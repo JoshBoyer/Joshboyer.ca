@@ -1,0 +1,9 @@
+/* The selected wide composition is cropped in CSS; its source bytes are preserved. */
+.about-layout{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);column-gap:clamp(40px,7vw,100px);row-gap:28px;align-items:start}
+.about-intro{grid-column:1;grid-row:1}.about-intro p.large-copy{margin-bottom:0}
+.about-story{grid-column:1;grid-row:2}
+.about-portrait{grid-column:2;grid-row:1 / span 2;margin:0;min-width:0}
+.about-portrait img{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;object-position:74% 50%;border-radius:12px}
+.about-portrait figcaption{margin-top:12px;font-size:12px;line-height:1.65;color:var(--muted)}
+.about-portrait figcaption span{display:block;font-size:11px}
+@media(max-width:700px){.about-layout{display:flex;flex-direction:column;gap:28px}.about-intro,.about-story,.about-portrait{width:100%}.about-intro h1{margin-bottom:24px}.about-portrait img{aspect-ratio:4/5}.about-story p:last-child{margin-bottom:0}}

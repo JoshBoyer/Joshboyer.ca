@@ -1,0 +1,11 @@
+{
+  "name": "joshboyer-ca",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Josh Boyer's imported portfolio and preserved career knowledge",
+  "scripts": {
+    "start": "node serve.cjs",
+    "test": "node --test tests/*.test.cjs",
+    "check": "node --check serve.cjs && node --check dist/app.js && node --check dist/career-tree.js && node --check dist/resume-engine.js && node --check dist/resume-ui.js && node --check dist/living-scenes.js && node --check dist/career-guide-engine.js && node --check dist/career-guide-ui.js && node --check dist/architect-workbench.js"
+  }
+}

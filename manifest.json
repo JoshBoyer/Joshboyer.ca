@@ -1,0 +1,236 @@
+{
+  "version": "portfolio-no-footer-barron-about-1",
+  "scope": "Direct Josh request: shared portfolio footer removed; accepted Barron Canyon image integrated as About portrait. Local only.",
+  "files": [
+    {
+      "path": "dist/about-portrait.css",
+      "bytes": 962,
+      "sha256": "70753a6c5e6bac1d7be8905b9eee842f44022197f2802a61797627e47e2e23d7"
+    },
+    {
+      "path": "dist/airy-scene.css",
+      "bytes": 17285,
+      "sha256": "b497357428f63c25a1ac3d061badc6fdc199ea07df7d4bac58b81736e9345b3a"
+    },
+    {
+      "path": "dist/app.js",
+      "bytes": 9988,
+      "sha256": "103a6f9fcb1ac539e95d2d963d88919af258fe93f0a0d8a68f617f238453908d"
+    },
+    {
+      "path": "dist/assets/apex.jpg",
+      "bytes": 753307,
+      "sha256": "bb128e36b0e43e8e707516cb0b09599c2f095028503893678af839ca39641ee1"
+    },
+    {
+      "path": "dist/assets/Audiowide-OFL.txt",
+      "bytes": 4430,
+      "sha256": "4fe01b13ffb41faa8f030d84843a95dab32792dfeeca7c072abbfd3f4d6896ad"
+    },
+    {
+      "path": "dist/assets/audiowide.ttf",
+      "bytes": 46972,
+      "sha256": "c42a74135f7f527e69a16826220cece45ec376776cfacdfd6cfd750053215146"
+    },
+    {
+      "path": "dist/assets/career-context-generated.png",
+      "bytes": 2824141,
+      "sha256": "94860d2efbe318e0fc615e659e23ee5093d5d0c384bbe74b7927e149fd30b397"
+    },
+    {
+      "path": "dist/assets/career-design.jpg",
+      "bytes": 105679,
+      "sha256": "06a90cb1f92ed92ec27f48c46ba4f7fccd67d14e5a52f78f910aee8543c0f2f0"
+    },
+    {
+      "path": "dist/assets/career-milestones-context.png",
+      "bytes": 2265662,
+      "sha256": "b89864032768087d573daccb6fa2cee800ecce1aa0d60c3196a87ffc611595fd"
+    },
+    {
+      "path": "dist/assets/dell-official.svg",
+      "bytes": 3671,
+      "sha256": "a11ac82671e1e0eca038071687a32a93a0cd539792e038cdbbd8952219cce14e"
+    },
+    {
+      "path": "dist/assets/favicon.svg",
+      "bytes": 261,
+      "sha256": "4bb5a9fd3b40351f1267b00adaca305bfd0f291d3a953d5b23dbc7a226f7d98b"
+    },
+    {
+      "path": "dist/assets/footer/Joe-Perry-Lake-footer-one-sun.png",
+      "bytes": 2652335,
+      "sha256": "e457ac55cea4de57c2c998c398d58783a8b1a94a2764450de2f6855c78de8153"
+    },
+    {
+      "path": "dist/assets/grenville-official.png",
+      "bytes": 5198,
+      "sha256": "b324d6c3aa4da1c996f89c48234bbd0a16d898d48303eb7ca6f8d486b569261a"
+    },
+    {
+      "path": "dist/assets/islands.png",
+      "bytes": 1455880,
+      "sha256": "d00db9ccf7ded6904109a22e87aec0b938ac94516ea65847d7f2cc358997aeeb"
+    },
+    {
+      "path": "dist/assets/lowkey-local-speech-v1.png",
+      "bytes": 1879916,
+      "sha256": "4807e1761474a0bc3dd00af5a175bb20563897fb678f77088efdb7c72ca182fe"
+    },
+    {
+      "path": "dist/assets/lowkey-tilde.png",
+      "bytes": 3895,
+      "sha256": "16a07657187bc130680e4da8415c738e12634754864bd2d8962374a93a84dced"
+    },
+    {
+      "path": "dist/assets/manrope-extrabold.ttf",
+      "bytes": 95688,
+      "sha256": "b8f802f05b322a7345805f5b89f8bb976604cc719a91530918d5ce3c47160950"
+    },
+    {
+      "path": "dist/assets/Manrope-OFL.txt",
+      "bytes": 4387,
+      "sha256": "58172e0c0fac2cda8a37b348164bb55e44b0e69051e557e92b1d3f6910141f7b"
+    },
+    {
+      "path": "dist/assets/manrope-regular.ttf",
+      "bytes": 94972,
+      "sha256": "a13d9b41b0a471ce58f0e46d377fa3cc76615e4632c3b15eb397caadf7a13f0a"
+    },
+    {
+      "path": "dist/assets/medavie-official.svg",
+      "bytes": 998,
+      "sha256": "3adc2c10537ff1b4b219cd41ef92b06baaf2fe471f4f59a484e127563eb003bf"
+    },
+    {
+      "path": "dist/assets/nexus-governed-work-v1.png",
+      "bytes": 1425612,
+      "sha256": "69358b873edb3ba0849e58f965ddaa173d0d70cf9ba3055ca1d3f4c70fcf5934"
+    },
+    {
+      "path": "dist/assets/nexus-mark.png",
+      "bytes": 130702,
+      "sha256": "a9915c866e9ca965b60a2878eeb3c1d02788779d9c532870a008ffc3710709ef"
+    },
+    {
+      "path": "dist/assets/nexus-wordmark-white.png",
+      "bytes": 13429,
+      "sha256": "75e7d5ee25f6a5efa8685a6b015450086905ebc44c06d99d4cb83885e6252f03"
+    },
+    {
+      "path": "dist/assets/personal/barron-canyon-about.png",
+      "bytes": 2349149,
+      "sha256": "4daa9c4ff9357c19aa4a395e93c4627a2fcfc940fd87072a76e4b20e822d107a"
+    },
+    {
+      "path": "dist/assets/solution-design-hero-v1.png",
+      "bytes": 1986979,
+      "sha256": "aa7fbf96a729ad3df7dc395f1072f0238e60219259a195fa56cfd731d5b257ce"
+    },
+    {
+      "path": "dist/assets/voyager.jpg",
+      "bytes": 2026796,
+      "sha256": "15dd78c2e5ae7c029dd2e972bde6a118d8acee29d500e0267508864c4436e27f"
+    },
+    {
+      "path": "dist/career-evidence.v1.json",
+      "bytes": 40466,
+      "sha256": "1f54c226e28ed84abcf6177da9c4e0c34f923821a6ff070b3ca9454534ce1585"
+    },
+    {
+      "path": "dist/career-evidence.v2.json",
+      "bytes": 42267,
+      "sha256": "bb28e168e1551f3526d21ee0e0cb0ea7583eb2e53b3e056ee3f8e7b467b58e03"
+    },
+    {
+      "path": "dist/career-evidence.v3.json",
+      "bytes": 45555,
+      "sha256": "aadfd227f064ced097a86f47a600b3df88d4cabe7542ddb190bf6134dc668d49"
+    },
+    {
+      "path": "dist/career-guide-engine.js",
+      "bytes": 5969,
+      "sha256": "6eeaabcb6a44c2c79ab216aff7e7ece5a7474527d486f7e3de97356eb6dc3016"
+    },
+    {
+      "path": "dist/career-guide-ui.js",
+      "bytes": 9377,
+      "sha256": "da8b1ec835e5a2c8e59486eab76203265f43c8825b83a4e9ce89968123a7ab1e"
+    },
+    {
+      "path": "dist/career-guide.css",
+      "bytes": 6795,
+      "sha256": "7bbf2b6a7ba7deb001f2674d4bb5cdca079b1be76515a0ba99d519b210791b1f"
+    },
+    {
+      "path": "dist/career-guide.html",
+      "bytes": 6164,
+      "sha256": "18a07a59bf44c87a0a1222db397efdd34d4fb6c8e9d9acee150f453f4493a1fb"
+    },
+    {
+      "path": "dist/career-tree.css",
+      "bytes": 14139,
+      "sha256": "07e6d690f2c42e99c27398705f7f876e68ed1088ef2cc2dbf4515cf9e50bb7c3"
+    },
+    {
+      "path": "dist/career-tree.js",
+      "bytes": 3962,
+      "sha256": "23d0de34e8f4fb4286d93a27167cd3f1d0a08b4355534a4f5cf3062e796b65d3"
+    },
+    {
+      "path": "dist/footer-preview.css",
+      "bytes": 2288,
+      "sha256": "a062bacd897eea139e0f1c591158567de85854e1345979d45ae6276e5a7b0873"
+    },
+    {
+      "path": "dist/image-info.js",
+      "bytes": 1702,
+      "sha256": "624be86cb4150c1b7046e19a473f52972e2d751e7a555d9ace8920a9f8025685"
+    },
+    {
+      "path": "dist/index.html",
+      "bytes": 92899,
+      "sha256": "e2a7a4a1cfda5e330b533ee612c90ef7f0551ee048cb054f1350a3fb969bd435"
+    },
+    {
+      "path": "dist/living-scenes.css",
+      "bytes": 2846,
+      "sha256": "aa148c503ec9178c68ca0231364b284bd4622edc6907ef75fdffbdcb0f517b28"
+    },
+    {
+      "path": "dist/living-scenes.js",
+      "bytes": 14473,
+      "sha256": "93c8943ea410063a5f24fe531415229069b923fe0f0b8b47ee703b3ae311d87d"
+    },
+    {
+      "path": "dist/resume-engine.js",
+      "bytes": 8054,
+      "sha256": "5e6002f6fa968e3bc33b3b8f606e6f46f066fdb93bb72b4806e781565175a0c9"
+    },
+    {
+      "path": "dist/resume-ui.js",
+      "bytes": 12962,
+      "sha256": "390b9685dbacdf1b56255a8714e7570ad611ce0fbe8eb2dec1ecd426892dd8ea"
+    },
+    {
+      "path": "dist/resume.css",
+      "bytes": 10587,
+      "sha256": "1ea19466722e7a05ce8cc1551d2b92965fd5b7fec98db63bd208bc2fbd354682"
+    },
+    {
+      "path": "dist/resume.html",
+      "bytes": 6434,
+      "sha256": "800fb3f2fe3896afbb97708607f9c4ee9a8129556e4da8031ae3c9829748dd5c"
+    },
+    {
+      "path": "dist/scene.css",
+      "bytes": 7538,
+      "sha256": "89ed95ac8e319e3c8d7ef8e2a649b4abb96cdac625d2c5e4807100ed44811858"
+    },
+    {
+      "path": "dist/styles.css",
+      "bytes": 24277,
+      "sha256": "efbaf8b4985a02e8e82a8406e46ed254d1cd27d042f73e1cad2c610ea349bf84"
+    }
+  ]
+}

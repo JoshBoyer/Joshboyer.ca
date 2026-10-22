@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'">
+  <title>Career evidence guide - Josh Boyer</title><meta name="description" content="Explore Josh Boyer's approved evidence, compare job requirements and prepare a resume in a clearly labelled rule-based career-guide demo.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="career-guide.css">
+  <script src="resume-engine.js" defer></script><script src="career-guide-engine.js" defer></script><script src="career-guide-ui.js" defer></script>
+</head>
+<body class="guide-tool">
+  <a class="skip-link" href="#guide-main">Skip to career guide</a>
+  <header class="guide-header"><a class="wordmark" href="index.html#home">Josh Boyer<span>.</span></a><nav aria-label="Portfolio"><a href="index.html#home">Portfolio</a><a href="resume.html">Resume builder</a></nav></header>
+  <main id="guide-main" class="guide-wrap" tabindex="-1">
+    <div class="guide-intro"><h1>Ask about the work.</h1><p>Explore my experience, compare a job posting and prepare a resume from approved evidence.</p><p class="guide-mode">Rule-based prototype. No AI model. Inputs stay in your browser.</p></div>
+    <div class="guide-workspace">
+      <section class="guide-controls" aria-label="Question and context">
+        <fieldset class="guide-actions"><legend>What would you like to do?</legend><div><label class="guide-action-option"><input type="radio" name="guide-action" data-action="explore_evidence" value="explore_evidence" form="guide-form" checked><span>Explore evidence</span></label><label class="guide-action-option"><input type="radio" name="guide-action" data-action="compare_job" value="compare_job" form="guide-form"><span>Compare a posting</span></label><label class="guide-action-option"><input type="radio" name="guide-action" data-action="prepare_resume" value="prepare_resume" form="guide-form"><span>Prepare a resume</span></label></div></fieldset>
+        <div class="guide-examples" aria-label="Example questions"><button type="button" data-example="Tell me about Josh">Josh’s background</button><button type="button" data-example="What insurance and REST integration evidence is available?">Insurance integrations</button><button type="button" data-example="How has Josh handled current-state analysis and solution design?">Solution design</button></div>
+        <form id="guide-form" novalidate>
+          <label for="guide-question">Your question</label><textarea id="guide-question" rows="3" maxlength="1000" aria-describedby="question-help question-count" placeholder="For example: what is the evidence for provider integration work?"></textarea><p id="question-help" class="guide-help">Ask about the approved work. For posting comparison and resume preparation, the attached posting controls the match.</p><p id="question-count" class="guide-count">0 / 1,000 characters</p>
+          <details id="posting-context" class="posting-context"><summary>Add a job posting</summary><label for="guide-posting">Public job requirements</label><p class="guide-help">20–12,000 characters. Leave out personal and confidential information. Changing this context clears earlier answers and exports.</p><textarea id="guide-posting" rows="7" maxlength="12000" aria-describedby="guide-posting-count"></textarea><p id="guide-posting-count" class="guide-count">0 / 12,000 characters</p><button type="button" id="guide-example-posting" class="guide-plain">Use an illustrative posting</button><label for="guide-profile">Emphasis</label><select id="guide-profile"><option value="auto">Choose from the posting</option><option value="insurance">Insurance technology</option><option value="integrations">Integration and data</option><option value="solutions">Technical solutions</option></select></details>
+          <p id="guide-error" class="guide-error" role="alert" hidden></p><div class="guide-form-actions"><button id="guide-send" class="button" type="submit" disabled>Send question</button><button id="guide-clear" class="guide-plain" type="button">Clear conversation</button></div>
+        </form>
+        <p id="guide-status" role="status" aria-live="polite">Loading approved evidence.</p><p id="guide-turns" class="guide-count">0 / 8 turns</p>
+        <details class="guide-method"><summary>What this demo can and cannot do</summary><p>Responses select approved prewritten facts using fixed topic rules. This is not an AI conversation or a complete qualification assessment. Unmatched topics are redirected. It cannot browse, run tools, disclose private career documents or add unsupported credentials.</p><p>Questions are limited to 1,000 characters and conversations to eight turns. Nothing is saved by the application. Clear removes the conversation and posting. Native Back requires a new question to rebuild results.</p><p>No server, paid-model call or server rate/spend controls are active in this static demo. Any model-backed version would need separate server enforcement and an approved budget.</p><a href="career-evidence.v3.json" download>Download approved evidence JSON</a></details>
+      </section>
+      <section class="guide-answers" aria-label="Evidence conversation"><div id="guide-welcome"><h2>Start with a question.</h2><p>Choose an example or ask about a technical problem, project or area of experience. Every answer keeps the evidence and its limits visible.</p><p class="guide-help">For a tailored resume, add the posting and choose Prepare a resume. You can review and export approved text here or use the full resume builder.</p></div><div id="guide-conversation" role="log" aria-label="Conversation" aria-live="polite" aria-relevant="additions"></div></section>
+    </div>
+  </main>
+</body>
+</html>

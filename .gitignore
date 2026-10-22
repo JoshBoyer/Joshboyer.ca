@@ -1,0 +1,11 @@
+node_modules/
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+knowledge/conversations/
+knowledge/archive/
+knowledge/source-documents/
+
+# Private source material stays local unless explicitly selected for version control.

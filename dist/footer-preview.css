@@ -1,0 +1,33 @@
+.next-step{padding-bottom:24px}
+.lake-footer{padding-top:24px;background:#fff;color:var(--ink)}
+.lake-footer-closing{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.55fr);align-items:center;gap:64px;padding-bottom:40px}
+.lake-footer-contact{min-width:0}
+.lake-footer-contact h2{font-size:clamp(30px,3.2vw,44px);margin:0 0 18px;text-wrap:balance}
+.lake-footer-contact p{font-size:15px;color:var(--muted);line-height:1.8;margin:0;max-width:40ch}
+.lake-footer-contact p br{display:none}
+.lake-footer-contact nav{display:flex;flex-direction:column;align-items:flex-start;gap:12px;margin-top:24px}
+.lake-footer-contact .button{min-height:48px}
+.lake-footer-contact .text-link{min-height:44px}
+.lake-footer-scene{min-width:0;margin:0;background:#fff}
+.lake-footer-scene img{display:block;width:100%;height:auto;aspect-ratio:1672/941;object-fit:contain;background:#fff}
+.lake-footer-scene figcaption{font-size:12px;color:var(--muted);line-height:1.65;margin:8px 0 0}
+.lake-footer-scene figcaption span{display:block;font-size:11px}
+.lake-footer-base{border-top:1px solid var(--line);padding-top:24px;padding-bottom:32px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.lake-footer-base>span{font-size:11px;color:var(--muted)}
+.lake-footer-base>a:last-child{font-size:13px;min-height:44px;display:inline-flex;align-items:center;gap:12px}
+.lake-footer-base .wordmark{min-height:44px;display:inline-flex;align-items:center}
+@media(max-width:900px){.lake-footer-closing{gap:32px;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr)}.lake-footer-contact h2{font-size:32px}}
+@media(max-width:600px){
+ .lake-footer{padding-top:16px}
+ .lake-footer-closing{grid-template-columns:minmax(0,1fr);gap:32px;padding-bottom:24px}
+ .lake-footer-contact h2{font-size:30px;margin-bottom:16px}
+ .lake-footer-contact p{font-size:14px}
+ .lake-footer-contact nav{gap:8px;margin-top:20px}
+ .lake-footer-scene figcaption{margin-top:8px;font-size:12px}
+ .lake-footer-scene figcaption span{margin-top:4px;font-size:11px}
+ .lake-footer-base{flex-wrap:wrap;gap:12px 24px;padding-top:20px;padding-bottom:24px}
+ .lake-footer-base .wordmark{font-size:23px}
+ .lake-footer-base>a:last-child{flex-basis:100%}
+ .lake-footer-base>span{margin-left:auto}
+}
+@media print{.lake-footer{display:none}}

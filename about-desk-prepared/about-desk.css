@@ -1,0 +1,13 @@
+/* Prepared responsive structure only; not linked by dist/index.html.
+   Image crop positioning must follow inspection of exact approved pixels. */
+.about-desk-layout{background:#fff;padding-block:64px}
+.about-desk-intro h1{font-size:clamp(44px,5.1vw,72px);margin:0 0 28px;text-wrap:balance}
+.about-desk-intro h1 span{color:var(--blue)}
+.about-desk-intro .large-copy{max-width:32ch;margin-bottom:32px}
+.about-desk-scene{margin:0 0 40px;min-width:0;background:#fff}
+.about-desk-scene img{display:block;width:100%;height:auto}
+.about-desk-scene figcaption{font-size:12px;line-height:1.65;color:var(--muted);margin-top:12px}
+.about-desk-story{max-width:75ch}
+.about-desk-story p{margin-bottom:28px;line-height:1.9}
+.about-desk-story .text-link{min-height:44px}
+@media(max-width:700px){.about-desk-layout{padding-block:40px}.about-desk-intro h1{margin-bottom:24px}.about-desk-intro .large-copy{font-size:22px;max-width:none;margin-bottom:24px}.about-desk-scene{margin-bottom:32px}.about-desk-story p{font-size:14px;margin-bottom:24px}}

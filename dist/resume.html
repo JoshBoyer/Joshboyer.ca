@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'">
+  <meta name="description" content="Select a resume from Josh Boyer's approved career evidence, with repeatable matching and visible sources.">
+  <title>Build a tailored resume — Josh Boyer</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="resume.css">
+  <script src="resume-engine.js" defer></script>
+  <script src="resume-ui.js" defer></script>
+</head>
+<body class="resume-tool">
+  <a class="skip-link" href="#resume-main">Skip to resume builder</a>
+  <header class="resume-header">
+    <a class="wordmark" href="index.html#home">Josh Boyer<span>.</span></a>
+    <nav aria-label="Portfolio"><a href="index.html#home">Home</a><a href="index.html#projects">Projects</a><a href="index.html#about">About</a></nav>
+  </header>
+  <main id="resume-main" class="resume-wrap" tabindex="-1">
+    <div class="tool-intro"><h1>Build a resume<br>around the work.</h1><p>Paste a posting to select from my approved experience. Deterministic matching runs in your browser. Review, then export a resume.</p></div>
+    <div class="posting-layout">
+      <form id="posting-form" novalidate>
+        <label for="job-posting">Job posting</label>
+        <p class="field-help" id="posting-help">Text only, 20–12,000 characters. Paste public requirements; leave out personal or confidential information.</p>
+        <textarea id="job-posting" name="posting" rows="9" maxlength="12000" aria-describedby="posting-help posting-count posting-error" spellcheck="false" placeholder="Paste the role’s responsibilities and requirements here…"></textarea>
+        <div class="field-meta"><span id="posting-count">0 / 12,000 characters</span><button type="button" id="example-button" class="plain-button">Use an example posting</button></div>
+        <label for="role-focus">Emphasis</label>
+        <select id="role-focus"><option value="auto">Choose from the posting</option><option value="insurance">Insurance technology</option><option value="integrations">Integration and data</option><option value="solutions">Technical solutions</option></select>
+        <p id="posting-error" class="field-error" role="alert" hidden></p>
+        <div class="form-actions"><button class="button" id="match-button" type="submit" disabled>Match evidence</button><button type="button" class="secondary-button" id="clear-button">Clear</button></div>
+      </form>
+      <aside class="matching-note" aria-labelledby="method-title"><h2 id="method-title">Selected, not invented.</h2><p>This prototype uses deterministic matching and prewritten text. The same posting, emphasis and evidence version produce the same selection.</p><p>It runs in your browser. Your posting is not sent to a model, stored or included in the resume.</p><details><summary>What the match can tell you</summary><p>Keywords connect a requirement to related career evidence. They do not confirm seniority, minimum years, credentials or every part of a requirement. Review the source and any qualification notes.</p><p>SOAP/XML, REST and scheduled table-backed publish/subscribe solution review are supported. JSON standards and broker-based or real-time implementation are not established. Independent NEXUS work stays separate from employer experience.</p></details><p><a href="career-guide.html">Ask the rule-based career guide</a></p><a class="dataset-link" href="career-evidence.v3.json" download>Download the reusable evidence JSON</a><p id="data-version" class="version-note">Loading approved evidence…</p></aside>
+    </div>
+    <p id="tool-status" class="tool-status" role="status" aria-live="polite"></p>
+    <section id="match-results" class="match-results" aria-labelledby="match-title" hidden>
+      <div class="results-heading"><div><h2 id="match-title" tabindex="-1">Requirements and evidence</h2><p id="match-summary"></p></div><a href="#resume-preview" id="preview-link">Go to resume preview</a></div>
+      <div id="qualification-notes" class="qualification-notes" hidden><h3>Qualifications to confirm</h3><p>These appear in the posting but are not established by the approved evidence. They are not added to the resume.</p><ul id="qualification-list"></ul></div>
+      <details class="mapping-disclosure"><summary>Review the posting line by line</summary><ol id="requirement-mapping" class="requirement-mapping"></ol></details>
+      <fieldset class="evidence-picker"><legend>Choose the evidence</legend><p id="selection-help">Choose one to eight chunks. The suggested selection favors related topics, then the chosen role emphasis, priority and stable ID.</p><div id="evidence-options"></div></fieldset>
+      <p id="selection-error" class="field-error" role="alert" hidden></p>
+      <div class="preview-toolbar"><div><h2 id="preview-title">Resume preview</h2><p id="selection-count"></p></div><div class="export-actions"><button class="button" type="button" id="text-export" disabled>Download .txt</button><button class="secondary-button" type="button" id="print-resume" disabled>Print / save PDF</button><button class="plain-button" type="button" id="selection-export" disabled>Export selection JSON</button></div></div>
+      <p class="print-help">Print opens your browser’s print dialog; choose “Save as PDF” where available. The preview and exports use approved text only and retain evidence IDs. No application is submitted.</p>
+      <article id="resume-preview" class="resume-paper" aria-labelledby="resume-name" tabindex="-1" hidden></article>
+    </section>
+    <noscript><p>JavaScript is required for browser-local matching. You can still <a href="career-evidence.v3.json" download>download the evidence JSON</a> or <a href="index.html#projects">read the portfolio</a>.</p></noscript>
+  </main>
+  <footer class="resume-footer resume-wrap"><p>Private prototype · Public-safe career evidence · No model backend</p><a href="index.html#home">Back to the portfolio</a></footer>
+</body>
+</html>

@@ -1,0 +1,1199 @@
+{
+  "schemaVersion": "1.0.0",
+  "datasetVersion": "2026-10-15.3",
+  "rankingVersion": "rank-1",
+  "templateVersion": "resume-1",
+  "reviewedSourceCommit": "61d3b52d4484d4b2b84a1bd3ea5a57e26cbb4f31",
+  "scope": "Approved public portfolio text only. No raw career documents, internal artifacts, claim data, contact details or inferred qualifications.",
+  "person": {
+    "name": "Josh Boyer",
+    "positioning": "Technology generalist | Insurance technology | Integration and solution design",
+    "summary": "Technology generalist with about twenty years of professional technology experience and deep insurance-domain knowledge. Connects business requirements, technical design and practical delivery, with hands-on analysis, implementation and troubleshooting."
+  },
+  "roles": [
+    {
+      "id": "role-medavie",
+      "employer": "Medavie",
+      "title": "Functional analyst",
+      "period": "2022–present",
+      "sort": 4,
+      "scope": "Claims integration requirements, data transitions, SQL and reconciliation alongside architects and delivery teams.",
+      "qualificationNotes": [
+        "Claims architecture describes work, not a claimed formal Architect title."
+      ]
+    },
+    {
+      "id": "role-grenville",
+      "employer": "Grenville",
+      "title": "Systems and network administration; later systems analysis and policy rules work",
+      "period": "2009–2022",
+      "sort": 3,
+      "scope": "Infrastructure, insurance rules, broker integration and application delivery across overlapping responsibilities.",
+      "qualificationNotes": [
+        "This is a responsibility summary, not a single formal job title. The exact analyst transition year is unresolved (2014 versus 2016 in prior accounts)."
+      ]
+    },
+    {
+      "id": "role-harris",
+      "employer": "Harris / Ottawa Computer Services",
+      "title": "NOC / project technician",
+      "period": "2007–2009",
+      "sort": 2,
+      "scope": "Network operations and infrastructure migration work.",
+      "qualificationNotes": [
+        "Broad résumé-supported career period."
+      ]
+    },
+    {
+      "id": "role-dell",
+      "employer": "Dell",
+      "title": "Technical support",
+      "period": "2006–2007",
+      "sort": 1,
+      "scope": "Latitude and OptiPlex hardware diagnosis and client support.",
+      "qualificationNotes": [
+        "September 2006 start confirmed; broad subsequent chronology."
+      ]
+    },
+    {
+      "id": "role-independent",
+      "employer": "Independent projects",
+      "title": "Personal software projects",
+      "period": "Active development",
+      "sort": 0,
+      "scope": "NEXUS is the current independent capstone; LOWKEY is retained only as archived evidence.",
+      "qualificationNotes": [
+        "No employer delivery or production maturity is inferred from personal projects."
+      ]
+    }
+  ],
+  "facets": [
+    {
+      "id": "insurance",
+      "label": "Insurance domain",
+      "aliases": [
+        "insurance",
+        "insurer",
+        "property and casualty",
+        "p&c",
+        "underwriting",
+        "adjudication"
+      ]
+    },
+    {
+      "id": "standards",
+      "label": "CSIO / ACORD and broker data",
+      "aliases": [
+        "csio",
+        "acord",
+        "al3",
+        "edocs",
+        "broker integration",
+        "broker management"
+      ]
+    },
+    {
+      "id": "rules",
+      "label": "Rating, underwriting and business rules",
+      "aliases": [
+        "business rules",
+        "rules engine",
+        "rating",
+        "underwriting",
+        "renewal",
+        "renewals",
+        "endorsement",
+        "endorsements"
+      ]
+    },
+    {
+      "id": "integrations",
+      "label": "SOAP / REST integrations",
+      "aliases": [
+        "integration",
+        "integrations",
+        "api",
+        "apis",
+        "b2b"
+      ]
+    },
+    {
+      "id": "mapping",
+      "label": "Data contracts and mappings",
+      "aliases": [
+        "mapping",
+        "mappings",
+        "data transformation",
+        "data migration",
+        "data contracts",
+        "etl",
+        "flat file",
+        "flat files"
+      ]
+    },
+    {
+      "id": "claims",
+      "label": "Claims and provider requirements",
+      "aliases": [
+        "claims",
+        "claim history",
+        "provider",
+        "providers",
+        "adjudication",
+        "takeover history"
+      ]
+    },
+    {
+      "id": "sql",
+      "label": "Hands-on SQL",
+      "aliases": [
+        "sql",
+        "structured query language"
+      ]
+    },
+    {
+      "id": "validation",
+      "label": "Validation and repeatable tooling",
+      "aliases": [
+        "validation",
+        "validate",
+        "testing",
+        "batch load",
+        "batch loading",
+        "excel",
+        "repeatable",
+        "reusable tooling",
+        "test"
+      ]
+    },
+    {
+      "id": "analysis",
+      "label": "Requirements and current-state design",
+      "aliases": [
+        "requirements",
+        "business analysis",
+        "functional analysis",
+        "gap analysis",
+        "current state",
+        "current-state",
+        "solution design",
+        "solutions architecture",
+        "solution architecture"
+      ]
+    },
+    {
+      "id": "guidance",
+      "label": "Technical guidance and design judgment",
+      "aliases": [
+        "technical leadership",
+        "technical guidance",
+        "technical direction",
+        "advisory",
+        "design judgment",
+        "stakeholders",
+        "stakeholder",
+        "vendor",
+        "vendors",
+        "specifications",
+        "specification"
+      ]
+    },
+    {
+      "id": "infrastructure",
+      "label": "Infrastructure and operational dependencies",
+      "aliases": [
+        "infrastructure",
+        "networking",
+        "network",
+        "virtualization",
+        "esxi",
+        "active directory",
+        "exchange",
+        "server",
+        "servers",
+        "firewall",
+        "firewalls",
+        "troubleshooting"
+      ]
+    },
+    {
+      "id": "application",
+      "label": "Application and API implementation",
+      "aliases": [
+        "c#",
+        ".net",
+        "csharp",
+        "javascript",
+        "typescript",
+        "react",
+        "openapi",
+        "postgresql",
+        "redis"
+      ]
+    },
+    {
+      "id": "execution",
+      "label": "Recoverable execution and evaluation",
+      "aliases": [
+        "distributed execution",
+        "durable commands",
+        "model routing",
+        "evaluation",
+        "websockets",
+        "ai",
+        "retrieval",
+        "context compilation"
+      ]
+    },
+    {
+      "id": "speech",
+      "label": "Local speech and native input",
+      "aliases": [
+        "speech recognition",
+        "speech",
+        "rust",
+        "tauri",
+        "kotlin",
+        "android",
+        "sherpa",
+        "parakeet",
+        "audioworklet"
+      ]
+    },
+    {
+      "id": "soap",
+      "label": "SOAP interfaces",
+      "aliases": [
+        "soap"
+      ]
+    },
+    {
+      "id": "rest",
+      "label": "REST APIs",
+      "aliases": [
+        "rest",
+        "restful"
+      ]
+    },
+    {
+      "id": "xml",
+      "label": "XML exchange and loading",
+      "aliases": [
+        "xml"
+      ]
+    },
+    {
+      "id": "reconciliation",
+      "label": "Reconciliation and balancing",
+      "aliases": [
+        "reconciliation",
+        "reconcile",
+        "financial reporting",
+        "financial reports",
+        "balancing"
+      ]
+    },
+    {
+      "id": "pubsub",
+      "label": "Scheduled table-backed publish/subscribe review",
+      "aliases": [
+        "pub/sub",
+        "pubsub",
+        "publish subscribe",
+        "publish-subscribe",
+        "publisher",
+        "consumer",
+        "event table",
+        "scheduled publisher"
+      ]
+    }
+  ],
+  "profiles": [
+    {
+      "id": "insurance",
+      "label": "Insurance technology",
+      "facetWeights": {
+        "standards": 7,
+        "rules": 6,
+        "claims": 5,
+        "insurance": 4,
+        "mapping": 3,
+        "analysis": 2
+      }
+    },
+    {
+      "id": "integrations",
+      "label": "Integration and data",
+      "facetWeights": {
+        "integrations": 7,
+        "mapping": 6,
+        "claims": 4,
+        "sql": 3,
+        "validation": 3,
+        "guidance": 2,
+        "soap": 7,
+        "rest": 7,
+        "xml": 6,
+        "reconciliation": 3,
+        "pubsub": 7
+      }
+    },
+    {
+      "id": "solutions",
+      "label": "Technical solutions",
+      "facetWeights": {
+        "analysis": 6,
+        "guidance": 5,
+        "infrastructure": 4,
+        "integrations": 3,
+        "validation": 2,
+        "application": 2
+      }
+    }
+  ],
+  "summaries": [
+    {
+      "id": "summary-insurance",
+      "profileId": "insurance",
+      "text": "Technology generalist with deep insurance-domain experience spanning P&C rating and underwriting rules, broker integrations and claims analysis. Connects insurance decisions to the information, interfaces and delivery processes needed to support them.",
+      "sourceRefs": [
+        "source-workflows",
+        "source-newbusiness",
+        "source-claims"
+      ]
+    },
+    {
+      "id": "summary-integrations",
+      "profileId": "integrations",
+      "text": "Technology generalist with hands-on experience connecting business workflows, data contracts and system boundaries. Work spans broker SOAP/XML and REST integrations, provider requirements and synchronization solution review, data mapping, validation tooling and claims reconciliation.",
+      "sourceRefs": [
+        "source-inquiry",
+        "source-upload",
+        "source-claims",
+        "source-takeover",
+        "source-sql",
+        "source-provider-sync-review"
+      ]
+    },
+    {
+      "id": "summary-solutions",
+      "profileId": "solutions",
+      "text": "Technology generalist with about twenty years in professional technology and deep insurance knowledge. Brings business analysis, technical design judgment and hands-on delivery together, from infrastructure dependencies to integration requirements and operational troubleshooting.",
+      "sourceRefs": [
+        "source-foundations",
+        "source-headquarters",
+        "source-workflows",
+        "source-claims"
+      ]
+    },
+    {
+      "id": "summary-general",
+      "profileId": "general",
+      "text": "Technology generalist with about twenty years of professional technology experience and deep insurance-domain knowledge. Connects business requirements, technical design and practical delivery, with hands-on analysis, implementation and troubleshooting.",
+      "sourceRefs": [
+        "source-dell",
+        "source-foundations",
+        "source-workflows",
+        "source-claims"
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "id": "section-summary",
+      "title": "Professional summary",
+      "order": 1
+    },
+    {
+      "id": "section-focus",
+      "title": "Selected areas of experience",
+      "order": 2
+    },
+    {
+      "id": "section-experience",
+      "title": "Professional experience",
+      "order": 3
+    },
+    {
+      "id": "section-independent",
+      "title": "Independent projects",
+      "order": 4
+    },
+    {
+      "id": "section-provenance",
+      "title": "Evidence references",
+      "order": 5
+    }
+  ],
+  "qualificationCatalog": [
+    {
+      "id": "qual-json",
+      "label": "JSON standards experience",
+      "aliases": [
+        "json"
+      ],
+      "note": "Hands-on JSON standards experience is not established in the approved employer evidence. SOAP/XML and REST are supported separately."
+    },
+    {
+      "id": "qual-pubsub",
+      "label": "Pub/sub or event-broker architecture",
+      "aliases": [
+        "pub/sub",
+        "pubsub",
+        "publish subscribe",
+        "publish-subscribe",
+        "kafka",
+        "rabbitmq"
+      ],
+      "note": "Historical gap superseded by the approved Oct15 ProviderRegistry solution-review account; inactive in current matching.",
+      "active": false
+    },
+    {
+      "id": "qual-cloud",
+      "label": "Named cloud platform",
+      "aliases": [
+        "aws",
+        "azure",
+        "gcp",
+        "google cloud",
+        "amazon web services"
+      ],
+      "note": "Experience or certification on this named platform is not established in this dataset."
+    },
+    {
+      "id": "qual-platform",
+      "label": "Named insurance platform",
+      "aliases": [
+        "guidewire",
+        "duck creek",
+        "sapiens",
+        "fineos"
+      ],
+      "note": "Experience on this named insurance platform is not established in this dataset."
+    },
+    {
+      "id": "qual-cert",
+      "label": "Certification or degree",
+      "aliases": [
+        "certified",
+        "certification",
+        "certifications",
+        "togaf",
+        "pmp",
+        "bachelor",
+        "bachelor's",
+        "degree",
+        "master's",
+        "masters"
+      ],
+      "note": "No certifications or education credentials are supplied in the approved dataset."
+    },
+    {
+      "id": "qual-management",
+      "label": "People-management remit",
+      "aliases": [
+        "people management",
+        "direct reports",
+        "manage a team",
+        "managed a team",
+        "hiring",
+        "performance reviews"
+      ],
+      "note": "Technical guidance is supported; formal people-management scope is not established."
+    },
+    {
+      "id": "qual-othertech",
+      "label": "Additional named technology",
+      "aliases": [
+        "python",
+        "java",
+        "kubernetes",
+        "docker",
+        "terraform",
+        "salesforce",
+        "snowflake",
+        "databricks",
+        "vba"
+      ],
+      "note": "This technology is not established in the approved dataset; no proficiency is inferred."
+    },
+    {
+      "id": "qual-eligibility",
+      "label": "Eligibility, location or language",
+      "aliases": [
+        "clearance",
+        "citizenship",
+        "work authorization",
+        "bilingual",
+        "french",
+        "relocate",
+        "relocation"
+      ],
+      "note": "Eligibility, language proficiency and location commitments require direct confirmation."
+    },
+    {
+      "id": "qual-message-broker",
+      "label": "Broker-based or real-time messaging implementation",
+      "aliases": [
+        "kafka",
+        "rabbitmq",
+        "message broker",
+        "message-broker",
+        "real-time streaming",
+        "realtime streaming"
+      ],
+      "note": "Scheduled table-backed publish/subscribe and REST solution review are supported. Broker-based or real-time implementation is not established."
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-dell",
+      "kind": "approved-public-portfolio",
+      "path": "index.html#projects/dell",
+      "revision": "61d3b52d4484d4b2b84a1bd3ea5a57e26cbb4f31",
+      "confidence": "approved-public-account",
+      "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
+    },
+    {
+      "id": "source-foundations",
+      "kind": "approved-public-portfolio",
+      "path": "index.html#projects/foundations",
+      "revision": "61d3b52d4484d4b2b84a1bd3ea5a57e26cbb4f31",
+      "confidence": "approved-public-account",
+      "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
+    },
+    {
+      "id": "source-headquarters",
+      "kind": "approved-public-portfolio",
+      "path": "index.html#projects/headquarters",
+      "revision": "61d3b52d4484d4b2b84a1bd3ea5a57e26cbb4f31",
+      "confidence": "approved-public-account",
+      "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
+    },
+    {
+      "id": "source-inquiry",
+      "kind": "approved-public-portfolio",
+      "path": "index.html#projects/inquiry",
+      "revision": "61d3b52d4484d4b2b84a1bd3ea5a57e26cbb4f31",
+      "confidence": "approved-public-account",
+      "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
+    },
+    {
+      "id": "source-workflows",
+      "kind": "approved-public-portfolio",
+      "path": "index.html#projects/workflows",
+      "revision": "61d3b52d4484d4b2b84a1bd3ea5a57e26cbb4f31",
+      "confidence": "approved-public-account",
+      "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
+    },
+    {
+      "id": "source-newbusiness",
+      "kind": "approved-public-portfolio",
+      "path": "index.html#projects/newbusiness",
+      "revision": "61d3b52d4484d4b2b84a1bd3ea5a57e26cbb4f31",
+      "confidence": "approved-public-account",
+      "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
+    },
+    {
+      "id": "source-renewals",
+      "kind": "approved-public-portfolio",
+      "path": "index.html#projects/renewals",
+      "revision": "61d3b52d4484d4b2b84a1bd3ea5a57e26cbb4f31",
+      "confidence": "approved-public-account",
+      "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
+    },
+    {
+      "id": "source-upload",
+      "kind": "approved-public-portfolio",
+      "path": "index.html#projects/upload",
+      "revision": "61d3b52d4484d4b2b84a1bd3ea5a57e26cbb4f31",
+      "confidence": "approved-public-account",
+      "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
+    },
+    {
+      "id": "source-claims",
+      "kind": "approved-public-portfolio",
+      "path": "index.html#projects/claims",
+      "revision": "61d3b52d4484d4b2b84a1bd3ea5a57e26cbb4f31",
+      "confidence": "approved-public-account",
+      "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
+    },
+    {
+      "id": "source-takeover",
+      "kind": "approved-public-portfolio",
+      "path": "index.html#projects/takeover",
+      "revision": "firsthand-2026-10-15-history-load-design",
+      "confidence": "approved-public-account",
+      "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
+    },
+    {
+      "id": "source-continuity",
+      "kind": "approved-public-portfolio",
+      "path": "index.html#projects/continuity",
+      "revision": "firsthand-2026-10-15-rest-compatibility-design",
+      "confidence": "approved-public-account",
+      "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
+    },
+    {
+      "id": "source-sql",
+      "kind": "approved-public-portfolio",
+      "path": "index.html#projects/sql",
+      "revision": "61d3b52d4484d4b2b84a1bd3ea5a57e26cbb4f31",
+      "confidence": "approved-public-account",
+      "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
+    },
+    {
+      "id": "source-nexus",
+      "kind": "approved-public-portfolio",
+      "path": "index.html#projects/nexus",
+      "revision": "61d3b52d4484d4b2b84a1bd3ea5a57e26cbb4f31",
+      "confidence": "approved-public-account",
+      "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
+    },
+    {
+      "id": "source-lowkey",
+      "kind": "approved-public-portfolio",
+      "path": "index.html#projects/lowkey",
+      "revision": "61d3b52d4484d4b2b84a1bd3ea5a57e26cbb4f31",
+      "confidence": "approved-public-account",
+      "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
+    },
+    {
+      "id": "source-provider-sync-review",
+      "kind": "approved-firsthand-public-summary",
+      "path": "index.html#projects/claims",
+      "revision": "firsthand-2026-10-15-provider-review",
+      "confidence": "approved-public-account",
+      "note": "Josh directly confirms solution review, nightly publisher writing an event table, separate scheduled consumer with REST retrieval, field mappings and synchronization requirements. Internal platform acronyms remain unconfirmed and are omitted."
+    }
+  ],
+  "chunks": [
+    {
+      "id": "experience-dell",
+      "kind": "experience",
+      "projectId": "dell",
+      "roleId": "role-dell",
+      "title": "Latitude and OptiPlex support",
+      "period": "2006–2007",
+      "tags": [
+        "infrastructure",
+        "guidance"
+      ],
+      "priority": 50,
+      "decision": "Kept the client’s hardware problem central to diagnosis rather than optimizing the call around duration.",
+      "process": [
+        "Investigate symptoms with the client.",
+        "Explain the hardware issue and next steps clearly."
+      ],
+      "technicalGuidance": "Clear client-facing technical explanation.",
+      "outcome": "Worked within the Gloves Off support model, aiming to resolve the issue on the first call.",
+      "resumeText": "Supported Latitude laptops and OptiPlex desktops on Dell’s Gloves Off team, working through hardware diagnosis with clients and explaining the next steps clearly.",
+      "sourceRefs": [
+        "source-dell"
+      ],
+      "confidence": "approved-public-account",
+      "qualificationNotes": [
+        "No numerical first-call resolution rate is established."
+      ],
+      "active": true
+    },
+    {
+      "id": "experience-foundations",
+      "kind": "experience",
+      "projectId": "foundations",
+      "roleId": "role-harris",
+      "title": "Small Business Server swing migrations",
+      "period": "2007–2009",
+      "tags": [
+        "infrastructure",
+        "validation",
+        "analysis"
+      ],
+      "priority": 70,
+      "decision": "Separated combined service roles as customers outgrew Small Business Server, keeping identity, data and email dependencies visible.",
+      "process": [
+        "Identify the combined Exchange and Active Directory dependencies.",
+        "Use a repeatable swing-migration process into separated infrastructure.",
+        "Preserve data and email through the transition."
+      ],
+      "technicalGuidance": "Developed the migration approach alongside practical server and network project work.",
+      "outcome": "Developed a reusable migration process; no measured success rate is established.",
+      "resumeText": "Developed a repeatable Small Business Server swing-migration process, separating infrastructure roles while accounting for data, email and identity dependencies.",
+      "sourceRefs": [
+        "source-foundations"
+      ],
+      "confidence": "approved-public-account",
+      "qualificationNotes": [
+        "No audited preservation guarantee or exact project date is asserted."
+      ],
+      "active": true
+    },
+    {
+      "id": "experience-headquarters",
+      "kind": "experience",
+      "projectId": "headquarters",
+      "roleId": "role-grenville",
+      "title": "Headquarters infrastructure and move",
+      "period": "Approximately 2014",
+      "tags": [
+        "infrastructure",
+        "analysis",
+        "guidance"
+      ],
+      "priority": 75,
+      "decision": "Designed for an occupied headquarters, connecting cooling and resilient power to networking, AV and security.",
+      "process": [
+        "Work through infrastructure requirements from planning.",
+        "Account for physical and operational dependencies during the build.",
+        "Carry the technical plan through the move and transition."
+      ],
+      "technicalGuidance": "Technical design contribution connected the infrastructure plan with the building’s practical operation.",
+      "outcome": "Took the technical design through the build and a smooth move/transition, as reported by Josh.",
+      "resumeText": "Carried headquarters infrastructure design from planning through build and move-in, accounting for networking, AV, security, cooling and resilient power.",
+      "sourceRefs": [
+        "source-headquarters"
+      ],
+      "confidence": "approved-public-account",
+      "qualificationNotes": [
+        "No budget or quantified reliability claim.",
+        "The broader bare-metal blade centre to ESXi work has no established exact date."
+      ],
+      "active": true
+    },
+    {
+      "id": "experience-inquiry",
+      "kind": "experience",
+      "projectId": "inquiry",
+      "roleId": "role-grenville",
+      "title": "Broker policy inquiry",
+      "period": "Within 2009–2022; overlapping work",
+      "tags": [
+        "insurance",
+        "standards",
+        "integrations",
+        "mapping",
+        "guidance",
+        "soap",
+        "rest",
+        "xml"
+      ],
+      "priority": 90,
+      "decision": "Treated an inquiry as both a broker workflow and a data contract, preserving the meaning of policy, billing and claims information.",
+      "process": [
+        "Define inquiry mockups and mappings.",
+        "Trace broker SOAP/XML requests and diagnose mismatches.",
+        "Test returned values and downloadable documents against the broker workflow."
+      ],
+      "technicalGuidance": "Connected broker-management vendor requests to proprietary backend information.",
+      "outcome": "Contributed inquiry workflows with downloadable policy, billing and claims PDFs.",
+      "resumeText": "Connected broker inquiry workflows to backend policy, billing and claims information through mockups, field/value mappings, SOAP/XML request diagnosis and integration testing; REST was used in the later backend.",
+      "sourceRefs": [
+        "source-inquiry"
+      ],
+      "confidence": "approved-public-account",
+      "qualificationNotes": [
+        "Exact completion date is not established.",
+        "Do not turn REST experience into unverified JSON standards experience."
+      ],
+      "active": true
+    },
+    {
+      "id": "experience-workflows",
+      "kind": "experience",
+      "projectId": "workflows",
+      "roleId": "role-grenville",
+      "title": "Commercial quoting and broker integration",
+      "period": "2010 onward; overlapping work",
+      "tags": [
+        "insurance",
+        "standards",
+        "rules",
+        "integrations",
+        "mapping",
+        "guidance",
+        "xml"
+      ],
+      "priority": 100,
+      "decision": "Made risk information and insurance meaning explicit across broker inputs, backend fields and rule decisions.",
+      "process": [
+        "Map CSIO/ACORD payload fields, data and values to proprietary backend fields.",
+        "Specify fields, UI stages and missing risk information with vendor teams.",
+        "Implement related rating/underwriting rules and test broker requests."
+      ],
+      "technicalGuidance": "Directed UI/specification changes; vendor teams performed commercial quoting development.",
+      "outcome": "Connected requirements, mappings and hands-on rules implementation across residential, auto, farm and commercial workflows.",
+      "resumeText": "Designed and implemented P&C rating and underwriting rules, mapped CSIO/ACORD broker payloads to proprietary backend fields, and directed UI/specification changes so commercial quoting collected the required risk information.",
+      "sourceRefs": [
+        "source-workflows"
+      ],
+      "confidence": "approved-public-account",
+      "qualificationNotes": [
+        "Responsibility does not imply a formal Architect job title.",
+        "Vendor teams performed commercial quoting development.",
+        "AL3 and eDocs familiarity is supported; hands-on JSON standards experience is not claimed."
+      ],
+      "active": true
+    },
+    {
+      "id": "experience-newbusiness",
+      "kind": "experience",
+      "projectId": "newbusiness",
+      "roleId": "role-grenville",
+      "title": "Auto and residential new-business integration",
+      "period": "2010 onward; overlapping work",
+      "tags": [
+        "insurance",
+        "rules",
+        "integrations",
+        "validation",
+        "guidance"
+      ],
+      "priority": 85,
+      "decision": "Connected the information collected in the interface to rating, underwriting and the next useful action.",
+      "process": [
+        "Identify missing risk inputs.",
+        "Implement rating/underwriting validation.",
+        "Help define correction, referral or bind messages for the broker portal."
+      ],
+      "technicalGuidance": "Directed UI/specification changes and helped design the rules-engine-to-portal messaging framework.",
+      "outcome": "Implemented rules connected to submission behavior and transaction context.",
+      "resumeText": "Implemented rating and underwriting rules and helped design broker-portal messages for correction, referral or binding, with validation that distinguished new business, renewals and endorsements.",
+      "sourceRefs": [
+        "source-newbusiness"
+      ],
+      "confidence": "approved-public-account",
+      "qualificationNotes": [
+        "No universal automation rate or project-volume claim."
+      ],
+      "active": true
+    },
+    {
+      "id": "experience-renewals",
+      "kind": "experience",
+      "projectId": "renewals",
+      "roleId": "role-grenville",
+      "title": "Renewal eligibility and exception routing",
+      "period": "Within 2009–2022; project date not established",
+      "tags": [
+        "insurance",
+        "rules",
+        "validation",
+        "analysis"
+      ],
+      "priority": 80,
+      "decision": "Automated eligible standard renewals while preserving a deliberate human-review path for exceptions.",
+      "process": [
+        "Define renewal-specific eligibility.",
+        "Implement rating/underwriting classification for each business context.",
+        "Refer exceptions for human review."
+      ],
+      "technicalGuidance": "Personally designed the renewal framework and implemented the rules.",
+      "outcome": "User-reported automation outcomes exist in the case study; numeric claims are deliberately omitted from this reusable chunk.",
+      "resumeText": "Designed the renewal eligibility framework and implemented rating and underwriting rules that classified standard policies for automatic renewal while referring exceptions for human review.",
+      "sourceRefs": [
+        "source-renewals"
+      ],
+      "confidence": "approved-public-account",
+      "qualificationNotes": [
+        "No independently audited automation result is inferred."
+      ],
+      "active": true
+    },
+    {
+      "id": "experience-upload",
+      "kind": "experience",
+      "projectId": "upload",
+      "roleId": "role-grenville",
+      "title": "Authenticated document upload and support tooling",
+      "period": "2013–2018 source range; approximately 2018",
+      "tags": [
+        "integrations",
+        "application",
+        "guidance",
+        "validation",
+        "rest"
+      ],
+      "priority": 90,
+      "decision": "Replaced ad-hoc email delivery with authenticated submission into the correct backend policy record, with operational visibility.",
+      "process": [
+        "Build the C#/.NET portal and authenticated workflow.",
+        "Use proprietary REST APIs to place documents in policy records.",
+        "Add logging and build internal log-search tooling for recurring issues."
+      ],
+      "technicalGuidance": "Connected privacy goals to workflow design and support diagnosis.",
+      "outcome": "Application became a production business tool; internal support tooling helped investigate recurring upload/download issues.",
+      "resumeText": "Built a C#/.NET portal using REST APIs for authenticated submission into policy records, with operational logging and internal log-search tooling to investigate recurring integration issues.",
+      "sourceRefs": [
+        "source-upload"
+      ],
+      "confidence": "approved-public-account",
+      "qualificationNotes": [
+        "No audited security certification, encryption mechanism or authentication protocol is asserted."
+      ],
+      "active": true
+    },
+    {
+      "id": "experience-claims",
+      "kind": "experience",
+      "projectId": "claims",
+      "roleId": "role-medavie",
+      "title": "Provider data for claims adjudication",
+      "period": "2022–present; parallel workstreams",
+      "tags": [
+        "insurance",
+        "claims",
+        "integrations",
+        "mapping",
+        "analysis",
+        "guidance"
+      ],
+      "priority": 100,
+      "decision": "Compared source information and existing interfaces with the new adjudication system’s actual requirements.",
+      "process": [
+        "Establish provider-integration adjudication requirements.",
+        "Analyze source/consumer gaps.",
+        "Contribute integration mappings with architects and delivery teams."
+      ],
+      "technicalGuidance": "Worked alongside architects and delivery teams on requirements, gaps and mappings.",
+      "outcome": "Confirmed analysis and mapping contribution; separate implementation/go-live results are not established.",
+      "resumeText": "Defined provider-integration adjudication requirements, analyzed source and consumer gaps, and contributed mappings alongside architects and delivery teams.",
+      "sourceRefs": [
+        "source-claims"
+      ],
+      "confidence": "approved-public-account",
+      "qualificationNotes": [
+        "ProviderRegistry solution review, field mappings and synchronization requirements are confirmed in the additional Oct15 firsthand account.",
+        "No solo implementation or separate go-live claim; platform acronyms remain unconfirmed."
+      ],
+      "active": true
+    },
+    {
+      "id": "experience-takeover",
+      "kind": "experience",
+      "projectId": "takeover",
+      "roleId": "role-medavie",
+      "title": "Takeover-history validation and XML loading",
+      "period": "2022–present; project date not established",
+      "tags": [
+        "insurance",
+        "claims",
+        "mapping",
+        "validation",
+        "xml",
+        "reconciliation"
+      ],
+      "priority": 95,
+      "decision": "Researched the existing XML-based adjudication history-load solution and documented gaps and necessary schema changes in a solution document.",
+      "process": [
+        "Research the existing history-load solution and document gaps and necessary schema changes.",
+        "Guide development through implementation and maintenance, including schema changes.",
+        "Support end users with Excel templates, VB scripts and validation that generate the required XML and make intake repeatable.",
+        "Prepare manageable batch loads and reconcile returned errors."
+      ],
+      "technicalGuidance": "Defined and documented the solution with the developer, guided implementation and maintenance, and supported end users with repeatable templates, VB scripts and validation.",
+      "outcome": "Production tooling adopted by the team.",
+      "resumeText": "Researched the existing adjudication history-load solution, documented gaps and XML schema changes, guided development through implementation and maintenance, and supported end users with Excel templates, VB scripts and validation for repeatable XML-based intake.",
+      "sourceRefs": [
+        "source-takeover"
+      ],
+      "confidence": "approved-public-account",
+      "qualificationNotes": [
+        "The precise VB runtime and public platform spelling remain unconfirmed.",
+        "Schema changes were defined and guided, not claimed as personally coded; no sole ownership or numeric improvement claim.",
+        "No private schema or claim records are included."
+      ],
+      "active": true
+    },
+    {
+      "id": "experience-continuity",
+      "kind": "experience",
+      "projectId": "continuity",
+      "roleId": "role-medavie",
+      "title": "Claims reporting continuity mapping",
+      "period": "2022–present; overlapping migration work",
+      "tags": [
+        "insurance",
+        "claims",
+        "mapping",
+        "analysis",
+        "guidance",
+        "rest"
+      ],
+      "priority": 95,
+      "decision": "Recognized a missed requirement to deliver underlying client data for downstream processing and reporting, then designed compatibility with the existing Cognos feed.",
+      "process": [
+        "Recognize flat-file and ETL conventions and trace the feed to client Cognos.",
+        "Confirm that the client agreement requires underlying data for the client’s own processing and reporting, rather than PDF or Excel reports alone.",
+        "Design a REST-based export from the adjudication system into the existing legacy COBOL pipeline.",
+        "Map the pipeline transformation into the InterBlue flat file consumed by Cognos; keep implementation/go-live unconfirmed."
+      ],
+      "technicalGuidance": "Designed a new adjudication REST export that preserves the existing COBOL-to-InterBlue-to-Cognos compatibility path; did not claim to replace or modernize the entire downstream system.",
+      "outcome": "Completed compatibility/export and continuity-mapping design; service implementation and bridge go-live remain unconfirmed.",
+      "resumeText": "Identified a missed requirement for underlying client data and completed continuity-mapping design for a REST-based adjudication export feeding an existing COBOL pipeline that transforms it into an InterBlue flat file for client Cognos processing and reporting; implementation/go-live remains unconfirmed.",
+      "sourceRefs": [
+        "source-continuity"
+      ],
+      "confidence": "approved-public-account",
+      "qualificationNotes": [
+        "Design contribution confirmed; REST service implementation and bridge go-live remain unconfirmed.",
+        "Unconfirmed intermediate acronym is omitted.",
+        "No private operational specification, client identity, schema or transport-security claim is published."
+      ],
+      "active": true
+    },
+    {
+      "id": "experience-sql",
+      "kind": "experience",
+      "projectId": "sql",
+      "roleId": "role-medavie",
+      "title": "Claims SQL and financial reconciliation",
+      "period": "2022–present; overlapping reporting work",
+      "tags": [
+        "insurance",
+        "claims",
+        "sql",
+        "analysis",
+        "reconciliation"
+      ],
+      "priority": 95,
+      "decision": "Kept report logic and reconciliation central while the broader extract/modernization decision remained open.",
+      "process": [
+        "Hand-write claims reporting SQL.",
+        "Understand and write financial report logic.",
+        "Reconcile and balance claims against the financial view."
+      ],
+      "technicalGuidance": "Hands-on query and report analysis rather than requirements-only contribution.",
+      "outcome": "Completed query/reporting and balancing work; broader exchange decision remained open.",
+      "resumeText": "Hand-wrote SQL for claims reporting, developed financial report logic, and reconciled and balanced claims against the financial reporting view.",
+      "sourceRefs": [
+        "source-sql"
+      ],
+      "confidence": "approved-public-account",
+      "qualificationNotes": [
+        "No financial volumes, private queries or database schemas are published."
+      ],
+      "active": true
+    },
+    {
+      "id": "experience-nexus",
+      "kind": "project",
+      "projectId": "nexus",
+      "roleId": "role-independent",
+      "title": "NEXUS",
+      "period": "Active development",
+      "tags": [
+        "application",
+        "execution",
+        "analysis",
+        "validation"
+      ],
+      "priority": 65,
+      "decision": "Separated plans from review/execution and made context, model choices and outcomes inspectable.",
+      "process": [
+        "Compile scoped retrieval context with project decisions, graph relationships and source receipts.",
+        "Use constraint-aware model routing.",
+        "Recover distributed Node execution through durable commands and permissions.",
+        "Evaluate with deterministic and semantic checks and integration/deployment receipts."
+      ],
+      "technicalGuidance": "Independent system design and implementation, distinct from employer architecture.",
+      "outcome": "Implemented mechanisms in an actively developing product; broader vision is still evolving.",
+      "resumeText": "Implemented scoped context compilation, explainable model routing, review/execution separation and recoverable distributed Node execution in NEXUS, using a headless TypeScript core, React/Vite, PostgreSQL/Redis, OpenAPI and WebSockets.",
+      "sourceRefs": [
+        "source-nexus"
+      ],
+      "confidence": "approved-public-account",
+      "qualificationNotes": [
+        "Independent project, not employer experience.",
+        "Pub/sub architecture is not established by this approved public snapshot.",
+        "Do not imply every product vision feature shipped."
+      ],
+      "active": true
+    },
+    {
+      "id": "experience-lowkey",
+      "kind": "project",
+      "projectId": "lowkey",
+      "roleId": "role-independent",
+      "title": "LOWKEY",
+      "period": "Active development",
+      "tags": [
+        "speech",
+        "application"
+      ],
+      "priority": 60,
+      "decision": "Connected local speech decoding to native Windows input and an Android keyboard.",
+      "process": [
+        "Capture audio with AudioWorklet and process phrases in a dedicated Rust worker with Silero detection.",
+        "Run cached sherpa-onnx/Parakeet models locally.",
+        "Connect the result to native input and a Kotlin Android IME; support optional local correction/dictionaries and fallback."
+      ],
+      "technicalGuidance": "Independent application and native-input integration.",
+      "outcome": "Implemented local decoding workflows; no trustworthy numerical speed benchmark exists.",
+      "resumeText": "Built local speech-to-input workflows in LOWKEY using React/TypeScript, Rust/Tauri 2 and sherpa-onnx/Parakeet, with AudioWorklet capture, phrase detection and a Kotlin Android keyboard.",
+      "sourceRefs": [
+        "source-lowkey"
+      ],
+      "confidence": "approved-public-account",
+      "qualificationNotes": [
+        "Independent project, not employer experience.",
+        "No universal device support, NPU, speed or absolute-security claim.",
+        "Local decoding/source review is not a network audit.",
+        "Archived at Josh’s explicit request; excluded from current resume selections."
+      ],
+      "active": false
+    },
+    {
+      "id": "experience-provider-sync-review",
+      "kind": "experience",
+      "projectId": "claims",
+      "roleId": "role-medavie",
+      "title": "ProviderRegistry synchronization solution review",
+      "period": "2022–present; exact project date not established",
+      "tags": [
+        "insurance",
+        "claims",
+        "integrations",
+        "mapping",
+        "analysis",
+        "guidance",
+        "rest",
+        "pubsub"
+      ],
+      "priority": 100,
+      "active": true,
+      "decision": "Review the scheduled event and retrieval flow together with the adjudication data contract, preserving the actual table-backed architecture.",
+      "process": [
+        "Review the nightly publisher job that writes events into a table.",
+        "Trace the separate scheduled consumer reading those events and using REST services to retrieve ProviderRegistry data into adjudication.",
+        "Confirm field mappings and synchronization requirements across the source and receiving system."
+      ],
+      "technicalGuidance": "Performed solution review as the solutions contributor, alongside architects and delivery teams; not merely a generic subject-matter consultation.",
+      "outcome": "Solution review/design contribution, field mappings and synchronization requirements are confirmed. Solo implementation and a separate go-live outcome are not claimed.",
+      "resumeText": "Reviewed the provider-registry integration design, including field mappings, scheduled publish/subscribe processing and REST-based data retrieval.",
+      "sourceRefs": [
+        "source-provider-sync-review"
+      ],
+      "confidence": "approved-public-account",
+      "qualificationNotes": [
+        "Scheduled table-backed publish/subscribe; no Kafka, message-broker or real-time implementation claim.",
+        "Review/design contribution, not a claim of solo implementation or separate go-live.",
+        "Source/destination platform acronyms remain unconfirmed; use ProviderRegistry and adjudication system."
+      ]
+    }
+  ],
+  "rankingPolicy": {
+    "eligible": "At least one recognized posting topic must intersect a chunk tag.",
+    "keywordPoints": "10 points per recognized topic occurrence, capped at three lines per topic.",
+    "profilePoints": "Sum of versioned profile weights across the chunk tags.",
+    "order": "Descending total score, descending priority, ascending stable chunk ID using code-point comparison.",
+    "defaultSelection": 6,
+    "maxSelection": 8,
+    "limits": "Topic matching does not interpret negation, seniority, minimum years, eligibility or full requirement satisfaction."
+  },
+  "templatePolicy": {
+    "order": "Fixed section order; professional roles newest first, with original chronology. Selected bullets follow ranking order within each role.",
+    "text": "Only prewritten approved summary, role scope and chunk resumeText; no job-posting text is inserted in resume prose.",
+    "citations": "Stable chunk IDs and public source IDs are retained in the preview and exports."
+  },
+  "editorialRevision": "NEXUS sole capstone; LOWKEY archived. ProviderRegistry solution review, scheduled table-backed publish/subscribe with REST retrieval, field mappings and synchronization requirements confirmed in Josh’s direct Oct15 account."
+}
