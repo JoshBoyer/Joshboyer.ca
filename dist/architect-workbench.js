@@ -17746,7 +17746,7 @@
       if (!cats.length) {
         return `
           <div class="skills-empty-state">
-            <p>No capability categories matched <strong>"${activeSkillSearch}"</strong>.</p>
+            <p>No capability categories matched <strong>"${String(activeSkillSearch).replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]))}"</strong>.</p>
             <button type="button" class="skills-reset-btn" data-skills-reset-all>Show all 6 capabilities</button>
           </div>
         `;

@@ -39,28 +39,22 @@ const types = {
 
 function readRawBody(req, maxBytes) {
   return new Promise((resolve, reject) => {
-    const chunks = [];
-    let total = 0;
-    let exceeded = false;
+    const chunks = []; let total = 0, settled = false, timer;
+    const finish = (error, bytes) => {
+      if (settled) return;
+      settled = true; clearTimeout(timer);
+      if (error) { chunks.length = 0; req.pause(); reject(error); }
+      else resolve(bytes);
+    };
+    timer = setTimeout(() => finish(Object.assign(new Error('Request timed out'), {statusCode:408})), CONTACT_LIMITS.requestReadTimeoutMs);
     req.on('data', chunk => {
+      if (settled) return;
       total += chunk.length;
-      if (total > maxBytes) {
-        exceeded = true;
-        chunks.length = 0;
-        return;
-      }
-      if (!exceeded) {
-        chunks.push(chunk);
-      }
+      if (total > maxBytes) { finish(Object.assign(new Error('Request payload exceeds limit.'), {statusCode:413})); return; }
+      chunks.push(chunk);
     });
-    req.on('end', () => {
-      if (exceeded) {
-        reject(Object.assign(new Error('Request payload exceeds limit.'), { statusCode: 413 }));
-        return;
-      }
-      resolve(Buffer.concat(chunks));
-    });
-    req.on('error', reject);
+    req.on('end', () => finish(null, Buffer.concat(chunks)));
+    req.on('error', error => finish(error));
   });
 }
 
@@ -98,9 +92,10 @@ async function handleContactApi(req, res) {
     const raw = await readRawBody(req, CONTACT_LIMITS.maxRequestBodyBytes);
     bodyObj = raw.length ? JSON.parse(raw.toString('utf8')) : {};
   } catch (err) {
-    const status = err && err.statusCode === 413 ? 413 : 400;
-    const code = status === 413 ? 'PAYLOAD_TOO_LARGE' : 'INVALID_JSON';
-    const message = status === 413 ? 'Request payload exceeds limit.' : 'Invalid JSON request body.';
+    const status = [408,413].includes(err?.statusCode) ? err.statusCode : 400;
+    const code = status === 408 ? 'REQUEST_TIMEOUT' : status === 413 ? 'PAYLOAD_TOO_LARGE' : 'INVALID_JSON';
+    const message = status === 408 ? 'Contact request timed out. Please try again.' : status === 413 ? 'Request payload exceeds limit.' : 'Invalid JSON request body.';
+    if (status === 408 || status === 413) res.setHeader('Connection', 'close');
     sendJson(res, status, { ok: false, code, error: message });
     return;
   }
