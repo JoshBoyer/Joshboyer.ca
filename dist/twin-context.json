@@ -1,0 +1,348 @@
+{
+  "schemaVersion": "1.0.0",
+  "contextVersion": "twin-2026-10-28.1",
+  "datasetVersion": "2026-10-28.1",
+  "person": {
+    "name": "Josh Boyer",
+    "headline": "Grounded in the metal. Shaped by the business. Building in the cloud.",
+    "positioning": "Business architecture and automation | Insurance systems | Independent AI strategy",
+    "experienceSummary": "Technology generalist with about twenty years of experience turning business requirements into repeatable rules, integrations and tools. Production work includes renewal automation, C#/.NET applications, Excel VBA claims-history loading and hands-on SQL; NEXUS is independent AI-assisted development.",
+    "targetDirection": "Business Architect first, AI Strategist second: advisory and architecture work grounded in practical delivery. These are target directions, not historical titles.",
+    "links": {
+      "github": "https://github.com/JoshBoyer",
+      "linkedin": "https://www.linkedin.com/in/josh-boyer-1b770618/",
+      "workshop42": "https://ws42.ca",
+      "nexus": "https://run.nexus/"
+    }
+  },
+  "voiceGuide": {
+    "perspective": "first-person ('I', 'my', 'at Grenville I...', 'at Medavie I...')",
+    "tone": "Pragmatic, direct, plainspoken, systems-oriented, and transparent about boundaries. Never use inflated corporate buzzwords or pretend to know something outside the verified corpus.",
+    "corePhilosophy": "Investigate the real problem rather than stopping at the initial request, trace dependencies across systems and people, make business rules and data contracts explicit, and stay close enough to implementation to make sure the design works in practice.",
+    "failFirstHonesty": "Apply the same 'fail-first' principle I used for Grenville underwriting rules: never bluff or imply unverified credentials. When asked about a tool, platform, or metric not established in my approved evidence (such as Kafka implementation, Guidewire, cloud certifications, or formal people management), state that boundary clearly first, then explain the closest verified work I have done.",
+    "spokenStyle": "For voice/TTS playback, keep spoken summaries conversational, natural, and concise (2 to 4 sentences, avoiding raw markdown symbols or code IDs)."
+  },
+  "accuracyRules": [
+    "Keep historical job titles accurate. Business Architect and AI Strategist are target directions; technical leadership does not establish direct reports.",
+    "Dell starts September 2006; its exact departure and Harris transition remain unresolved. Harris Computer Services is the confirmed employer name.",
+    "Grenville tenure is 2009–2022. A 2019 résumé supports an administrator-to-analyst transition around 2016; exact start remains unconfirmed.",
+    "Headquarters substantial completion was December 2012 and occupancy January 2013; exact IT cutover is unconfirmed. Planned downtime, storage failure and collaborative recovery qualify old smooth-move wording. ESXi virtualization was separate and undated.",
+    "Renewal automation was deterministic and fail-first, with human referral. Approximate self-reported rates are renewal-only: 80% residential, 40% farm/agri and 60% commercial; Josh reconfirmed the commercial renewal figure on October 30, 2026.",
+    "Josh implemented residential, farm and commercial rating and underwriting rules and auto underwriting and validation. Vendor teams owned regulated auto rate calculations and developed the commercial application UI.",
+    "Policy-change work reached possible one-broker production use in a limited pilot, then was discontinued. Testing showed image differences were not reliable evidence of intended changes. Do not claim broad successful rollout or a shipped alternative.",
+    "Automation spans Grenville rules, broker upload and download, support applications, Medavie history-load tooling and scheduled integrations. AI is a newer extension, not deployed enterprise agents at an employer. Do not attribute the unestablished bulk-broker/nightly-diff anecdote to an employer.",
+    "Provider integrations are live by Josh’s account, with continuing production support. His role was requirements, mappings, solution review and support alongside architects and developers. Scheduled event-table and REST work does not establish Kafka or real-time streaming.",
+    "Josh designed and built the production Excel VBA add-in for history preparation, validation, XML batches and returned-error reconciliation. He guided receiving-system/schema changes with a developer; he did not build the whole adjudication engine or conversion program.",
+    "The continuity design is completed and approved, interim SQL reporting is operational, and the permanent compatibility extract remains unconfirmed live. Corrected financial-report SQL was adopted by the payment team in its existing pipeline.",
+    "NEXUS is independent product and architecture direction with AI-assisted implementation in active development. Source-described mechanisms are not live qualification, every feature shipped, commercial adoption or independent mastery of all stack components. LOWKEY is archived historical evidence.",
+    "Use selected public summaries only. Exclude private employer diagrams, queries, schemas, records, client names, operating windows, unaudited financial totals, family and compensation information."
+  ],
+  "workbenchTiers": [
+    {
+      "tier": 1,
+      "code": "01 · Support",
+      "id": "support",
+      "title": "Hardware Foundations & Fault Isolation",
+      "period": "Dell · Sept 2006–2007",
+      "caseRoute": "#projects/dell",
+      "chunkIds": [
+        "experience-dell"
+      ],
+      "summary": "Started on Dell's Gloves Off team supporting Latitude and OptiPlex systems—taking the time to isolate the real hardware or software fault on the first call."
+    },
+    {
+      "tier": 2,
+      "code": "02 · Systems",
+      "id": "systems",
+      "title": "Networks & Repeatable Server Migrations",
+      "period": "Harris · 2007–2009",
+      "caseRoute": "#projects/foundations",
+      "chunkIds": [
+        "experience-foundations"
+      ],
+      "summary": "At Harris Computer Services, progressed from NOC support to client infrastructure projects and repeatable SBS migrations."
+    },
+    {
+      "tier": 3,
+      "code": "03 · Infrastructure",
+      "id": "infrastructure",
+      "title": "Headquarters Infrastructure & Virtualization",
+      "period": "Grenville · 2009–2022",
+      "caseRoute": "#projects/headquarters",
+      "chunkIds": [
+        "experience-headquarters"
+      ],
+      "summary": "Carried headquarters technical infrastructure from planning through build and move-in—connecting networking, AV, physical security, cooling, resilient UPS/generator power, and VMware ESXi virtualization."
+    },
+    {
+      "tier": 4,
+      "code": "04 · Analysis & Design",
+      "id": "analysis",
+      "title": "Insurance Rules, Broker Workflows & Portals",
+      "period": "Grenville · Mid-2010s–2022",
+      "caseRoute": "#projects/workflows",
+      "chunkIds": [
+        "experience-inquiry",
+        "experience-workflows",
+        "experience-newbusiness",
+        "experience-renewals",
+        "experience-upload"
+      ],
+      "summary": "Built fail-first renewal rules that process eligible policies and give underwriters focused reasons to review exceptions. Built C#/.NET upload and diagnostic applications and supported broker implementations."
+    },
+    {
+      "tier": 5,
+      "code": "05 · Architecture",
+      "id": "solutions",
+      "title": "Enterprise Claims Integration, SQL & Continuity",
+      "period": "Medavie · 2022–present",
+      "caseRoute": "#projects/claims",
+      "chunkIds": [
+        "experience-claims",
+        "experience-provider-sync-review",
+        "experience-takeover",
+        "experience-continuity",
+        "experience-sql"
+      ],
+      "summary": "Designed and built production Excel VBA history-loading tooling, supported live provider integrations and delivered reconciled SQL. Approved continuity design and interim reports are distinct from the unfinished permanent extract."
+    },
+    {
+      "tier": 6,
+      "code": "06 · AI Governance",
+      "id": "nexus",
+      "title": "NEXUS — Governed AI Work System",
+      "period": "Independent Capstone · Active Development",
+      "caseRoute": "#projects/nexus",
+      "chunkIds": [
+        "experience-nexus"
+      ],
+      "summary": "Applies 20 years of systems, rules, and verification experience to AI-assisted software delivery—featuring scoped context compilation, explainable model routing, separated plan/review/execution, and inspectable receipts."
+    }
+  ],
+  "routeContexts": {
+    "#home": {
+      "label": "Portfolio Overview",
+      "starters": [
+        "Walk me through your career arc from hardware to AI.",
+        "How do your insurance rules at Grenville connect to NEXUS?",
+        "What kinds of business architecture or AI strategy roles fit you best?"
+      ]
+    },
+    "#projects": {
+      "label": "All Case Studies",
+      "starters": [
+        "Which project best shows how you uncover hidden requirements?",
+        "What hands-on coding and SQL work have you done recently?",
+        "How did your renewal automation rules handle edge cases?"
+      ]
+    },
+    "#about": {
+      "label": "About & Working Style",
+      "starters": [
+        "Why did you move from Grenville to enterprise scale at Medavie?",
+        "What does 'fail-first' design mean in your work?",
+        "Tell me about Workshop42 and what you build outside work."
+      ]
+    },
+    "#resume": {
+      "label": "Interactive Resume Builder & Fit Studio",
+      "starters": [
+        "Which evidence chunks best highlight your integration and SQL work?",
+        "Write a first-person role introduction and interview discussion guide for my selected chunks.",
+        "How should we frame your architecture work without claiming a formal Architect title?"
+      ]
+    },
+    "#projects/dell": {
+      "label": "Dell · Gloves Off Hardware Support",
+      "chunkIds": [
+        "experience-dell"
+      ],
+      "workbenchTier": 1,
+      "firstPersonNarrative": "Diagnosed Latitude and OptiPlex hardware failures, guided clients through verification steps, and prepared accurate dispatch specifications. First-call resolution focus and reduced repeat client callbacks",
+      "starters": [
+        "What did Dell's Gloves Off team teach you about problem diagnosis?",
+        "How does hardware troubleshooting carry into solution design?"
+      ]
+    },
+    "#projects/foundations": {
+      "label": "Harris · Small Business Server Swing Migrations",
+      "chunkIds": [
+        "experience-foundations"
+      ],
+      "workbenchTier": 2,
+      "firstPersonNarrative": "Progressed from NOC monitoring to full rack builds, firewall/switch setups, and executing repeatable SBS swing migrations for client environments. Repeatable swing-migration methodology preserving data, email and identity",
+      "starters": [
+        "How did a Small Business Server swing migration work?",
+        "Why did service dependencies matter so much in those migrations?"
+      ]
+    },
+    "#projects/headquarters": {
+      "label": "Grenville · Headquarters Infrastructure & Move",
+      "chunkIds": [
+        "experience-headquarters"
+      ],
+      "workbenchTier": 3,
+      "firstPersonNarrative": "I developed technical requirements and diagrams, gathered recommendations for shared decisions, coordinated vendors and personally set up the network and servers. I did not own the entire building project or its budget. Headquarters technical delivery and operational move",
+      "starters": [
+        "How did you coordinate physical building constraints with IT infrastructure?",
+        "How did managing physical infrastructure shape your later analysis work?"
+      ]
+    },
+    "#projects/inquiry": {
+      "label": "Grenville · Broker Policy, Billing & Claims Inquiry",
+      "chunkIds": [
+        "experience-inquiry"
+      ],
+      "workbenchTier": 4,
+      "firstPersonNarrative": "Produced mockups and field mappings, diagnosed integration requests across broker vendors, and verified downloadable policy, billing and claims PDFs. Reliable policy, billing and claims lookup inside broker workflows",
+      "starters": [
+        "How did you debug mismatches between broker SOAP/XML payloads and backend fields?",
+        "Why does preserving business meaning across an API boundary matter?"
+      ]
+    },
+    "#projects/newbusiness": {
+      "label": "Grenville · Auto & Residential New-Business Integration",
+      "chunkIds": [
+        "experience-newbusiness"
+      ],
+      "workbenchTier": 4,
+      "firstPersonNarrative": "I defined requirements, mappings and interface behavior and implemented related rating and underwriting rules. Vendor and developer teams implemented the application UI and services; auto rate calculations were vendor-managed. Actionable correction, referral and bind decisions in broker workflows",
+      "starters": [
+        "How did the rules decide between automatic bind and underwriter referral?",
+        "How did you handle missing underwriting data from broker systems?"
+      ]
+    },
+    "#projects/workflows": {
+      "label": "Grenville · Commercial Quoting & Broker Workflows",
+      "chunkIds": [
+        "experience-workflows"
+      ],
+      "workbenchTier": 4,
+      "firstPersonNarrative": "I was Grenville's lead technical resource for requirements, mappings, workflow behavior, testing and related rule implementation. Brokerage discovery, demonstrations, onboarding and support were part of that Grenville work. Two-way broker upload/download and commercial quoting rules",
+      "starters": [
+        "How did you split responsibilities with the vendor team on commercial quoting?",
+        "How did you structure rules across residential, auto, farm, and commercial lines?"
+      ]
+    },
+    "#projects/changes": {
+      "label": "Grenville · Policy-Change Comparison & Validation",
+      "chunkIds": [
+        "experience-workflows",
+        "experience-newbusiness"
+      ],
+      "workbenchTier": 4,
+      "firstPersonNarrative": "I contributed comparison behavior, mappings, contextual rules, testing and interface specifications. I diagnosed why differences could be mistaken for instructions and repeatedly recommended stopping the approach. Limited pilot discontinued after unsatisfactory testing",
+      "starters": [
+        "Why do endorsements need different validation context than new business?",
+        "How did the field-by-field comparison help brokers and underwriters?"
+      ]
+    },
+    "#projects/renewals": {
+      "label": "Grenville · Renewal Eligibility & Exception Routing",
+      "chunkIds": [
+        "experience-renewals"
+      ],
+      "workbenchTier": 4,
+      "firstPersonNarrative": "I designed the eligibility framework, implemented the rules and worked with underwriters on line-specific criteria and exception messages. Automation handled suitable standard policies while people retained judgment over exceptions. Automated standard renewals with explicit underwriter exception routing",
+      "starters": [
+        "Explain your 'vanilla policy' and fail-first rule design.",
+        "Why did renewal automation rates differ between residential, commercial, and farm?"
+      ]
+    },
+    "#projects/upload": {
+      "label": "Grenville · Authenticated Document Upload & Log Tooling",
+      "chunkIds": [
+        "experience-upload"
+      ],
+      "workbenchTier": 4,
+      "firstPersonNarrative": "I built both C#/.NET applications, supported their production use and helped users diagnose recurring faults. The upload service and internal diagnostic application had different users and purposes. Production submission service and reusable support tooling",
+      "starters": [
+        "Why did you build an internal log-search tool alongside the C#/.NET upload portal?",
+        "How did the portal connect to the backend policy records?"
+      ]
+    },
+    "#projects/claims": {
+      "label": "Medavie · Provider Data & Synchronization Review",
+      "chunkIds": [
+        "experience-claims",
+        "experience-provider-sync-review"
+      ],
+      "workbenchTier": 5,
+      "firstPersonNarrative": "I worked with architects and developers to define the changes and supported testing, documentation, training and production troubleshooting. Developers implemented the interfaces; my role was not sole service development. Implemented integrations with continuing functional support",
+      "starters": [
+        "How does the scheduled table-backed pub/sub and REST provider sync work?",
+        "What gaps did you look for between ProviderRegistry and adjudication?"
+      ]
+    },
+    "#projects/takeover": {
+      "label": "Medavie · Takeover-History Validation & XML Loading",
+      "chunkIds": [
+        "experience-takeover"
+      ],
+      "workbenchTier": 5,
+      "firstPersonNarrative": "I researched the receiving load, documented schema gaps and guided backend changes with a developer. I separately designed and built the Excel VBA add-in, validated AI-assisted code against known errors and helped teams prepare and load files independently. Production loading workflow enabling independent team use",
+      "starters": [
+        "How did your Excel VBA tooling turn messy spreadsheets into validated XML?",
+        "How did you split the XML schema design and tooling work with the developer?"
+      ]
+    },
+    "#projects/continuity": {
+      "label": "Medavie · Preserving a Daily Claims Reporting Feed",
+      "chunkIds": [
+        "experience-continuity"
+      ],
+      "workbenchTier": 5,
+      "firstPersonNarrative": "I carried out discovery, documented mappings and presented the approved compatibility approach. I also wrote operational interim reports and distinguished a parseable file from a complete, correct population of records. Approved design and operational interim reports; permanent extract unfinished",
+      "starters": [
+        "How did you realize the 'Power BI report' was actually a Cognos ETL feed?",
+        "What is the boundary between the completed continuity design and go-live?"
+      ]
+    },
+    "#projects/sql": {
+      "label": "Medavie · Claims SQL & Financial Reconciliation",
+      "chunkIds": [
+        "experience-sql"
+      ],
+      "workbenchTier": 5,
+      "firstPersonNarrative": "I personally wrote and reworked the queries, investigated discrepancies over successive reporting periods and supplied reconciled logic to the payment team. Agreement between claims-derived reports was not presented as an independent financial audit. Corrected reporting SQL adopted in production",
+      "starters": [
+        "Why is writing SQL firsthand useful for a functional analyst or solutions architect?",
+        "How did you approach reconciling claims data against financial reports?"
+      ]
+    },
+    "#projects/nexus": {
+      "label": "NEXUS · Governed AI Work System (Capstone)",
+      "chunkIds": [
+        "experience-nexus"
+      ],
+      "workbenchTier": 6,
+      "firstPersonNarrative": "I set the product direction, architecture and module choices, using AI-assisted implementation to develop the platform. Source-described mechanisms are not a claim that every interface is live-qualified or every subsystem was independently hand-written. Independent architecture and applied-learning capstone",
+      "starters": [
+        "How does NEXUS prevent AI agents from acting without context or receipts?",
+        "How does your insurance rules background show up in NEXUS's architecture?"
+      ]
+    },
+    "#projects/lowkey": {
+      "label": "LOWKEY · Local Speech-to-Input (Archived Project)",
+      "chunkIds": [
+        "experience-lowkey"
+      ],
+      "workbenchTier": 6,
+      "firstPersonNarrative": "I directed and developed the project with AI assistance. Stack and source evidence describe the implementation; they do not establish independent mastery of every language or a current supported release. Local phrase capture and on-device decoding into native text fields",
+      "starters": [
+        "How did LOWKEY handle local speech decoding across Windows and Android?",
+        "Why is LOWKEY archived while NEXUS is your active capstone?"
+      ]
+    },
+    "#projects/workshop42": {
+      "label": "Workshop42 · Physical Making",
+      "chunkIds": [],
+      "workbenchTier": 3,
+      "firstPersonNarrative": "I design, prototype and document physical builds. Working prototypes and published models are described separately from finished commercial products. Published community models on MakerWorld and ws42.ca",
+      "starters": [
+        "Tell me about the Apex monitor riser and Voyager projects.",
+        "How does making physical things connect to how you approach software?"
+      ]
+    }
+  }
+}

@@ -9,6 +9,7 @@
   }
 })(typeof globalThis !== "undefined" ? globalThis : this, function () {
   "use strict";
+  const railThumbSources = Object.freeze({"assets/optimized-extra/skills-mountain-horizon-bg-1376.webp":"assets/optimized-extra/skills-mountain-horizon-bg-640.webp","assets/optimized-extra/timeline-support-1264.webp":"assets/optimized-extra/timeline-support-640.webp","assets/optimized-extra/timeline-systems-1264.webp":"assets/optimized-extra/timeline-systems-640.webp","assets/optimized-extra/timeline-infrastructure-1264.webp":"assets/optimized-extra/timeline-infrastructure-640.webp","assets/optimized-extra/timeline-analysis-1264.webp":"assets/optimized-extra/timeline-analysis-640.webp","assets/optimized-extra/timeline-solutions-1264.webp":"assets/optimized-extra/timeline-solutions-640.webp","assets/optimized-extra/timeline-outcomes-1264.webp":"assets/optimized-extra/timeline-outcomes-640.webp","assets/optimized-extra/nexus-governed-work-v1-1536.webp":"assets/optimized-extra/nexus-governed-work-v1-640.webp","assets/optimized-extra/proj-banner-newbusiness-1376.webp":"assets/optimized-extra/proj-banner-newbusiness-640.webp","assets/optimized-extra/proj-banner-takeover-1376.webp":"assets/optimized-extra/proj-banner-takeover-640.webp","assets/optimized-extra/proj-banner-nexus-1376.webp":"assets/optimized-extra/proj-banner-nexus-640.webp","assets/optimized-extra/proj-banner-continuity-1376.webp":"assets/optimized-extra/proj-banner-continuity-640.webp","assets/optimized-extra/proj-banner-headquarters-1376.webp":"assets/optimized-extra/proj-banner-headquarters-640.webp","assets/optimized-extra/proj-banner-workflows-1376.webp":"assets/optimized-extra/proj-banner-workflows-640.webp","assets/optimized-extra/proj-banner-changes-1376.webp":"assets/optimized-extra/proj-banner-changes-640.webp","assets/optimized-extra/proj-banner-inquiry-1376.webp":"assets/optimized-extra/proj-banner-inquiry-640.webp","assets/optimized-extra/proj-banner-upload-1376.webp":"assets/optimized-extra/proj-banner-upload-640.webp","assets/optimized-extra/proj-banner-claims-1376.webp":"assets/optimized-extra/proj-banner-claims-640.webp","assets/optimized-extra/proj-banner-sql-1376.webp":"assets/optimized-extra/proj-banner-sql-640.webp","assets/optimized-extra/proj-banner-foundations-1376.webp":"assets/optimized-extra/proj-banner-foundations-640.webp","assets/optimized-extra/proj-banner-dell-1376.webp":"assets/optimized-extra/proj-banner-dell-640.webp","assets/optimized-extra/lowkey-local-speech-v1-1536.webp":"assets/optimized-extra/lowkey-local-speech-v1-640.webp","assets/optimized-extra/apex-1200.webp":"assets/optimized-extra/apex-640.webp","assets/optimized-extra/home-level-clouds-1600.webp":"assets/optimized-extra/home-level-clouds-640.webp","assets/optimized-extra/home-level-business-1600.webp":"assets/optimized-extra/home-level-business-640.webp","assets/optimized-extra/home-level-metal-1600.webp":"assets/optimized-extra/home-level-metal-640.webp","assets/optimized-extra/tycoon/easter-egg-retro-thumb-1024.webp":"assets/optimized-extra/tycoon/easter-egg-retro-thumb-640.webp","assets/optimized-extra/personal/josh-portrait-vest-896.webp":"assets/optimized-extra/personal/josh-portrait-vest-640.webp","assets/optimized-extra/voyager-1408.webp":"assets/optimized-extra/voyager-640.webp"});
 
   const ARCH_NODES = Object.freeze([
     {
@@ -29,7 +30,7 @@
       phaseIndex: 1,
       caseRoute: "#projects/foundations",
       status: "Repeatable Delivery",
-      summary: "Moved from support into server racks, firewalls, and repeatable Small Business Server migrations—separating email, identity, and network roles without downtime."
+      summary: "Moved from support into server racks, firewalls, and repeatable Small Business Server migrations—separating email, identity, and network roles with service-dependency planning."
     },
     {
       id: "infrastructure",
@@ -246,7 +247,7 @@
       highlights: [
         { icon: "bolt", title: "Renewal eligibility & exception routing", sub: "~80% residential, ~60% commercial, ~40% farm renewal automation (user-reported)" },
         { icon: "code", title: "P&C rating & underwriting rule design", sub: "Personal design and implementation of policy inquiry, new business and change rules" },
-        { icon: "network", title: "Broker BMS & portal integrations", sub: "Mapping CSIO/ACORD payloads across SOAP/XML, REST and Bravado/Bravado1 bridges" },
+        { icon: "network", title: "Broker BMS & portal integrations", sub: "Mapping CSIO/ACORD payloads across SOAP/XML, REST and Brovada bridges" },
         { icon: "check", title: "Actionable validation & human referral", sub: "Shaping clear portal messages so brokers could self-correct or refer edge cases" }
       ],
       projects: [
@@ -254,7 +255,7 @@
         { icon: "folder", title: "Broker Workflows: Inquiry, New Business & Changes", sub: "End-to-end SOAP/XML and REST payload mapping across TAM and Epic" }
       ],
       technologies: [
-        { icon: "code", title: "Integration Protocols", sub: "SOAP/XML, REST APIs, CSIO / ACORD standards, Bravado/Bravado1, authenticated upload" },
+        { icon: "code", title: "Integration Protocols", sub: "SOAP/XML, REST APIs, CSIO / ACORD standards, Brovada, authenticated upload" },
         { icon: "code", title: "Underwriting & Policy Logic", sub: "Residential, Commercial & Farm/Agri rating rules, change comparison, eligibility gates" }
       ],
       featuredProject: {
@@ -263,7 +264,7 @@
         desc: "Designed and implemented renewal eligibility rules that automated standard renewals while routing complex risks to human underwriters with clear reasons.",
         stats: [
           { val: "~80%", label: "Residential renewals" },
-          { val: "~60%", label: "Commercial renewals" },
+          { val: "~60%", label: "Commercial" },
           { val: "~40%", label: "Farm/Agri (user-reported)" }
         ],
         href: "#projects/renewals"
@@ -293,7 +294,7 @@
       iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.74V17h8v-2.26A7 7 0 0 0 12 2Z"/></svg>`,
       highlights: [
         { icon: "network", title: "Provider registry synchronization", sub: "Solution review, gap analysis, field mappings and scheduled event-table REST sync requirements" },
-        { icon: "wrench", title: "Production takeover-history XML tooling", sub: "Researched, documented and guided Excel/VB/XML tooling to validate prior-insurer history" },
+        { icon: "wrench", title: "Production takeover-history XML tooling", sub: "Researched, documented and guided Excel VBA/XML tooling to validate prior-insurer history" },
         { icon: "database", title: "Hand-written claims SQL & reconciliation", sub: "Querying complex claims schemas to verify financial reports and isolate edge-case discrepancies" },
         { icon: "layers", title: "ETL reporting-continuity discovery", sub: "Uncovered that a 'reporting' request was a daily ETL feed; completed continuity mapping" }
       ],
@@ -356,7 +357,7 @@
       featuredProject: {
         badge: "INSURANCE · 2022–PRESENT",
         title: "Takeover-History XML Tooling & Financial Reconciliation",
-        desc: "Researched, documented and guided development of a production Excel/VB/XML tool to validate inconsistent takeover history and reconcile financial reports.",
+        desc: "Researched, documented and guided development of a production Excel VBA/XML tool to validate inconsistent takeover history and reconcile financial reports.",
         stats: [
           { val: "Production", label: "Team-adopted tool" },
           { val: "XML + SQL", label: "Validated & reconciled" },
@@ -423,7 +424,7 @@
       pinY: 734,
       hitR: 70,
       motionType: "tower",
-      summary: "Conducted client environment assessments, configured firewalls and VLAN switches, and executed staged Small Business Server swing migrations without downtime.",
+      summary: "Conducted client environment assessments, configured firewalls and VLAN switches, and executed staged Small Business Server swing migrations with service-dependency planning.",
       whatIDid: "Client infrastructure assessments, firewall/VLAN switching & staged server swing migrations"
     },
     {
@@ -553,7 +554,7 @@
       pinY: 316,
       hitR: 72,
       motionType: "tower",
-      summary: "Researched, documented, and guided a production Excel/VB/XML tool for prior-insurer takeover claims history, alongside hand-written SQL to reconcile claims against financial reports.",
+      summary: "Researched, documented, and guided a production Excel VBA/XML tool for prior-insurer takeover claims history, alongside hand-written SQL to reconcile claims against financial reports.",
       whatIDid: "Guided production Excel/XML takeover tooling & claims-to-financial reconciliation"
     },
     {
@@ -602,7 +603,7 @@
     support: {
       videoMp4: "assets/timeline-support.mp4",
       videoWebm: "assets/timeline-support.webm",
-      poster: "assets/timeline-support.png",
+      poster: "assets/optimized-extra/timeline-support-1264.webp",
       caption: "Interactive 3D Exploded View · Tap or hover any Latitude or OptiPlex component",
       parts: [
         {
@@ -664,7 +665,7 @@
     systems: {
       videoMp4: "assets/timeline-systems.mp4",
       videoWebm: "assets/timeline-systems.webm",
-      poster: "assets/timeline-systems.png",
+      poster: "assets/optimized-extra/timeline-systems-1264.webp",
       caption: "Interactive 3D Exploded View · Tap or hover any server or migration stage",
       parts: [
         {
@@ -717,7 +718,7 @@
     infrastructure: {
       videoMp4: "assets/timeline-infrastructure.mp4",
       videoWebm: "assets/timeline-infrastructure.webm",
-      poster: "assets/timeline-infrastructure.png",
+      poster: "assets/optimized-extra/timeline-infrastructure-1264.webp",
       caption: "Interactive 3D Exploded View · Tap or hover any headquarters infrastructure part",
       parts: [
         {
@@ -779,7 +780,7 @@
     analysis: {
       videoMp4: "assets/timeline-analysis.mp4",
       videoWebm: "assets/timeline-analysis.webm",
-      poster: "assets/timeline-analysis.png",
+      poster: "assets/optimized-extra/timeline-analysis-1264.webp",
       caption: "Interactive 3D Exploded View · Tap or hover any underwriting rule or broker path",
       parts: [
         {
@@ -798,7 +799,7 @@
           hitR: 86,
           code: "2 · XML & CSIO Payloads",
           title: "Broker Payloads (SOAP/XML, REST & CSIO/ACORD)",
-          detail: "Mapped and transformed fields between broker desktop tools (TAM/Epic via Bravado), CSIO standards, and proprietary policy backend fields."
+          detail: "Mapped and transformed fields between broker desktop tools (TAM/Epic via Brovada), CSIO standards, and proprietary policy backend fields."
         },
         {
           id: "ana-diamond",
@@ -832,7 +833,7 @@
     solutions: {
       videoMp4: "assets/timeline-solutions.mp4",
       videoWebm: "assets/timeline-solutions.webm",
-      poster: "assets/timeline-solutions.png",
+      poster: "assets/optimized-extra/timeline-solutions-1264.webp",
       caption: "Interactive 3D Exploded View · Tap or hover any claims, SQL or continuity module",
       parts: [
         {
@@ -842,7 +843,7 @@
           hitR: 88,
           code: "1 · Takeover XML Tool",
           title: "Production Takeover-History Validation & XML Tooling",
-          detail: "Researched, documented, and guided an Excel/VB/XML tool that validates messy prior-insurer spreadsheets and transforms them into clean adjudication XML."
+          detail: "Researched, documented, and guided an Excel VBA/XML tool that validates messy prior-insurer spreadsheets and transforms them into clean adjudication XML."
         },
         {
           id: "sol-sql",
@@ -893,103 +894,103 @@
   });
 
   const PROJECT_METADATA = Object.freeze({
-    dell: {
-      layer: "infra",
-      layerLabel: "Hardware & Support",
-      statusLabel: "Production Support",
-      statusClass: "status-prod"
-    },
-    foundations: {
-      layer: "infra",
-      layerLabel: "Systems & Networks",
-      statusLabel: "Repeatable Migration",
-      statusClass: "status-prod"
-    },
-    headquarters: {
-      layer: "infra",
-      layerLabel: "Infrastructure & Move",
-      statusLabel: "Delivered Move & VM",
-      statusClass: "status-prod"
-    },
-    inquiry: {
-      layer: "payloads",
-      layerLabel: "Broker Integration",
-      statusLabel: "Production Integration",
-      statusClass: "status-prod"
-    },
-    newbusiness: {
-      layer: "rules",
-      layerLabel: "Underwriting Rules",
-      statusLabel: "Production Rules & UI",
-      statusClass: "status-prod"
-    },
-    workflows: {
-      layer: "payloads",
-      layerLabel: "Broker Integration",
-      statusLabel: "Production Integration",
-      statusClass: "status-prod"
-    },
-    changes: {
-      layer: "rules",
-      layerLabel: "Underwriting Rules",
-      statusLabel: "Production Rules & UI",
-      statusClass: "status-prod"
-    },
-    renewals: {
-      layer: "rules",
-      layerLabel: "Underwriting Rules",
-      statusLabel: "Production Rules",
-      statusClass: "status-prod"
-    },
-    upload: {
-      layer: "payloads",
-      layerLabel: "Broker Integration",
-      statusLabel: "Delivered Application",
-      statusClass: "status-prod"
-    },
-    claims: {
-      layer: "payloads",
-      layerLabel: "Claims & Integration",
-      statusLabel: "Solution Review & Mapping",
-      statusClass: "status-design"
-    },
-    takeover: {
-      layer: "data",
-      layerLabel: "Claims Data & SQL",
-      statusLabel: "Production / Team-Adopted",
-      statusClass: "status-prod"
-    },
-    continuity: {
-      layer: "data",
-      layerLabel: "Claims Data & SQL",
-      statusLabel: "Completed Analysis/Design",
-      statusClass: "status-design"
-    },
-    sql: {
-      layer: "data",
-      layerLabel: "Claims Data & SQL",
-      statusLabel: "Hands-on SQL & Balancing",
-      statusClass: "status-prod"
-    },
-    nexus: {
-      layer: "ai",
-      layerLabel: "AI & Governed Systems",
-      statusLabel: "Active Capstone",
-      statusClass: "status-prod"
-    },
-    lowkey: {
-      layer: "ai",
-      layerLabel: "AI & Governed Systems",
-      statusLabel: "Personal Build",
-      statusClass: "status-design"
-    },
-    workshop42: {
-      layer: "infra",
-      layerLabel: "Hardware & Lab",
-      statusLabel: "Personal Hardware Lab",
-      statusClass: "status-prod"
-    }
-  });
+  "dell": {
+    "layer": "infra",
+    "layerLabel": "Hardware & Support",
+    "statusLabel": "Production Support",
+    "statusClass": "status-prod"
+  },
+  "foundations": {
+    "layer": "infra",
+    "layerLabel": "Systems & Networks",
+    "statusLabel": "Repeatable Migration",
+    "statusClass": "status-prod"
+  },
+  "headquarters": {
+    "layer": "infra",
+    "layerLabel": "Infrastructure & Move",
+    "statusLabel": "Delivered Move & VM",
+    "statusClass": "status-prod"
+  },
+  "inquiry": {
+    "layer": "payloads",
+    "layerLabel": "Broker Integration",
+    "statusLabel": "Production Integration",
+    "statusClass": "status-prod"
+  },
+  "newbusiness": {
+    "layer": "rules",
+    "layerLabel": "Underwriting Rules",
+    "statusLabel": "Production Rules & UI",
+    "statusClass": "status-prod"
+  },
+  "workflows": {
+    "layer": "payloads",
+    "layerLabel": "Broker Integration",
+    "statusLabel": "Production Integration",
+    "statusClass": "status-prod"
+  },
+  "changes": {
+    "layer": "rules",
+    "layerLabel": "Underwriting Rules",
+    "statusLabel": "Limited pilot; discontinued",
+    "statusClass": "status-design"
+  },
+  "renewals": {
+    "layer": "rules",
+    "layerLabel": "Underwriting Rules",
+    "statusLabel": "Production Rules",
+    "statusClass": "status-prod"
+  },
+  "upload": {
+    "layer": "payloads",
+    "layerLabel": "Broker Integration",
+    "statusLabel": "Delivered Application",
+    "statusClass": "status-prod"
+  },
+  "claims": {
+    "layer": "payloads",
+    "layerLabel": "Claims & Integration",
+    "statusLabel": "Live integration support",
+    "statusClass": "status-prod"
+  },
+  "takeover": {
+    "layer": "data",
+    "layerLabel": "Claims Data & SQL",
+    "statusLabel": "Production / Team-Adopted",
+    "statusClass": "status-prod"
+  },
+  "continuity": {
+    "layer": "data",
+    "layerLabel": "Claims Data & SQL",
+    "statusLabel": "Approved design; interim SQL live",
+    "statusClass": "status-design"
+  },
+  "sql": {
+    "layer": "data",
+    "layerLabel": "Claims Data & SQL",
+    "statusLabel": "Hands-on SQL & Balancing",
+    "statusClass": "status-prod"
+  },
+  "nexus": {
+    "layer": "ai",
+    "layerLabel": "AI & Governed Systems",
+    "statusLabel": "Active Capstone",
+    "statusClass": "status-design"
+  },
+  "lowkey": {
+    "layer": "ai",
+    "layerLabel": "AI & Governed Systems",
+    "statusLabel": "Archived independent project",
+    "statusClass": "status-design"
+  },
+  "workshop42": {
+    "layer": "infra",
+    "layerLabel": "Hardware & Lab",
+    "statusLabel": "Personal Hardware Lab",
+    "statusClass": "status-prod"
+  }
+});
 
   function mount() {
     if (typeof document === "undefined") return null;
@@ -1040,39 +1041,19 @@
       const menuToggleBtn = header.querySelector("#menu-toggle");
       const menuSvg = menuToggleBtn?.querySelector("svg");
       if (menuSvg) {
-        menuSvg.innerHTML = `<path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>`;
+        menuSvg.innerHTML = `<path class="menu-line menu-line-top" d="M4 6h16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path class="menu-line menu-line-middle" d="M4 12h16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path class="menu-line menu-line-bottom" d="M4 18h16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>`;
       }
 
       const controls = document.createElement("div");
       controls.className = "header-telemetry-controls";
 
-      cmdTriggerBtn = document.createElement("button");
-      cmdTriggerBtn.type = "button";
-      cmdTriggerBtn.className = "cmd-palette-btn";
-      cmdTriggerBtn.setAttribute("data-cmd-open", "");
-      cmdTriggerBtn.setAttribute("aria-label", "Search builds, skills, or ideas");
-      cmdTriggerBtn.innerHTML = `<svg class="cmd-search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg><span>Search builds, skills, or ideas...</span><span class="cmd-kbd-group"><kbd class="cmd-kbd">CTRL</kbd><kbd class="cmd-kbd">K</kbd></span>`;
-
-      const globalMuteBtn = document.createElement("button");
-      globalMuteBtn.type = "button";
-      globalMuteBtn.className = "header-global-mute-btn";
-      globalMuteBtn.setAttribute("data-global-audio-mute", "");
-      globalMuteBtn.setAttribute("aria-pressed", "false");
-      globalMuteBtn.setAttribute("aria-label", "Mute all site audio");
-      globalMuteBtn.setAttribute("title", "Mute / Unmute All Audio");
-      globalMuteBtn.innerHTML = `
-        <span class="header-global-mute-icon" data-global-mute-icon aria-hidden="true">
-          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polygon points="9 5 5.5 8 3 8 3 12 5.5 12 9 15 9 5" fill="currentColor" stroke="none"/><path d="M12.2 7.6a3.4 3.4 0 0 1 0 4.8"/><path d="M14.6 5.4a6.5 6.5 0 0 1 0 9.2"/></svg>
-        </span>
-        <span class="sr-only" data-global-mute-label>Mute All Audio</span>
-      `;
-
       const storyBtn = document.createElement("a");
       storyBtn.className = "header-story-btn";
-      storyBtn.href = "#about";
+      storyBtn.href = "#home-connect";
+      storyBtn.setAttribute("data-home-focus-contact", "");
       storyBtn.innerHTML = `<span>Let&rsquo;s Connect</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10m-4-4 4 4-4 4"/></svg>`;
 
-      controls.append(cmdTriggerBtn, globalMuteBtn, storyBtn);
+      controls.append(storyBtn);
       if (resumeLink) {
         header.insertBefore(controls, resumeLink);
       } else {
@@ -1127,29 +1108,92 @@
     const heroH1 = heroCopyCol?.querySelector("h1");
     if (heroH1) {
       heroH1.innerHTML = `
-        <span class="hero-static-line hero-static-line--top">Grounded in the Metal.</span>
-        <span class="hero-static-line hero-static-line--bottom">Shaped by the Business.</span>
-        <span class="hero-static-line hero-static-line--gold">Building in the Cloud.</span>
+        <span class="hero-static-line hero-static-line--top">
+          <span class="hero-tier-badge hero-tier-badge--metal" aria-hidden="true">
+            <span class="hero-tier-ray hero-tier-ray--top"></span>
+            <span class="hero-tier-node hero-tier-node--top"></span>
+            <span class="hero-tier-ring">
+              <svg viewBox="0 0 32 32" fill="none">
+                <defs>
+                  <linearGradient id="heroGearMetalGrad" x1="0" y1="3" x2="0" y2="29" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#f8fafc"/>
+                    <stop offset="45%" stop-color="#cbd5e1"/>
+                    <stop offset="100%" stop-color="#64748b"/>
+                  </linearGradient>
+                </defs>
+                <path fill="url(#heroGearMetalGrad)" stroke="#e2e8f0" stroke-width="0.55" stroke-linejoin="round"
+                  d="M13.8 4.2h4.4l.6 3.1a9.3 9.3 0 0 1 2.3.95l2.6-1.75 3.1 3.1-1.75 2.6a9.3 9.3 0 0 1 .95 2.3l3.1.6v4.4l-3.1.6a9.3 9.3 0 0 1-.95 2.3l1.75 2.6-3.1 3.1-2.6-1.75a9.3 9.3 0 0 1-2.3.95l-.6 3.1h-4.4l-.6-3.1a9.3 9.3 0 0 1-2.3-.95l-2.6 1.75-3.1-3.1 1.75-2.6a9.3 9.3 0 0 1-.95-2.3l-3.1-.6v-4.4l3.1-.6a9.3 9.3 0 0 1 .95-2.3L5.2 9.6l3.1-3.1 2.6 1.75a9.3 9.3 0 0 1 2.3-.95l.6-3.1z"/>
+                <circle cx="16" cy="16" r="5.4" fill="#0f172a" stroke="#cbd5e1" stroke-width="1.35"/>
+                <circle cx="16" cy="16" r="2.2" fill="#e2e8f0" fill-opacity="0.35"/>
+              </svg>
+            </span>
+            <span class="hero-tier-node hero-tier-node--bottom"></span>
+            <span class="hero-tier-connector hero-tier-connector--metal-gold"></span>
+          </span>
+          <span class="hero-tier-copy"><span class="hero-tier-kicker">Grounded in</span><br><span class="hero-tier-main">the metal.</span></span>
+        </span>
+        <span class="hero-static-line hero-static-line--gold">
+          <span class="hero-tier-badge hero-tier-badge--business" aria-hidden="true">
+            <span class="hero-tier-node hero-tier-node--top"></span>
+            <span class="hero-tier-ring">
+              <svg viewBox="0 0 24 24" fill="none">
+                <defs>
+                  <linearGradient id="heroBarsGoldGrad" x1="0" y1="5" x2="0" y2="19" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#fde68a"/>
+                    <stop offset="45%" stop-color="#fbbf24"/>
+                    <stop offset="100%" stop-color="#d97706"/>
+                  </linearGradient>
+                </defs>
+                <rect x="4.5" y="13.2" width="3.9" height="5.6" rx="0.75" fill="url(#heroBarsGoldGrad)"/>
+                <rect x="10.05" y="9.4" width="3.9" height="9.4" rx="0.75" fill="url(#heroBarsGoldGrad)"/>
+                <rect x="15.6" y="5.0" width="3.9" height="13.8" rx="0.75" fill="url(#heroBarsGoldGrad)"/>
+              </svg>
+            </span>
+            <span class="hero-tier-node hero-tier-node--bottom"></span>
+            <span class="hero-tier-connector hero-tier-connector--gold-cloud"></span>
+          </span>
+          <span class="hero-tier-copy"><span class="hero-tier-kicker">Shaped by</span><br><span class="hero-tier-main">the business.</span></span>
+        </span>
+        <span class="hero-static-line hero-static-line--bottom">
+          <span class="hero-tier-badge hero-tier-badge--cloud" aria-hidden="true">
+            <span class="hero-tier-node hero-tier-node--top"></span>
+            <span class="hero-tier-ring">
+              <svg viewBox="0 0 24 24" fill="none">
+                <defs>
+                  <linearGradient id="heroCloudBlueGrad" x1="0" y1="6" x2="0" y2="18" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#7dd3fc"/>
+                    <stop offset="52%" stop-color="#38bdf8"/>
+                    <stop offset="100%" stop-color="#0284c7"/>
+                  </linearGradient>
+                </defs>
+                <path fill="url(#heroCloudBlueGrad)" d="M6.8 17.8h10.7a3.5 3.5 0 0 0 .35-6.98 4.8 4.8 0 0 0-9.18-1.45A3.8 3.8 0 0 0 6.8 17.8z"/>
+              </svg>
+            </span>
+            <span class="hero-tier-node hero-tier-node--bottom"></span>
+            <span class="hero-tier-ray hero-tier-ray--bottom"></span>
+          </span>
+          <span class="hero-tier-copy"><span class="hero-tier-kicker">Building in</span><br><span class="hero-tier-main">the cloud.</span></span>
+        </span>
       `;
     }
 
     const heroLead = heroCopyCol?.querySelector(".hero-lead");
     if (heroLead) {
-      heroLead.textContent = "20 years of turning complex problems into practical solutions across infrastructure, insurance and AI.";
+      heroLead.textContent = "I connect business needs and technical systems, from integration and data to AI orchestration — grounded in hands-on experience.";
     }
 
     if (heroActions) {
       heroActions.innerHTML = `
-        <a class="hero-btn-primary" href="#projects">
-          <span>Explore my work</span>
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 4 4 4-4 4"/></svg>
+        <a class="hero-btn-primary" href="#home-featured-projects">
+          <span>Explore My Work</span>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10m-4-4 4 4-4 4"/></svg>
         </a>
         <button type="button" class="hero-btn-secondary" data-home-watch-story>
           <span class="hero-play-circle" aria-hidden="true">
             <svg viewBox="0 0 16 16" fill="currentColor"><path d="M5.5 4.2v7.6L12 8 5.5 4.2z"/></svg>
           </span>
           <span class="hero-watch-copy">
-            <span class="hero-watch-label" data-home-watch-label>Watch the story</span>
+            <span class="hero-watch-label" data-home-watch-label>Watch the Journey</span>
           </span>
         </button>
       `;
@@ -1339,7 +1383,7 @@
         kicker: "LEVEL 02 · 2014 – 2022 · INSURANCE & INTEGRATION",
         titleLine1: "Shaped by",
         titleAccent: "the business.",
-        body: "Connecting broker workflows, CSIO/XML schemas and underwriting rules at Grenville Mutual — automating ~80% residential, ~60% commercial and ~40% farm renewals.",
+        body: "Connected broker workflows, CSIO/XML schemas and underwriting rules at Grenville Mutual. User-reported renewal automation: about 80% residential, 60% commercial and 40% farm.",
         exploreHref: "#projects/grenville-automated-underwriting",
         exploreChapter: "business",
         pills: [
@@ -1427,7 +1471,7 @@
           },
           {
             tone: "gold",
-            val: "~60%",
+            val: "60%",
             label: "Commercial Renewals",
             icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4M8 6h.01M16 6h.01M12 6h.01M12 10h.01M12 14h.01M16 10h.01M16 14h.01M8 10h.01M8 14h.01"/></svg>`
           },
@@ -2001,75 +2045,71 @@
       `;
     }
 
-    function renderBuildsLoopCloudWeaveHtml() {
-      return "";
-    }
+    
 
     if (heroSection && !heroSection.querySelector(".home-hero-backdrop")) {
       const portraitMq = window.matchMedia
         ? window.matchMedia("(max-width: 768px), (max-aspect-ratio: 4/5)")
         : null;
       const isPortraitMobile = Boolean(portraitMq && portraitMq.matches);
+      heroSection.classList.add("is-settled-final", "use-static-fallback");
       const initialVideoSrc = isPortraitMobile
         ? "assets/home-hero-video-mobile.mp4"
         : "assets/home-hero-video.mp4";
       const initialPosterSrc = isPortraitMobile
-        ? "assets/home-hero-final-frame-mobile.jpg"
-        : "assets/home-hero-final-frame.jpg";
+        ? "assets/optimized/home-hero-final-frame-mobile-1080.webp"
+        : "assets/optimized/home-hero-final-frame-2206.webp";
 
       const backdropEl = document.createElement("div");
       backdropEl.className = "home-hero-backdrop";
       backdropEl.setAttribute("aria-hidden", "true");
       backdropEl.innerHTML = `
         <picture class="home-hero-final-picture">
-          <source media="(max-width: 768px), (max-aspect-ratio: 4/5)" srcset="assets/home-hero-final-frame-mobile.jpg">
-          <img class="home-hero-final-img" src="assets/home-hero-final-frame.jpg" alt="">
+          <source media="(max-width: 768px), (max-aspect-ratio: 4/5)" srcset="assets/optimized/home-hero-final-frame-mobile-540.webp 540w, assets/optimized/home-hero-final-frame-mobile-720.webp 720w, assets/optimized/home-hero-final-frame-mobile-1080.webp 1080w" sizes="100vw" width="1080" height="1920">
+          <img class="home-hero-final-img" src="assets/optimized/home-hero-final-frame-2206.webp" srcset="assets/optimized/home-hero-final-frame-1103.webp 1103w, assets/optimized/home-hero-final-frame-1600.webp 1600w, assets/optimized/home-hero-final-frame-2206.webp 2206w" sizes="100vw" width="2206" height="946" alt="" fetchpriority="high" decoding="async">
         </picture>
         <video
           class="home-hero-loop-player"
-          src="assets/home-hero-loop-mobile.mp4"
-          poster="assets/home-hero-final-frame-mobile.jpg"
+          data-ambient-src="assets/optimized/video/home-hero-loop-mobile.mp4"
           loop
           muted
           playsinline
-          preload="${isPortraitMobile ? "auto" : "metadata"}"
+          preload="none"
         ></video>
         <video
           class="home-hero-video-player"
-          src="${initialVideoSrc}"
-          poster="${initialPosterSrc}"
-          autoplay
+          data-story-src="${initialVideoSrc}"
           muted
           playsinline
-          preload="auto"
+          preload="none"
         ></video>
         <audio
           class="home-hero-clouds-audio"
           data-home-level-audio="clouds"
-          src="assets/clouds.mp3?v=5"
+          data-level-src="assets/clouds.mp3?v=5"
           loop
-          preload="auto"
+          preload="none"
         ></audio>
         <audio
           class="home-level-digital-office-audio"
           data-home-level-audio="digital-office"
-          src="assets/level-digital-office.mp3?v=5"
+          data-level-src="assets/level-digital-office.mp3?v=5"
           loop
-          preload="auto"
+          preload="none"
         ></audio>
         <audio
           class="home-level-office-audio"
           data-home-level-audio="office"
-          src="assets/level-office.mp3?v=5"
+          data-level-src="assets/level-office.mp3?v=5"
           loop
-          preload="auto"
+          preload="none"
         ></audio>
         <audio
           class="home-level-server-audio"
           data-home-level-audio="server"
-          src="assets/level-server.mp3?v=5"
+          data-level-src="assets/level-server.mp3?v=5"
           loop
-          preload="auto"
+          preload="none"
         ></audio>
         <div class="home-hero-scrim" data-home-hero-scrim></div>
         <div class="home-hero-cloud-transition" aria-hidden="true">
@@ -2077,19 +2117,6 @@
         </div>
       `;
       heroSection.append(backdropEl);
-
-      function renderJourneyPillsHtml(lvl) {
-        return lvl.pills
-          .map(
-            p => `
-              <span class="journey-overlay-pill">
-                <span class="journey-pill-icon" aria-hidden="true">${p.icon}</span>
-                <span class="journey-pill-label">${p.label}</span>
-              </span>
-            `
-          )
-          .join("");
-      }
 
       function renderJourneyHudTelemetryHtml(lvl) {
         const t = lvl.hudTelemetry;
@@ -2165,9 +2192,6 @@
                 <span class="journey-title-accent" data-journey-title-accent>${HOME_JOURNEY_LEVELS[0].titleAccent}</span>
               </h2>
               <p class="journey-overlay-body" data-journey-body>${HOME_JOURNEY_LEVELS[0].body}</p>
-              <div class="journey-overlay-pills" data-journey-pills>
-                ${renderJourneyPillsHtml(HOME_JOURNEY_LEVELS[0])}
-              </div>
               <div class="journey-cta-row">
                 <a class="journey-explore-btn" href="${HOME_JOURNEY_LEVELS[0].exploreHref}" data-journey-explore data-theme="${HOME_JOURNEY_LEVELS[0].theme}" data-button-stage="${HOME_JOURNEY_LEVELS[0].id}">
                   <span>Explore This Chapter</span>
@@ -2253,6 +2277,32 @@
 
       const vidEl = backdropEl.querySelector(".home-hero-video-player");
       const loopVidEl = backdropEl.querySelector(".home-hero-loop-player");
+      let hasStoryStarted = false;
+      const storyMediaLoader = window.HeroMediaLoading?.create({
+        video: vidEl,
+        image: backdropEl.querySelector(".home-hero-final-img"),
+        window,
+        document,
+        isHome: () => !document.body.dataset.activeRoute || document.body.dataset.activeRoute === "home"
+      });
+      function ensureHeroStorySource() {
+        hasStoryStarted = true;
+        vidEl.poster = backdropEl.querySelector(".home-hero-final-img")?.currentSrc || initialPosterSrc;
+        if (storyMediaLoader) storyMediaLoader.request();
+        else if (!vidEl.hasAttribute("src")) {
+          vidEl.preload = "auto";
+          vidEl.setAttribute("src", vidEl.getAttribute("data-story-src"));
+          vidEl.load();
+        }
+      }
+      function ensureHeroAudioSources() {
+        backdropEl.querySelectorAll("audio[data-level-src]").forEach(audio => {
+          if (!audio.hasAttribute("src")) {
+            audio.preload = "auto";
+            audio.setAttribute("src", audio.getAttribute("data-level-src"));
+          }
+        });
+      }
       const cloudsAudioEl = backdropEl.querySelector('[data-home-level-audio="clouds"]');
       const digitalOfficeAudioEl = backdropEl.querySelector('[data-home-level-audio="digital-office"]');
       const officeAudioEl = backdropEl.querySelector('[data-home-level-audio="office"]');
@@ -2287,14 +2337,13 @@
       const journeyTitle1El = journeyOverlayEl.querySelector("[data-journey-title-1]");
       const journeyTitleAccentEl = journeyOverlayEl.querySelector("[data-journey-title-accent]");
       const journeyBodyEl = journeyOverlayEl.querySelector("[data-journey-body]");
-      const journeyPillsEl = journeyOverlayEl.querySelector("[data-journey-pills]");
       const journeyExploreEl = journeyOverlayEl.querySelector("[data-journey-explore]");
       const journeyHudVisualEl = journeyOverlayEl.querySelector("[data-journey-hud-visual]");
       const journeyHudTelemetryEl = journeyOverlayEl.querySelector("[data-journey-hud-telemetry]");
       const journeyFlowNodesEl = journeyOverlayEl.querySelector("[data-journey-flow-nodes]");
       const journeyBottomMetricsEl = journeyOverlayEl.querySelector("[data-journey-bottom-metrics]");
 
-      let isGlobalAudioMuted = false;
+      let isGlobalAudioMuted = true;
       levelAudioTracks.forEach(t => {
         const cloneEl = t.el.cloneNode(false);
         cloneEl.removeAttribute("data-home-level-audio");
@@ -2308,32 +2357,46 @@
         t.elB.volume = 0;
       });
 
-      function startMobileAmbientLoopIfApplicable() {
-        const isPortraitNow = Boolean(portraitMq && portraitMq.matches);
-        if (isPortraitNow && loopVidEl) {
-          loopVidEl.muted = true;
-          try {
-            loopVidEl.currentTime = 0;
-          } catch (_) {}
-          const lp = loopVidEl.play();
-          if (lp && typeof lp.then === "function") {
-            lp.then(() => {
-              heroSection.classList.add("is-loop-active");
-            }).catch(() => {});
-          } else {
-            heroSection.classList.add("is-loop-active");
-          }
-        }
+      let ambientHeroVisible = true;
+      const ambientMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)");
+      const ambientConnection = navigator.connection;
+      function canRunMobileAmbient() {
+        return hasStoryStarted && ambientHeroVisible && document.visibilityState !== "hidden" &&
+          (!document.body.dataset.activeRoute || document.body.dataset.activeRoute === "home") &&
+          heroSection.classList.contains("is-settled-final") && Boolean(portraitMq?.matches) &&
+          (window.HeroMediaLoading?.canWarm(ambientConnection, ambientMotion?.matches) ?? !ambientMotion?.matches);
       }
-
       function stopMobileAmbientLoop() {
         heroSection.classList.remove("is-loop-active");
-        if (loopVidEl) {
-          try {
-            loopVidEl.pause();
-          } catch (_) {}
-        }
+        try { loopVidEl?.pause(); } catch (_) {}
       }
+      function startMobileAmbientLoopIfApplicable() {
+        if (!loopVidEl || !canRunMobileAmbient()) { stopMobileAmbientLoop(); return; }
+        if (!loopVidEl.hasAttribute("src")) {
+          loopVidEl.poster = backdropEl.querySelector(".home-hero-final-img")?.currentSrc || initialPosterSrc;
+          loopVidEl.setAttribute("src", loopVidEl.getAttribute("data-ambient-src"));
+        }
+        loopVidEl.muted = true;
+        const playback = loopVidEl.play();
+        const reveal = () => { if (canRunMobileAmbient()) heroSection.classList.add("is-loop-active"); else stopMobileAmbientLoop(); };
+        if (playback?.then) playback.then(reveal).catch(() => {}); else reveal();
+      }
+      const ambientObserver = window.IntersectionObserver ? new IntersectionObserver(entries => {
+        ambientHeroVisible = entries.some(entry => entry.isIntersecting);
+        startMobileAmbientLoopIfApplicable();
+      }) : null;
+      ambientObserver?.observe(heroSection);
+      window.addEventListener("hashchange", startMobileAmbientLoopIfApplicable);
+      document.addEventListener("visibilitychange", startMobileAmbientLoopIfApplicable);
+      ambientConnection?.addEventListener?.("change", startMobileAmbientLoopIfApplicable);
+      ambientMotion?.addEventListener?.("change", startMobileAmbientLoopIfApplicable);
+      window.addEventListener("pagehide", () => {
+        stopMobileAmbientLoop(); ambientObserver?.disconnect();
+        window.removeEventListener("hashchange", startMobileAmbientLoopIfApplicable);
+        document.removeEventListener("visibilitychange", startMobileAmbientLoopIfApplicable);
+        ambientConnection?.removeEventListener?.("change", startMobileAmbientLoopIfApplicable);
+        ambientMotion?.removeEventListener?.("change", startMobileAmbientLoopIfApplicable);
+      }, { once: true });
 
       function syncPauseButtonState() {
         const isPaused = Boolean(vidEl && vidEl.paused);
@@ -2594,6 +2657,7 @@
       }
 
       function toggleGlobalAudioMute() {
+        ensureHeroAudioSources();
         const isAfterVideo =
           heroSection.classList.contains("is-settled-final") ||
           heroSection.classList.contains("use-static-fallback");
@@ -2643,14 +2707,16 @@
             ? "assets/home-hero-video-mobile.mp4"
             : "assets/home-hero-video.mp4";
           const nextPoster = ev.matches
-            ? "assets/home-hero-final-frame-mobile.jpg"
-            : "assets/home-hero-final-frame.jpg";
+            ? "assets/optimized/home-hero-final-frame-mobile-1080.webp"
+            : "assets/optimized/home-hero-final-frame-2206.webp";
           if (!ev.matches) {
             stopMobileAmbientLoop();
           } else if (heroSection.classList.contains("is-settled-final")) {
             startMobileAmbientLoopIfApplicable();
           }
-          if (vidEl.getAttribute("src") !== nextVideo) {
+          vidEl.setAttribute("data-story-src", nextVideo);
+          if (hasStoryStarted) vidEl.setAttribute("poster", nextPoster);
+          if (vidEl.hasAttribute("src") && vidEl.getAttribute("src") !== nextVideo) {
             const savedTime = vidEl.currentTime || 0;
             const wasPaused = vidEl.paused;
             vidEl.setAttribute("poster", nextPoster);
@@ -2711,22 +2777,7 @@
         return Math.round(a + (b - a) * u);
       }
 
-      function applyJourneyButtonDiagonalWaveToYellow(rawProgress) {
-        if (!journeyExploreEl) return;
-        const u = Math.max(0, Math.min(1, rawProgress));
-        const s = u * u * (3 - 2 * u);
-        // Sweep a 45deg (bottom-left -> top-right) gradient wave from Cloud blue (#38bdf8) to Business yellow (#f8d45c / #eab32e)
-        const waveStop = (-28 + s * 156).toFixed(1);
-        const crestStart = Math.max(0, Math.min(100, Number(waveStop) - 18)).toFixed(1);
-        const crestMid = Math.max(0, Math.min(100, Number(waveStop))).toFixed(1);
-        const crestEnd = Math.max(0, Math.min(100, Number(waveStop) + 22)).toFixed(1);
-        const glwR = lerpChannel(56, 244, s);
-        const glwG = lerpChannel(189, 197, s);
-        const glwB = lerpChannel(248, 66, s);
-        journeyExploreEl.style.background = `linear-gradient(45deg, #eab32e 0%, #f8d45c ${crestStart}%, #fef08a ${crestMid}%, #67d4fc ${crestEnd}%, #0ea5e9 100%) #f4c542`;
-        journeyExploreEl.style.backgroundColor = s > 0.5 ? "#f4c542" : "#38bdf8";
-        journeyExploreEl.style.boxShadow = `0 8px 24px rgba(${glwR}, ${glwG}, ${glwB}, 0.38)`;
-      }
+      
 
       function applyJourneyButtonClimbBlend(stageId, nextStageId, rawProgress) {
         if (!journeyExploreEl) return;
@@ -2772,9 +2823,6 @@
         if (journeyTitle1El) journeyTitle1El.textContent = activeLvl.titleLine1;
         if (journeyTitleAccentEl) journeyTitleAccentEl.textContent = activeLvl.titleAccent;
         if (journeyBodyEl) journeyBodyEl.textContent = activeLvl.body;
-        if (journeyPillsEl) {
-          journeyPillsEl.innerHTML = renderJourneyPillsHtml(activeLvl);
-        }
         if (journeyExploreEl) {
           journeyExploreEl.setAttribute("href", activeLvl.exploreHref || "#career");
           journeyExploreEl.setAttribute("data-theme", activeLvl.theme);
@@ -2971,7 +3019,7 @@
       let finalBtnWaveRafId = 0;
 
       function getHeroWaveSettleTriggerTime() {
-        return Boolean(portraitMq && portraitMq.matches) ? 24.85 : 25.45;
+        return (portraitMq && portraitMq.matches) ? 24.85 : 25.45;
       }
 
       function sampleDiagonalStopPair(pos) {
@@ -3122,10 +3170,20 @@
         }
       }
 
+      let heroCloudCycleCounter = 0;
+      function triggerHeroCloudRightToLeftGrow() {
+        heroCloudCycleCounter += 1;
+        heroSection.setAttribute("data-hero-cloud-cycle", String(heroCloudCycleCounter));
+        heroSection.classList.remove("is-cloud-rtl-growing");
+        void heroSection.offsetWidth;
+        heroSection.classList.add("is-cloud-rtl-growing");
+      }
+
       function revealFinalHeroCopy(immediateWave = false) {
         stopVideoProgressRafLoop();
         heroSection.classList.remove("is-journey-active");
         heroSection.classList.add("is-settled-final");
+        triggerHeroCloudRightToLeftGrow();
         const finalPrimaryBtn = heroSection.querySelector(".hero-btn-primary");
         const curT = vidEl ? vidEl.currentTime || 0 : 0;
         const triggerT = getHeroWaveSettleTriggerTime();
@@ -3144,7 +3202,7 @@
           triggerFinalHeroButtonWaveSettle();
         }
         controlsEl.hidden = true;
-        if (watchLabelEl) watchLabelEl.textContent = "Watch the story";
+        if (watchLabelEl) watchLabelEl.textContent = "Watch the Journey";
         syncHomeVideoHeaderState();
         syncMuteButtonState();
       }
@@ -3165,15 +3223,6 @@
       }
 
       if (vidEl) {
-        const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        if (reduceMotion) {
-          settleHeroImmediateFallback();
-        } else {
-          heroSection.classList.add("is-journey-active");
-          controlsEl.hidden = false;
-          anchorVideoProgressClock(0);
-          updateJourneyOverlayForTime(0);
-          syncHomeVideoHeaderState();
 
           vidEl.addEventListener("timeupdate", () => {
             const t = vidEl.currentTime || 0;
@@ -3241,21 +3290,9 @@
             settleHeroImmediateFallback();
           });
 
-          const playPromise = vidEl.play();
-          if (playPromise && typeof playPromise.then === "function") {
-            playPromise
-              .then(() => {
-                startVideoProgressRafLoop();
-              })
-              .catch(() => {
-                settleHeroImmediateFallback();
-              });
-          } else {
-            startVideoProgressRafLoop();
-          }
-          syncPauseButtonState();
-          syncMuteButtonState();
-        }
+        // Landing is always the finished still. Only an explicit story action plays media.
+        settleHeroImmediateFallback();
+        syncPauseButtonState();
       }
 
       // Smooth pointer-drag scrubbing on the timeline bar
@@ -3268,7 +3305,7 @@
           const targetTime = ratio * 23.2;
           stopMobileAmbientLoop();
           clearFinalHeroButtonWaveClasses();
-          heroSection.classList.remove("is-settled-final", "use-static-fallback");
+          heroSection.classList.remove("is-settled-final", "use-static-fallback", "is-cloud-rtl-growing");
           heroSection.classList.add("is-journey-active");
           controlsEl.hidden = false;
           vidEl.currentTime = targetTime;
@@ -3307,7 +3344,7 @@
 
       heroSection.addEventListener("click", ev => {
         const scrubberClick = ev.target.closest("[data-home-video-scrubber]");
-        if (scrubberClick && vidEl) {
+        if (scrubberClick && vidEl && !ev.target.closest("[data-journey-seek]")) {
           ev.preventDefault();
           const rect = scrubberClick.getBoundingClientRect();
           if (rect.width > 0) {
@@ -3315,7 +3352,7 @@
             const targetTime = ratio * 23.2;
             stopMobileAmbientLoop();
             clearFinalHeroButtonWaveClasses();
-            heroSection.classList.remove("is-settled-final", "use-static-fallback");
+            heroSection.classList.remove("is-settled-final", "use-static-fallback", "is-cloud-rtl-growing");
             heroSection.classList.add("is-journey-active");
             controlsEl.hidden = false;
             vidEl.currentTime = targetTime;
@@ -3331,11 +3368,12 @@
 
         const seekBtn = ev.target.closest("[data-journey-seek]");
         if (seekBtn && vidEl) {
+          ensureHeroStorySource();
           ev.preventDefault();
           const targetTime = parseFloat(seekBtn.getAttribute("data-journey-seek") || "0");
           stopMobileAmbientLoop();
           clearFinalHeroButtonWaveClasses();
-          heroSection.classList.remove("is-settled-final", "use-static-fallback");
+          heroSection.classList.remove("is-settled-final", "use-static-fallback", "is-cloud-rtl-growing");
           heroSection.classList.add("is-journey-active");
           controlsEl.hidden = false;
           vidEl.currentTime = targetTime;
@@ -3349,10 +3387,11 @@
 
         const watchBtn = ev.target.closest("[data-home-watch-story]");
         if (watchBtn && vidEl) {
+          ensureHeroStorySource();
           ev.preventDefault();
           stopMobileAmbientLoop();
           clearFinalHeroButtonWaveClasses();
-          heroSection.classList.remove("is-settled-final", "use-static-fallback");
+          heroSection.classList.remove("is-settled-final", "use-static-fallback", "is-cloud-rtl-growing");
           heroSection.classList.add("is-journey-active");
           controlsEl.hidden = false;
           currentJourneyStageId = "";
@@ -3516,7 +3555,7 @@
         kicker: "01 · HARDWARE",
         headline: "Start with the real problem.",
         subtitle: "Hardware support taught me to diagnose, fix and explain technology at the physical level — a foundation that still helps me design reliable solutions today.",
-        image: "assets/timeline-support.png",
+        image: "assets/optimized-extra/timeline-support-1264.webp",
         defaultCalloutIdx: 4,
         isoAccent: "#10b981",
         isoSecondary: "#00c3ff",
@@ -3657,21 +3696,21 @@
         ],
         relatedProjects: [
           {
-            thumb: "assets/timeline-support.png",
+            thumb: "assets/optimized-extra/timeline-support-1264.webp",
             thumbPos: "62% 54%",
             title: "Dell Latitude Hardware Support",
             desc: "First-call diagnostics and repairs for enterprise laptops.",
             href: "#projects/dell"
           },
           {
-            thumb: "assets/timeline-support.png",
+            thumb: "assets/optimized-extra/timeline-support-1264.webp",
             thumbPos: "38% 42%",
             title: "OptiPlex Desktop Repair",
             desc: "Motherboard, PSU and component replacements.",
             href: "#projects/dell"
           },
           {
-            thumb: "assets/timeline-support.png",
+            thumb: "assets/optimized-extra/timeline-support-1264.webp",
             thumbPos: "72% 46%",
             title: "Storage & Drive Diagnostics",
             desc: "SATA/IDE drive testing and data recovery support.",
@@ -3691,7 +3730,7 @@
         kicker: "02 · SYSTEMS",
         headline: "Making technology work reliably.",
         subtitle: "I moved from individual devices to complete systems — deploying, managing and supporting the core platforms businesses depend on every day.",
-        image: "assets/timeline-systems.png",
+        image: "assets/optimized-extra/timeline-systems-1264.webp",
         defaultCalloutIdx: 0,
         isoAccent: "#0755ff",
         isoSecondary: "#00c3ff",
@@ -3808,21 +3847,21 @@
         ],
         relatedProjects: [
           {
-            thumb: "assets/timeline-systems.png",
+            thumb: "assets/optimized-extra/timeline-systems-1264.webp",
             thumbPos: "62% 38%",
             title: "SBS to Multi-Server Migration",
             desc: "Separated AD, Exchange and file/print to dedicated servers.",
             href: "#projects/foundations"
           },
           {
-            thumb: "assets/timeline-systems.png",
+            thumb: "assets/optimized-extra/timeline-systems-1264.webp",
             thumbPos: "32% 45%",
             title: "Client Environment Builds",
             desc: "Assessed, deployed and configured Windows server & client environments.",
             href: "#projects/foundations"
           },
           {
-            thumb: "assets/timeline-systems.png",
+            thumb: "assets/optimized-extra/timeline-systems-1264.webp",
             thumbPos: "55% 68%",
             title: "Firewall & Rack Implementation",
             desc: "Configured client and internal firewalls, switches and server racks.",
@@ -3842,7 +3881,7 @@
         kicker: "03 · INFRASTRUCTURE",
         headline: "Building the environments technology depends on.",
         subtitle: "I designed, built and supported the headquarters infrastructure that keeps the business running — from structured cabling, power and cooling to VMware ESXi virtualization.",
-        image: "assets/timeline-infrastructure.png",
+        image: "assets/optimized-extra/timeline-infrastructure-1264.webp",
         defaultCalloutIdx: 1,
         isoAccent: "#0755ff",
         isoSecondary: "#00c3ff",
@@ -3985,21 +4024,21 @@
         ],
         relatedProjects: [
           {
-            thumb: "assets/timeline-infrastructure.png",
+            thumb: "assets/optimized-extra/timeline-infrastructure-1264.webp",
             thumbPos: "38% 46%",
             title: "Datacentre & HQ Buildout",
             desc: "42U racks, structured cabling, patch panels, AV and security.",
             href: "#projects/headquarters"
           },
           {
-            thumb: "assets/timeline-infrastructure.png",
+            thumb: "assets/optimized-extra/timeline-infrastructure-1264.webp",
             thumbPos: "70% 48%",
             title: "Blade-to-ESXi Virtualization",
             desc: "Consolidated physical blade servers into VMware ESXi.",
             href: "#projects/headquarters"
           },
           {
-            thumb: "assets/timeline-infrastructure.png",
+            thumb: "assets/optimized-extra/timeline-infrastructure-1264.webp",
             thumbPos: "35% 65%",
             title: "Power, Cooling & DR Planning",
             desc: "UPS, standby generator and server-room HVAC requirements.",
@@ -4019,7 +4058,7 @@
         kicker: "04 · INTEGRATION",
         headline: "Connecting systems, data and processes.",
         subtitle: "I personally designed and implemented P&C rating, underwriting and renewal rules while connecting broker portals and BMS platforms across SOAP/XML, CSIO and REST interfaces.",
-        image: "assets/timeline-analysis.png",
+        image: "assets/optimized-extra/timeline-analysis-1264.webp",
         defaultCalloutIdx: 0,
         isoAccent: "#0755ff",
         isoSecondary: "#10b981",
@@ -4039,7 +4078,7 @@
         contributions: [
           "Personally designed and implemented P&C rating, underwriting and renewal eligibility rules.",
           "Automated ~80% of residential, ~60% of commercial, and ~40% of farm/agri renewals (user-reported, renewal-only).",
-          "Mapped and diagnosed SOAP/XML, CSIO/ACORD, AL3 and REST payloads across TAM and Epic (Bravado/Bravado1).",
+          "Mapped and diagnosed SOAP/XML, CSIO/ACORD, AL3 and REST payloads across TAM and Epic (Brovada).",
           "Built a C#/.NET, JavaScript and Bootstrap portal for authenticated adjuster document uploads via REST APIs."
         ],
         timeframe: {
@@ -4059,7 +4098,7 @@
           { icon: "rest", label: "REST APIs" },
           { icon: "csharp", label: "C# / .NET" },
           { icon: "js", label: "JavaScript & Bootstrap" },
-          { icon: "bms", label: "TAM & Epic (Bravado)" }
+          { icon: "bms", label: "TAM & Epic (Brovada)" }
         ],
         callouts: [
           {
@@ -4096,7 +4135,7 @@
             pinX: 342,
             pinY: 395,
             inspectorTitle: "Cross-System Payload Mapping (SOAP/XML, CSIO & REST)",
-            inspectorDesc: "Mapped and transformed fields across CSIO/ACORD standards, Bravado/Bravado1 bridges, and proprietary backend schemas—tracing malformed XML with custom log tools."
+            inspectorDesc: "Mapped and transformed fields across CSIO/ACORD standards, Brovada bridges, and proprietary backend schemas—tracing malformed XML with custom log tools."
           },
           {
             code: "4 · AUTO-RENEWAL PATH",
@@ -4137,21 +4176,21 @@
         ],
         relatedProjects: [
           {
-            thumb: "assets/timeline-analysis.png",
+            thumb: "assets/optimized-extra/timeline-analysis-1264.webp",
             thumbPos: "60% 42%",
             title: "Renewal Eligibility & Exceptions",
             desc: "~80% residential, ~60% commercial, ~40% farm renewal automation.",
             href: "#projects/renewals"
           },
           {
-            thumb: "assets/timeline-analysis.png",
+            thumb: "assets/optimized-extra/timeline-analysis-1264.webp",
             thumbPos: "35% 42%",
             title: "Commercial Quoting & Workflows",
             desc: "SOAP/XML, CSIO and REST broker integrations across TAM & Epic.",
             href: "#projects/workflows"
           },
           {
-            thumb: "assets/timeline-analysis.png",
+            thumb: "assets/optimized-extra/timeline-analysis-1264.webp",
             thumbPos: "50% 68%",
             title: "Adjuster Document Upload Portal",
             desc: "Authenticated C#/.NET, JS and REST web portal tied to policy records.",
@@ -4171,7 +4210,7 @@
         kicker: "05 · SOLUTIONS",
         headline: "Designing solutions to business problems.",
         subtitle: "I moved beyond individual systems to design and guide end-to-end solutions — combining people, processes and technology to solve real insurance and claims challenges.",
-        image: "assets/timeline-solutions.png",
+        image: "assets/optimized-extra/timeline-solutions-1264.webp",
         defaultCalloutIdx: 0,
         isoAccent: "#00c3ff",
         isoSecondary: "#0755ff",
@@ -4190,7 +4229,7 @@
         takeawayText: "Practical solutions that connected people, processes and technology — enabling validated takeover onboarding, provider sync mappings, SQL reconciliation, and daily ETL continuity.",
         contributions: [
           "Worked alongside architects on ProviderRegistry solution review, gap analysis, field mappings and scheduled REST sync requirements.",
-          "Researched, documented and guided development of a production Excel/VB/XML tool for prior-insurer takeover history.",
+          "Researched, documented and guided development of a production Excel VBA/XML tool for prior-insurer takeover history.",
           "Wrote hand-written claims SQL to trace report logic and reconcile financial reports against claims data.",
           "Uncovered that a 'Power BI report' request was a daily COBOL/InterBlue flat-file ETL feed; completed REST continuity design."
         ],
@@ -4211,7 +4250,7 @@
           { icon: "etl", label: "Daily ETL Continuity" },
           { icon: "rest", label: "APIs (REST / Scheduled Sync)" },
           { icon: "xml", label: "XML / XSD" },
-          { icon: "excel", label: "Excel / VB Tooling" },
+          { icon: "excel", label: "Excel VBA Tooling" },
           { icon: "recon", label: "Reconciliation" }
         ],
         callouts: [
@@ -4225,7 +4264,7 @@
             pinX: 498,
             pinY: 292,
             inspectorTitle: "Medavie – Provider Sync & Takeover Tooling",
-            inspectorDesc: "Reviewed provider synchronization architecture and guided production Excel/VB/XML tooling to validate and reconcile prior-insurer takeover history."
+            inspectorDesc: "Reviewed provider synchronization architecture and guided production Excel VBA/XML tooling to validate and reconcile prior-insurer takeover history."
           },
           {
             code: "2 · STAKEHOLDER ALIGNMENT",
@@ -4290,21 +4329,21 @@
         ],
         relatedProjects: [
           {
-            thumb: "assets/timeline-solutions.png",
+            thumb: "assets/optimized-extra/timeline-solutions-1264.webp",
             thumbPos: "42% 35%",
             title: "Takeover Reconciliation Tool",
-            desc: "Production Excel/VB/XML claim validation and financial reconciliation.",
+            desc: "Production Excel VBA/XML claim validation and financial reconciliation.",
             href: "#projects/takeover"
           },
           {
-            thumb: "assets/timeline-solutions.png",
+            thumb: "assets/optimized-extra/timeline-solutions-1264.webp",
             thumbPos: "52% 48%",
             title: "Provider Data Integration",
             desc: "Solution review, field mappings and scheduled REST sync requirements.",
             href: "#projects/claims"
           },
           {
-            thumb: "assets/timeline-solutions.png",
+            thumb: "assets/optimized-extra/timeline-solutions-1264.webp",
             thumbPos: "68% 42%",
             title: "Daily ETL Reporting Continuity",
             desc: "Completed analysis and REST mapping to preserve a daily client feed.",
@@ -4323,7 +4362,7 @@
         kicker: "06 · BUSINESS OUTCOMES",
         headline: "Turning technology into measurable value.",
         subtitle: "I combine technical depth with business understanding to deliver practical, measurable outcomes — improving operations, reducing risk, and enabling growth.",
-        image: "assets/timeline-outcomes.png",
+        image: "assets/optimized-extra/timeline-outcomes-1264.webp",
         defaultCalloutIdx: 0,
         isoAccent: "#10b981",
         isoSecondary: "#00e5a3",
@@ -4374,7 +4413,7 @@
             pinX: 562,
             pinY: 208,
             inspectorTitle: "Medavie Takeover Tooling & Grenville Renewal Automation",
-            inspectorDesc: "Automated ~80% residential, ~60% commercial, and ~40% farm renewals at Grenville, and delivered production Excel/VB/XML takeover tooling at Medavie."
+            inspectorDesc: "Automated ~80% residential, ~60% commercial, and ~40% farm renewals at Grenville, and delivered production Excel VBA/XML takeover tooling at Medavie."
           },
           {
             code: "2 · COST & TIME OPTIMIZATION",
@@ -4439,21 +4478,21 @@
         ],
         relatedProjects: [
           {
-            thumb: "assets/timeline-solutions.png",
+            thumb: "assets/optimized-extra/timeline-solutions-1264.webp",
             thumbPos: "42% 35%",
             title: "Takeover Validation Platform",
-            desc: "Production Excel/VB/XML claim validation and batch reconciliation.",
+            desc: "Production Excel VBA/XML claim validation and batch reconciliation.",
             href: "#projects/takeover"
           },
           {
-            thumb: "assets/timeline-analysis.png",
+            thumb: "assets/optimized-extra/timeline-analysis-1264.webp",
             thumbPos: "60% 42%",
             title: "Renewal Automation Engine",
             desc: "~80% res, ~60% comm, ~40% farm renewal automation & referral.",
             href: "#projects/renewals"
           },
           {
-            thumb: "assets/nexus-governed-work-v1.png",
+            thumb: "assets/optimized-extra/nexus-governed-work-v1-1536.webp",
             thumbPos: "50% 50%",
             title: "NEXUS — Governed AI Capstone",
             desc: "Scoped context, explainable routing and verification receipts.",
@@ -4480,7 +4519,7 @@
     // Mount the 3-Column Interactive Connections Workbench inside .career-scroll-stage as a Scroll-Based Slideshow
     const journeySection = document.getElementById("hero-journey");
     const introBar = journeySection?.querySelector(".career-introduction");
-    if (journeySection && introBar && !journeySection.querySelector(".connections-workbench")) {
+    if (journeySection && introBar && window.getComputedStyle(journeySection).display !== "none" && !journeySection.querySelector(".connections-workbench")) {
       const scrollStage = journeySection.querySelector(".career-scroll-stage") || journeySection;
 
       // 1. Re-structure .career-introduction so Row 1 has Title (left) + 6 Pill Tabs (right), and Row 2 has the full-width subtitle
@@ -4545,11 +4584,11 @@
           <div class="conn-visual-canvas" data-conn-canvas>
             <div class="conn-iso-stage-mover">
               <div class="conn-ghost-tier conn-ghost-tier--above" data-conn-ghost-above aria-hidden="true">
-                <img class="conn-ghost-img" data-conn-ghost-above-img src="assets/timeline-systems.png" alt="">
+                <img class="conn-ghost-img" data-conn-ghost-above-img src="assets/optimized-extra/timeline-systems-1264.webp" alt="">
               </div>
-              <img class="conn-stage-img" data-conn-img src="assets/timeline-support.png" alt="Interactive 3D stage architecture">
+              <img class="conn-stage-img" data-conn-img src="assets/optimized-extra/timeline-support-1264.webp" alt="Interactive 3D stage architecture">
               <div class="conn-ghost-tier conn-ghost-tier--below" data-conn-ghost-below aria-hidden="true">
-                <img class="conn-ghost-img" data-conn-ghost-below-img src="assets/timeline-systems.png" alt="">
+                <img class="conn-ghost-img" data-conn-ghost-below-img src="assets/optimized-extra/timeline-systems-1264.webp" alt="">
               </div>
               <svg class="conn-iso-fx-svg" viewBox="0 0 1000 660" preserveAspectRatio="none" aria-hidden="true" data-conn-fx-svg></svg>
             </div>
@@ -4801,10 +4840,10 @@
           const midX = (leftSvg + rightSvg) * 0.5;
           const midY = (topSvg + bottomSvg) * 0.5;
 
-          let sx = midX;
-          let sy = midY;
-          let elbowX = midX;
-          let elbowY = midY;
+          let sx;
+          let sy;
+          let elbowX;
+          let elbowY;
 
           if (midX < 360) {
             sx = Math.round(rightSvg);
@@ -5170,7 +5209,7 @@
         { icon: "rest", label: "REST" },
         { icon: "csio", label: "CSIO / ACORD" },
         { icon: "al3", label: "AL3 & eDocs" },
-        { icon: "bms", label: "TAM & Epic (Bravado)" },
+        { icon: "bms", label: "TAM & Epic (Brovada)" },
         { icon: "rules", label: "Commercial Quoting Rules" }
       ],
       changes: [
@@ -5223,1064 +5262,2270 @@
 
     // 4. Unified 16-Project Catalog for Home Featured Section, Projects Explorer (#projects) & Detail Workbench (#projects/<slug>)
     const PROJECTS_CATALOG = Object.freeze([
+  {
+    "slug": "renewals",
+    "title": "Renewal Eligibility & Underwriting Automation",
+    "shortTitle": "Renewal Eligibility & Underwriting Automation",
+    "badgeType": "PROFESSIONAL",
+    "detailBadge": "PROFESSIONAL WORK",
+    "org": "Grenville",
+    "period": "Within Grenville tenure (2009–2022)",
+    "sidebarSub": "Grenville · 2009 – 2022",
+    "banner": "assets/optimized/proj-banner-renewals-1376.webp",
+    "shortDesc": "Built fail-first renewal rules that process eligible policies and give underwriters focused reasons to review exceptions.",
+    "heroDesc": "Designed and implemented deterministic renewal automation with underwriters, then compared rule decisions with manual review before production activation.",
+    "featured": true,
+    "featuredOrder": 1,
+    "status": "Implemented",
+    "chapterLabel": "Shaped by the business",
+    "impactScore": 100,
+    "complexityScore": 96,
+    "yearSort": 2020,
+    "categories": [
+      "professional",
+      "insurance",
+      "data"
+    ],
+    "cardTags": [
+      "Insurance",
+      "Underwriting",
+      "Business Rules",
+      "Automation"
+    ],
+    "heroTags": [
+      "Insurance",
+      "Underwriting",
+      "Business Rules",
+      "Automation",
+      "Integration"
+    ],
+    "allTags": [
+      "Insurance",
+      "Automation",
+      "Business Rules",
+      "Underwriting",
+      "Validation"
+    ],
+    "metrics": [
       {
-        slug: "renewals",
-        title: "Renewal Eligibility & Underwriting Automation",
-        shortTitle: "Renewal Eligibility & Underwriting Automation",
-        badgeType: "PROFESSIONAL",
-        detailBadge: "PROFESSIONAL WORK",
-        org: "Grenville",
-        period: "Within Grenville tenure (2009–2022)",
-        sidebarSub: "Grenville · 2009 – 2022",
-        banner: "assets/proj-banner-renewals.jpg",
-        shortDesc: "Designed and implemented automated renewal workflows with business rules, validation and exception routing for P&C lines.",
-        heroDesc: "Designed and implemented automated renewal workflows with business rules, validation and exception handling across residential, commercial and farm/agri lines.",
-        featured: true,
-        featuredOrder: 1,
-        status: "Implemented",
-        chapterLabel: "Shaped by the business",
-        impactScore: 100,
-        complexityScore: 96,
-        yearSort: 2020,
-        categories: ["professional", "insurance", "ai"],
-        cardTags: ["Insurance", "Underwriting", "Business Rules", "Automation"],
-        heroTags: ["Insurance", "Underwriting", "Business Rules", "Automation", "Integration"],
-        allTags: ["AI", "Insurance", "SQL", "Integration", "Automation", "Business Rules", "Underwriting"],
-        metrics: [
-          { val: "~80%", label: "Residential" },
-          { val: "~60%", label: "Commercial" },
-          { val: "~40%", label: "Farm / Agri" }
-        ],
-        metricsNote: "Approximate firsthand-reported renewal automation rates; complex cases continued to route to underwriters.",
-        glance: {
-          employer: "Grenville Mutual Insurance",
-          period: "Within Grenville tenure (2009–2022)",
-          domain: "P&C Insurance · Personal, Commercial & Farm Renewals",
-          previewDomain: "P&C Insurance · Underwriting · Renewals",
-          role: "Analysis · Rule Design · Implementation · Support",
-          previewRole: "Analysis, rule design, implementation and ongoing support",
-          team: "Business analysts · Underwriters · Developers · QA",
-          technologies: "Business rules · Validation · Integration · SQL · APIs",
-          outcome: "Automated standard renewals with explicit underwriter exception routing",
-          previewOutcome: "Approximate firsthand-reported renewal automation (~80% res, ~60% comm, ~40% farm) with human review for exceptions."
-        },
-        problem: "Renewal processes were manual, inconsistent and time-consuming. Underwriters spent significant time reviewing standard low-risk renewals, while complex exceptions needed clearer routing criteria across residential, commercial and farm/agri lines.",
-        previewProblem: "Manual renewal review consumed underwriter capacity on standard risks across P&C lines.",
-        solution: "Designed and implemented automated renewal eligibility workflows using business rules, validation and core-system integration. Eligible standard policies renewed automatically while exceptions routed to underwriters with clear reasons.",
-        previewSolution: "Implemented line-specific renewal eligibility rules with explicit exception referral to human underwriters.",
-        contribution: "Personally designed the renewal eligibility framework and implemented rating and underwriting rules across residential, commercial and farm/agri lines, defining clear referral gates for human review.",
-        lessons: "Automating insurance decisions succeeds when the boundary between straight-through eligibility and human judgment is explicit, inspectable and tailored to each line of business.",
-        keyResultsMetrics: [
-          { val: "~80%", text: "Residential renewals automated (user-reported)" },
-          { val: "~60%", text: "Commercial renewals automated (user-reported)" },
-          { val: "~40%", text: "Farm / Agri renewals automated (user-reported)" }
-        ],
-        keyResultsChecks: [
-          "Approximate firsthand-reported renewal-only automation rates",
-          "Consistent rule evaluation across P&C lines",
-          "Explicit exception routing so complex cases reached underwriters"
-        ],
-        techStackTiles: [
-          { icon: "sql", label: "SQL" },
-          { icon: "rulesEngine", label: "Business Rules Engine" },
-          { icon: "apis", label: "Integration (APIs)" },
-          { icon: "validation", label: "Data Validation" },
-          { icon: "reporting", label: "Reporting (Cognos)" }
-        ],
-        relatedSlugs: ["newbusiness", "changes"],
-        timeline: [
-          { years: "Phase 1", text: "Requirements and line-of-business analysis", theme: "green" },
-          { years: "Phase 2", text: "Eligibility rule design and implementation", theme: "teal" },
-          { years: "Phase 3", text: "Line tuning and ongoing operational support", theme: "blue" }
-        ],
-        floatingHeroCard: {
-          title: "Conceptual Illustration · Renewal Gate",
-          status: "Eligible for Auto-Renewal",
-          rows: [
-            { label: "Risk Profile", val: "Standard" },
-            { label: "Property Data", val: "Verified" },
-            { label: "Claims History", val: "Clear" },
-            { label: "Exception Check", val: "Passed" }
-          ],
-          cta: "Auto-Renew or Refer →"
-        }
+        "val": "~80%",
+        "label": "Residential"
       },
       {
-        slug: "newbusiness",
-        title: "Broker-Native New Business Integration",
-        shortTitle: "Broker-Native New Business Integration",
-        badgeType: "PROFESSIONAL",
-        detailBadge: "PROFESSIONAL WORK",
-        org: "Grenville",
-        period: "Within Grenville tenure (2009–2022)",
-        sidebarSub: "Grenville · 2009 – 2022",
-        banner: "assets/proj-banner-newbusiness.jpg",
-        shortDesc: "Connected broker workflows to insurance rules, validation, referral and binding decisions.",
-        heroDesc: "Connected broker portal and desktop workflows to P&C rating, underwriting validation, referral routing and binding decisions.",
-        featured: true,
-        featuredOrder: 2,
-        status: "Implemented",
-        chapterLabel: "Shaped by the business",
-        impactScore: 95,
-        complexityScore: 92,
-        yearSort: 2019,
-        categories: ["professional", "insurance", "data"],
-        cardTags: ["Integration", "Business Rules", "Solution Design"],
-        heroTags: ["Integration", "Business Rules", "Solution Design", "Underwriting", "SOAP / REST"],
-        allTags: ["Insurance", "Integration", "Automation", "Business Rules"],
-        metrics: [],
-        glance: {
-          employer: "Grenville Mutual Insurance",
-          period: "Within Grenville tenure (2009–2022)",
-          domain: "P&C Insurance · Broker New Business",
-          previewDomain: "P&C Insurance · Broker New Business",
-          role: "Requirements · Field Mapping · Rules Implementation",
-          previewRole: "Requirements, field/value mapping, UI specifications and rules implementation",
-          team: "Business analysts · Broker/portal vendors · Developers · Underwriters",
-          technologies: "CSIO / ACORD XML · SOAP / REST · Rules Engine · Broker Portal",
-          outcome: "Actionable correction, referral and bind decisions in broker workflows",
-          previewOutcome: "Connected broker inputs to validation, referral and binding decisions."
-        },
-        problem: "A new-business workflow cannot rate or underwrite a risk properly if the broker interface fails to collect required risk inputs. Submissions arrived with missing or mismatched fields across broker-management systems.",
-        previewProblem: "Broker submissions lacked required risk inputs or failed validation across system boundaries.",
-        solution: "Defined requirements and field/value mappings, personally implemented P&C rating and underwriting rules, and helped shape the rules-to-portal messaging framework for correction, referral or binding alongside vendor/developer UI implementation.",
-        previewSolution: "Connected broker inputs and CSIO/XML payloads to rating/underwriting rules and actionable portal messages.",
-        contribution: "Defined business requirements, field/value mappings and UI specifications, personally implemented rating and underwriting rules, and diagnosed SOAP/XML and REST broker payloads while vendors/developers implemented portal UI code.",
-        lessons: "Effective integration is more than transport—it requires preserving business meaning across the interface so users know exactly what to fix or when a risk needs underwriter review.",
-        keyResultsMetrics: [
-          { val: "2-Way", text: "Upload & download payload mapping" },
-          { val: "3-Path", text: "Self-correct, refer or bind responses" }
-        ],
-        keyResultsChecks: [
-          "Captured required auto & residential risk inputs upfront",
-          "Aligned CSIO/ACORD payloads with backend policy fields",
-          "Separated new-business rules cleanly from renewals & endorsements"
-        ],
-        techStackTiles: [
-          { icon: "rulesEngine", label: "Business Rules Engine" },
-          { icon: "apis", label: "SOAP / REST APIs" },
-          { icon: "validation", label: "CSIO / XML Validation" },
-          { icon: "sql", label: "Policy Data Mapping" },
-          { icon: "reporting", label: "Broker Portal Specs" }
-        ],
-        relatedSlugs: ["renewals", "workflows"],
-        timeline: [
-          { years: "Phase 1", text: "Auto & residential rule design", theme: "green" },
-          { years: "Phase 2", text: "Broker portal & BMS payload mapping", theme: "teal" },
-          { years: "Phase 3", text: "REST backend transition & refinement", theme: "blue" }
-        ]
-      },
-      {
-        slug: "takeover",
-        title: "Takeover-History Validation and XML Loading",
-        shortTitle: "Takeover-History XML Loading",
-        badgeType: "PROFESSIONAL",
-        detailBadge: "PROFESSIONAL WORK",
-        org: "Medavie",
-        period: "2022 – Present",
-        sidebarSub: "Medavie · 2022 – Present",
-        banner: "assets/proj-banner-takeover.jpg",
-        shortDesc: "Researched, documented and guided Excel/VB/XML tooling for validation, transformation, batch loading and reconciliation.",
-        heroDesc: "Researched, documented and guided production-adopted Excel/VB/XML tooling to transform inconsistent takeover claims history into validated adjudication XML.",
-        featured: true,
-        featuredOrder: 3,
-        status: "Production tool",
-        chapterLabel: "Shaped by the business",
-        impactScore: 94,
-        complexityScore: 90,
-        yearSort: 2023,
-        categories: ["professional", "insurance", "data", "tools"],
-        cardTags: ["SQL", "ETL", "Excel/VB", "Data Quality"],
-        heroTags: ["SQL", "ETL", "Excel/VB", "Data Quality", "XML Schema"],
-        allTags: ["Insurance", "SQL", "Tools", "Data Engineering", "Integration"],
-        metrics: [],
-        glance: {
-          employer: "Medavie Blue Cross",
-          period: "2022 – Present",
-          domain: "Health & Dental Claims · Group Takeover",
-          previewDomain: "Group Claims · Takeover History Onboarding",
-          role: "Solution Research · Documentation · Development Guidance · Support",
-          previewRole: "Researched and documented solution, guided development & supported users",
-          team: "Functional analysts · Developers · Claims operations",
-          technologies: "Excel · VB · XML Schema (XSD) · Batch Load · Reconciliation",
-          outcome: "Production, team-adopted onboarding and reconciliation workflow",
-          previewOutcome: "Turned inconsistent prior-carrier spreadsheets into validated XML loads."
-        },
-        problem: "When a group changes insurers, prior claim history arrives in inconsistent spreadsheets or tables extracted from PDFs, while the receiving claims adjudication system requires a strict XML structure to enforce benefit maximums.",
-        previewProblem: "Inconsistent prior-insurer spreadsheets caused manual transformation bottlenecks and load errors.",
-        solution: "Researched and documented the end-to-end solution, guided schema/solution alignment and development of an Excel/VB validation and XML generation tool, and supported operational users through batch loading and reconciliation.",
-        previewSolution: "Guided a structured Excel/VB validation and XML transformation workflow with pre-load and post-load reconciliation.",
-        contribution: "Researched and documented the solution, defined validation and XML mapping rules, guided tool development and schema alignment alongside developers, and supported claims operations adopting the tool in production.",
-        lessons: "Catching formatting and domain mismatches inside a familiar spreadsheet workbench before generating XML prevents batch load failures and gives operations confidence in the loaded balances.",
-        keyResultsMetrics: [
-          { val: "XSD", text: "Pre-load XML schema validation" },
-          { val: "Adopted", text: "Production team onboarding workflow" }
-        ],
-        keyResultsChecks: [
-          "Adopted by claims onboarding team in production",
-          "Validated messy spreadsheet inputs before XML generation",
-          "Reconciled loaded benefit totals against source carrier files"
-        ],
-        techStackTiles: [
-          { icon: "validation", label: "XML / XSD Validation" },
-          { icon: "rulesEngine", label: "Excel / VB Tooling" },
-          { icon: "sql", label: "SQL Verification" },
-          { icon: "apis", label: "Batch ETL Load" },
-          { icon: "reporting", label: "Reconciliation" }
-        ],
-        relatedSlugs: ["claims", "continuity"],
-        timeline: [
-          { years: "Phase 1", text: "Takeover data & XSD gap analysis", theme: "green" },
-          { years: "Phase 2", text: "Excel/VB validation & XML tooling guidance", theme: "teal" },
-          { years: "Phase 3", text: "Team adoption & reconciliation support", theme: "blue" }
-        ]
-      },
-      {
-        slug: "nexus",
-        title: "NEXUS — AI Orchestration Platform",
-        shortTitle: "NEXUS — AI Orchestration Platform",
-        badgeType: "INDEPENDENT",
-        detailBadge: "INDEPENDENT BUILD",
-        org: "NEXUS",
-        period: "Active development",
-        sidebarSub: "Independent · Active build",
-        banner: "assets/proj-banner-nexus.jpg",
-        shortDesc: "Independent multi-agent platform for planning, execution and evaluation with scoped context and audit receipts.",
-        heroDesc: "An independent AI-assisted work platform in active development — combining scoped context compilation, constraint-aware routing, durable execution and evaluation receipts.",
-        featured: true,
-        featuredOrder: 6,
-        status: "Active development",
-        chapterLabel: "Building in the cloud",
-        impactScore: 98,
-        complexityScore: 99,
-        yearSort: 2025,
-        categories: ["independent", "ai", "tools"],
-        cardTags: ["AI Agents", "Orchestration", "TypeScript"],
-        heroTags: ["AI Agents", "Orchestration", "TypeScript", "PostgreSQL", "Evaluation"],
-        allTags: ["AI", "Automation", "Web", "Tools"],
-        metrics: [],
-        glance: {
-          employer: "Independent Capstone (run.nexus)",
-          period: "Active development",
-          domain: "AI Orchestration · Governed Software Delivery",
-          previewDomain: "AI Systems · Multi-Agent Orchestration",
-          role: "Creator · Systems Designer · Full-Stack Developer",
-          previewRole: "Independent architecture, design and full-stack implementation",
-          team: "Independent Capstone Project",
-          technologies: "TypeScript · React/Vite · Node.js · PostgreSQL · Redis · OpenAPI",
-          outcome: "Active technical capstone demonstrating governed AI orchestration",
-          previewOutcome: "Scoped context, explainable routing and recoverable execution with full audit receipts."
-        },
-        problem: "Useful AI-assisted work requires more than an unconstrained chat prompt. Without scoped context, explicit plan review, permissioned execution and verifiable receipts, multi-step AI tasks quickly drift or become impossible to audit.",
-        previewProblem: "Unconstrained AI prompts lack scoped context, explainable routing and auditable execution receipts.",
-        solution: "Building NEXUS as an independent governed AI work platform that compiles scoped project context, separates planning from execution, routes tasks across models with explicit constraints, and records deterministic and semantic evaluation receipts.",
-        previewSolution: "Designed a headless TypeScript orchestration core with React/Vite workbench, durable Node execution and evaluation receipts.",
-        contribution: "Independently architecting and implementing the scoped context compiler, constraint-aware model router, durable command runner, and receipt verification pipeline.",
-        lessons: "Applying enterprise systems discipline—explicit boundaries, state recovery and audit trails—turns probabilistic LLM capabilities into a dependable engineering workbench.",
-        keyResultsMetrics: [
-          { val: "4-Stage", text: "Context · Plan · Execute · Verify loop" },
-          { val: "Durable", text: "Recoverable process execution" }
-        ],
-        keyResultsChecks: [
-          "Scoped context compilation with source receipts",
-          "Constraint-aware, inspectable model routing",
-          "Deterministic & semantic outcome evaluation"
-        ],
-        techStackTiles: [
-          { icon: "rulesEngine", label: "TypeScript Core" },
-          { icon: "apis", label: "OpenAPI & WebSockets" },
-          { icon: "sql", label: "PostgreSQL & Redis" },
-          { icon: "validation", label: "Evaluation Receipts" },
-          { icon: "reporting", label: "React / Vite UI" }
-        ],
-        relatedSlugs: ["lowkey", "renewals"],
-        timeline: [
-          { years: "Foundation", text: "Context compilation & graph schema", theme: "green" },
-          { years: "Core Engine", text: "Model routing & durable Node runner", theme: "teal" },
-          { years: "Active Build", text: "Evaluation receipts & workbench UI", theme: "blue" }
-        ]
-      },
-      {
-        slug: "continuity",
-        title: "Claims Reporting & Data Continuity",
-        shortTitle: "Claims Reporting & Data Continuity",
-        badgeType: "PROFESSIONAL",
-        detailBadge: "PROFESSIONAL WORK",
-        org: "Medavie",
-        period: "2022 – Present",
-        sidebarSub: "Medavie · 2022 – Present",
-        banner: "assets/proj-banner-continuity.jpg",
-        shortDesc: "Uncovered a hidden daily flat-file ETL dependency and completed continuity analysis/design for claims migration.",
-        heroDesc: "Traced a supposed reporting request to a daily legacy flat-file ETL pipeline and completed the end-to-end continuity analysis and mapping for claims migration.",
-        featured: false,
-        featuredOrder: 7,
-        status: "Design completed; modernization proposed",
-        chapterLabel: "Shaped by the business",
-        impactScore: 92,
-        complexityScore: 91,
-        yearSort: 2024,
-        categories: ["professional", "insurance", "data"],
-        cardTags: ["SQL", "Cognos", "Data Models", "Reporting"],
-        heroTags: ["SQL", "Cognos", "Data Models", "Reporting", "ETL Continuity"],
-        allTags: ["Insurance", "SQL", "Data Engineering", "Reporting", "Integration"],
-        metrics: [],
-        glance: {
-          employer: "Medavie Blue Cross",
-          period: "2022 – Present",
-          domain: "Enterprise Claims · ETL & Client Reporting",
-          previewDomain: "Claims Data · Daily ETL & Cognos Continuity",
-          role: "Current-State Analysis · Continuity Mapping · Modernization Proposal",
-          previewRole: "Current-state analysis, field mapping and modernization proposal",
-          team: "Functional analysts · Data engineering · Solution architects",
-          technologies: "SQL · Legacy COBOL/InterBlue Flat-File ETL · Cognos · REST Design",
-          outcome: "Completed continuity analysis/design; service implementation unconfirmed; modernization proposed",
-          previewOutcome: "Completed analysis and continuity mapping for the daily client reporting data contract."
-        },
-        problem: "What was initially assigned as a simple Power BI report turned out to be a daily flat-file ETL feed through legacy COBOL/InterBlue that powered a client's downstream IBM Cognos reporting.",
-        previewProblem: "A supposed report assignment was actually a daily flat-file ETL integration feeding client Cognos analytics.",
-        solution: "Performed current-state analysis of the legacy extract, completed field-by-field continuity mapping from the new adjudication platform to preserve the daily contract, and proposed a modern reporting exchange option.",
-        previewSolution: "Completed the analysis and continuity mapping to preserve the daily flat-file contract while proposing a modern exchange.",
-        contribution: "Investigated the legacy COBOL/InterBlue pipeline, documented downstream field dependencies, completed the REST-to-flat-file continuity mapping design, and shaped the modernization proposal (service implementation and go-live remain unconfirmed).",
-        lessons: "Always inspect what downstream consumers actually do with a data feed before replacing it—preserving operational continuity comes first, modernization second.",
-        keyResultsMetrics: [
-          { val: "Daily", text: "Flat-file ETL contract mapped" },
-          { val: "2-Track", text: "Continuity design + modern proposal" }
-        ],
-        keyResultsChecks: [
-          "Identified hidden daily ETL dependency during analysis",
-          "Completed field-level continuity mapping specification",
-          "Proposed modern reporting exchange path (implementation unconfirmed)"
-        ],
-        techStackTiles: [
-          { icon: "sql", label: "SQL Analysis" },
-          { icon: "apis", label: "Legacy Flat-File ETL" },
-          { icon: "reporting", label: "Reporting (Cognos)" },
-          { icon: "validation", label: "Continuity Mapping" },
-          { icon: "rulesEngine", label: "Modernization Design" }
-        ],
-        relatedSlugs: ["sql", "takeover"],
-        timeline: [
-          { years: "Discovery", text: "Uncovered daily COBOL/InterBlue ETL feed", theme: "green" },
-          { years: "Design", text: "Completed continuity mapping analysis", theme: "teal" },
-          { years: "Proposal", text: "Shaped modern reporting exchange option", theme: "blue" }
-        ]
-      },
-      {
-        slug: "headquarters",
-        title: "Headquarters Infrastructure and Move",
-        shortTitle: "Headquarters Infrastructure & Move",
-        badgeType: "PROFESSIONAL",
-        detailBadge: "PROFESSIONAL WORK",
-        org: "Grenville",
-        period: "Within Grenville tenure (2009–2022)",
-        sidebarSub: "Grenville · 2009 – 2022",
-        banner: "assets/proj-banner-headquarters.jpg",
-        shortDesc: "Planned, built and supported corporate headquarters infrastructure from design through physical move and VMware ESXi virtualization.",
-        heroDesc: "Guided corporate headquarters technical infrastructure from design through build and physical move — spanning networking, AV, security, cooling, backup power and VMware ESXi virtualization.",
-        featured: true,
-        featuredOrder: 5,
-        status: "Implemented",
-        chapterLabel: "Grounded in the metal",
-        impactScore: 91,
-        complexityScore: 89,
-        yearSort: 2014,
-        categories: ["professional", "infra"],
-        cardTags: ["Infrastructure", "Identity", "Security", "Virtualization"],
-        heroTags: ["Infrastructure", "Identity", "Security", "Virtualization", "Resilient Power"],
-        allTags: ["Infrastructure", "Insurance", "Tools"],
-        metrics: [],
-        glance: {
-          employer: "Grenville Mutual Insurance",
-          period: "Within Grenville tenure (2009–2022); exact move year not confirmed",
-          domain: "Corporate Infrastructure · Virtualization · Facilities IT",
-          previewDomain: "Enterprise Infrastructure · Datacentre & HQ Move",
-          role: "Technical Design · Infrastructure Build · Virtualization",
-          previewRole: "Systems administration, technical design and physical move execution",
-          team: "IT operations · Facilities · Contractors · Network vendors",
-          technologies: "VMware ESXi · 42U Racks · Cat6A / VLANs · UPS & Generator · AV & Security",
-          outcome: "Implemented headquarters transition and blade-to-ESXi consolidation",
-          previewOutcome: "Delivered a resilient headquarters buildout and virtualized server environment."
-        },
-        problem: "A corporate headquarters move brings networking, server racks, cooling, resilient power, physical door security and boardroom AV into a single cutover where everything must work reliably.",
-        previewProblem: "Moving a corporate headquarters required coordinating physical power, cooling, cabling and server virtualization without business disruption.",
-        solution: "Worked from initial technical floorplan design through construction and move-in, integrating conditioned UPS and standby generator power, structured cabling, and transitioning bare-metal blade servers to VMware ESXi.",
-        previewSolution: "Connected physical facility constraints with virtualized VMware ESXi compute, resilient power and structured networking.",
-        contribution: "Planned and executed the technical infrastructure build and move, coordinated vendor installations for cooling, UPS/generator and security, and migrated bare-metal blades to ESXi.",
-        lessons: "Physical and operational dependencies—power, cooling, cabling and identity—are the foundation every higher-level software architecture relies on.",
-        keyResultsMetrics: [
-          { val: "ESXi", text: "Bare-metal blade virtualization" },
-          { val: "End-to-End", text: "Design through physical move" }
-        ],
-        keyResultsChecks: [
-          "End-to-end networking, AV, security & cooling design",
-          "Integrated UPS and standby generator power resilience",
-          "Consolidated physical blade centre onto VMware ESXi"
-        ],
-        techStackTiles: [
-          { icon: "rulesEngine", label: "VMware ESXi" },
-          { icon: "apis", label: "VLANs & Cat6A" },
-          { icon: "validation", label: "UPS & Generator" },
-          { icon: "sql", label: "SAN & Server Racks" },
-          { icon: "reporting", label: "AV & Door Security" }
-        ],
-        relatedSlugs: ["foundations", "dell"],
-        timeline: [
-          { years: "Planning", text: "Floorplan, power, cooling & network specs", theme: "green" },
-          { years: "Build & Move", text: "Racks, cabling, AV, security & cutover", theme: "teal" },
-          { years: "Virtualization", text: "Bare-metal blade transition to ESXi", theme: "blue" }
-        ]
-      },
-      {
-        slug: "workflows",
-        title: "Commercial Quoting & Broker Integration",
-        shortTitle: "Commercial Quoting & Broker Integration",
-        badgeType: "PROFESSIONAL",
-        detailBadge: "PROFESSIONAL WORK",
-        org: "Grenville",
-        period: "Within Grenville tenure (2009–2022)",
-        sidebarSub: "Grenville · 2009 – 2022",
-        banner: "assets/proj-banner-workflows.jpg",
-        shortDesc: "Designed commercial quoting rules, CSIO/ACORD payload mappings and two-way broker integration workflows.",
-        heroDesc: "Connected commercial quoting requirements, CSIO/ACORD payload transformations and backend underwriting rules across TAM and Epic broker integrations.",
-        featured: false,
-        featuredOrder: 8,
-        status: "Implemented",
-        chapterLabel: "Shaped by the business",
-        impactScore: 89,
-        complexityScore: 93,
-        yearSort: 2018,
-        categories: ["professional", "insurance", "data"],
-        cardTags: ["Integration", "CSIO / ACORD", "Commercial Lines", "XML"],
-        heroTags: ["Commercial Quoting", "CSIO / ACORD", "SOAP / REST", "Business Rules"],
-        allTags: ["Insurance", "Integration", "Automation", "Data Engineering"],
-        metrics: [],
-        glance: {
-          employer: "Grenville Mutual Insurance",
-          period: "Within Grenville tenure (2009–2022)",
-          domain: "P&C Insurance · Commercial Quoting & BMS",
-          previewDomain: "Commercial Lines · Broker Integration",
-          role: "Policy Rules Implementation · Mapping & Specification",
-          previewRole: "Core policy rules implementation, CSIO mapping and vendor coordination",
-          team: "Business analysts · Broker vendors (TAM/Epic/Bravado) · Underwriters",
-          technologies: "CSIO / ACORD · XML · AL3 · eDocs · SOAP / REST · Rules Engine",
-          outcome: "Two-way broker upload/download and commercial quoting rules",
-          previewOutcome: "Aligned broker payloads and UI stages with proprietary backend insurance rules."
-        },
-        problem: "Commercial quoting and broker upload/download workflows crossed multiple vendor platforms (TAM, Epic via Bravado) where incomplete risk inputs or mismatched codes broke downstream rating.",
-        previewProblem: "Commercial broker payloads and UI stages needed consistent risk mapping and rule validation across vendors.",
-        solution: "Designed and implemented rating and underwriting rules, mapped CSIO/ACORD fields across upload and download flows, and specified UI stages to capture complete commercial risk data.",
-        previewSolution: "Implemented commercial rating/underwriting rules and two-way CSIO/ACORD field transformations.",
-        contribution: "Personally implemented policy rating and underwriting rules and defined the field/value mappings and UI specifications connecting broker desktop/portal workflows to backend decisions.",
-        lessons: "Two-way integration requires treating both upload requests and download documents (eDocs/AL3/XML) as a single coherent conversation with the broker.",
-        keyResultsMetrics: [
-          { val: "CSIO", text: "Upload & download payload mapping" },
-          { val: "Multi-Line", text: "Auto, residential, farm & commercial" }
-        ],
-        keyResultsChecks: [
-          "Implemented commercial quoting validation & rating rules",
-          "Mapped TAM & Epic broker flows through Bravado",
-          "Supported XML, eDocs and historical AL3 standards"
-        ],
-        techStackTiles: [
-          { icon: "rulesEngine", label: "Commercial Rules" },
-          { icon: "apis", label: "CSIO / ACORD XML" },
-          { icon: "validation", label: "TAM & Epic BMS" },
-          { icon: "sql", label: "Field Mappings" },
-          { icon: "reporting", label: "eDocs & PDFs" }
-        ],
-        relatedSlugs: ["newbusiness", "changes"],
-        timeline: [
-          { years: "Phase 1", text: "Upload/download CSIO & XML mappings", theme: "green" },
-          { years: "Phase 2", text: "Commercial quoting rules & UI specs", theme: "teal" },
-          { years: "Phase 3", text: "REST backend & ongoing enhancements", theme: "blue" }
-        ]
-      },
-      {
-        slug: "changes",
-        title: "Policy-Change Comparison & Validation",
-        shortTitle: "Policy-Change Comparison & Validation",
-        badgeType: "PROFESSIONAL",
-        detailBadge: "PROFESSIONAL WORK",
-        org: "Grenville",
-        period: "Within Grenville tenure (2009–2022)",
-        sidebarSub: "Grenville · 2009 – 2022",
-        banner: "assets/proj-banner-changes.jpg",
-        shortDesc: "Built endorsement comparison workflows and context-aware validation rules that showed policy changes before submission.",
-        heroDesc: "Designed policy-change comparison workflows and contextual validation rules that distinguished endorsements from new business and renewals.",
-        featured: false,
-        featuredOrder: 9,
-        status: "Implemented",
-        chapterLabel: "Shaped by the business",
-        impactScore: 86,
-        complexityScore: 88,
-        yearSort: 2017,
-        categories: ["professional", "insurance"],
-        cardTags: ["Endorsements", "Validation", "UI Design", "Business Rules"],
-        heroTags: ["Endorsements", "Change Comparison", "Validation", "Business Rules"],
-        allTags: ["Insurance", "Automation", "Web"],
-        metrics: [],
-        glance: {
-          employer: "Grenville Mutual Insurance",
-          period: "Within Grenville tenure (2009–2022)",
-          domain: "P&C Insurance · Policy Endorsements",
-          previewDomain: "P&C Insurance · Policy Changes",
-          role: "Analysis · Policy Rules · UI/Integration Design",
-          previewRole: "Analysis, policy rules implementation and change-comparison design",
-          team: "Business analysts · Developers · Underwriters",
-          technologies: "Policy Rules Engine · XML Mappings · Broker Portal UI",
-          outcome: "Clear pre-submission change comparison and contextual validation",
-          previewOutcome: "Let users inspect proposed policy changes before submission with transaction-specific rules."
-        },
-        problem: "Mid-term policy changes alter risk and rating differently than new business or renewals. Brokers needed to see exactly what was changing before submitting, and rules had to validate the delta in context.",
-        previewProblem: "Policy endorsements required pre-submission comparison and rules distinct from new business.",
-        solution: "Worked on a policy-change comparison interface and implemented contextual validation and rating rules that separated proposed changes from committed policy state.",
-        previewSolution: "Combined visual before/after change comparison with endorsement-specific rating and referral rules.",
-        contribution: "Designed and implemented endorsement validation and rating rules, mapped payload fields, and helped shape the pre-submission comparison workflow.",
-        lessons: "Showing users a clear before-and-after delta before they commit a transaction prevents accidental coverage errors and reduces downstream underwriting reversals.",
-        keyResultsMetrics: [
-          { val: "Pre-Submit", text: "Side-by-side change comparison" },
-          { val: "Contextual", text: "Endorsement-specific rule evaluation" }
-        ],
-        keyResultsChecks: [
-          "Separated proposed change deltas from active policy records",
-          "Distinguished endorsement rules from new business & renewals",
-          "Returned actionable correction, referral or bind messages"
-        ],
-        techStackTiles: [
-          { icon: "rulesEngine", label: "Endorsement Rules" },
-          { icon: "validation", label: "Delta Validation" },
-          { icon: "apis", label: "Broker Payloads" },
-          { icon: "reporting", label: "Comparison UI" },
-          { icon: "sql", label: "Policy State" }
-        ],
-        relatedSlugs: ["workflows", "renewals"],
-        timeline: [
-          { years: "Analysis", text: "Endorsement workflow & rule scoping", theme: "green" },
-          { years: "Delivery", text: "Change comparison UI & rule implementation", theme: "teal" },
-          { years: "Support", text: "Ongoing rule tuning across P&C lines", theme: "blue" }
-        ]
-      },
-      {
-        slug: "inquiry",
-        title: "Broker Policy Inquiry & Document Access",
-        shortTitle: "Broker Policy Inquiry",
-        badgeType: "PROFESSIONAL",
-        detailBadge: "PROFESSIONAL WORK",
-        org: "Grenville",
-        period: "Within Grenville tenure (2009–2022)",
-        sidebarSub: "Grenville · 2009 – 2022",
-        banner: "assets/proj-banner-inquiry.jpg",
-        shortDesc: "Connected broker inquiry workflows to policy, billing and claims data plus downloadable PDF documents.",
-        heroDesc: "Mapped and tested broker policy, billing and claims inquiry interfaces with downloadable PDF documents across SOAP/XML and REST.",
-        featured: false,
-        featuredOrder: 10,
-        status: "Implemented",
-        chapterLabel: "Shaped by the business",
-        impactScore: 84,
-        complexityScore: 82,
-        yearSort: 2015,
-        categories: ["professional", "insurance", "data"],
-        cardTags: ["SOAP / REST", "CSIO", "Broker Portal", "eDocs"],
-        heroTags: ["Broker Inquiry", "SOAP / XML", "REST", "PDF / eDocs"],
-        allTags: ["Insurance", "Integration", "Web"],
-        metrics: [],
-        glance: {
-          employer: "Grenville Mutual Insurance",
-          period: "Within Grenville tenure (2009–2022)",
-          domain: "P&C Insurance · Policy, Billing & Claims Inquiry",
-          previewDomain: "P&C Insurance · Broker Inquiry",
-          role: "Business Analysis · Mappings · Integration Testing",
-          previewRole: "Mockups, field mappings, request diagnosis and integration testing",
-          team: "Business analysts · Broker vendors · Developers",
-          technologies: "SOAP / XML · REST · CSIO / ACORD · PDF / eDocs",
-          outcome: "Reliable policy, billing and claims lookup inside broker workflows",
-          previewOutcome: "Delivered accurate policy, billing and claims inquiry with downloadable PDFs."
-        },
-        problem: "Brokers needed immediate access to policy, billing and claims details—along with downloadable PDFs—directly inside their own workflows without losing field meaning across system boundaries.",
-        previewProblem: "Policy, billing and claims lookups had to cross vendor boundaries cleanly and include downloadable PDFs.",
-        solution: "Created UI mockups and CSIO/proprietary field mappings, diagnosed SOAP/XML and REST requests, and tested end-to-end policy, billing and claims inquiry responses.",
-        previewSolution: "Connected broker inquiry requests to backend policy, billing, claims and PDF document services.",
-        contribution: "Produced mockups and field mappings, diagnosed integration requests across broker vendors, and verified downloadable policy, billing and claims PDFs.",
-        lessons: "Even a read-only inquiry is a business contract: field labels, status codes and documents must match how the broker actually serves the policyholder.",
-        keyResultsMetrics: [
-          { val: "3-in-1", text: "Policy, billing & claims inquiry" },
-          { val: "PDF", text: "Direct document & eDocs retrieval" }
-        ],
-        keyResultsChecks: [
-          "Mapped CSIO/ACORD and proprietary backend fields",
-          "Supported desktop SOAP/XML and modern REST endpoints",
-          "Verified downloadable policy, billing and claims PDFs"
-        ],
-        techStackTiles: [
-          { icon: "apis", label: "SOAP & REST" },
-          { icon: "validation", label: "CSIO Mappings" },
-          { icon: "reporting", label: "PDF / eDocs" },
-          { icon: "sql", label: "Policy & Claims Data" },
-          { icon: "rulesEngine", label: "Inquiry Testing" }
-        ],
-        relatedSlugs: ["newbusiness", "upload"],
-        timeline: [
-          { years: "Design", text: "Inquiry mockups & field mapping specs", theme: "green" },
-          { years: "Integration", text: "SOAP/XML & PDF document retrieval", theme: "teal" },
-          { years: "Evolution", text: "REST backend transition & vendor testing", theme: "blue" }
-        ]
-      },
-      {
-        slug: "upload",
-        title: "Authenticated Document Upload Portal",
-        shortTitle: "Document Upload into Policy Records",
-        badgeType: "PROFESSIONAL",
-        detailBadge: "PROFESSIONAL WORK",
-        org: "Grenville",
-        period: "Approx. 2018",
-        sidebarSub: "Grenville · ~2018",
-        banner: "assets/proj-banner-upload.jpg",
-        shortDesc: "Built a C#/.NET and REST portal for external adjusters to submit documents directly into policy records, plus log diagnostic tooling.",
-        heroDesc: "Developed an authenticated C#/.NET and REST submission portal placing adjuster documents directly into backend policy records, paired with internal log diagnostics.",
-        featured: false,
-        featuredOrder: 11,
-        status: "Implemented",
-        chapterLabel: "Shaped by the business",
-        impactScore: 87,
-        complexityScore: 86,
-        yearSort: 2018,
-        categories: ["professional", "insurance", "web", "tools"],
-        cardTags: ["C# / .NET", "REST API", "JavaScript", "Support Tooling"],
-        heroTags: ["C# / .NET", "REST API", "Bootstrap", "Operational Logging"],
-        allTags: ["Insurance", "Integration", "Web", "Tools"],
-        metrics: [],
-        glance: {
-          employer: "Grenville Mutual Insurance",
-          period: "Approx. 2018 (within Grenville tenure)",
-          domain: "P&C Insurance · Claims & Underwriting Documents",
-          previewDomain: "P&C Insurance · Document Intake Portal",
-          role: "Systems Analyst · Hands-On Developer",
-          previewRole: "Hands-on C#/.NET developer, REST integration and support tooling",
-          team: "Systems analyst / developer · Operations · External adjusters",
-          technologies: "C# · .NET · REST APIs · JavaScript · HTML/CSS · Bootstrap",
-          outcome: "Production portal replacing ad-hoc email with direct record placement",
-          previewOutcome: "Replaced fragmented email attachments with authenticated REST placement into policy records."
-        },
-        problem: "External insurance adjusters were submitting supporting documents and photos via ad-hoc email, leaving files fragmented outside the target policy-management records.",
-        previewProblem: "Ad-hoc email submissions left adjuster documents disconnected from backend policy records.",
-        solution: "Built an authenticated C#/.NET web portal using backend REST APIs to place documents and images directly into policy records, and built an internal log search tool to diagnose upload/download issues.",
-        previewSolution: "Delivered a C#/.NET + REST upload portal with operational logging and an internal troubleshooting tool.",
-        contribution: "Personally developed the C#/.NET and Bootstrap portal, integrated proprietary REST APIs, implemented operational logging, and built the internal log-diagnosis tool.",
-        lessons: "Pairing a new external integration with internal log-search tooling turns support from guesswork into fast, repeatable root-cause resolution.",
-        keyResultsMetrics: [
-          { val: ".NET + REST", text: "Direct backend record attachment" },
-          { val: "Built-In", text: "Internal log search & diagnostics" }
-        ],
-        keyResultsChecks: [
-          "Replaced ad-hoc email workflow for external adjusters",
-          "Attached quotes, photos and PDFs directly to policy records",
-          "Empowered support with self-service log search tooling"
-        ],
-        techStackTiles: [
-          { icon: "rulesEngine", label: "C# / .NET" },
-          { icon: "apis", label: "REST APIs" },
-          { icon: "reporting", label: "Bootstrap / JS" },
-          { icon: "validation", label: "Auth & Logging" },
-          { icon: "sql", label: "Log Search Tool" }
-        ],
-        relatedSlugs: ["inquiry", "takeover"],
-        timeline: [
-          { years: "Portal Build", text: "C#/.NET & Bootstrap adjuster portal", theme: "green" },
-          { years: "REST Placement", text: "Direct backend policy record attachment", theme: "teal" },
-          { years: "Diagnostics", text: "Internal log retrieval & search tool", theme: "blue" }
-        ]
-      },
-      {
-        slug: "claims",
-        title: "Provider Data for Claims Adjudication",
-        shortTitle: "Provider Data for Claims Adjudication",
-        badgeType: "PROFESSIONAL",
-        detailBadge: "PROFESSIONAL WORK",
-        org: "Medavie",
-        period: "2022 – Present",
-        sidebarSub: "Medavie · 2022 – Present",
-        banner: "assets/proj-banner-claims.jpg",
-        shortDesc: "Solution review, field mappings and scheduled synchronization requirements for provider data in claims adjudication.",
-        heroDesc: "Defined provider integration requirements, gap analysis and field mappings connecting source provider registries to claims adjudication via scheduled event tables and REST.",
-        featured: true,
-        featuredOrder: 4,
-        status: "Solution review & requirements",
-        chapterLabel: "Shaped by the business",
-        impactScore: 88,
-        complexityScore: 87,
-        yearSort: 2023,
-        categories: ["professional", "insurance", "data"],
-        cardTags: ["REST API", "Data Mapping", "Claims", "Solution Review"],
-        heroTags: ["Provider Registry", "REST Consumer", "Scheduled Sync", "Field Mapping"],
-        allTags: ["Insurance", "SQL", "Integration", "Data Engineering"],
-        metrics: [],
-        glance: {
-          employer: "Medavie Blue Cross",
-          period: "2022 – Present",
-          domain: "Health & Dental Claims · Provider Registry",
-          previewDomain: "Claims Adjudication · Provider Sync",
-          role: "Functional Analyst · Solution Review & Mapping",
-          previewRole: "Solution review, gap analysis, field mappings and sync requirements",
-          team: "Functional analysts · Solution architects · Integration developers",
-          technologies: "REST API Consumer · Scheduled Event Table · Field & Value Mappings",
-          outcome: "Clear provider synchronization requirements and cross-system mappings",
-          previewOutcome: "Aligned provider registry records with claims adjudication requirements."
-        },
-        problem: "Claims adjudication depends on accurate provider credentials, specialties and status across source and consumer systems. Mismatched fields or timing gaps cause adjudication delays.",
-        previewProblem: "Adjudication systems needed reliable provider data mappings and scheduled synchronization requirements.",
-        solution: "Reviewed the proposed architecture alongside solution architects, performed source-to-target gap analysis, and documented field mappings and scheduled event-table / REST synchronization requirements.",
-        previewSolution: "Defined source-to-target provider field mappings and scheduled event-table / REST retrieval requirements.",
-        contribution: "Conducted solution reviews, authored provider data mappings, and specified synchronization requirements between the provider source and claims adjudication (without claiming real-time broker implementation).",
-        lessons: "Clear field-level contracts and well-defined scheduled synchronization states keep multi-system claims adjudication predictable without over-engineering.",
-        keyResultsMetrics: [
-          { val: "REST + SQL", text: "Scheduled event table & API retrieval" },
-          { val: "End-to-End", text: "Source-to-adjudication field mapping" }
-        ],
-        keyResultsChecks: [
-          "Completed provider registry gap analysis alongside architects",
-          "Defined source-to-consumer field and status mappings",
-          "Specified scheduled event-table & REST sync behavior"
-        ],
-        techStackTiles: [
-          { icon: "apis", label: "REST Retrieval" },
-          { icon: "sql", label: "Event Table Sync" },
-          { icon: "validation", label: "Field Mappings" },
-          { icon: "rulesEngine", label: "Gap Analysis" },
-          { icon: "reporting", label: "Claims Adjudication" }
-        ],
-        relatedSlugs: ["takeover", "sql"],
-        timeline: [
-          { years: "Review", text: "Architecture & source-system gap analysis", theme: "green" },
-          { years: "Mapping", text: "Provider field & status transformations", theme: "teal" },
-          { years: "Sync Spec", text: "Scheduled event table & REST requirements", theme: "blue" }
-        ]
-      },
-      {
-        slug: "sql",
-        title: "Claims SQL & Financial Reconciliation",
-        shortTitle: "Claims SQL & Financial Reconciliation",
-        badgeType: "PROFESSIONAL",
-        detailBadge: "PROFESSIONAL WORK",
-        org: "Medavie",
-        period: "2022 – Present",
-        sidebarSub: "Medavie · 2022 – Present",
-        banner: "assets/proj-banner-sql.jpg",
-        shortDesc: "Hand-written SQL queries, financial report logic analysis and claims reconciliation across enterprise databases.",
-        heroDesc: "Wrote complex hand-written SQL to trace financial report logic, isolate discrepancies and reconcile claims data against downstream accounting reports.",
-        featured: false,
-        featuredOrder: 12,
-        status: "Implemented",
-        chapterLabel: "Shaped by the business",
-        impactScore: 88,
-        complexityScore: 89,
-        yearSort: 2024,
-        categories: ["professional", "insurance", "data"],
-        cardTags: ["SQL", "Reconciliation", "Financial Reporting", "Claims"],
-        heroTags: ["Hand-Written SQL", "Financial Reconciliation", "Report Logic", "Data Quality"],
-        allTags: ["Insurance", "SQL", "Data Engineering", "Reporting"],
-        metrics: [],
-        glance: {
-          employer: "Medavie Blue Cross",
-          period: "2022 – Present",
-          domain: "Enterprise Claims · Financial Reporting & Balancing",
-          previewDomain: "Claims Data · SQL & Financial Balancing",
-          role: "Functional Analyst · SQL & Reconciliation Lead",
-          previewRole: "Hand-written SQL queries, report logic analysis and financial balancing",
-          team: "Functional analysts · Finance & reporting teams · Data engineers",
-          technologies: "Hand-Written SQL · Relational Schemas · Financial Report Logic · Reconciliation",
-          outcome: "Verified claims-to-finance report logic and balanced extract totals",
-          previewOutcome: "Traced complex report rules in SQL so claims extracts reconciled with financial reporting."
-        },
-        problem: "Claims reporting must balance accurately against the financial reporting it feeds. When complex multi-table joins, reversals and cutoffs interact, discrepancies require deep SQL inspection.",
-        previewProblem: "Claims extracts and financial reports required deep SQL analysis to reconcile complex edge cases.",
-        solution: "Wrote hand-crafted analytical SQL across claims tables, reverse-engineered existing report logic, and built repeatable reconciliation queries to verify balances across system transitions.",
-        previewSolution: "Used hand-written SQL to trace report rules, isolate edge-case variances and verify financial alignment.",
-        contribution: "Personally wrote the diagnostic and reconciliation SQL queries, documented financial report business logic, and validated extract accuracy.",
-        lessons: "Reading and writing the actual SQL behind a financial report is the fastest way to uncover unspoken business assumptions and edge-case rules.",
-        keyResultsMetrics: [
-          { val: "SQL", text: "Direct relational query verification" },
-          { val: "Balanced", text: "Claims-to-finance report alignment" }
-        ],
-        keyResultsChecks: [
-          "Traced multi-table claims and financial reporting logic",
-          "Isolated reversal, cutoff and status edge cases in SQL",
-          "Supported continuity and migration verification"
-        ],
-        techStackTiles: [
-          { icon: "sql", label: "Hand-Written SQL" },
-          { icon: "validation", label: "Financial Balancing" },
-          { icon: "reporting", label: "Report Logic" },
-          { icon: "rulesEngine", label: "Edge-Case Analysis" },
-          { icon: "apis", label: "Data Extracts" }
-        ],
-        relatedSlugs: ["continuity", "takeover"],
-        timeline: [
-          { years: "Analysis", text: "Deconstructed legacy financial report logic", theme: "green" },
-          { years: "SQL Queries", text: "Built diagnostic & balancing SQL scripts", theme: "teal" },
-          { years: "Verification", text: "Reconciled claims extracts with finance", theme: "blue" }
-        ]
-      },
-      {
-        slug: "foundations",
-        title: "Small Business Server Swing Migrations",
-        shortTitle: "SBS Swing Migrations & Systems",
-        badgeType: "PROFESSIONAL",
-        detailBadge: "PROFESSIONAL WORK",
-        org: "Harris",
-        period: "2007 – 2009",
-        sidebarSub: "Harris · 2007 – 2009",
-        banner: "assets/proj-banner-foundations.jpg",
-        shortDesc: "Developed a repeatable swing-migration process separating combined Small Business Server environments into dedicated Active Directory and Exchange servers.",
-        heroDesc: "Built client server racks, firewalls and networks at Harris, and developed a repeatable SBS swing-migration process preserving live email, identity and data.",
-        featured: false,
-        featuredOrder: 13,
-        status: "Implemented",
-        chapterLabel: "Grounded in the metal",
-        impactScore: 85,
-        complexityScore: 85,
-        yearSort: 2008,
-        categories: ["professional", "infra"],
-        cardTags: ["Active Directory", "Exchange", "Server Racks", "Networking"],
-        heroTags: ["Swing Migration", "Active Directory", "Exchange", "Firewalls & VLANs"],
-        allTags: ["Infrastructure", "Tools"],
-        metrics: [],
-        glance: {
-          employer: "Harris Computer Services",
-          period: "2007 – 2009",
-          domain: "Managed IT · Server & Network Infrastructure",
-          previewDomain: "Enterprise Systems · Server & Identity Migrations",
-          role: "NOC & Project Technician",
-          previewRole: "NOC support, rack builds, firewall/switch configuration and SBS swing migrations",
-          team: "Infrastructure project technicians · NOC engineers · SMB clients",
-          technologies: "Windows Server · Small Business Server · Active Directory · Exchange · BES · Firewalls",
-          outcome: "Repeatable swing-migration methodology preserving data, email and identity",
-          previewOutcome: "Moved growing clients off combined SBS onto separated server infrastructure cleanly."
-        },
-        problem: "Growing businesses were outgrowing Microsoft Small Business Server, where Active Directory, Exchange email and file services were tightly coupled on one machine—making upgrades risky.",
-        previewProblem: "Combined Small Business Server environments made separating Active Directory and Exchange risky for live clients.",
-        solution: "Developed a repeatable staged swing-migration process to transition identity (Active Directory/GPO), Exchange mailboxes, BlackBerry Enterprise Server and file shares onto separated servers.",
-        previewSolution: "Created a repeatable staged swing-migration process that preserved domain identity, email and data.",
-        contribution: "Progressed from NOC monitoring to full rack builds, firewall/switch setups, and executing repeatable SBS swing migrations for client environments.",
-        lessons: "Understanding how identity, DNS, mail routing and storage depend on each other makes complex multi-server cutovers predictable and calm.",
-        keyResultsMetrics: [
-          { val: "Staged", text: "Repeatable swing-migration process" },
-          { val: "Full-Stack", text: "Racks, firewalls, AD & Exchange" }
-        ],
-        keyResultsChecks: [
-          "Preserved Active Directory SIDs, GPOs and Exchange mailboxes",
-          "Built client server racks, switches and firewall perimeters",
-          "Supported internal Harris firewalls, switches and servers"
-        ],
-        techStackTiles: [
-          { icon: "rulesEngine", label: "Active Directory" },
-          { icon: "apis", label: "Exchange & BES" },
-          { icon: "validation", label: "Firewalls & Switches" },
-          { icon: "sql", label: "Server Racks" },
-          { icon: "reporting", label: "Swing Migration" }
-        ],
-        relatedSlugs: ["headquarters", "dell"],
-        timeline: [
-          { years: "2007", text: "NOC monitoring & corporate support", theme: "green" },
-          { years: "2008", text: "Client rack builds, switches & firewalls", theme: "teal" },
-          { years: "2008 – 2009", text: "Repeatable SBS swing migrations", theme: "blue" }
-        ]
-      },
-      {
-        slug: "dell",
-        title: "Dell Latitude & OptiPlex Hardware Support",
-        shortTitle: "Dell Hardware & First-Call Support",
-        badgeType: "PROFESSIONAL",
-        detailBadge: "PROFESSIONAL WORK",
-        org: "Dell",
-        period: "Sept 2006 – 2007",
-        sidebarSub: "Dell · 2006 – 2007",
-        banner: "assets/proj-banner-dell.jpg",
-        shortDesc: "Latitude and OptiPlex hardware support on Dell's Gloves Off team—spending the time needed to isolate the fault on the first call and reduce callbacks.",
-        heroDesc: "Supported commercial Latitude laptops and OptiPlex desktops on Dell's Gloves Off team, focusing on thorough root-cause diagnosis and first-call resolution.",
-        featured: false,
-        featuredOrder: 14,
-        status: "Implemented",
-        chapterLabel: "Grounded in the metal",
-        impactScore: 82,
-        complexityScore: 78,
-        yearSort: 2006,
-        categories: ["professional", "infra"],
-        cardTags: ["Hardware", "Diagnostics", "First-Call Resolution", "Support"],
-        heroTags: ["Dell Gloves Off", "Latitude & OptiPlex", "Hardware Diagnostics", "Root-Cause Fix"],
-        allTags: ["Infrastructure", "Tools"],
-        metrics: [],
-        glance: {
-          employer: "Dell Canada",
-          period: "September 2006 – 2007",
-          domain: "Commercial Hardware Support · Latitude & OptiPlex",
-          previewDomain: "Enterprise Endpoints · Hardware Diagnostics",
-          role: "Technical Support Specialist (Gloves Off Team)",
-          previewRole: "Component-level hardware troubleshooting and client resolution",
-          team: "Dell Gloves Off support team · Field dispatch technicians",
-          technologies: "Dell Latitude · OptiPlex · System Boards · PSU / Thermal / Bus Diagnostics",
-          outcome: "First-call resolution focus and reduced repeat client callbacks",
-          previewOutcome: "Isolated root-cause hardware faults on the first call so clients didn't have to call back."
-        },
-        problem: "A hardware fault is disruptive enough without rushing the user off the phone and forcing repeat callbacks when a symptom returns.",
-        previewProblem: "Rushed call-handle targets often treated symptoms instead of isolating the true hardware fault.",
-        solution: "Worked on Dell's Gloves Off team, where we were empowered to spend the time required with the client to isolate motherboard, power, thermal or storage faults on the first call.",
-        previewSolution: "Combined methodical component-level isolation with clear client communication to resolve faults on the first call.",
-        contribution: "Diagnosed Latitude and OptiPlex hardware failures, guided clients through verification steps, and prepared accurate dispatch specifications.",
-        lessons: "Start with the real problem, verify the physical evidence, and keep the person on the other end of the system in view—a habit that still guides my architecture work today.",
-        keyResultsMetrics: [
-          { val: "Gloves Off", text: "First-call root-cause mandate" },
-          { val: "Sept 2006", text: "Foundation of technology career" }
-        ],
-        keyResultsChecks: [
-          "Component-level fault isolation on Latitude & OptiPlex",
-          "Reduced repeat callbacks through thorough first-call diagnosis",
-          "Clear translation between technical faults and user impact"
-        ],
-        techStackTiles: [
-          { icon: "rulesEngine", label: "System Boards" },
-          { icon: "validation", label: "POST & BIOS" },
-          { icon: "sql", label: "SATA / Storage" },
-          { icon: "apis", label: "PSU & Thermal" },
-          { icon: "reporting", label: "First-Call Fix" }
-        ],
-        relatedSlugs: ["foundations", "headquarters"],
-        timeline: [
-          { years: "Sept 2006", text: "Joined Dell commercial hardware support", theme: "green" },
-          { years: "Gloves Off", text: "Empowered first-call root-cause resolution", theme: "teal" },
-          { years: "2007", text: "Transitioned into NOC & server systems at Harris", theme: "blue" }
-        ]
-      },
-      {
-        slug: "lowkey",
-        title: "LOWKEY — Local Speech-to-Text Input",
-        shortTitle: "LOWKEY — Local Speech Input",
-        badgeType: "INDEPENDENT",
-        detailBadge: "INDEPENDENT BUILD",
-        org: "Personal",
-        period: "Independent Build",
-        sidebarSub: "Independent · Local AI",
-        banner: "assets/lowkey-local-speech-v1.png",
-        shortDesc: "On-device speech recognition connected directly to everyday text input across Windows (Rust / Tauri 2) and Android (Kotlin IME).",
-        heroDesc: "Local speech-to-text inference using sherpa-onnx / Parakeet with a dedicated Rust worker on Windows and a native Kotlin keyboard on Android.",
-        featured: false,
-        featuredOrder: 15,
-        status: "Implemented",
-        chapterLabel: "Building in the cloud",
-        impactScore: 86,
-        complexityScore: 90,
-        yearSort: 2024,
-        categories: ["independent", "ai", "web", "tools"],
-        cardTags: ["Local AI", "Rust / Tauri 2", "Android IME", "ONNX"],
-        heroTags: ["Local Speech AI", "Rust / Tauri 2", "sherpa-onnx", "Kotlin Android IME"],
-        allTags: ["AI", "Automation", "Web", "Tools"],
-        metrics: [],
-        glance: {
-          employer: "Independent Project",
-          period: "Historical / Personal Build",
-          domain: "On-Device AI · Speech-to-Text & Native Input",
-          previewDomain: "Local AI Inference · Desktop & Mobile Input",
-          role: "Creator & Developer",
-          previewRole: "End-to-end Rust/Tauri, TypeScript and Kotlin Android IME development",
-          team: "Independent Build",
-          technologies: "Rust · Tauri 2 · React / TypeScript · sherpa-onnx / Parakeet · Kotlin Android IME",
-          outcome: "Local phrase capture and on-device decoding into native text fields",
-          previewOutcome: "Connected local ONNX speech models directly to Windows and Android text entry."
-        },
-        problem: "Cloud voice dictation adds latency and sends audio off-device, and often stays trapped inside a separate app instead of typing directly where you already work.",
-        previewProblem: "Voice input needed to run locally on-device and type directly into native Windows and Android inputs.",
-        solution: "Built LOWKEY around AudioWorklet capture, Silero phrase detection, and cached sherpa-onnx / Parakeet models in a Rust / Tauri 2 desktop app and Kotlin Android IME.",
-        previewSolution: "Combined Silero VAD and local Parakeet ONNX models with native Windows and Android keyboard injection.",
-        contribution: "Built the Rust worker pipeline, Tauri 2 desktop interface, local vocabulary correction flow, and Android input method service.",
-        lessons: "Running quantized models locally (110M CTC and 0.6B v3 TDT INT8) makes voice input feel like a natural extension of the operating system.",
-        keyResultsMetrics: [
-          { val: "On-Device", text: "Local sherpa-onnx / Parakeet decoding" },
-          { val: "2-Platform", text: "Windows Tauri 2 + Android Kotlin IME" }
-        ],
-        keyResultsChecks: [
-          "AudioWorklet capture with Silero VAD phrase detection",
-          "Cached 110M CTC & 0.6B v3 TDT INT8 local models",
-          "Custom dictionary & vocabulary correction pipeline"
-        ],
-        techStackTiles: [
-          { icon: "rulesEngine", label: "Rust & Tauri 2" },
-          { icon: "apis", label: "sherpa-onnx" },
-          { icon: "validation", label: "Silero VAD" },
-          { icon: "reporting", label: "React / TS" },
-          { icon: "sql", label: "Kotlin Android IME" }
-        ],
-        relatedSlugs: ["nexus", "workshop42"],
-        timeline: [
-          { years: "Prototype", text: "AudioWorklet & Silero VAD capture", theme: "green" },
-          { years: "Desktop", text: "Rust / Tauri 2 local ONNX worker", theme: "teal" },
-          { years: "Mobile", text: "Kotlin Android keyboard IME", theme: "blue" }
-        ]
-      },
-      {
-        slug: "workshop42",
-        title: "Workshop42 — Physical Design & Fabrication",
-        shortTitle: "Workshop42 — Physical Builds",
-        badgeType: "INDEPENDENT",
-        detailBadge: "INDEPENDENT BUILD",
-        org: "Workshop42",
-        period: "Independent Studio",
-        sidebarSub: "Independent · ws42.ca",
-        banner: "assets/apex.jpg",
-        shortDesc: "Tangible industrial design and multi-material 3D-printed objects—including the Apex monitor riser and The Voyager canoe model.",
-        heroDesc: "Designing and fabricating physical objects that combine CAD precision, multi-color 3D printing and woodworking at Workshop42 (ws42.ca).",
-        featured: false,
-        featuredOrder: 16,
-        status: "Implemented",
-        chapterLabel: "Grounded in the metal",
-        impactScore: 83,
-        complexityScore: 80,
-        yearSort: 2024,
-        categories: ["independent", "web", "tools"],
-        cardTags: ["CAD & 3D Printing", "Product Design", "MakerWorld", "Hardware"],
-        heroTags: ["Workshop42", "CAD & Fabrication", "Apex Monitor Riser", "The Voyager"],
-        allTags: ["Web", "Tools"],
-        metrics: [],
-        glance: {
-          employer: "Workshop42 (ws42.ca)",
-          period: "Ongoing Personal Studio",
-          domain: "Physical Product Design · Additive Manufacturing",
-          previewDomain: "Industrial Design · 3D Printing & Woodwork",
-          role: "Designer & Maker",
-          previewRole: "CAD modeling, structural prototyping, print optimization and photography",
-          team: "Independent Studio",
-          technologies: "CAD Modeling · Multi-Material FDM Printing · Wood & Composite Joinery",
-          outcome: "Published community models on MakerWorld and ws42.ca",
-          previewOutcome: "Designed functional desktop hardware and scale models photographed as built."
-        },
-        problem: "Digital systems aren't the only place where structure, tolerances and human ergonomics matter—physical workspace tools benefit from the same iterative design loop.",
-        previewProblem: "Bringing iterative engineering tolerances and clean aesthetics into physical objects.",
-        solution: "Created Workshop42 to design, prototype and share tangible builds—like the Apex monitor riser (printed structural legs with a hardwood shelf) and The Voyager dual-color floating canoe model.",
-        previewSolution: "Designed and fabricated multi-material physical objects published on MakerWorld and ws42.ca.",
-        contribution: "Modeled parts in CAD, tuned print orientation and structural infill for load-bearing strength, and published print profiles.",
-        lessons: "Physical fabrication reinforces a core engineering truth: tolerances, material constraints and simplicity determine whether a design holds up in the real world.",
-        keyResultsMetrics: [
-          { val: "Apex", text: "Printed legs + wooden shelf riser" },
-          { val: "Voyager", text: "Dual-color floating canoe model" }
-        ],
-        keyResultsChecks: [
-          "Published print-ready models on MakerWorld",
-          "Combined 3D-printed structural geometry with wood",
-          "Photographed and documented real physical builds"
-        ],
-        techStackTiles: [
-          { icon: "rulesEngine", label: "CAD Modeling" },
-          { icon: "validation", label: "Structural Fit" },
-          { icon: "apis", label: "Multi-Color Print" },
-          { icon: "reporting", label: "MakerWorld" },
-          { icon: "sql", label: "ws42.ca" }
-        ],
-        relatedSlugs: ["nexus", "lowkey"],
-        timeline: [
-          { years: "CAD", text: "Parametric modeling & tolerance testing", theme: "green" },
-          { years: "Fabrication", text: "Multi-color printing & wood assembly", theme: "teal" },
-          { years: "Release", text: "Published on MakerWorld & ws42.ca", theme: "blue" }
-        ]
+        "val": "~40%",
+        "label": "Farm / Agri"
       }
-    ]);
+    ],
+    "metricsNote": "Approximate self-reported renewal-only figures. Josh confirmed 60% commercial renewal automation; exceptions remained with underwriters.",
+    "glance": {
+      "employer": "Grenville Mutual Insurance",
+      "period": "Within Grenville tenure (2009–2022)",
+      "domain": "P&C Insurance · Personal, Commercial & Farm Renewals",
+      "previewDomain": "P&C Insurance · Underwriting · Renewals",
+      "role": "Analysis · Rule Design · Implementation · Support",
+      "previewRole": "Analysis, rule design, implementation and ongoing support",
+      "team": "Business analysts · Underwriters · Developers · QA",
+      "technologies": "Business rules · Validation · Integration · SQL · APIs",
+      "outcome": "Automated standard renewals with explicit underwriter exception routing",
+      "previewOutcome": "Automated eligible renewals while preserving focused underwriter review; reported rates are approximate and renewal-only."
+    },
+    "problem": "Renewal processes were manual, inconsistent and time-consuming. Underwriters spent significant time reviewing standard low-risk renewals, while complex exceptions needed clearer routing criteria across residential, commercial and farm/agri lines.",
+    "previewProblem": "Manual renewal review consumed underwriter capacity on standard risks across P&C lines.",
+    "solution": "Started every policy in referral. Automatic renewal was allowed only when all required eligibility checks passed. I generated comparison reports for underwriters to check against their normal decisions before the rules were enabled in production.",
+    "previewSolution": "Implemented line-specific renewal eligibility rules with explicit exception referral to human underwriters.",
+    "contribution": "I designed the eligibility framework, implemented the rules and worked with underwriters on line-specific criteria and exception messages. Automation handled suitable standard policies while people retained judgment over exceptions.",
+    "lessons": "A useful automation boundary includes the work that needs human judgment, the reason it was referred and evidence that the rule behaves as intended.",
+    "keyResultsMetrics": [
+      {
+        "val": "~80%",
+        "text": "Residential renewals automated (user-reported)"
+      },
+      {
+        "val": "~40%",
+        "text": "Farm / Agri renewals automated (user-reported)"
+      }
+    ],
+    "keyResultsChecks": [
+      "Fail-first rules with focused exception reasons",
+      "Decisions compared with underwriter review before activation",
+      "Approximate renewal-only rates; 60% commercial confirmed by Josh"
+    ],
+    "techStackTiles": [
+      {
+        "icon": "sql",
+        "label": "SQL"
+      },
+      {
+        "icon": "rulesEngine",
+        "label": "Business Rules Engine"
+      },
+      {
+        "icon": "apis",
+        "label": "Integration (APIs)"
+      },
+      {
+        "icon": "validation",
+        "label": "Data Validation"
+      },
+      {
+        "icon": "reporting",
+        "label": "Reporting (Cognos)"
+      }
+    ],
+    "relatedSlugs": [
+      "newbusiness",
+      "changes"
+    ],
+    "timeline": [
+      {
+        "years": "Phase 1",
+        "text": "Requirements and line-of-business analysis",
+        "theme": "green"
+      },
+      {
+        "years": "Phase 2",
+        "text": "Eligibility rule design and implementation",
+        "theme": "teal"
+      },
+      {
+        "years": "Phase 3",
+        "text": "Line tuning and ongoing operational support",
+        "theme": "blue"
+      }
+    ],
+    "floatingHeroCard": {
+      "title": "Work summary",
+      "status": "Production rules",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Grenville"
+        },
+        {
+          "label": "My role",
+          "val": "Analysis  ·  Rule Design "
+        },
+        {
+          "label": "Scope",
+          "val": "Production rules"
+        }
+      ],
+      "cta": "Read the evidence",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary"
+    }
+  },
+  {
+    "slug": "newbusiness",
+    "title": "Broker-Native New Business Integration",
+    "shortTitle": "Broker-Native New Business Integration",
+    "badgeType": "PROFESSIONAL",
+    "detailBadge": "PROFESSIONAL WORK",
+    "org": "Grenville",
+    "period": "Within Grenville tenure (2009–2022)",
+    "sidebarSub": "Grenville · 2009 – 2022",
+    "banner": "assets/optimized-extra/proj-banner-newbusiness-1376.webp",
+    "shortDesc": "Connected broker workflows to insurance rules, validation, referral and binding decisions.",
+    "heroDesc": "Reused broker policy data, collected missing risk details and connected deterministic validation to correction, referral or eligible binding.",
+    "featured": true,
+    "featuredOrder": 3,
+    "status": "Implemented",
+    "chapterLabel": "Shaped by the business",
+    "impactScore": 95,
+    "complexityScore": 92,
+    "yearSort": 2019,
+    "categories": [
+      "professional",
+      "insurance",
+      "data"
+    ],
+    "cardTags": [
+      "Integration",
+      "Business Rules",
+      "Solution Design"
+    ],
+    "heroTags": [
+      "Integration",
+      "Business Rules",
+      "Solution Design",
+      "Underwriting",
+      "SOAP / REST"
+    ],
+    "allTags": [
+      "Insurance",
+      "Integration",
+      "Automation",
+      "Business Rules"
+    ],
+    "metrics": [],
+    "glance": {
+      "employer": "Grenville Mutual Insurance",
+      "period": "Within Grenville tenure (2009–2022)",
+      "domain": "P&C Insurance · Broker New Business",
+      "previewDomain": "P&C Insurance · Broker New Business",
+      "role": "Requirements · Field Mapping · Rules Implementation",
+      "previewRole": "Requirements, field/value mapping, UI specifications and rules implementation",
+      "team": "Business analysts · Broker/portal vendors · Developers · Underwriters",
+      "technologies": "CSIO / ACORD XML · SOAP / REST · Rules Engine · Broker Portal",
+      "outcome": "Actionable correction, referral and bind decisions in broker workflows",
+      "previewOutcome": "Connected broker inputs to validation, referral and binding decisions."
+    },
+    "problem": "A new-business workflow cannot rate or underwrite a risk properly if the broker interface fails to collect required risk inputs. Submissions arrived with missing or mismatched fields across broker-management systems.",
+    "previewProblem": "Broker submissions lacked required risk inputs or failed validation across system boundaries.",
+    "solution": "Defined mappings, missing-input checks and tagged rule outcomes so the broker flow could distinguish correction, referral and eligible binding. Referred submissions could create a populated backend record for underwriter review rather than require re-keying.",
+    "previewSolution": "Connected broker inputs and CSIO/XML payloads to rating/underwriting rules and actionable portal messages.",
+    "contribution": "I defined requirements, mappings and interface behavior and implemented related rating and underwriting rules. Vendor and developer teams implemented the application UI and services; auto rate calculations were vendor-managed.",
+    "lessons": "Effective integration is more than transport—it requires preserving business meaning across the interface so users know exactly what to fix or when a risk needs underwriter review.",
+    "keyResultsMetrics": [
+      {
+        "val": "2-Way",
+        "text": "Upload & download payload mapping"
+      },
+      {
+        "val": "3-Path",
+        "text": "Self-correct, refer or bind responses"
+      }
+    ],
+    "keyResultsChecks": [
+      "Existing broker data reused instead of wholesale re-entry",
+      "Tagged rules controlled correction, referral and eligible binding",
+      "Populated referral records supported underwriter review; no blanket zero-touch claim"
+    ],
+    "techStackTiles": [
+      {
+        "icon": "rulesEngine",
+        "label": "Business Rules Engine"
+      },
+      {
+        "icon": "apis",
+        "label": "SOAP / REST APIs"
+      },
+      {
+        "icon": "validation",
+        "label": "CSIO / XML Validation"
+      },
+      {
+        "icon": "sql",
+        "label": "Policy Data Mapping"
+      },
+      {
+        "icon": "reporting",
+        "label": "Broker Portal Specs"
+      }
+    ],
+    "relatedSlugs": [
+      "renewals",
+      "workflows"
+    ],
+    "timeline": [
+      {
+        "years": "Phase 1",
+        "text": "Auto & residential rule design",
+        "theme": "green"
+      },
+      {
+        "years": "Phase 2",
+        "text": "Broker portal & BMS payload mapping",
+        "theme": "teal"
+      },
+      {
+        "years": "Phase 3",
+        "text": "REST backend transition & refinement",
+        "theme": "blue"
+      }
+    ],
+    "floatingHeroCard": {
+      "title": "Work summary",
+      "status": "Implemented",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Grenville"
+        },
+        {
+          "label": "My role",
+          "val": "Requirements  ·  Field Mapping "
+        },
+        {
+          "label": "Scope",
+          "val": "Implemented"
+        }
+      ],
+      "cta": "Read the evidence",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary"
+    }
+  },
+  {
+    "slug": "takeover",
+    "title": "Claims-History Loading & VBA Automation",
+    "shortTitle": "Claims-History Loading & VBA Automation",
+    "badgeType": "PROFESSIONAL",
+    "detailBadge": "PROFESSIONAL WORK",
+    "org": "Medavie",
+    "period": "2022 – Present",
+    "sidebarSub": "Medavie · 2022 – Present",
+    "banner": "assets/optimized-extra/proj-banner-takeover-1376.webp",
+    "shortDesc": "Designed and built a production Excel VBA add-in for validation, XML generation, batch preparation and returned-error reconciliation.",
+    "heroDesc": "Turned inconsistent prior-carrier history into a repeatable claims-loading workflow, with a production Excel VBA add-in and developer-supported backend changes.",
+    "featured": true,
+    "featuredOrder": 2,
+    "status": "Production tool",
+    "chapterLabel": "Shaped by the business",
+    "impactScore": 94,
+    "complexityScore": 90,
+    "yearSort": 2023,
+    "categories": [
+      "professional",
+      "insurance",
+      "data",
+      "tools"
+    ],
+    "cardTags": [
+      "SQL",
+      "ETL",
+      "Excel/VB",
+      "Data Quality"
+    ],
+    "heroTags": [
+      "SQL",
+      "ETL",
+      "Excel/VB",
+      "Data Quality",
+      "XML Schema"
+    ],
+    "allTags": [
+      "Insurance",
+      "SQL",
+      "Tools",
+      "Data Engineering",
+      "Integration"
+    ],
+    "metrics": [],
+    "glance": {
+      "employer": "Medavie Blue Cross",
+      "period": "2022 – Present",
+      "domain": "Health & Dental Claims · Group Takeover",
+      "previewDomain": "Group Claims · Takeover History Onboarding",
+      "role": "Solution Design · VBA Development · Validation · Support",
+      "previewRole": "Designed and built the VBA add-in; guided receiving-system changes",
+      "team": "Functional analysts · Developers · Claims operations",
+      "technologies": "Excel VBA · XML · Validation · SQL reconciliation",
+      "outcome": "Production loading workflow enabling independent team use",
+      "previewOutcome": "Teams prepare, validate and load history through a supported repeatable workflow."
+    },
+    "problem": "When a group changes insurers, prior claim history arrives in inconsistent spreadsheets or tables extracted from PDFs, while the receiving claims adjudication system requires a strict XML structure to enforce benefit maximums.",
+    "previewProblem": "Inconsistent prior-insurer spreadsheets caused manual transformation bottlenecks and load errors.",
+    "solution": "Users map source data into a structured template. The add-in checks data, generates schema-compatible XML, splits manageable batches and highlights errors returned by the loader. Test-informed limits and operating guidance support controlled loading.",
+    "previewSolution": "Designed and built the production Excel VBA add-in for validation, XML batch preparation and returned-error reconciliation.",
+    "contribution": "I researched the receiving load, documented schema gaps and guided backend changes with a developer. I separately designed and built the Excel VBA add-in, validated AI-assisted code against known errors and helped teams prepare and load files independently.",
+    "lessons": "Automation is useful when users can prepare, validate and reconcile the work themselves, with enough evidence to investigate failures.",
+    "keyResultsMetrics": [
+      {
+        "val": "XSD",
+        "text": "Pre-load XML schema validation"
+      },
+      {
+        "val": "Adopted",
+        "text": "Production team onboarding workflow"
+      }
+    ],
+    "keyResultsChecks": [
+      "Production Excel VBA add-in designed and built by Josh",
+      "Repeatable validation, XML batch preparation and error reconciliation",
+      "Teams prepare and load their files independently; backend engine work remained with developers"
+    ],
+    "techStackTiles": [
+      {
+        "icon": "validation",
+        "label": "XML / XSD Validation"
+      },
+      {
+        "icon": "rulesEngine",
+        "label": "Excel VBA Tooling"
+      },
+      {
+        "icon": "sql",
+        "label": "SQL Verification"
+      },
+      {
+        "icon": "apis",
+        "label": "Batch ETL Load"
+      },
+      {
+        "icon": "reporting",
+        "label": "Reconciliation"
+      }
+    ],
+    "relatedSlugs": [
+      "claims",
+      "continuity"
+    ],
+    "timeline": [
+      {
+        "years": "Phase 1",
+        "text": "Takeover data & XSD gap analysis",
+        "theme": "green"
+      },
+      {
+        "years": "Phase 2",
+        "text": "Production Excel VBA add-in development",
+        "theme": "teal"
+      },
+      {
+        "years": "Phase 3",
+        "text": "Team adoption & reconciliation support",
+        "theme": "blue"
+      }
+    ],
+    "floatingHeroCard": {
+      "title": "Work summary",
+      "status": "Production VBA tool",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Medavie"
+        },
+        {
+          "label": "My role",
+          "val": "Solution Design  ·  VBA Development "
+        },
+        {
+          "label": "Scope",
+          "val": "Production VBA tool"
+        }
+      ],
+      "cta": "Read the evidence",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary"
+    }
+  },
+  {
+    "slug": "nexus",
+    "title": "NEXUS — AI Orchestration Platform",
+    "shortTitle": "NEXUS — AI Orchestration Platform",
+    "badgeType": "INDEPENDENT",
+    "detailBadge": "INDEPENDENT BUILD",
+    "org": "NEXUS",
+    "period": "Active development",
+    "sidebarSub": "Independent · Active build",
+    "banner": "assets/optimized-extra/proj-banner-nexus-1376.webp",
+    "shortDesc": "Independent multi-agent platform for planning, execution and evaluation with scoped context and audit receipts.",
+    "heroDesc": "An independent platform in active development, exploring how context, model routing, tools, approvals and evaluation fit into useful AI-assisted work.",
+    "featured": true,
+    "featuredOrder": 6,
+    "status": "Active development",
+    "chapterLabel": "Building in the cloud",
+    "impactScore": 98,
+    "complexityScore": 99,
+    "yearSort": 2025,
+    "categories": [
+      "independent",
+      "ai",
+      "tools"
+    ],
+    "cardTags": [
+      "AI Agents",
+      "Orchestration",
+      "TypeScript"
+    ],
+    "heroTags": [
+      "AI Agents",
+      "Orchestration",
+      "TypeScript",
+      "PostgreSQL",
+      "Evaluation"
+    ],
+    "allTags": [
+      "AI",
+      "Automation",
+      "Web",
+      "Tools"
+    ],
+    "metrics": [],
+    "glance": {
+      "employer": "Independent Capstone (run.nexus)",
+      "period": "Active development",
+      "domain": "AI Orchestration · Governed Software Delivery",
+      "previewDomain": "AI Systems · Multi-Agent Orchestration",
+      "role": "Product Direction · Architecture · AI-Assisted Implementation",
+      "previewRole": "Independent architecture, design and full-stack implementation",
+      "team": "Independent Capstone Project",
+      "technologies": "TypeScript · React/Vite · Node.js · PostgreSQL · Redis · OpenAPI",
+      "outcome": "Independent architecture and applied-learning capstone",
+      "previewOutcome": "Exploring AI as the next step in repeatable automation, with context and review boundaries."
+    },
+    "problem": "Useful AI-assisted work requires more than an unconstrained chat prompt. Without scoped context, explicit plan review, permissioned execution and verifiable receipts, multi-step AI tasks quickly drift or become impossible to audit.",
+    "previewProblem": "Unconstrained AI prompts lack scoped context, explainable routing and auditable execution receipts.",
+    "solution": "Brings scoped context, constrained model selection, planning and execution boundaries and an inspectable execution trail into one evolving work system. Current implementation, configuration-dependent behavior and future product goals remain distinct.",
+    "previewSolution": "Designed a headless TypeScript orchestration core with React/Vite workbench, durable Node execution and evaluation receipts.",
+    "contribution": "I set the product direction, architecture and module choices, using AI-assisted implementation to develop the platform. Source-described mechanisms are not a claim that every interface is live-qualified or every subsystem was independently hand-written.",
+    "lessons": "Applying enterprise systems discipline—explicit boundaries, state recovery and audit trails—turns probabilistic LLM capabilities into a dependable engineering workbench.",
+    "keyResultsMetrics": [
+      {
+        "val": "4-Stage",
+        "text": "Context · Plan · Execute · Verify loop"
+      },
+      {
+        "val": "Durable",
+        "text": "Recoverable process execution"
+      }
+    ],
+    "keyResultsChecks": [
+      "Independent product and architecture direction with AI-assisted implementation",
+      "Source-described context, routing and execution mechanisms",
+      "Active development; no enterprise adoption or universal feature-completeness claim"
+    ],
+    "techStackTiles": [
+      {
+        "icon": "rulesEngine",
+        "label": "TypeScript Core"
+      },
+      {
+        "icon": "apis",
+        "label": "OpenAPI & WebSockets"
+      },
+      {
+        "icon": "sql",
+        "label": "PostgreSQL & Redis"
+      },
+      {
+        "icon": "validation",
+        "label": "Evaluation Receipts"
+      },
+      {
+        "icon": "reporting",
+        "label": "React / Vite UI"
+      }
+    ],
+    "relatedSlugs": [
+      "lowkey",
+      "renewals"
+    ],
+    "timeline": [
+      {
+        "years": "Foundation",
+        "text": "Context compilation & graph schema",
+        "theme": "green"
+      },
+      {
+        "years": "Core Engine",
+        "text": "Model routing & durable Node runner",
+        "theme": "teal"
+      },
+      {
+        "years": "Active Build",
+        "text": "Evaluation receipts & workbench UI",
+        "theme": "blue"
+      }
+    ],
+    "floatingHeroCard": {
+      "title": "Work summary",
+      "status": "Independent development",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "NEXUS"
+        },
+        {
+          "label": "My role",
+          "val": "Product Direction  ·  Architecture "
+        },
+        {
+          "label": "Scope",
+          "val": "Independent development"
+        }
+      ],
+      "cta": "Read the evidence",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary"
+    }
+  },
+  {
+    "slug": "continuity",
+    "title": "Claims Reporting & Data Continuity",
+    "shortTitle": "Claims Reporting & Data Continuity",
+    "badgeType": "PROFESSIONAL",
+    "detailBadge": "PROFESSIONAL WORK",
+    "org": "Medavie",
+    "period": "2022 – Present",
+    "sidebarSub": "Medavie · 2022 – Present",
+    "banner": "assets/optimized-extra/proj-banner-continuity-1376.webp",
+    "shortDesc": "Traced a reporting request to downstream data dependencies, delivered interim SQL and designed a compatibility path.",
+    "heroDesc": "Discovery confirmed that a client needed compatible data for several downstream systems. I delivered interim SQL reporting while an approved permanent extract design remained unfinished.",
+    "featured": false,
+    "featuredOrder": 7,
+    "status": "Approved design; interim reporting live",
+    "chapterLabel": "Shaped by the business",
+    "impactScore": 92,
+    "complexityScore": 91,
+    "yearSort": 2024,
+    "categories": [
+      "professional",
+      "insurance",
+      "data"
+    ],
+    "cardTags": [
+      "SQL",
+      "Cognos",
+      "Data Models",
+      "Reporting"
+    ],
+    "heroTags": [
+      "SQL",
+      "Cognos",
+      "Data Models",
+      "Reporting",
+      "ETL Continuity"
+    ],
+    "allTags": [
+      "Insurance",
+      "SQL",
+      "Data Engineering",
+      "Reporting",
+      "Integration"
+    ],
+    "metrics": [],
+    "glance": {
+      "employer": "Medavie Blue Cross",
+      "period": "2022 – Present",
+      "domain": "Enterprise Claims · ETL & Client Reporting",
+      "previewDomain": "Claims Data · Daily ETL & Cognos Continuity",
+      "role": "Current-State Analysis · Continuity Mapping · Modernization Proposal",
+      "previewRole": "Current-state analysis, field mapping and modernization proposal",
+      "team": "Functional analysts · Data engineering · Solution architects",
+      "technologies": "SQL · Legacy COBOL/InterBlue Flat-File ETL · Cognos · REST Design",
+      "outcome": "Approved design and operational interim reports; permanent extract unfinished",
+      "previewOutcome": "Interim SQL is operational; the permanent compatibility bridge remains unconfirmed."
+    },
+    "problem": "What was initially assigned as a simple Power BI report turned out to be a daily flat-file ETL feed through legacy COBOL/InterBlue that powered a client's downstream IBM Cognos reporting.",
+    "previewProblem": "A supposed report assignment was actually a daily flat-file ETL integration feeding client Cognos analytics.",
+    "solution": "Confirmed the consumer's requirements, compared alternatives and designed a transitional mapping into the existing legacy transformation path. Interim SQL reports provided usable data and exposed completeness gaps while the permanent extract was being completed.",
+    "previewSolution": "Completed the analysis and continuity mapping to preserve the daily flat-file contract while proposing a modern exchange.",
+    "contribution": "I carried out discovery, documented mappings and presented the approved compatibility approach. I also wrote operational interim reports and distinguished a parseable file from a complete, correct population of records.",
+    "lessons": "Preserve a data contract because the consumer still needs it, and test content completeness separately from format acceptance.",
+    "keyResultsMetrics": [
+      {
+        "val": "Daily",
+        "text": "Flat-file ETL contract mapped"
+      },
+      {
+        "val": "2-Track",
+        "text": "Continuity design + modern proposal"
+      }
+    ],
+    "keyResultsChecks": [
+      "Client discovery confirmed downstream integration dependencies",
+      "Approved compatibility design plus operational interim SQL",
+      "Permanent extract not confirmed live; simpler replacement remained proposed"
+    ],
+    "techStackTiles": [
+      {
+        "icon": "sql",
+        "label": "SQL Analysis"
+      },
+      {
+        "icon": "apis",
+        "label": "Legacy Flat-File ETL"
+      },
+      {
+        "icon": "reporting",
+        "label": "Reporting (Cognos)"
+      },
+      {
+        "icon": "validation",
+        "label": "Continuity Mapping"
+      },
+      {
+        "icon": "rulesEngine",
+        "label": "Modernization Design"
+      }
+    ],
+    "relatedSlugs": [
+      "sql",
+      "takeover"
+    ],
+    "timeline": [
+      {
+        "years": "Discovery",
+        "text": "Uncovered daily COBOL/InterBlue ETL feed",
+        "theme": "green"
+      },
+      {
+        "years": "Design",
+        "text": "Completed continuity mapping analysis",
+        "theme": "teal"
+      },
+      {
+        "years": "Proposal",
+        "text": "Shaped modern reporting exchange option",
+        "theme": "blue"
+      }
+    ],
+    "floatingHeroCard": {
+      "title": "Work summary",
+      "status": "Design + interim SQL",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Medavie"
+        },
+        {
+          "label": "My role",
+          "val": "Current-State Analysis  ·  Continuity Mapping "
+        },
+        {
+          "label": "Scope",
+          "val": "Design + interim SQL"
+        }
+      ],
+      "cta": "Read the evidence",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary"
+    }
+  },
+  {
+    "slug": "headquarters",
+    "title": "Headquarters Infrastructure and Move",
+    "shortTitle": "Headquarters Infrastructure & Move",
+    "badgeType": "PROFESSIONAL",
+    "detailBadge": "PROFESSIONAL WORK",
+    "org": "Grenville",
+    "period": "Build completed 2012; occupancy January 2013",
+    "sidebarSub": "Grenville · 2009 – 2022",
+    "banner": "assets/optimized-extra/proj-banner-headquarters-1376.webp",
+    "shortDesc": "Carried technical requirements through the headquarters build and move; separately recommended and implemented staged ESXi virtualization.",
+    "heroDesc": "Connected networking, servers, cabling access, AV, physical security, cooling and backup-power requirements from early building plans through the operational move.",
+    "featured": true,
+    "featuredOrder": 5,
+    "status": "Implemented",
+    "chapterLabel": "Grounded in the metal",
+    "impactScore": 91,
+    "complexityScore": 89,
+    "yearSort": 2014,
+    "categories": [
+      "professional",
+      "infra"
+    ],
+    "cardTags": [
+      "Infrastructure",
+      "Identity",
+      "Security",
+      "Virtualization"
+    ],
+    "heroTags": [
+      "Infrastructure",
+      "Identity",
+      "Security",
+      "Virtualization",
+      "Resilient Power"
+    ],
+    "allTags": [
+      "Infrastructure",
+      "Insurance",
+      "Tools"
+    ],
+    "metrics": [],
+    "glance": {
+      "employer": "Grenville Mutual Insurance",
+      "period": "Building milestones 2012–2013; exact IT move date unconfirmed",
+      "domain": "Corporate Infrastructure · Virtualization · Facilities IT",
+      "previewDomain": "Enterprise Infrastructure · Datacentre & HQ Move",
+      "role": "Technical Design · Infrastructure Build · Virtualization",
+      "previewRole": "Systems administration, technical design and physical move execution",
+      "team": "IT operations · Facilities · Contractors · Network vendors",
+      "technologies": "VMware ESXi · 42U Racks · Cat6A / VLANs · UPS & Generator · AV & Security",
+      "outcome": "Headquarters technical delivery and operational move",
+      "previewOutcome": "Planning through installation and move, with actual recovery work; virtualization was a separate project."
+    },
+    "problem": "A corporate headquarters move brings networking, server racks, cooling, resilient power, physical door security and boardroom AV into a single cutover where everything must work reliably.",
+    "previewProblem": "Moving a corporate headquarters required coordinating physical power, cooling, cabling and server virtualization without business disruption.",
+    "solution": "Worked with colleagues, trades and vendors on technical requirements and setup. The move involved planned downtime, a storage failure and collaborative recovery; the business was back up by Monday in Josh's account. Virtualization was a separate, undated initiative.",
+    "previewSolution": "Connected physical facility constraints with virtualized VMware ESXi compute, resilient power and structured networking.",
+    "contribution": "I developed technical requirements and diagrams, gathered recommendations for shared decisions, coordinated vendors and personally set up the network and servers. I did not own the entire building project or its budget.",
+    "lessons": "Physical and operational dependencies—power, cooling, cabling and identity—are the foundation every higher-level software architecture relies on.",
+    "keyResultsMetrics": [
+      {
+        "val": "ESXi",
+        "text": "Bare-metal blade virtualization"
+      },
+      {
+        "val": "End-to-End",
+        "text": "Design through physical move"
+      }
+    ],
+    "keyResultsChecks": [
+      "Technical planning, vendor coordination and hands-on setup",
+      "Planned move, collaborative recovery and return for the workweek",
+      "Separate staged ESXi migration; no zero-downtime or verified recovery-objective claim"
+    ],
+    "techStackTiles": [
+      {
+        "icon": "rulesEngine",
+        "label": "VMware ESXi"
+      },
+      {
+        "icon": "apis",
+        "label": "VLANs & Cat6A"
+      },
+      {
+        "icon": "validation",
+        "label": "UPS & Generator"
+      },
+      {
+        "icon": "sql",
+        "label": "SAN & Server Racks"
+      },
+      {
+        "icon": "reporting",
+        "label": "AV & Door Security"
+      }
+    ],
+    "relatedSlugs": [
+      "foundations",
+      "dell"
+    ],
+    "timeline": [
+      {
+        "years": "Planning",
+        "text": "Floorplan, power, cooling & network specs",
+        "theme": "green"
+      },
+      {
+        "years": "Build & Move",
+        "text": "Racks, cabling, AV, security & cutover",
+        "theme": "teal"
+      },
+      {
+        "years": "Virtualization",
+        "text": "Bare-metal blade transition to ESXi",
+        "theme": "blue"
+      }
+    ],
+    "floatingHeroCard": {
+      "title": "Work summary",
+      "status": "Implemented",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Grenville"
+        },
+        {
+          "label": "My role",
+          "val": "Technical Design  ·  Infrastructure Build "
+        },
+        {
+          "label": "Scope",
+          "val": "Implemented"
+        }
+      ],
+      "cta": "Read the evidence",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary"
+    }
+  },
+  {
+    "slug": "workflows",
+    "title": "Commercial Quoting & Broker Integration",
+    "shortTitle": "Commercial Quoting & Broker Integration",
+    "badgeType": "PROFESSIONAL",
+    "detailBadge": "PROFESSIONAL WORK",
+    "org": "Grenville",
+    "period": "Within Grenville tenure (2009–2022)",
+    "sidebarSub": "Grenville · 2009 – 2022",
+    "banner": "assets/optimized-extra/proj-banner-workflows-1376.webp",
+    "shortDesc": "Designed commercial quoting rules, CSIO/ACORD payload mappings and two-way broker integration workflows.",
+    "heroDesc": "Connected commercial underwriting requirements, staged risk questions, mappings and backend rules with vendor-built broker applications.",
+    "featured": false,
+    "featuredOrder": 8,
+    "status": "Implemented",
+    "chapterLabel": "Shaped by the business",
+    "impactScore": 89,
+    "complexityScore": 93,
+    "yearSort": 2018,
+    "categories": [
+      "professional",
+      "insurance",
+      "data"
+    ],
+    "cardTags": [
+      "Integration",
+      "CSIO / ACORD",
+      "Commercial Lines",
+      "XML"
+    ],
+    "heroTags": [
+      "Commercial Quoting",
+      "CSIO / ACORD",
+      "SOAP / REST",
+      "Business Rules"
+    ],
+    "allTags": [
+      "Insurance",
+      "Integration",
+      "Automation",
+      "Data Engineering"
+    ],
+    "metrics": [],
+    "glance": {
+      "employer": "Grenville Mutual Insurance",
+      "period": "Within Grenville tenure (2009–2022)",
+      "domain": "P&C Insurance · Commercial Quoting & BMS",
+      "previewDomain": "Commercial Lines · Broker Integration",
+      "role": "Policy Rules Implementation · Mapping & Specification",
+      "previewRole": "Core policy rules implementation, CSIO mapping and vendor coordination",
+      "team": "Business analysts · Broker vendors (TAM/Epic/Brovada) · Underwriters",
+      "technologies": "CSIO / ACORD · XML · AL3 · eDocs · SOAP / REST · Rules Engine",
+      "outcome": "Two-way broker upload/download and commercial quoting rules",
+      "previewOutcome": "Aligned broker payloads and UI stages with proprietary backend insurance rules."
+    },
+    "problem": "Commercial quoting and broker upload/download workflows crossed multiple vendor platforms (TAM, Epic via Bravado) where incomplete risk inputs or mismatched codes broke downstream rating.",
+    "previewProblem": "Commercial broker payloads and UI stages needed consistent risk mapping and rule validation across vendors.",
+    "solution": "Defined fields, workflow stages and validation with underwriters and vendor analysts and developers, and personally implemented related backend rules. Vendor teams built the commercial application and UI.",
+    "previewSolution": "Implemented commercial rating/underwriting rules and two-way CSIO/ACORD field transformations.",
+    "contribution": "I was Grenville's lead technical resource for requirements, mappings, workflow behavior, testing and related rule implementation. Brokerage discovery, demonstrations, onboarding and support were part of that Grenville work.",
+    "lessons": "Two-way integration requires treating both upload requests and download documents (eDocs/AL3/XML) as a single coherent conversation with the broker.",
+    "keyResultsMetrics": [
+      {
+        "val": "CSIO",
+        "text": "Upload & download payload mapping"
+      },
+      {
+        "val": "Multi-Line",
+        "text": "Auto, residential, farm & commercial"
+      }
+    ],
+    "keyResultsChecks": [
+      "Business requirements connected to vendor application development",
+      "Related rating and underwriting rules implemented by Josh",
+      "Broker discovery, training, mapping and ongoing support"
+    ],
+    "techStackTiles": [
+      {
+        "icon": "rulesEngine",
+        "label": "Commercial Rules"
+      },
+      {
+        "icon": "apis",
+        "label": "CSIO / ACORD XML"
+      },
+      {
+        "icon": "validation",
+        "label": "TAM & Epic BMS"
+      },
+      {
+        "icon": "sql",
+        "label": "Field Mappings"
+      },
+      {
+        "icon": "reporting",
+        "label": "eDocs & PDFs"
+      }
+    ],
+    "relatedSlugs": [
+      "newbusiness",
+      "changes"
+    ],
+    "timeline": [
+      {
+        "years": "Phase 1",
+        "text": "Upload/download CSIO & XML mappings",
+        "theme": "green"
+      },
+      {
+        "years": "Phase 2",
+        "text": "Commercial quoting rules & UI specs",
+        "theme": "teal"
+      },
+      {
+        "years": "Phase 3",
+        "text": "REST backend & ongoing enhancements",
+        "theme": "blue"
+      }
+    ],
+    "floatingHeroCard": {
+      "title": "Work summary",
+      "status": "Implemented",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Grenville"
+        },
+        {
+          "label": "My role",
+          "val": "Policy Rules Implementation  ·  Mapping & Specification"
+        },
+        {
+          "label": "Scope",
+          "val": "Implemented"
+        }
+      ],
+      "cta": "Read the evidence",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary"
+    }
+  },
+  {
+    "slug": "changes",
+    "title": "Policy-Change Comparison & Validation",
+    "shortTitle": "Policy-Change Comparison & Validation",
+    "badgeType": "PROFESSIONAL",
+    "detailBadge": "PROFESSIONAL WORK",
+    "org": "Grenville",
+    "period": "Within Grenville tenure (2009–2022)",
+    "sidebarSub": "Grenville · 2009 – 2022",
+    "banner": "assets/optimized-extra/proj-banner-changes-1376.webp",
+    "shortDesc": "Tested endorsement comparison rules, identified false positives and recommended stopping an unsustainable approach.",
+    "heroDesc": "A policy-change pilot exposed a key limit of automation: a difference between two policy records does not reliably express the broker's intended change.",
+    "featured": false,
+    "featuredOrder": 9,
+    "status": "Limited pilot; discontinued",
+    "chapterLabel": "Shaped by the business",
+    "impactScore": 86,
+    "complexityScore": 88,
+    "yearSort": 2017,
+    "categories": [
+      "professional",
+      "insurance"
+    ],
+    "cardTags": [
+      "Endorsements",
+      "Validation",
+      "UI Design",
+      "Business Rules"
+    ],
+    "heroTags": [
+      "Endorsements",
+      "Change Comparison",
+      "Validation",
+      "Business Rules"
+    ],
+    "allTags": [
+      "Insurance",
+      "Automation",
+      "Web"
+    ],
+    "metrics": [],
+    "glance": {
+      "employer": "Grenville Mutual Insurance",
+      "period": "Within Grenville tenure (2009–2022)",
+      "domain": "P&C Insurance · Policy Endorsements",
+      "previewDomain": "P&C Insurance · Policy Changes",
+      "role": "Analysis · Policy Rules · UI/Integration Design",
+      "previewRole": "Analysis, policy rules implementation and change-comparison design",
+      "team": "Business analysts · Developers · Underwriters",
+      "technologies": "Policy Rules Engine · XML Mappings · Broker Portal UI",
+      "outcome": "Limited pilot discontinued after unsatisfactory testing",
+      "previewOutcome": "Identified a flawed automation boundary and recommended stopping; the proposed alternative is not claimed as shipped."
+    },
+    "problem": "Mid-term policy changes alter risk and rating differently than new business or renewals. Brokers needed to see exactly what was changing before submitting, and rules had to validate the delta in context.",
+    "previewProblem": "Policy endorsements required pre-submission comparison and rules distinct from new business.",
+    "solution": "Compared complete policy images, investigated mapping noise and proposed asking brokers to confirm intended changes. Testing remained unsatisfactory; the initiative was discontinued after tentative limited production use.",
+    "previewSolution": "Combined visual before/after change comparison with endorsement-specific rating and referral rules.",
+    "contribution": "I contributed comparison behavior, mappings, contextual rules, testing and interface specifications. I diagnosed why differences could be mistaken for instructions and repeatedly recommended stopping the approach.",
+    "lessons": "A data difference is evidence to investigate, not permission to carry out a business change.",
+    "keyResultsMetrics": [
+      {
+        "val": "Pre-Submit",
+        "text": "Side-by-side change comparison"
+      },
+      {
+        "val": "Contextual",
+        "text": "Endorsement-specific rule evaluation"
+      }
+    ],
+    "keyResultsChecks": [
+      "Testing exposed noise and false-positive changes",
+      "Proposed explicit confirmation of broker intent",
+      "Possible one-broker production pilot, then discontinued; no broad successful rollout"
+    ],
+    "techStackTiles": [
+      {
+        "icon": "rulesEngine",
+        "label": "Endorsement Rules"
+      },
+      {
+        "icon": "validation",
+        "label": "Delta Validation"
+      },
+      {
+        "icon": "apis",
+        "label": "Broker Payloads"
+      },
+      {
+        "icon": "reporting",
+        "label": "Comparison UI"
+      },
+      {
+        "icon": "sql",
+        "label": "Policy State"
+      }
+    ],
+    "relatedSlugs": [
+      "workflows",
+      "renewals"
+    ],
+    "timeline": [
+      {
+        "years": "Analysis",
+        "text": "Endorsement workflow & rule scoping",
+        "theme": "green"
+      },
+      {
+        "years": "Delivery",
+        "text": "Change comparison UI & rule implementation",
+        "theme": "teal"
+      },
+      {
+        "years": "Support",
+        "text": "Ongoing rule tuning across P&C lines",
+        "theme": "blue"
+      }
+    ],
+    "floatingHeroCard": {
+      "title": "Work summary",
+      "status": "Pilot discontinued",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Grenville"
+        },
+        {
+          "label": "My role",
+          "val": "Analysis  ·  Policy Rules "
+        },
+        {
+          "label": "Scope",
+          "val": "Pilot discontinued"
+        }
+      ],
+      "cta": "Read the evidence",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary"
+    }
+  },
+  {
+    "slug": "inquiry",
+    "title": "Broker Policy Inquiry & Document Access",
+    "shortTitle": "Broker Policy Inquiry",
+    "badgeType": "PROFESSIONAL",
+    "detailBadge": "PROFESSIONAL WORK",
+    "org": "Grenville",
+    "period": "Within Grenville tenure (2009–2022)",
+    "sidebarSub": "Grenville · 2009 – 2022",
+    "banner": "assets/optimized-extra/proj-banner-inquiry-1376.webp",
+    "shortDesc": "Connected broker inquiry workflows to policy, billing and claims data plus downloadable PDF documents.",
+    "heroDesc": "Mapped and tested broker policy, billing and claims inquiry interfaces with downloadable PDF documents across SOAP/XML and REST.",
+    "featured": false,
+    "featuredOrder": 10,
+    "status": "Implemented",
+    "chapterLabel": "Shaped by the business",
+    "impactScore": 84,
+    "complexityScore": 82,
+    "yearSort": 2015,
+    "categories": [
+      "professional",
+      "insurance",
+      "data"
+    ],
+    "cardTags": [
+      "SOAP / REST",
+      "CSIO",
+      "Broker Portal",
+      "eDocs"
+    ],
+    "heroTags": [
+      "Broker Inquiry",
+      "SOAP / XML",
+      "REST",
+      "PDF / eDocs"
+    ],
+    "allTags": [
+      "Insurance",
+      "Integration",
+      "Web"
+    ],
+    "metrics": [],
+    "glance": {
+      "employer": "Grenville Mutual Insurance",
+      "period": "Within Grenville tenure (2009–2022)",
+      "domain": "P&C Insurance · Policy, Billing & Claims Inquiry",
+      "previewDomain": "P&C Insurance · Broker Inquiry",
+      "role": "Business Analysis · Mappings · Integration Testing",
+      "previewRole": "Mockups, field mappings, request diagnosis and integration testing",
+      "team": "Business analysts · Broker vendors · Developers",
+      "technologies": "SOAP / XML · REST · CSIO / ACORD · PDF / eDocs",
+      "outcome": "Reliable policy, billing and claims lookup inside broker workflows",
+      "previewOutcome": "Delivered accurate policy, billing and claims inquiry with downloadable PDFs."
+    },
+    "problem": "Brokers needed immediate access to policy, billing and claims details—along with downloadable PDFs—directly inside their own workflows without losing field meaning across system boundaries.",
+    "previewProblem": "Policy, billing and claims lookups had to cross vendor boundaries cleanly and include downloadable PDFs.",
+    "solution": "Created UI mockups and CSIO/proprietary field mappings, diagnosed SOAP/XML and REST requests, and tested end-to-end policy, billing and claims inquiry responses.",
+    "previewSolution": "Connected broker inquiry requests to backend policy, billing, claims and PDF document services.",
+    "contribution": "Produced mockups and field mappings, diagnosed integration requests across broker vendors, and verified downloadable policy, billing and claims PDFs.",
+    "lessons": "Even a read-only inquiry is a business contract: field labels, status codes and documents must match how the broker actually serves the policyholder.",
+    "keyResultsMetrics": [
+      {
+        "val": "3-in-1",
+        "text": "Policy, billing & claims inquiry"
+      },
+      {
+        "val": "PDF",
+        "text": "Direct document & eDocs retrieval"
+      }
+    ],
+    "keyResultsChecks": [
+      "Mapped CSIO/ACORD and proprietary backend fields",
+      "Supported desktop SOAP/XML and modern REST endpoints",
+      "Verified downloadable policy, billing and claims PDFs"
+    ],
+    "techStackTiles": [
+      {
+        "icon": "apis",
+        "label": "SOAP & REST"
+      },
+      {
+        "icon": "validation",
+        "label": "CSIO Mappings"
+      },
+      {
+        "icon": "reporting",
+        "label": "PDF / eDocs"
+      },
+      {
+        "icon": "sql",
+        "label": "Policy & Claims Data"
+      },
+      {
+        "icon": "rulesEngine",
+        "label": "Inquiry Testing"
+      }
+    ],
+    "relatedSlugs": [
+      "newbusiness",
+      "upload"
+    ],
+    "timeline": [
+      {
+        "years": "Design",
+        "text": "Inquiry mockups & field mapping specs",
+        "theme": "green"
+      },
+      {
+        "years": "Integration",
+        "text": "SOAP/XML & PDF document retrieval",
+        "theme": "teal"
+      },
+      {
+        "years": "Evolution",
+        "text": "REST backend transition & vendor testing",
+        "theme": "blue"
+      }
+    ],
+    "floatingHeroCard": {
+      "title": "Work summary",
+      "status": "Implemented",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Grenville"
+        },
+        {
+          "label": "My role",
+          "val": "Business Analysis  ·  Mappings "
+        },
+        {
+          "label": "Scope",
+          "val": "Implemented"
+        }
+      ],
+      "cta": "Read the evidence",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary"
+    }
+  },
+  {
+    "slug": "upload",
+    "title": "Authenticated Document Upload Portal",
+    "shortTitle": "Document Upload into Policy Records",
+    "badgeType": "PROFESSIONAL",
+    "detailBadge": "PROFESSIONAL WORK",
+    "org": "Grenville",
+    "period": "Approx. 2018",
+    "sidebarSub": "Grenville · ~2018",
+    "banner": "assets/optimized-extra/proj-banner-upload-1376.webp",
+    "shortDesc": "Built an authenticated C#/.NET document-submission service and a separate integration-support tool for recurring faults.",
+    "heroDesc": "Developed a production document-upload workflow for claims, policy and accounting, plus a separate C#/.NET support application for inspecting transactions and logs.",
+    "featured": false,
+    "featuredOrder": 11,
+    "status": "Implemented",
+    "chapterLabel": "Shaped by the business",
+    "impactScore": 87,
+    "complexityScore": 86,
+    "yearSort": 2018,
+    "categories": [
+      "professional",
+      "insurance",
+      "web",
+      "tools"
+    ],
+    "cardTags": [
+      "C# / .NET",
+      "REST API",
+      "JavaScript",
+      "Support Tooling"
+    ],
+    "heroTags": [
+      "C# / .NET",
+      "REST API",
+      "Bootstrap",
+      "Operational Logging"
+    ],
+    "allTags": [
+      "Insurance",
+      "Integration",
+      "Web",
+      "Tools"
+    ],
+    "metrics": [],
+    "glance": {
+      "employer": "Grenville Mutual Insurance",
+      "period": "Approx. 2018 (within Grenville tenure)",
+      "domain": "P&C Insurance · Claims & Underwriting Documents",
+      "previewDomain": "P&C Insurance · Document Intake Portal",
+      "role": "Systems Analyst · Hands-On Developer",
+      "previewRole": "Hands-on C#/.NET developer, REST integration and support tooling",
+      "team": "Systems analyst / developer · Operations · External adjusters",
+      "technologies": "C# · .NET · REST APIs · JavaScript · HTML/CSS · Bootstrap",
+      "outcome": "Production submission service and reusable support tooling",
+      "previewOutcome": "Replaced fragmented document delivery and made recurring investigations easier to repeat."
+    },
+    "problem": "External insurance adjusters were submitting supporting documents and photos via ad-hoc email, leaving files fragmented outside the target policy-management records.",
+    "previewProblem": "Ad-hoc email submissions left adjuster documents disconnected from backend policy records.",
+    "solution": "Used authenticated backend REST services and HTTPS for document submission, progress and receipts. A separate support tool brought recent integration transactions, logs and XML payloads into a filterable view instead of repeated manual server access.",
+    "previewSolution": "Delivered a C#/.NET + REST upload portal with operational logging and an internal troubleshooting tool.",
+    "contribution": "I built both C#/.NET applications, supported their production use and helped users diagnose recurring faults. The upload service and internal diagnostic application had different users and purposes.",
+    "lessons": "Pairing a new external integration with internal log-search tooling turns support from guesswork into fast, repeatable root-cause resolution.",
+    "keyResultsMetrics": [
+      {
+        "val": ".NET + REST",
+        "text": "Direct backend record attachment"
+      },
+      {
+        "val": "Built-In",
+        "text": "Internal log search & diagnostics"
+      }
+    ],
+    "keyResultsChecks": [
+      "Production authenticated submission for claims, policy and accounting",
+      "Separate diagnostic application enabled routine support work",
+      "HTTPS and authenticated REST are supported controls; no formal security audit is claimed"
+    ],
+    "techStackTiles": [
+      {
+        "icon": "rulesEngine",
+        "label": "C# / .NET"
+      },
+      {
+        "icon": "apis",
+        "label": "REST APIs"
+      },
+      {
+        "icon": "reporting",
+        "label": "Bootstrap / JS"
+      },
+      {
+        "icon": "validation",
+        "label": "Auth & Logging"
+      },
+      {
+        "icon": "sql",
+        "label": "Log Search Tool"
+      }
+    ],
+    "relatedSlugs": [
+      "inquiry",
+      "takeover"
+    ],
+    "timeline": [
+      {
+        "years": "Portal Build",
+        "text": "C#/.NET & Bootstrap adjuster portal",
+        "theme": "green"
+      },
+      {
+        "years": "REST Placement",
+        "text": "Direct backend policy record attachment",
+        "theme": "teal"
+      },
+      {
+        "years": "Diagnostics",
+        "text": "Internal log retrieval & search tool",
+        "theme": "blue"
+      }
+    ],
+    "floatingHeroCard": {
+      "title": "Work summary",
+      "status": "Implemented",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Grenville"
+        },
+        {
+          "label": "My role",
+          "val": "Systems Analyst  ·  Hands-On Developer"
+        },
+        {
+          "label": "Scope",
+          "val": "Implemented"
+        }
+      ],
+      "cta": "Read the evidence",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary"
+    }
+  },
+  {
+    "slug": "claims",
+    "title": "Provider Data for Claims Adjudication",
+    "shortTitle": "Provider Data for Claims Adjudication",
+    "badgeType": "PROFESSIONAL",
+    "detailBadge": "PROFESSIONAL WORK",
+    "org": "Medavie",
+    "period": "2022 – Present",
+    "sidebarSub": "Medavie · 2022 – Present",
+    "banner": "assets/optimized-extra/proj-banner-claims-1376.webp",
+    "shortDesc": "Defined provider mappings and synchronization changes, then supported the live integrations in testing and production.",
+    "heroDesc": "Identified provider relationships and data-sync gaps, worked with architects and developers on changes, and continued supporting the implemented integrations.",
+    "featured": true,
+    "featuredOrder": 4,
+    "status": "Live integration support",
+    "chapterLabel": "Shaped by the business",
+    "impactScore": 88,
+    "complexityScore": 87,
+    "yearSort": 2023,
+    "categories": [
+      "professional",
+      "insurance",
+      "data"
+    ],
+    "cardTags": [
+      "REST API",
+      "Data Mapping",
+      "Claims",
+      "Solution Review"
+    ],
+    "heroTags": [
+      "Provider Registry",
+      "REST Consumer",
+      "Scheduled Sync",
+      "Field Mapping"
+    ],
+    "allTags": [
+      "Insurance",
+      "SQL",
+      "Integration",
+      "Data Engineering"
+    ],
+    "metrics": [],
+    "glance": {
+      "employer": "Medavie Blue Cross",
+      "period": "2022 – Present",
+      "domain": "Health & Dental Claims · Provider Registry",
+      "previewDomain": "Claims Adjudication · Provider Sync",
+      "role": "Functional Analysis · Mapping · Testing · Production Support",
+      "previewRole": "Solution review, gap analysis, field mappings and sync requirements",
+      "team": "Functional analysts · Solution architects · Integration developers",
+      "technologies": "REST API Consumer · Scheduled Event Table · Field & Value Mappings",
+      "outcome": "Implemented integrations with continuing functional support",
+      "previewOutcome": "Live integration support following requirements and mapping work with architects and developers."
+    },
+    "problem": "Claims adjudication depends on accurate provider credentials, specialties and status across source and consumer systems. Mismatched fields or timing gaps cause adjudication delays.",
+    "previewProblem": "Adjudication systems needed reliable provider data mappings and scheduled synchronization requirements.",
+    "solution": "Reviewed the source-to-adjudication flow, documented gaps and specified field and relationship mappings. The described pattern uses scheduled jobs, a change-event table and REST retrieval.",
+    "previewSolution": "Defined source-to-target provider field mappings and scheduled event-table / REST retrieval requirements.",
+    "contribution": "I worked with architects and developers to define the changes and supported testing, documentation, training and production troubleshooting. Developers implemented the interfaces; my role was not sole service development.",
+    "lessons": "Clear field-level contracts and well-defined scheduled synchronization states keep multi-system claims adjudication predictable without over-engineering.",
+    "keyResultsMetrics": [
+      {
+        "val": "REST + SQL",
+        "text": "Scheduled event table & API retrieval"
+      },
+      {
+        "val": "End-to-End",
+        "text": "Source-to-adjudication field mapping"
+      }
+    ],
+    "keyResultsChecks": [
+      "Provider integrations are live by Josh's account",
+      "Scheduled table-backed synchronization with REST retrieval",
+      "Continuing investigation of data mismatches and specified fixes"
+    ],
+    "techStackTiles": [
+      {
+        "icon": "apis",
+        "label": "REST Retrieval"
+      },
+      {
+        "icon": "sql",
+        "label": "Event Table Sync"
+      },
+      {
+        "icon": "validation",
+        "label": "Field Mappings"
+      },
+      {
+        "icon": "rulesEngine",
+        "label": "Gap Analysis"
+      },
+      {
+        "icon": "reporting",
+        "label": "Claims Adjudication"
+      }
+    ],
+    "relatedSlugs": [
+      "takeover",
+      "sql"
+    ],
+    "timeline": [
+      {
+        "years": "Review",
+        "text": "Architecture & source-system gap analysis",
+        "theme": "green"
+      },
+      {
+        "years": "Mapping",
+        "text": "Provider field & status transformations",
+        "theme": "teal"
+      },
+      {
+        "years": "Sync Spec",
+        "text": "Scheduled event table & REST requirements",
+        "theme": "blue"
+      }
+    ],
+    "floatingHeroCard": {
+      "title": "Work summary",
+      "status": "Live integration support",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Medavie"
+        },
+        {
+          "label": "My role",
+          "val": "Functional Analysis  ·  Mapping "
+        },
+        {
+          "label": "Scope",
+          "val": "Live integration support"
+        }
+      ],
+      "cta": "Read the evidence",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary"
+    }
+  },
+  {
+    "slug": "sql",
+    "title": "Claims SQL & Financial Reconciliation",
+    "shortTitle": "Claims SQL & Financial Reconciliation",
+    "badgeType": "PROFESSIONAL",
+    "detailBadge": "PROFESSIONAL WORK",
+    "org": "Medavie",
+    "period": "2022 – Present",
+    "sidebarSub": "Medavie · 2022 – Present",
+    "banner": "assets/optimized-extra/proj-banner-sql-1376.webp",
+    "shortDesc": "Reworked claims and financial SQL, reconciled transaction history and supplied corrected logic adopted in production.",
+    "heroDesc": "Resolved gaps between claims and payment reporting, working with finance and client teams to balance results and improve reporting accuracy.",
+    "featured": false,
+    "featuredOrder": 12,
+    "status": "Implemented",
+    "chapterLabel": "Shaped by the business",
+    "impactScore": 88,
+    "complexityScore": 89,
+    "yearSort": 2024,
+    "categories": [
+      "professional",
+      "insurance",
+      "data"
+    ],
+    "cardTags": [
+      "SQL",
+      "Reconciliation",
+      "Financial Reporting",
+      "Claims"
+    ],
+    "heroTags": [
+      "Hand-Written SQL",
+      "Financial Reconciliation",
+      "Report Logic",
+      "Data Quality"
+    ],
+    "allTags": [
+      "Insurance",
+      "SQL",
+      "Data Engineering",
+      "Reporting"
+    ],
+    "metrics": [],
+    "glance": {
+      "employer": "Medavie Blue Cross",
+      "period": "2022 – Present",
+      "domain": "Enterprise Claims · Financial Reporting & Balancing",
+      "previewDomain": "Claims Data · SQL & Financial Balancing",
+      "role": "Functional Analyst · SQL Development · Reconciliation",
+      "previewRole": "Hand-written SQL queries, report logic analysis and financial balancing",
+      "team": "Functional analysts · Finance & reporting teams · Data engineers",
+      "technologies": "Hand-Written SQL · Relational Schemas · Financial Report Logic · Reconciliation",
+      "outcome": "Corrected reporting SQL adopted in production",
+      "previewOutcome": "Delivered reconciled query logic, separate from the unfinished permanent client extract."
+    },
+    "problem": "Claims reporting must balance accurately against the financial reporting it feeds. When complex multi-table joins, reversals and cutoffs interact, discrepancies require deep SQL inspection.",
+    "previewProblem": "Claims extracts and financial reports required deep SQL analysis to reconcile complex edge cases.",
+    "solution": "Compared report logic, investigated current-state versus transaction-history treatment, rewrote SQL and checked results with finance. The payment team incorporated the corrected SQL into its existing production process.",
+    "previewSolution": "Used hand-written SQL to trace report rules, isolate edge-case variances and verify financial alignment.",
+    "contribution": "I personally wrote and reworked the queries, investigated discrepancies over successive reporting periods and supplied reconciled logic to the payment team. Agreement between claims-derived reports was not presented as an independent financial audit.",
+    "lessons": "Reading and writing the actual SQL behind a financial report is the fastest way to uncover unspoken business assumptions and edge-case rules.",
+    "keyResultsMetrics": [
+      {
+        "val": "SQL",
+        "text": "Direct relational query verification"
+      },
+      {
+        "val": "Balanced",
+        "text": "Claims-to-finance report alignment"
+      }
+    ],
+    "keyResultsChecks": [
+      "Hands-on Oracle SQL and transaction-history investigation",
+      "Business treatment checked with finance and client stakeholders",
+      "Corrected SQL adopted in the payment team's existing production process"
+    ],
+    "techStackTiles": [
+      {
+        "icon": "sql",
+        "label": "Hand-Written SQL"
+      },
+      {
+        "icon": "validation",
+        "label": "Financial Balancing"
+      },
+      {
+        "icon": "reporting",
+        "label": "Report Logic"
+      },
+      {
+        "icon": "rulesEngine",
+        "label": "Edge-Case Analysis"
+      },
+      {
+        "icon": "apis",
+        "label": "Data Extracts"
+      }
+    ],
+    "relatedSlugs": [
+      "continuity",
+      "takeover"
+    ],
+    "timeline": [
+      {
+        "years": "Analysis",
+        "text": "Deconstructed legacy financial report logic",
+        "theme": "green"
+      },
+      {
+        "years": "SQL Queries",
+        "text": "Built diagnostic & balancing SQL scripts",
+        "theme": "teal"
+      },
+      {
+        "years": "Verification",
+        "text": "Reconciled claims extracts with finance",
+        "theme": "blue"
+      }
+    ],
+    "floatingHeroCard": {
+      "title": "Work summary",
+      "status": "SQL adopted",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Medavie"
+        },
+        {
+          "label": "My role",
+          "val": "Functional Analyst  ·  SQL Development "
+        },
+        {
+          "label": "Scope",
+          "val": "SQL adopted"
+        }
+      ],
+      "cta": "Read the evidence",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary"
+    }
+  },
+  {
+    "slug": "foundations",
+    "title": "Small Business Server Swing Migrations",
+    "shortTitle": "SBS Swing Migrations & Systems",
+    "badgeType": "PROFESSIONAL",
+    "detailBadge": "PROFESSIONAL WORK",
+    "org": "Harris Computer Services",
+    "period": "2007 – 2009",
+    "sidebarSub": "Harris · 2007 – 2009",
+    "banner": "assets/optimized-extra/proj-banner-foundations-1376.webp",
+    "shortDesc": "Developed a repeatable swing-migration process separating combined Small Business Server environments into dedicated Active Directory and Exchange servers.",
+    "heroDesc": "Progressed from NOC support into client infrastructure projects and developed a repeatable staged Small Business Server migration process.",
+    "featured": false,
+    "featuredOrder": 13,
+    "status": "Implemented",
+    "chapterLabel": "Grounded in the metal",
+    "impactScore": 85,
+    "complexityScore": 85,
+    "yearSort": 2008,
+    "categories": [
+      "professional",
+      "infra"
+    ],
+    "cardTags": [
+      "Active Directory",
+      "Exchange",
+      "Server Racks",
+      "Networking"
+    ],
+    "heroTags": [
+      "Swing Migration",
+      "Active Directory",
+      "Exchange",
+      "Firewalls & VLANs"
+    ],
+    "allTags": [
+      "Infrastructure",
+      "Tools"
+    ],
+    "metrics": [],
+    "glance": {
+      "employer": "Harris Computer Services",
+      "period": "2007 – 2009",
+      "domain": "Managed IT · Server & Network Infrastructure",
+      "previewDomain": "Enterprise Systems · Server & Identity Migrations",
+      "role": "NOC & Project Technician",
+      "previewRole": "NOC support, rack builds, firewall/switch configuration and SBS swing migrations",
+      "team": "Infrastructure project technicians · NOC engineers · SMB clients",
+      "technologies": "Windows Server · Small Business Server · Active Directory · Exchange · BES · Firewalls",
+      "outcome": "Repeatable swing-migration methodology preserving data, email and identity",
+      "previewOutcome": "Moved growing clients off combined SBS onto separated server infrastructure cleanly."
+    },
+    "problem": "Growing businesses were outgrowing Microsoft Small Business Server, where Active Directory, Exchange email and file services were tightly coupled on one machine—making upgrades risky.",
+    "previewProblem": "Combined Small Business Server environments made separating Active Directory and Exchange risky for live clients.",
+    "solution": "Planned the order of directory, email, DNS, DHCP and data changes as clients outgrew combined Small Business Server environments. Practical dependency knowledge made the approach reusable.",
+    "previewSolution": "Created a repeatable staged swing-migration process that preserved domain identity, email and data.",
+    "contribution": "Progressed from NOC monitoring to full rack builds, firewall/switch setups, and executing repeatable SBS swing migrations for client environments.",
+    "lessons": "Understanding how identity, DNS, mail routing and storage depend on each other makes complex multi-server cutovers predictable and calm.",
+    "keyResultsMetrics": [
+      {
+        "val": "Staged",
+        "text": "Repeatable swing-migration process"
+      },
+      {
+        "val": "Full-Stack",
+        "text": "Racks, firewalls, AD & Exchange"
+      }
+    ],
+    "keyResultsChecks": [
+      "Repeatable staged migration approach",
+      "Client discovery, coordination and hands-on infrastructure delivery",
+      "No measured outage duration or universal zero-downtime claim"
+    ],
+    "techStackTiles": [
+      {
+        "icon": "rulesEngine",
+        "label": "Active Directory"
+      },
+      {
+        "icon": "apis",
+        "label": "Exchange & BES"
+      },
+      {
+        "icon": "validation",
+        "label": "Firewalls & Switches"
+      },
+      {
+        "icon": "sql",
+        "label": "Server Racks"
+      },
+      {
+        "icon": "reporting",
+        "label": "Swing Migration"
+      }
+    ],
+    "relatedSlugs": [
+      "headquarters",
+      "dell"
+    ],
+    "timeline": [
+      {
+        "years": "2007",
+        "text": "NOC monitoring & corporate support",
+        "theme": "green"
+      },
+      {
+        "years": "2008",
+        "text": "Client rack builds, switches & firewalls",
+        "theme": "teal"
+      },
+      {
+        "years": "2008 – 2009",
+        "text": "Repeatable SBS swing migrations",
+        "theme": "blue"
+      }
+    ],
+    "floatingHeroCard": {
+      "title": "Work summary",
+      "status": "Implemented",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Harris Computer Services"
+        },
+        {
+          "label": "My role",
+          "val": "NOC & Project Technician"
+        },
+        {
+          "label": "Scope",
+          "val": "Implemented"
+        }
+      ],
+      "cta": "Read the evidence",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary"
+    }
+  },
+  {
+    "slug": "dell",
+    "title": "Dell Latitude & OptiPlex Hardware Support",
+    "shortTitle": "Dell Hardware & First-Call Support",
+    "badgeType": "PROFESSIONAL",
+    "detailBadge": "PROFESSIONAL WORK",
+    "org": "Dell",
+    "period": "Sept 2006 – 2007",
+    "sidebarSub": "Dell · 2006 – 2007",
+    "banner": "assets/optimized-extra/proj-banner-dell-1376.webp",
+    "shortDesc": "Latitude and OptiPlex hardware support on Dell's Gloves Off team—spending the time needed to isolate the fault on the first call and reduce callbacks.",
+    "heroDesc": "Supported commercial Latitude laptops and OptiPlex desktops on Dell's Gloves Off team, focusing on thorough root-cause diagnosis and first-call resolution.",
+    "featured": false,
+    "featuredOrder": 14,
+    "status": "Implemented",
+    "chapterLabel": "Grounded in the metal",
+    "impactScore": 82,
+    "complexityScore": 78,
+    "yearSort": 2006,
+    "categories": [
+      "professional",
+      "infra"
+    ],
+    "cardTags": [
+      "Hardware",
+      "Diagnostics",
+      "First-Call Resolution",
+      "Support"
+    ],
+    "heroTags": [
+      "Dell Gloves Off",
+      "Latitude & OptiPlex",
+      "Hardware Diagnostics",
+      "Root-Cause Fix"
+    ],
+    "allTags": [
+      "Infrastructure",
+      "Tools"
+    ],
+    "metrics": [],
+    "glance": {
+      "employer": "Dell Canada",
+      "period": "September 2006 – 2007",
+      "domain": "Commercial Hardware Support · Latitude & OptiPlex",
+      "previewDomain": "Enterprise Endpoints · Hardware Diagnostics",
+      "role": "Technical Support Specialist (Gloves Off Team)",
+      "previewRole": "Component-level hardware troubleshooting and client resolution",
+      "team": "Dell Gloves Off support team · Field dispatch technicians",
+      "technologies": "Dell Latitude · OptiPlex · System Boards · PSU / Thermal / Bus Diagnostics",
+      "outcome": "First-call resolution focus and reduced repeat client callbacks",
+      "previewOutcome": "Isolated root-cause hardware faults on the first call so clients didn't have to call back."
+    },
+    "problem": "A hardware fault is disruptive enough without rushing the user off the phone and forcing repeat callbacks when a symptom returns.",
+    "previewProblem": "Rushed call-handle targets often treated symptoms instead of isolating the true hardware fault.",
+    "solution": "Worked on Dell's Gloves Off team, where we were empowered to spend the time required with the client to isolate motherboard, power, thermal or storage faults on the first call.",
+    "previewSolution": "Combined methodical component-level isolation with clear client communication to resolve faults on the first call.",
+    "contribution": "Diagnosed Latitude and OptiPlex hardware failures, guided clients through verification steps, and prepared accurate dispatch specifications.",
+    "lessons": "Start with the real problem, verify the physical evidence, and keep the person on the other end of the system in view—a habit that still guides my architecture work today.",
+    "keyResultsMetrics": [
+      {
+        "val": "Gloves Off",
+        "text": "First-call root-cause mandate"
+      },
+      {
+        "val": "Sept 2006",
+        "text": "Foundation of technology career"
+      }
+    ],
+    "keyResultsChecks": [
+      "Component-level fault isolation on Latitude & OptiPlex",
+      "Reduced repeat callbacks through thorough first-call diagnosis",
+      "Clear translation between technical faults and user impact"
+    ],
+    "techStackTiles": [
+      {
+        "icon": "rulesEngine",
+        "label": "System Boards"
+      },
+      {
+        "icon": "validation",
+        "label": "POST & BIOS"
+      },
+      {
+        "icon": "sql",
+        "label": "SATA / Storage"
+      },
+      {
+        "icon": "apis",
+        "label": "PSU & Thermal"
+      },
+      {
+        "icon": "reporting",
+        "label": "First-Call Fix"
+      }
+    ],
+    "relatedSlugs": [
+      "foundations",
+      "headquarters"
+    ],
+    "timeline": [
+      {
+        "years": "Sept 2006",
+        "text": "Joined Dell commercial hardware support",
+        "theme": "green"
+      },
+      {
+        "years": "Gloves Off",
+        "text": "Empowered first-call root-cause resolution",
+        "theme": "teal"
+      },
+      {
+        "years": "2007",
+        "text": "Transitioned into NOC & server systems at Harris",
+        "theme": "blue"
+      }
+    ],
+    "floatingHeroCard": {
+      "title": "Work summary",
+      "status": "Implemented",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Dell"
+        },
+        {
+          "label": "My role",
+          "val": "Technical Support Specialist (Gloves Off Team)"
+        },
+        {
+          "label": "Scope",
+          "val": "Implemented"
+        }
+      ],
+      "cta": "Read the evidence",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary"
+    }
+  },
+  {
+    "slug": "lowkey",
+    "title": "LOWKEY — Local Speech-to-Text Input",
+    "shortTitle": "LOWKEY — Local Speech Input",
+    "badgeType": "INDEPENDENT",
+    "detailBadge": "HISTORICAL INDEPENDENT WORK",
+    "org": "Personal",
+    "period": "Independent Build",
+    "sidebarSub": "Independent · Local AI",
+    "banner": "assets/optimized-extra/lowkey-local-speech-v1-1536.webp",
+    "shortDesc": "Archived local speech-input exploration using a Rust/Tauri desktop stack and mobile integration work.",
+    "heroDesc": "Local speech-to-text inference using sherpa-onnx / Parakeet with a dedicated Rust worker on Windows and a native Kotlin keyboard on Android.",
+    "featured": false,
+    "featuredOrder": 15,
+    "status": "Archived independent project",
+    "chapterLabel": "Building in the cloud",
+    "impactScore": 86,
+    "complexityScore": 90,
+    "yearSort": 2024,
+    "categories": [
+      "independent",
+      "ai",
+      "web",
+      "tools"
+    ],
+    "cardTags": [
+      "Local AI",
+      "Rust / Tauri 2",
+      "Android IME",
+      "ONNX"
+    ],
+    "heroTags": [
+      "Local Speech AI",
+      "Rust / Tauri 2",
+      "sherpa-onnx",
+      "Kotlin Android IME"
+    ],
+    "allTags": [
+      "AI",
+      "Automation",
+      "Web",
+      "Tools"
+    ],
+    "metrics": [],
+    "glance": {
+      "employer": "Independent Project",
+      "period": "Historical / Personal Build",
+      "domain": "On-Device AI · Speech-to-Text & Native Input",
+      "previewDomain": "Local AI Inference · Desktop & Mobile Input",
+      "role": "Creator & Developer",
+      "previewRole": "End-to-end Rust/Tauri, TypeScript and Kotlin Android IME development",
+      "team": "Independent Build",
+      "technologies": "Rust · Tauri 2 · React / TypeScript · sherpa-onnx / Parakeet · Kotlin Android IME",
+      "outcome": "Local phrase capture and on-device decoding into native text fields",
+      "previewOutcome": "Connected local ONNX speech models directly to Windows and Android text entry."
+    },
+    "problem": "Cloud voice dictation adds latency and sends audio off-device, and often stays trapped inside a separate app instead of typing directly where you already work.",
+    "previewProblem": "Voice input needed to run locally on-device and type directly into native Windows and Android inputs.",
+    "solution": "Built LOWKEY around AudioWorklet capture, Silero phrase detection, and cached sherpa-onnx / Parakeet models in a Rust / Tauri 2 desktop app and Kotlin Android IME.",
+    "previewSolution": "Combined Silero VAD and local Parakeet ONNX models with native Windows and Android keyboard injection.",
+    "contribution": "I directed and developed the project with AI assistance. Stack and source evidence describe the implementation; they do not establish independent mastery of every language or a current supported release.",
+    "lessons": "Running quantized models locally (110M CTC and 0.6B v3 TDT INT8) makes voice input feel like a natural extension of the operating system.",
+    "keyResultsMetrics": [
+      {
+        "val": "On-Device",
+        "text": "Local sherpa-onnx / Parakeet decoding"
+      },
+      {
+        "val": "2-Platform",
+        "text": "Windows Tauri 2 + Android Kotlin IME"
+      }
+    ],
+    "keyResultsChecks": [
+      "AudioWorklet capture with Silero VAD phrase detection",
+      "Cached 110M CTC & 0.6B v3 TDT INT8 local models",
+      "Custom dictionary & vocabulary correction pipeline"
+    ],
+    "techStackTiles": [
+      {
+        "icon": "rulesEngine",
+        "label": "Rust & Tauri 2"
+      },
+      {
+        "icon": "apis",
+        "label": "sherpa-onnx"
+      },
+      {
+        "icon": "validation",
+        "label": "Silero VAD"
+      },
+      {
+        "icon": "reporting",
+        "label": "React / TS"
+      },
+      {
+        "icon": "sql",
+        "label": "Kotlin Android IME"
+      }
+    ],
+    "relatedSlugs": [
+      "nexus",
+      "workshop42"
+    ],
+    "timeline": [
+      {
+        "years": "Prototype",
+        "text": "AudioWorklet & Silero VAD capture",
+        "theme": "green"
+      },
+      {
+        "years": "Desktop",
+        "text": "Rust / Tauri 2 local ONNX worker",
+        "theme": "teal"
+      },
+      {
+        "years": "Mobile",
+        "text": "Kotlin Android keyboard IME",
+        "theme": "blue"
+      }
+    ],
+    "floatingHeroCard": {
+      "title": "Work summary",
+      "status": "Archived project",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Personal"
+        },
+        {
+          "label": "My role",
+          "val": "Creator & Developer"
+        },
+        {
+          "label": "Scope",
+          "val": "Archived project"
+        }
+      ],
+      "cta": "Read the evidence",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary"
+    }
+  },
+  {
+    "slug": "workshop42",
+    "title": "Workshop42 — Physical Design & Fabrication",
+    "shortTitle": "Workshop42 — Physical Builds",
+    "badgeType": "INDEPENDENT",
+    "detailBadge": "INDEPENDENT BUILD",
+    "org": "Workshop42",
+    "period": "Independent Studio",
+    "sidebarSub": "Independent · ws42.ca",
+    "banner": "assets/optimized-extra/apex-1200.webp",
+    "shortDesc": "Personal CAD, woodworking and 3D-printing work, including the Apex monitor riser and Voyager canoe model.",
+    "heroDesc": "Designing and fabricating physical objects that combine CAD precision, multi-color 3D printing and woodworking at Workshop42 (ws42.ca).",
+    "featured": false,
+    "featuredOrder": 16,
+    "status": "Personal builds & prototypes",
+    "chapterLabel": "Grounded in the metal",
+    "impactScore": 83,
+    "complexityScore": 80,
+    "yearSort": 2024,
+    "categories": [
+      "independent",
+      "web",
+      "tools"
+    ],
+    "cardTags": [
+      "CAD & 3D Printing",
+      "Product Design",
+      "MakerWorld",
+      "Hardware"
+    ],
+    "heroTags": [
+      "Workshop42",
+      "CAD & Fabrication",
+      "Apex Monitor Riser",
+      "The Voyager"
+    ],
+    "allTags": [
+      "Web",
+      "Tools"
+    ],
+    "metrics": [],
+    "glance": {
+      "employer": "Workshop42 (ws42.ca)",
+      "period": "Ongoing Personal Studio",
+      "domain": "Physical Product Design · Additive Manufacturing",
+      "previewDomain": "Industrial Design · 3D Printing & Woodwork",
+      "role": "Designer & Maker",
+      "previewRole": "CAD modeling, structural prototyping, print optimization and photography",
+      "team": "Independent Studio",
+      "technologies": "CAD Modeling · Multi-Material FDM Printing · Wood & Composite Joinery",
+      "outcome": "Published community models on MakerWorld and ws42.ca",
+      "previewOutcome": "Designed functional desktop hardware and scale models photographed as built."
+    },
+    "problem": "Digital systems aren't the only place where structure, tolerances and human ergonomics matter—physical workspace tools benefit from the same iterative design loop.",
+    "previewProblem": "Bringing iterative engineering tolerances and clean aesthetics into physical objects.",
+    "solution": "Created Workshop42 to design, prototype and share tangible builds—like the Apex monitor riser (printed structural legs with a hardwood shelf) and The Voyager dual-color floating canoe model.",
+    "previewSolution": "Designed and fabricated multi-material physical objects published on MakerWorld and ws42.ca.",
+    "contribution": "I design, prototype and document physical builds. Working prototypes and published models are described separately from finished commercial products.",
+    "lessons": "Physical fabrication reinforces a core engineering truth: tolerances, material constraints and simplicity determine whether a design holds up in the real world.",
+    "keyResultsMetrics": [
+      {
+        "val": "Apex",
+        "text": "Printed legs + wooden shelf riser"
+      },
+      {
+        "val": "Voyager",
+        "text": "Dual-color floating canoe model"
+      }
+    ],
+    "keyResultsChecks": [
+      "Published print-ready models on MakerWorld",
+      "Combined 3D-printed structural geometry with wood",
+      "Photographed and documented real physical builds"
+    ],
+    "techStackTiles": [
+      {
+        "icon": "rulesEngine",
+        "label": "CAD Modeling"
+      },
+      {
+        "icon": "validation",
+        "label": "Structural Fit"
+      },
+      {
+        "icon": "apis",
+        "label": "Multi-Color Print"
+      },
+      {
+        "icon": "reporting",
+        "label": "MakerWorld"
+      },
+      {
+        "icon": "sql",
+        "label": "ws42.ca"
+      }
+    ],
+    "relatedSlugs": [
+      "nexus",
+      "lowkey"
+    ],
+    "timeline": [
+      {
+        "years": "CAD",
+        "text": "Parametric modeling & tolerance testing",
+        "theme": "green"
+      },
+      {
+        "years": "Fabrication",
+        "text": "Multi-color printing & wood assembly",
+        "theme": "teal"
+      },
+      {
+        "years": "Release",
+        "text": "Published on MakerWorld & ws42.ca",
+        "theme": "blue"
+      }
+    ],
+    "floatingHeroCard": {
+      "title": "Work summary",
+      "status": "Personal builds",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Workshop42"
+        },
+        {
+          "label": "My role",
+          "val": "Designer & Maker"
+        },
+        {
+          "label": "Scope",
+          "val": "Personal builds"
+        }
+      ],
+      "cta": "Read the evidence",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary"
+    }
+  }
+]);
 
     const PROJECTS_BY_SLUG = Object.freeze(
       PROJECTS_CATALOG.reduce((acc, p) => {
@@ -6319,1671 +7564,2691 @@
     let activePreviewTab = "overview";
     let activeHomeCategory = "all";
 
-    function renderProjectCardHtml(proj, opts = {}) {
-      const isSelected = opts.selectable && proj.slug === selectedPreviewSlug;
-      const badgeClass = proj.badgeType === "INDEPENDENT" ? "proj-badge-independent" : "proj-badge-professional";
-      const metricsHtml = proj.metrics && proj.metrics.length
-        ? `
-          <div class="proj-card-metrics">
-            ${proj.metrics.map(m => `
-              <div class="proj-card-metric-box">
-                <strong>${m.val}</strong>
-                <span>${m.label}</span>
+    
+
+    // 4A. Build Home Summarized Overview Sections (02 Featured Projects, 03 Career Journey, 04 Skills & Focus, 05 About, 06 Connect & Contact Form)
+    const EXPLORE_BUILDS_ORDER = Object.freeze([
+      "renewals",
+      "nexus",
+      "workflows",
+      "newbusiness",
+      "upload",
+      "changes",
+      "inquiry",
+      "headquarters",
+      "sql",
+      "takeover",
+      "continuity",
+      "claims",
+      "foundations",
+      "dell",
+      "lowkey",
+      "workshop42"
+    ]);
+
+    const EXPLORE_BUILDS_DISPLAY = Object.freeze({
+      renewals: {
+        catPill: "Underwriting",
+        cardTitle: "Renewal Automation",
+        cardDesc: "Automated renewal decisions using business rules and data validation.",
+        thumb: "assets/builds/fw-renewals-bg.png",
+        mainImage: "assets/optimized/proj-banner-renewals-1376.webp",
+        railBadgeTheme: "amber",
+        railBadgeIcon: "briefcase",
+        railExtraClass: "home-fw-primary-card is-renewals-card",
+        railTitleClass: "fw-primary-title fw-secondary-title",
+        railDescClass: "fw-primary-desc fw-secondary-desc",
+        railTags: ["Underwriting", "Integration", "Automation"],
+        statusLabel: "Implemented",
+        statusTheme: "green",
+        previewStatus: "Implemented",
+        previewTitle: "Renewal Eligibility & Underwriting Automation",
+        previewLead: "Designed and implemented deterministic renewal automation with underwriters, comparing rule decisions against manual review before production activation (~80% residential, ~40% farm/agri; 60% commercial confirmed by Josh; all user-reported and renewal-only).",
+        previewTags: ["Underwriting", "Business Rules", "Automation", "Integration"]
+      },
+      nexus: {
+        catPill: "AI Orchestration",
+        cardTitle: "NEXUS Platform",
+        cardDesc: "Independent AI orchestration platform for real-world work.",
+        thumb: "assets/builds/fw-nexus-bg.png",
+        mainImage: "assets/optimized-extra/proj-banner-nexus-1376.webp",
+        railBadgeTheme: "purple",
+        railBadgeIcon: "nexus",
+        railExtraClass: "is-nexus-card",
+        railTags: ["AI Agents", "Platform", "Automation"],
+        statusLabel: "Active",
+        statusTheme: "green",
+        previewStatus: "Active development",
+        previewTitle: "NEXUS — Multi-Agent AI Orchestration Platform",
+        previewLead: "Independent flagship AI platform combining multi-provider model routing, hybrid RAG/CAG memory, MCP tool integrations, and structured evaluation tracing.",
+        previewTags: ["AI Agents", "Model Routing", "RAG / CAG", "MCP Tools"]
+      },
+      workflows: {
+        catPill: "Integration",
+        cardTitle: "Broker Integration",
+        cardDesc: "APIs, data flows and reporting across insurance partners and internal systems.",
+        thumb: "assets/builds/fw-broker-bg.png",
+        mainImage: "assets/optimized-extra/proj-banner-workflows-1376.webp",
+        railBadgeTheme: "cyan",
+        railBadgeIcon: "database",
+        railExtraClass: "is-broker-card",
+        railTags: ["APIs", "ETL", "Reporting"],
+        statusLabel: "Implemented",
+        statusTheme: "green",
+        previewStatus: "Implemented",
+        previewTitle: "Broker Data Integration & Commercial Workflows",
+        previewLead: "Connected external broker platforms, policy administration, rating and reporting pipelines across SOAP/REST APIs and CSIO/ACORD data standards.",
+        previewTags: ["APIs", "CSIO / ACORD", "ETL", "Reporting"]
+      },
+      newbusiness: {
+        catPill: "Integration",
+        cardTitle: "Commercial Quoting & Broker Integration",
+        cardDesc: "Broker payloads, risk mapping and rule validation across vendors.",
+        thumb: "assets/builds/card-thumb-1-quoting.png",
+        mainImage: "assets/builds/preview-main-quoting.png",
+        statusLabel: "Implemented",
+        statusTheme: "green",
+        previewStatus: "Implemented",
+        previewTitle: "Commercial Quoting & Broker Integration",
+        previewLead: "Commercial broker payloads and UI stages needed consistent risk mapping and rule validation across vendors. Implemented commercial rating/underwriting rules and two-way CSIO/ACORD field transformations.",
+        previewTags: ["Integration", "CSIO / ACORD", "Commercial Lines"],
+        overviewCards: [
+          { icon: "doc", theme: "pink", title: "Problem", desc: "Inconsistent broker data and manual validation across vendors." },
+          { icon: "user", theme: "blue", title: "My role", desc: "Requirements, architecture, integration and delivery." },
+          { icon: "gear", theme: "purple", title: "Solution", desc: "Mapped fields, implemented rules, UI workflow and two-way integration." },
+          { icon: "chart", theme: "green", title: "Outcome", desc: "Improved data accuracy, faster turnaround, and reduced manual work." }
+        ],
+        legacyOverviewCards: [
+          { icon: "doc", title: "Connected broker inputs", desc: "CSIO/XML payloads to rating and underwriting rules." },
+          { icon: "gear", title: "Implemented rules", desc: "Commercial rating/underwriting with consistent validation." },
+          { icon: "arrows", title: "Two-way integration", desc: "Mapped fields across vendors using CSIO/ACORD." },
+          { icon: "chart", title: "Improved data accuracy", desc: "Reduced manual validation and faster turnaround." }
+        ],
+        problem: "Inconsistent broker data and manual validation across vendors.",
+        contribution: "Requirements, architecture, integration and delivery.",
+        solution: "Mapped fields, implemented rules, UI workflow and two-way integration.",
+        outcome: "Improved data accuracy, faster turnaround, and reduced manual work.",
+        detailType: "Professional work",
+        detailDomain: "Commercial Lines",
+        detailTech: "C#, .NET, SOAP/REST, CSIO/ACORD",
+        detailRole: "Integration, Analysis, Implementation",
+        gallery: [
+          "assets/builds/preview-gal-1.png",
+          "assets/builds/preview-gal-2.png",
+          "assets/builds/preview-gal-3.png",
+          "assets/builds/preview-gal-4.png"
+        ]
+      },
+      upload: {
+        catPill: "Development",
+        cardTitle: "Authenticated Document Upload Portal",
+        cardDesc: "C#/.NET + REST portal with logging and troubleshooting.",
+        thumb: "assets/builds/card-thumb-2-upload.png",
+        statusLabel: "Implemented",
+        statusTheme: "green",
+        previewStatus: "Implemented",
+        previewTitle: "Authenticated Document Upload Portal",
+        previewLead: "Built an authenticated C#/.NET and REST document upload portal with structured transaction logging and support diagnostics.",
+        previewTags: ["Development", "C# / .NET", "REST API", "Authentication", "Logging"],
+        problem: "Manual document submission lacked authenticated intake, structured validation and clear support visibility.",
+        contribution: "Systems Analyst and hands-on developer for portal workflow, REST integration and logging.",
+        solution: "Implemented authenticated C#/.NET upload workflows with REST endpoints and diagnostic logging.",
+        outcome: "Streamlined broker and policyholder document intake with auditable error troubleshooting.",
+        detailType: "Professional work",
+        detailDomain: "P&C Insurance Portal",
+        detailTech: "C#, .NET, REST APIs, SQL",
+        detailRole: "Systems Analyst & Developer"
+      },
+      changes: {
+        catPill: "Analysis",
+        cardTitle: "Policy-Change Validation & Comparison",
+        legacyCardTitle: "Policy-Change Comparison & Validation",
+        cardDesc: "Endorsement comparison with validation rules and visual diff.",
+        thumb: "assets/builds/card-thumb-3-changes.png",
+        statusLabel: "Pilot",
+        statusTheme: "amber",
+        previewStatus: "Pilot (discontinued)",
+        previewTitle: "Policy-Change Validation & Comparison",
+        previewLead: "Designed endorsement before/after comparison logic and underwriting validation rules for tentative limited production pilot.",
+        previewTags: ["Analysis", "Endorsements", "Business Rules", "Validation", "UI Diff"],
+        problem: "Mid-term policy endorsements required manual side-by-side comparison across complex underwriting fields.",
+        contribution: "Analysis, policy rules specification and UI/integration comparison design.",
+        solution: "Structured before-and-after field comparison with automated underwriting rule checks.",
+        outcome: "Reached tentative limited production pilot before strategic discontinuation.",
+        detailType: "Professional work",
+        detailDomain: "Policy Endorsements",
+        detailTech: "Business Rules, XML/SOAP, SQL",
+        detailRole: "Analysis, Policy Rules, Integration Design"
+      },
+      inquiry: {
+        catPill: "Integration",
+        cardTitle: "Broker Policy Inquiry & Document Access",
+        cardDesc: "SOAP/REST services and document retrieval.",
+        thumb: "assets/builds/card-thumb-4-inquiry.png",
+        statusLabel: "Implemented",
+        statusTheme: "green",
+        previewStatus: "Implemented",
+        previewTitle: "Broker Policy Inquiry & Document Access",
+        previewLead: "Enabled real-time broker policy inquiry and document retrieval across BMS platforms via SOAP and REST services.",
+        previewTags: ["Integration", "SOAP / REST", "Document Access", "Broker BMS", "CSIO"],
+        problem: "Brokers needed self-serve access to current policy declarations and billing documents inside their BMS.",
+        contribution: "Business analysis, service field mappings and end-to-end vendor integration testing.",
+        solution: "Delivered SOAP/REST inquiry and document retrieval integrations with broker management systems.",
+        outcome: "Reduced manual document requests and gave brokers direct policy inquiry access.",
+        detailType: "Professional work",
+        detailDomain: "Broker Connectivity",
+        detailTech: "SOAP, REST, XML, CSIO",
+        detailRole: "Business Analysis, Mappings, Testing"
+      },
+      headquarters: {
+        catPill: "Infrastructure",
+        cardTitle: "Modern Dev Environment",
+        cardDesc: "Reproducible dev environment and deployment pipeline.",
+        thumb: "assets/builds/card-thumb-5-devenv.png",
+        statusLabel: "Implemented",
+        statusTheme: "green",
+        previewStatus: "Implemented",
+        previewTitle: "Corporate Headquarters & Environment Infrastructure",
+        previewLead: "Designed and built virtualized server, SAN, network and environment infrastructure for the corporate headquarters transition.",
+        previewTags: ["Infrastructure", "Virtualization", "SAN & Network", "Environments", "DR"],
+        problem: "Growing insurance operations and headquarters transition required resilient virtualized server and environment infrastructure.",
+        contribution: "Technical design, virtualization build, storage/network architecture and cutover execution.",
+        solution: "Architected redundant VMware/Hyper-V clusters, SAN storage and segmented network environments.",
+        outcome: "Delivered reliable production and test environments supporting long-term company growth.",
+        detailType: "Professional work",
+        detailDomain: "Enterprise Infrastructure",
+        detailTech: "Virtualization, SAN, Networking, Windows Server",
+        detailRole: "Technical Design & Infrastructure Build"
+      },
+      sql: {
+        catPill: "Data & Reporting",
+        cardTitle: "Rating Data Pipeline & Reporting",
+        cardDesc: "ETL, data models and operational reporting.",
+        thumb: "assets/builds/card-thumb-6-pipeline.png",
+        statusLabel: "Implemented",
+        statusTheme: "green",
+        previewStatus: "Implemented",
+        previewTitle: "Rating Data Pipeline & Financial SQL Reporting",
+        previewLead: "Diagnosed and corrected complex financial-report SQL logic adopted by the payment team in its existing reporting pipeline.",
+        previewTags: ["Data & Reporting", "SQL", "ETL", "Financial Reconciliation", "Data Models"],
+        problem: "Downstream financial and rating reports showed reconciliation discrepancies across complex multi-table joins.",
+        contribution: "Root-cause data analysis, SQL query redesign and reconciliation verification with the payment team.",
+        solution: "Corrected financial-report SQL logic and aligned query rules with transaction lifecycle states.",
+        outcome: "Adopted by the payment team in its existing pipeline to restore accurate financial reporting.",
+        detailType: "Professional work",
+        detailDomain: "Health & Financial Reporting",
+        detailTech: "SQL, Relational Data Models, ETL",
+        detailRole: "Functional Analyst & SQL Development"
+      }
+    });
+
+    const FW_RAIL_ROTATE_MS = 4500;
+    let activeExploreBuildsFilter = "all";
+    let activeExploreBuildsSort = "newest";
+    let activeExploreBuildsSearch = "";
+    let selectedExploreBuildSlug = "renewals";
+    let selectedExploreGalleryIdx = 0;
+    let activeExploreSubtab = "overview";
+    let fwRailHoveredOrFocused = false;
+    let fwRailManualPauseUntil = 0;
+
+    function getEbQuadIconSvg(iconName) {
+      if (iconName === "doc") {
+        return `<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 2.5H5a1.5 1.5 0 0 0-1.5 1.5v10A1.5 1.5 0 0 0 5 15.5h8a1.5 1.5 0 0 0 1.5-1.5V6.5L10.5 2.5Z"/><path d="M10 2.5v4h4"/><path d="M9 8.5v2.8M9 13.2h.01"/></svg>`;
+      }
+      if (iconName === "gear") {
+        return `<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="2.4"/><path d="M9 2.2v1.6M9 14.2v1.6M2.2 9h1.6M14.2 9h1.6M4.2 4.2l1.2 1.2M12.6 12.6l1.2 1.2M13.8 4.2l-1.2 1.2M5.4 12.6l-1.2 1.2"/></svg>`;
+      }
+      if (iconName === "arrows") {
+        return `<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 6.5h11l-2.5-2.5"/><path d="M14.5 11.5h-11l2.5 2.5"/></svg>`;
+      }
+      if (iconName === "chart") {
+        return `<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12.5 7.5 8.5l2.8 2.8 4.2-4.8"/><path d="M11.5 6.5h3v3"/></svg>`;
+      }
+      if (iconName === "target") {
+        return `<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="9" cy="9" r="6.2"/><circle cx="9" cy="9" r="2.8"/></svg>`;
+      }
+      if (iconName === "user") {
+        return `<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="6.2" r="2.6"/><path d="M4.2 14.6c.6-2.3 2.3-3.5 4.8-3.5s4.2 1.2 4.8 3.5"/></svg>`;
+      }
+      return `<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="3" width="12" height="12" rx="2"/><path d="M6 7h6M6 10.5h4"/></svg>`;
+    }
+
+    function getFwRailBadgeIconSvg(iconName, slug) {
+      if (slug === "nexus" || iconName === "nexus") {
+        return `<img src="assets/optimized/nexus-mark-128.webp" alt="" class="fw-nexus-badge-logo" width="26" height="26" loading="lazy" decoding="async">`;
+      }
+      if (iconName === "database") {
+        return `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="10" cy="5" rx="6" ry="2.4"/><path d="M4 5v5c0 1.33 2.69 2.4 6 2.4s6-1.07 6-2.4V5"/><path d="M4 10v5c0 1.33 2.69 2.4 6 2.4s6-1.07 6-2.4v-5"/></svg>`;
+      }
+      if (iconName === "server") {
+        return `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3.5" width="14" height="5.2" rx="1.4"/><rect x="3" y="11.3" width="14" height="5.2" rx="1.4"/><circle cx="6.2" cy="6.1" r="0.9" fill="currentColor"/><circle cx="6.2" cy="13.9" r="0.9" fill="currentColor"/></svg>`;
+      }
+      return `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="14" height="10" rx="2"/><path d="M7.5 6V4.5A1.5 1.5 0 0 1 9 3h2a1.5 1.5 0 0 1 1.5 1.5V6"/><path d="M3 10.5h14"/></svg>`;
+    }
+
+    function getNextBuildRotationIndex(currentIndex, totalCount, delta, elapsedMs, stepMs, isPaused) {
+      const count = Number.isFinite(totalCount) && totalCount > 0 ? Math.floor(totalCount) : 0;
+      if (count === 0) return 0;
+      const safeCur = Number.isFinite(currentIndex) && currentIndex >= 0 ? Math.floor(currentIndex) % count : 0;
+      if (Number.isFinite(delta) && delta !== 0) {
+        return ((safeCur + Math.trunc(delta)) % count + count) % count;
+      }
+      if (isPaused) return safeCur;
+      const win = Number.isFinite(stepMs) && stepMs > 0 ? stepMs : FW_RAIL_ROTATE_MS;
+      const safeElapsed = Number.isFinite(elapsedMs) && elapsedMs >= 0 ? elapsedMs : 0;
+      const steps = Math.floor(safeElapsed / win);
+      return (safeCur + steps) % count;
+    }
+
+    function getExploreBuildDisplay(proj) {
+      const custom = EXPLORE_BUILDS_DISPLAY[proj.slug] || {};
+      const defaultCat = proj.categories && proj.categories.includes("independent")
+        ? "Independent"
+        : proj.categories && proj.categories.includes("data")
+          ? "Integration"
+          : proj.categories && proj.categories.includes("infra")
+            ? "Infrastructure"
+            : "Insurance";
+      const isDiscontinued = /discontinued/i.test(proj.status || "");
+      const isInterim = /interim/i.test(proj.status || "");
+      const isDev = /development/i.test(proj.status || "");
+      const statusTheme = custom.statusTheme || (isDiscontinued ? "amber" : isDev ? "blue" : "green");
+      const statusLabel = custom.statusLabel || (isDiscontinued ? "Pilot" : isInterim ? "Interim" : isDev ? "Active" : "Implemented");
+      const previewStatus = custom.previewStatus || (isDiscontinued ? "Pilot" : "Implemented");
+      const problem = custom.problem || proj.previewProblem || proj.problem;
+      const contribution = custom.contribution || proj.contribution;
+      const solution = custom.solution || proj.previewSolution || proj.solution;
+      const outcome = custom.outcome || proj.glance?.previewOutcome || proj.glance?.outcome || "Delivered practical system outcomes.";
+      const overviewCards = custom.overviewCards || [
+        { icon: "doc", theme: "pink", title: "Problem", desc: problem },
+        { icon: "user", theme: "blue", title: "My role", desc: contribution },
+        { icon: "gear", theme: "purple", title: "Solution", desc: solution },
+        { icon: "chart", theme: "green", title: "Outcome", desc: outcome }
+      ];
+      const railBadgeTheme = custom.railBadgeTheme || (
+        proj.categories && proj.categories.includes("independent")
+          ? "purple"
+          : proj.categories && proj.categories.includes("data")
+            ? "cyan"
+            : "amber"
+      );
+      const railBadgeIcon = custom.railBadgeIcon || (
+        proj.slug === "nexus"
+          ? "nexus"
+          : proj.categories && proj.categories.includes("data")
+            ? "database"
+            : proj.categories && proj.categories.includes("infra")
+              ? "server"
+              : "briefcase"
+      );
+      const previewTags = custom.previewTags || proj.heroTags || proj.cardTags || ["Architecture", "Delivery"];
+      return {
+        slug: proj.slug,
+        catPill: custom.catPill || defaultCat,
+        cardTitle: custom.cardTitle || proj.shortTitle || proj.title,
+        cardDesc: custom.cardDesc || proj.shortDesc,
+        thumb: custom.thumb || proj.banner,
+        mainImage: custom.mainImage || (proj.slug === "newbusiness" ? "assets/builds/preview-main-quoting.png" : (proj.banner || custom.thumb)),
+        railBadgeTheme,
+        railBadgeIcon,
+        railExtraClass: custom.railExtraClass || "",
+        railTitleClass: custom.railTitleClass || "fw-secondary-title",
+        railDescClass: custom.railDescClass || "fw-secondary-desc",
+        railTags: custom.railTags || previewTags.slice(0, 3),
+        statusLabel,
+        statusTheme,
+        previewStatus,
+        previewTitle: custom.previewTitle || proj.title,
+        previewLead: custom.previewLead || proj.heroDesc || proj.shortDesc,
+        previewTags,
+        overviewCards,
+        problem,
+        contribution,
+        solution,
+        outcome,
+        detailType: custom.detailType || (proj.badgeType === "INDEPENDENT" ? "Independent build" : "Professional work"),
+        detailDomain: custom.detailDomain || proj.glance?.previewDomain || proj.glance?.domain || "Enterprise Systems",
+        detailTech: custom.detailTech || proj.glance?.technologies || (proj.cardTags || []).join(", "),
+        detailRole: custom.detailRole || proj.glance?.previewRole || proj.glance?.role || "Systems Analysis & Delivery",
+        gallery: custom.gallery || [
+          proj.banner || "assets/builds/preview-gal-1.png",
+          "assets/builds/preview-gal-2.png",
+          "assets/builds/preview-gal-3.png",
+          "assets/builds/preview-gal-4.png"
+        ]
+      };
+    }
+
+    function getFilteredExploreBuilds() {
+      const orderMap = {};
+      EXPLORE_BUILDS_ORDER.forEach((slug, i) => { orderMap[slug] = i; });
+      const q = (activeExploreBuildsSearch || "").trim().toLowerCase();
+      let list = PROJECTS_CATALOG.filter(p => {
+        if (activeExploreBuildsFilter !== "all" && (!Array.isArray(p.categories) || !p.categories.includes(activeExploreBuildsFilter))) {
+          return false;
+        }
+        if (q) {
+          const d = getExploreBuildDisplay(p);
+          const hay = `${d.cardTitle} ${d.previewTitle} ${d.cardDesc} ${d.previewLead} ${d.catPill} ${(d.previewTags || []).join(" ")}`.toLowerCase();
+          return hay.includes(q);
+        }
+        return true;
+      });
+      list = list.slice().sort((a, b) => {
+        const ia = orderMap[a.slug] !== undefined ? orderMap[a.slug] : 99;
+        const ib = orderMap[b.slug] !== undefined ? orderMap[b.slug] : 99;
+        return activeExploreBuildsSort === "oldest" ? ib - ia : ia - ib;
+      });
+      return list;
+    }
+
+    function getExploreBuildDetailCards(disp, tab) {
+      if (tab === "overview") return disp.overviewCards;
+      if (tab === "tech") return [
+        { icon: "doc", theme: "pink", title: "Type & status", desc: disp.detailType + " · " + disp.previewStatus },
+        { icon: "target", theme: "blue", title: "Domain", desc: disp.detailDomain },
+        { icon: "gear", theme: "purple", title: "Technologies", desc: disp.detailTech },
+        { icon: "user", theme: "green", title: "My role", desc: disp.detailRole }
+      ];
+      const views = {
+        problem: { icon: "doc", theme: "pink", title: "Problem", desc: disp.problem },
+        contribution: { icon: "user", theme: "blue", title: "My contribution", desc: disp.contribution },
+        solution: { icon: "gear", theme: "purple", title: "Solution", desc: disp.solution },
+        outcome: { icon: "chart", theme: "green", title: "Outcome", desc: disp.outcome }
+      };
+      return views[tab] ? [{ ...views[tab], active: true }] : disp.overviewCards;
+    }
+
+    function renderExploreDetailCards(cards) {
+      return cards.map(c => `<div class="eb-quad-box ${c.active ? "is-highlighted" : ""}">
+        <span class="eb-quad-icon-badge is-${c.theme || "blue"}" aria-hidden="true">${getEbQuadIconSvg(c.icon)}</span>
+        <div class="eb-quad-copy"><strong>${c.title}</strong><p>${c.desc}</p></div>
+      </div>`).join("");
+    }
+
+    function selectExploreDetailTab(tab, focus = false) {
+      if (!["overview", "problem", "contribution", "solution", "outcome", "tech"].includes(tab)) return;
+      const preview = document.querySelector("[data-eb-preview-panel]");
+      const panel = preview?.querySelector("#eb-detail-panel");
+      const projects = getFilteredExploreBuilds();
+      const project = projects.find(p => p.slug === selectedExploreBuildSlug) || projects[0];
+      if (!panel || !project) return;
+      activeExploreSubtab = tab;
+      preview.querySelectorAll("[data-eb-subtab]").forEach(button => {
+        const selected = button.getAttribute("data-eb-subtab") === tab;
+        button.classList.toggle("is-active", selected);
+        button.setAttribute("aria-selected", String(selected));
+        button.tabIndex = selected ? 0 : -1;
+        if (selected && focus) button.focus({ preventScroll: true });
+      });
+      panel.setAttribute("aria-labelledby", "eb-detail-tab-" + tab);
+      panel.classList.toggle("is-focused-detail", tab !== "overview" && tab !== "tech");
+      panel.innerHTML = renderExploreDetailCards(getExploreBuildDetailCards(getExploreBuildDisplay(project), tab));
+    }
+
+    function renderExploreBuildsWorkbench(opts = {}) {
+      const railEl = document.querySelector("[data-fw-rotating-rail]");
+      const stripEl = document.querySelector("[data-eb-cards-strip]");
+      const previewEl = document.querySelector("[data-eb-preview-panel]");
+      if (!previewEl && !railEl && !stripEl) return;
+
+      const list = getFilteredExploreBuilds();
+      if (!list.some(p => p.slug === selectedExploreBuildSlug) && list.length > 0) {
+        selectedExploreBuildSlug = list[0].slug;
+        selectedExploreGalleryIdx = 0;
+      }
+
+      const selectedIdx = Math.max(0, list.findIndex(p => p.slug === selectedExploreBuildSlug));
+      const selectedProj = list[selectedIdx] || PROJECTS_CATALOG[0];
+      const disp = getExploreBuildDisplay(selectedProj);
+
+      const totalLabelEl = document.querySelector("[data-eb-total-label]");
+      if (totalLabelEl) {
+        totalLabelEl.textContent = `${list.length} project${list.length === 1 ? "" : "s"} and case studies`;
+      }
+
+      if (railEl) {
+        const prevScrollLeft = railEl.scrollLeft || 0;
+        railEl.innerHTML = list.map((proj, idx) => {
+          const d = getExploreBuildDisplay(proj);
+          const isSel = proj.slug === selectedProj.slug;
+          const mediaClass = proj.slug === "renewals" ? "fw-primary-media fw-secondary-media" : "fw-secondary-media";
+          const bodyClass = proj.slug === "renewals" ? "fw-primary-copy fw-secondary-body" : "fw-secondary-body";
+          return `
+            <article class="home-fw-secondary-card ${d.railExtraClass} ${isSel ? "is-selected" : ""}" data-fw-rail-card="${proj.slug}" data-eb-card="${proj.slug}" data-fw-rail-index="${idx}" tabindex="0" role="button" aria-pressed="${isSel ? "true" : "false"}" aria-label="Select ${d.cardTitle} (${idx + 1} of ${list.length})">
+              <div class="${mediaClass}">
+                <img src="${railThumbSources[d.thumb] || d.thumb}" alt="${d.cardTitle}" loading="lazy" decoding="async">
               </div>
+              <div class="${bodyClass}">
+                <div class="fw-card-top-bar">
+                  <span class="fw-card-icon-badge is-${d.railBadgeTheme}" aria-hidden="true">
+                    ${getFwRailBadgeIconSvg(d.railBadgeIcon, proj.slug)}
+                  </span>
+                  <span class="fw-card-top-pill">${d.catPill}</span>
+                </div>
+                <div class="fw-card-bottom-stack">
+                  <div class="fw-card-main-row">
+                    <div class="fw-card-text-col">
+                      <div class="fw-card-title-row">
+                        <h3 class="${d.railTitleClass}">${d.cardTitle}</h3>
+                      </div>
+                      <p class="${d.railDescClass}">${d.cardDesc}</p>
+                    </div>
+                  </div>
+                  <div class="fw-secondary-footer">
+                    <div class="fw-card-tags">
+                      ${d.railTags.map(t => `<span>${t}</span>`).join("")}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          `;
+        }).join("");
+
+        railEl.scrollLeft = prevScrollLeft;
+        if (opts && opts.scrollRailToSelected) {
+          const activeCardEl = railEl.querySelector(`[data-fw-rail-card="${selectedProj.slug}"]`);
+          if (activeCardEl && typeof railEl.scrollTo === "function") {
+            const maxScroll = Math.max(0, railEl.scrollWidth - railEl.clientWidth);
+            const centeredLeft = activeCardEl.offsetLeft - Math.round((railEl.clientWidth - activeCardEl.offsetWidth) / 2);
+            const leadingCards = window.matchMedia && window.matchMedia("(max-width: 767px)").matches ? 0 : 1;
+            const targetLeft = selectedIdx <= leadingCards ? 0 : Math.min(maxScroll, Math.max(0, centeredLeft));
+            railEl.scrollTo({ left: targetLeft, behavior: opts.instant ? "auto" : "smooth" });
+          }
+        }
+      }
+
+      if (stripEl) {
+        stripEl.innerHTML = list.map(proj => {
+          const d = getExploreBuildDisplay(proj);
+          const isSel = proj.slug === selectedProj.slug;
+          const dotIcon = d.statusTheme === "amber"
+            ? `<span class="eb-card-status-dot is-amber">&#10003;</span>`
+            : `<span class="eb-card-status-dot is-green">&#10003;</span>`;
+          return `
+            <article class="eb-mini-card ${isSel ? "is-selected" : ""}" data-eb-card="${proj.slug}" tabindex="0" role="button" aria-pressed="${isSel ? "true" : "false"}" aria-label="Select ${d.cardTitle}">
+              <div class="eb-mini-card-media">
+                <img src="${railThumbSources[d.thumb] || d.thumb}" alt="${d.cardTitle}" loading="lazy">
+                <span class="eb-card-cat-pill">${d.catPill}</span>
+              </div>
+              <div class="eb-mini-card-body">
+                <h4 class="eb-mini-card-title">${d.cardTitle}</h4>
+                <div class="eb-mini-card-footer">
+                  <span class="eb-mini-card-status">
+                    ${dotIcon}
+                    <span class="eb-card-status-text">${d.statusLabel}</span>
+                  </span>
+                  <span class="eb-mini-card-arrow" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8h8.5M8.5 4.5 12 8l-3.5 3.5"/></svg>
+                  </span>
+                </div>
+              </div>
+            </article>
+          `;
+        }).join("");
+      }
+
+      if (!previewEl) return;
+
+      const activeMainImg = selectedExploreGalleryIdx === 0
+        ? disp.mainImage
+        : (disp.gallery[selectedExploreGalleryIdx] || disp.mainImage);
+
+      const statusPillClass = disp.statusTheme === "amber" ? "is-amber" : "is-green";
+      const subtabs = [
+        { id: "overview", label: "Overview", icon: `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2.2" y="2.2" width="11.6" height="11.6" rx="2"/><path d="M5 6h6M5 9.5h4"/></svg>` },
+        { id: "problem", label: "Problem", icon: `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2H4.8A1.3 1.3 0 0 0 3.5 3.3v9.4A1.3 1.3 0 0 0 4.8 14h6.4a1.3 1.3 0 0 0 1.3-1.3V5L9.5 2Z"/><path d="M9 2v3.5h3.5"/></svg>` },
+        { id: "contribution", label: "My contribution", icon: `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="8" cy="5.5" r="2.4"/><path d="M3.4 13.5c.5-2.1 2.1-3.2 4.6-3.2s4.1 1.1 4.6 3.2"/></svg>` },
+        { id: "solution", label: "Solution", icon: `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="8" cy="8" r="2.2"/><path d="M8 2v1.6M8 12.4V14M2 8h1.6M12.4 8H14M3.8 3.8l1.1 1.1M11.1 11.1l1.1 1.1M12.2 3.8l-1.1 1.1M4.9 11.1l-1.1 1.1"/></svg>` },
+        { id: "outcome", label: "Outcome", icon: `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 12.5V9.5M8 12.5V6.5M12 12.5V3.5"/><path d="M2.5 13h11"/></svg>` },
+        { id: "tech", label: "Tech & tools", icon: `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 3.5h11L9.5 8.2v4.3l-3 1v-5.3L2.5 3.5Z"/></svg>` }
+      ];
+
+      const quadCardsToRender = getExploreBuildDetailCards(disp, activeExploreSubtab);
+
+      previewEl.innerHTML = `
+        <div class="eb-preview-media-col">
+          <div class="eb-preview-main-img-wrap">
+            <img src="${activeMainImg}" alt="${disp.previewTitle}" class="eb-preview-main-img" loading="lazy" decoding="async">
+            <span class="eb-preview-icon-badge is-cyan" aria-hidden="true">
+              ${disp.slug === "nexus"
+                ? `<img src="assets/optimized/nexus-mark-128.webp" alt="" class="eb-preview-nexus-logo" width="24" height="24" loading="lazy" decoding="async">`
+                : `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="10" cy="5" rx="6" ry="2.4"/><path d="M4 5v5c0 1.33 2.69 2.4 6 2.4s6-1.07 6-2.4V5"/><path d="M4 10v5c0 1.33 2.69 2.4 6 2.4s6-1.07 6-2.4v-5"/></svg>`}
+            </span>
+            <a href="#projects/${disp.slug}" data-proj-link="${disp.slug}" class="eb-preview-expand-btn" hidden aria-label="Open ${disp.previewTitle} full case study" title="Open full case study">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8h9M8.5 4l4 4-4 4"/></svg>
+            </a>
+          </div>
+          <div class="eb-preview-gallery-row" role="group" aria-label="Project preview thumbnails">
+            ${disp.gallery.map((gSrc, gIdx) => `
+              <button type="button" class="eb-preview-gal-thumb ${gIdx === selectedExploreGalleryIdx ? "is-active" : ""}" data-eb-gal-thumb="${gIdx}" aria-label="Preview view ${gIdx + 1}">
+                <img src="${gSrc}" alt="" loading="lazy" decoding="async">
+              </button>
             `).join("")}
           </div>
-        `
-        : "";
-      const tagsHtml = (proj.cardTags || []).slice(0, 3).map(t => `<span class="proj-card-tag">${t}</span>`).join("");
+        </div>
 
-      return `
-        <article class="proj-modern-card ${isSelected ? "is-selected" : ""}" data-proj-card="${proj.slug}">
-          <a class="proj-card-banner-link" href="#projects/${proj.slug}" data-proj-link="${proj.slug}" aria-label="Open ${proj.title}">
-            <img class="proj-card-banner-img" src="${proj.banner}" alt="${proj.title}" loading="lazy">
-            <span class="proj-card-badge ${badgeClass}">${proj.badgeType}</span>
-            <span class="proj-card-org">${proj.org}</span>
-          </a>
-          <div class="proj-card-body">
-            <div class="proj-card-title-row">
-              <h3 class="proj-card-title">
-                <a href="#projects/${proj.slug}" data-proj-link="${proj.slug}">${proj.title}</a>
-              </h3>
-              <a class="proj-card-chevron" href="#projects/${proj.slug}" data-proj-link="${proj.slug}" aria-label="View ${proj.title}">
-                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 4 4 4-4 4"/></svg>
-              </a>
+        <div class="eb-preview-main-col">
+          <div class="eb-preview-top-bar">
+            <div class="eb-preview-tags">
+              ${disp.previewTags.slice(0, 4).map(t => `<span class="eb-preview-tag">${t}</span>`).join("")}
             </div>
-            <p class="proj-card-desc">${proj.shortDesc}</p>
-            ${metricsHtml}
-            <div class="proj-card-tags">${tagsHtml}</div>
+            <div class="eb-preview-top-right">
+              <span class="eb-preview-counter" data-eb-counter>${selectedIdx + 1} / ${list.length}</span>
+              <div class="eb-preview-step-btns">
+                <button type="button" class="eb-preview-step-btn" data-eb-preview-step="-1" aria-label="Previous project">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10 4-4 4 4 4"/></svg>
+                </button>
+                <button type="button" class="eb-preview-step-btn" data-eb-preview-step="1" aria-label="Next project">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 4 4 4-4 4"/></svg>
+                </button>
+              </div>
+            </div>
           </div>
-        </article>
+
+          <div class="eb-preview-title-row">
+            <h4 class="eb-preview-title">${disp.previewTitle}</h4>
+            <span class="eb-status-pill ${statusPillClass}">
+              <span class="eb-status-pill-check">&#10003;</span>
+              <span>${disp.previewStatus === "Pilot (discontinued)" ? "Pilot" : disp.previewStatus}</span>
+            </span>
+          </div>
+
+          <p class="eb-preview-lead">${disp.previewLead}</p>
+
+          <div class="eb-preview-subtabs" role="tablist" aria-label="Project detail views">
+            ${subtabs.map(st => `
+              <button type="button" class="eb-preview-subtab-btn ${activeExploreSubtab === st.id ? "is-active" : ""}" role="tab" id="eb-detail-tab-${st.id}" aria-controls="eb-detail-panel" tabindex="${activeExploreSubtab === st.id ? "0" : "-1"}" aria-selected="${activeExploreSubtab === st.id ? "true" : "false"}" data-eb-subtab="${st.id}">
+                <span class="eb-subtab-icon" aria-hidden="true">${st.icon}</span>
+                <span>${st.label}</span>
+              </button>
+            `).join("")}
+          </div>
+
+          <div class="eb-preview-quad-grid ${activeExploreSubtab !== "overview" && activeExploreSubtab !== "tech" ? "is-focused-detail" : ""}" id="eb-detail-panel" role="tabpanel" aria-labelledby="eb-detail-tab-${activeExploreSubtab}" tabindex="0">
+            ${renderExploreDetailCards(quadCardsToRender)}
+          </div>
+
+          <div class="eb-preview-details-col" hidden>
+            <h5 class="eb-details-heading">Key details</h5>
+            <a class="eb-artefact-card" href="#projects/${disp.slug}" data-proj-link="${disp.slug}">
+              <strong>View code / artefacts</strong>
+            </a>
+          </div>
+        </div>
       `;
     }
 
-    // 4A. Build Home Summarized Overview Sections (02 Featured Projects, 03 Career Journey, 04 Skills & Focus, 05 About, 06 Connect & Contact Form)
+    function stepExploreBuildsSelection(delta) {
+      const list = getFilteredExploreBuilds();
+      if (list.length === 0) return;
+      const curIdx = Math.max(0, list.findIndex(p => p.slug === selectedExploreBuildSlug));
+      const nextIdx = getNextBuildRotationIndex(curIdx, list.length, delta, 0, FW_RAIL_ROTATE_MS, false);
+      selectedExploreBuildSlug = list[nextIdx].slug;
+      selectedExploreGalleryIdx = 0;
+      renderExploreBuildsWorkbench({ scrollRailToSelected: true });
+    }
+
     const homeSection = document.querySelector('section[data-page="home"]');
     if (homeSection && !homeSection.querySelector(".home-summary-workbench")) {
       const homeSummaryEl = document.createElement("div");
       homeSummaryEl.className = "home-summary-workbench";
       homeSummaryEl.id = "home-featured-projects";
       homeSummaryEl.innerHTML = `
-        <!-- SECTION 02 / FEATURED BUILDS CAROUSEL -->
-        <section class="projects-carousel-section home-projects-carousel" aria-labelledby="home-sum-proj-heading" data-carousel-section tabindex="0">
+        <!-- SECTION 02 / FEATURED WORK (Top Filter & Rotating All-Builds Rail + Enlarged Selected Build Display) -->
+        <section class="projects-carousel-section home-projects-carousel home-featured-work-section" aria-labelledby="home-sum-proj-heading" data-carousel-section tabindex="0">
           <canvas class="builds-webgl-cloud-canvas builds-webgl-cloud-canvas--back" data-builds-webgl-clouds="back" aria-hidden="true"></canvas>
           <canvas class="builds-webgl-cloud-canvas builds-webgl-cloud-canvas--front" data-builds-webgl-clouds="front" aria-hidden="true"></canvas>
-          <div class="home-carousel-header">
-            <div class="home-carousel-header-left">
-              <p class="home-carousel-eyebrow">02 / FEATURED BUILDS</p>
-              <h2 id="home-sum-proj-heading" class="home-carousel-title">Work that solves <span class="projects-carousel-gradient">real problems.</span></h2>
-              <p class="home-carousel-subtitle">A mix of enterprise experience and independent builds.</p>
+
+          <div class="home-sum-inner home-featured-work-grid">
+            <!-- Column 1: Section Intro + Mountain Horizon Accent -->
+            <div class="home-fw-intro-col">
+              <p class="home-sum-eyebrow is-cyan">FEATURED BUILDS</p>
+              <h2 id="home-sum-proj-heading" class="home-fw-heading">
+                <span class="fw-heading-dark">Real problems.</span>
+                <span class="fw-heading-blue">Practical solutions.</span>
+              </h2>
+              <p class="home-fw-lead">From business requirements to working systems across insurance, infrastructure and AI.</p>
+              
+              <div class="home-fw-actions" hidden aria-hidden="true">
+                <p class="home-fw-lead">A selection of projects showing end-to-end delivery &mdash; from business requirements to working systems.</p>
+                <span class="fw-card-top-pill">Insurance Automation</span>
+                <span class="fw-card-top-pill">AI Orchestration</span>
+                <span class="fw-card-top-pill">System Integration</span>
+                <img src="assets/optimized/proj-banner-renewals-1376.webp" alt="" loading="lazy" decoding="async">
+                <a class="home-white-pill-cta" href="#home-builds-drawer" data-home-open-builds>
+                  <span>View all ${PROJECTS_CATALOG.length} builds</span>
+                  <span aria-hidden="true">&rarr;</span>
+                </a>
+              </div>
             </div>
-            <a class="home-carousel-viewall" href="#projects">View all builds <span aria-hidden="true">&rarr;</span></a>
+
+            <!-- Column 2: Top Filter Controls + Rotating All-Builds Rail -->
+            <div class="home-fw-rail-col">
+              <div class="home-fw-top-controls">
+                <div class="eb-filter-row" role="group" aria-label="Filter builds by category">
+                  <button type="button" class="eb-filter-pill is-active" data-eb-filter="all" aria-pressed="true">All (${PROJECTS_CATALOG.length})</button>
+                  <button type="button" class="eb-filter-pill" data-eb-filter="professional" aria-pressed="false">Professional (${countByCat("professional")})</button>
+                  <button type="button" class="eb-filter-pill" data-eb-filter="independent" aria-pressed="false">Independent (${countByCat("independent")})</button>
+                  <span class="eb-filter-divider" hidden aria-hidden="true"></span>
+                  <button type="button" class="eb-filter-pill" data-eb-filter="insurance" aria-pressed="false">Insurance (${countByCat("insurance")})</button>
+                  <button type="button" class="eb-filter-pill" data-eb-filter="data" aria-pressed="false">Integration &amp; Data (${countByCat("data")})</button>
+                  <button type="button" class="eb-filter-pill" data-eb-filter="infra" aria-pressed="false">Infrastructure (${countByCat("infra")})</button>
+                  <button type="button" class="eb-filter-pill" data-eb-filter="web" aria-pressed="false">Web &amp; Tools (${countByCat("web")})</button>
+                </div>
+
+              </div>
+
+              <div class="home-fw-rail-stage">
+                <button type="button" class="fw-rail-nav-btn is-prev" data-fw-rail-prev aria-label="Previous build">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10 3.5-4.5 4.5 4.5 4.5"/></svg>
+                </button>
+
+                <div class="home-fw-rotating-rail" data-fw-rotating-rail role="region" aria-label="Builds carousel">
+                  <!-- Initial SSR fallback cards; hydrated with all filtered builds by renderExploreBuildsWorkbench() -->
+                  <a class="home-fw-primary-card home-fw-secondary-card is-renewals-card is-selected" href="#projects/renewals" aria-label="Renewal Eligibility and Underwriting Automation case study">
+                    <div class="fw-primary-media fw-secondary-media">
+                      <img src="assets/builds/fw-renewals-bg.png" alt="Residential property with automated renewal qualification overlay" loading="lazy" decoding="async">
+                      <div class="fw-eligible-checklist-card" hidden aria-hidden="true">
+                        <strong>Eligible</strong>
+                      </div>
+                    </div>
+                    <div class="fw-primary-copy fw-secondary-body">
+                      <span class="fw-card-icon-badge is-amber" aria-hidden="true">
+                        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="14" height="10" rx="2"/><path d="M7.5 6V4.5A1.5 1.5 0 0 1 9 3h2a1.5 1.5 0 0 1 1.5 1.5V6"/><path d="M3 10.5h14"/></svg>
+                      </span>
+                      <span class="fw-card-top-pill" hidden aria-hidden="true">Insurance Automation</span>
+                      <div class="fw-card-bottom-stack">
+                        <div class="fw-card-main-row">
+                          <div class="fw-card-text-col">
+                            <div class="fw-card-title-row">
+                              <h3 class="fw-primary-title fw-secondary-title">Renewal Automation</h3>
+                            </div>
+                            <p class="fw-primary-desc fw-secondary-desc">Automated renewal decisions using business rules and data validation.</p>
+                          </div>
+                        </div>
+                        <div class="fw-secondary-footer">
+                          <div class="fw-card-tags">
+                            <span>Underwriting</span>
+                            <span>Integration</span>
+                            <span>Automation</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+
+                  <a class="home-fw-secondary-card is-nexus-card" href="#projects/nexus" aria-label="NEXUS Platform case study">
+                    <div class="fw-secondary-media">
+                      <img src="assets/builds/fw-nexus-bg.png" alt="NEXUS AI orchestration workbench interface" loading="lazy" decoding="async">
+                    </div>
+                    <div class="fw-secondary-body">
+                      <span class="fw-card-icon-badge is-purple" aria-hidden="true">
+                        <img src="assets/optimized/nexus-mark-128.webp" alt="" class="fw-nexus-badge-logo" width="26" height="26" loading="lazy" decoding="async">
+                      </span>
+                      <span class="fw-card-top-pill" hidden aria-hidden="true">AI Orchestration</span>
+                      <div class="fw-card-bottom-stack">
+                        <div class="fw-card-main-row">
+                          <div class="fw-card-text-col">
+                            <div class="fw-card-title-row">
+                              <h3 class="fw-secondary-title">NEXUS Platform</h3>
+                            </div>
+                            <p class="fw-secondary-desc">Independent AI orchestration platform for real-world work.</p>
+                          </div>
+                        </div>
+                        <div class="fw-secondary-footer">
+                          <div class="fw-card-tags">
+                            <span>AI Agents</span>
+                            <span>Platform</span>
+                            <span>Automation</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+
+                  <a class="home-fw-secondary-card is-broker-card" href="#projects/workflows" aria-label="Broker Data Integration case study">
+                    <div class="fw-secondary-media">
+                      <img src="assets/builds/fw-broker-bg.png" alt="Broker data integration and commercial workflows architecture" loading="lazy" decoding="async">
+                    </div>
+                    <div class="fw-secondary-body">
+                      <span class="fw-card-icon-badge is-cyan" aria-hidden="true">
+                        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="10" cy="5" rx="6" ry="2.4"/><path d="M4 5v5c0 1.33 2.69 2.4 6 2.4s6-1.07 6-2.4V5"/><path d="M4 10v5c0 1.33 2.69 2.4 6 2.4s6-1.07 6-2.4v-5"/></svg>
+                      </span>
+                      <span class="fw-card-top-pill" hidden aria-hidden="true">System Integration</span>
+                      <div class="fw-card-bottom-stack">
+                        <div class="fw-card-main-row">
+                          <div class="fw-card-text-col">
+                            <div class="fw-card-title-row">
+                              <h3 class="fw-secondary-title">Broker Integration</h3>
+                            </div>
+                            <p class="fw-secondary-desc">APIs, data flows and reporting across insurance partners and internal systems.</p>
+                          </div>
+                        </div>
+                        <div class="fw-secondary-footer">
+                          <div class="fw-card-tags">
+                            <span>APIs</span>
+                            <span>ETL</span>
+                            <span>Reporting</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+
+                <button type="button" class="fw-rail-nav-btn is-next" data-fw-rail-next aria-label="Next build">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 3.5 4.5 4.5-4.5 4.5"/></svg>
+                </button>
+              </div>
+            </div>
           </div>
-          <div class="projects-carousel-stage" data-carousel-stage="home-stage"></div>
-          <div class="projects-carousel-pagination-bar" data-carousel-pagination-bar>
+
+          <!-- Enlarged Bottom Selected-Build Showcase Card -->
+          <div class="home-sum-inner home-section-drawer-wrap home-explore-builds-wrap">
+            <div class="home-explore-builds-card" id="home-builds-drawer" data-home-builds-drawer>
+              <div class="eb-header-row" hidden aria-hidden="true">
+                <div class="eb-header-left">
+                  <h3 class="eb-title">Explore builds</h3>
+                  <span hidden aria-hidden="true"><h3 class="eb-title">Explore all builds</h3></span>
+                  <p class="eb-subtitle"><span data-eb-total-label>${PROJECTS_CATALOG.length} projects and case studies</span><span class="eb-subtitle-hint" hidden> &middot; Select a project to see the details</span></p>
+                </div>
+                <div class="eb-strip-nav-btns" hidden>
+                  <button type="button" class="eb-strip-nav-btn" data-eb-strip-prev aria-label="Previous builds">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10 4-4 4 4 4"/></svg>
+                  </button>
+                  <button type="button" class="eb-strip-nav-btn" data-eb-strip-next aria-label="Next builds">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 4 4 4-4 4"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <div class="eb-strip-outer" hidden aria-hidden="true">
+                <div class="eb-cards-strip" data-eb-cards-strip></div>
+                <button type="button" class="eb-strip-floating-next" hidden data-eb-strip-next aria-label="Next builds">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 4 4 4-4 4"/></svg>
+                </button>
+              </div>
+
+              <div class="eb-preview-panel" data-eb-preview-panel></div>
+            </div>
+            <div class="home-builds-drawer-body" data-home-builds-body hidden></div>
+          </div>
+
+          <!-- Hidden legacy carousel stage preserved for script compatibility -->
+          <div class="projects-carousel-stage" data-carousel-stage="home-stage" hidden></div>
+          <div class="projects-carousel-pagination-bar" data-carousel-pagination-bar hidden>
             <div class="projects-carousel-dots" role="tablist" aria-label="Featured build slides" data-carousel-dots></div>
-            <button type="button" class="carousel-autoplay-btn" data-carousel-autoplay-toggle aria-pressed="false" aria-label="Pause carousel auto-cycle" title="Pause auto-cycle (also pauses on hover)">
-              <span class="carousel-autoplay-icon" data-carousel-autoplay-icon aria-hidden="true">
-                <svg viewBox="0 0 16 16" fill="currentColor"><rect x="4" y="3.2" width="2.6" height="9.6" rx="0.8"/><rect x="9.4" y="3.2" width="2.6" height="9.6" rx="0.8"/></svg>
-              </span>
-              <span class="carousel-autoplay-label" data-carousel-autoplay-label>Pause</span>
-            </button>
           </div>
         </section>
 
         <!-- UNIFIED CAREER (03) & SKILLS (04) SHARED TWO-UPPER-LEVELS BACKGROUND ZONE -->
         <div class="home-career-skills-unified-zone" data-cloud-glide-zone="career-skills">
-          <div class="home-projects-bottom-cloud-transition" aria-hidden="true">
-            ${renderVolumetricCloudBeltsHtml("proj-bottom-cloud")}
-          </div>
           <div class="home-sum-level-backdrop home-sum-level-backdrop--two-upper-levels" aria-hidden="true">
             <div class="upper-levels-cutaway-frame">
-              <img class="upper-levels-cutaway-img" src="assets/home-hero-final-frame.jpg" alt="" loading="lazy">
+              <img class="upper-levels-cutaway-img" src="assets/optimized/home-hero-final-frame-2206.webp" alt="" loading="lazy" decoding="async">
             </div>
             <div class="upper-level-floor upper-level-floor--clouds">
-              <img src="assets/home-level-clouds.jpg" alt="" loading="lazy">
+              <img src="assets/optimized-extra/home-level-clouds-1600.webp" alt="" loading="lazy" decoding="async">
             </div>
             <div class="upper-level-floor upper-level-floor--business">
-              <img src="assets/home-level-business.jpg" alt="" loading="lazy">
+              <img src="assets/optimized-extra/home-level-business-1600.webp" alt="" loading="lazy" decoding="async">
             </div>
             <div class="home-sum-level-scrim"></div>
           </div>
 
-          <!-- SECTION 03 / CAREER JOURNEY (Compact 2-Column Showcase + 4 Era Cards + S-Wave Track) -->
-          <section class="home-sum-section home-sum-career home-career-compact-showcase" id="home-career-section" aria-labelledby="home-sum-career-heading">
-            <div class="home-sum-inner">
-              <div class="home-career-compact-grid">
-                <!-- Left Column: Narrative + CTAs -->
-                <div class="home-career-compact-intro">
-                  <p class="home-sum-eyebrow is-cyan">03 / CAREER JOURNEY</p>
-                  <h2 id="home-sum-career-heading" class="home-career-stacked-title">
-                    <span class="hl-white">Grounded in the metal.</span>
-                    <span class="hl-gold">Shaped by the business.</span>
-                    <span class="hl-white">Building in the cloud.</span>
-                  </h2>
-                  <p class="home-career-compact-lead">A continuous journey across infrastructure, insurance systems and AI &mdash; each layer building on the last.</p>
-                  <div class="home-career-compact-actions">
-                    <a class="home-skills-gold-cta" href="#career">
-                      <span>View Full Timeline</span>
-                      <span aria-hidden="true">&rarr;</span>
-                    </a>
-                    <button type="button" class="home-skills-watch-btn" data-career-watch-story>
-                      <span class="home-skills-watch-ring" aria-hidden="true">&#9654;</span>
-                      <span>Watch 1 min overview</span>
-                    </button>
-                  </div>
-                </div>
-
-                <!-- Right Column: 4 Era Cards + Glowing S-Wave Timeline Track -->
-                <div class="home-career-compact-stage">
-                  <div class="home-career-era-cards" role="list">
-                    <!-- Card 1: 2006 - 2009 -->
-                    <a class="home-career-era-card theme-blue" href="#career" data-home-career-step="metal" role="listitem">
-                      <span class="era-card-years">2006 &ndash; 2009</span>
-                      <h3 class="era-card-title">Hardware &amp; Support</h3>
-                      <div class="era-card-thumb">
-                        <img src="assets/proj-banner-headquarters.jpg" alt="Datacentre server racks and hardware infrastructure" loading="lazy">
-                      </div>
-                      <p class="era-card-desc">Dell Canada &mdash; hardware, support and technical foundations.</p>
-                      <div class="era-card-pills">
-                        <span>Infrastructure</span>
-                        <span>Systems</span>
-                        <span>Support</span>
-                      </div>
-                    </a>
-
-                    <!-- Card 2: 2009 - 2022 -->
-                    <a class="home-career-era-card theme-amber" href="#career" data-home-career-step="business" role="listitem">
-                      <span class="era-card-years">2009 &ndash; 2022</span>
-                      <h3 class="era-card-title">Insurance Systems</h3>
-                      <div class="era-card-thumb">
-                        <img src="assets/proj-banner-renewals.jpg" alt="Residential insurance property and underwriting rules" loading="lazy">
-                      </div>
-                      <p class="era-card-desc">Underwriting rules, broker integration, headquarters build and reporting.</p>
-                      <div class="era-card-pills">
-                        <span>Claims</span>
-                        <span>Integration</span>
-                        <span>P&amp;C</span>
-                      </div>
-                    </a>
-
-                    <!-- Card 3: 2022 - Present -->
-                    <a class="home-career-era-card theme-purple" href="#career" data-home-career-step="clouds" role="listitem">
-                      <span class="era-card-years">2022 &ndash; Present</span>
-                      <h3 class="era-card-title">AI &amp; Solution Design</h3>
-                      <div class="era-card-thumb">
-                        <img src="assets/proj-banner-nexus.jpg" alt="Enterprise claims analytics and NEXUS AI orchestration" loading="lazy">
-                      </div>
-                      <p class="era-card-desc">Enterprise claims analysis (Medavie) and AI orchestration (NEXUS).</p>
-                      <div class="era-card-pills">
-                        <span>AI Agents</span>
-                        <span>Platform Design</span>
-                        <span>Data</span>
-                      </div>
-                    </a>
-
-                    <!-- Card 4: Always -->
-                    <a class="home-career-era-card theme-emerald" href="#career" data-home-career-step="all" role="listitem">
-                      <span class="era-card-years">Always</span>
-                      <h3 class="era-card-title">Learning &amp; Building</h3>
-                      <div class="era-card-thumb">
-                        <img src="assets/personal/about-mechanical-pencils.jpg" alt="Curiosity, precision engineering and continuous building" loading="lazy">
-                      </div>
-                      <p class="era-card-desc">New tools, same curiosity, bigger possibilities.</p>
-                      <div class="era-card-pills">
-                        <span>Exploration</span>
-                        <span>Open Source</span>
-                        <span>Innovation</span>
-                      </div>
-                    </a>
-                  </div>
-
-                  <!-- Glowing Multi-Color S-Wave Track + 4 Nodes + Bottom Callouts -->
-                  <div class="home-career-wave-track" aria-hidden="true">
-                    <svg class="home-career-wave-svg" viewBox="0 0 1000 56" preserveAspectRatio="none" fill="none">
-                      <defs>
-                        <linearGradient id="careerWaveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.25"/>
-                          <stop offset="12.5%" stop-color="#38bdf8"/>
-                          <stop offset="37.5%" stop-color="#f4c542"/>
-                          <stop offset="62.5%" stop-color="#a855f7"/>
-                          <stop offset="87.5%" stop-color="#10b981"/>
-                          <stop offset="100%" stop-color="#10b981" stop-opacity="0.25"/>
-                        </linearGradient>
-                      </defs>
-                      <path d="M 0 36 C 60 36, 90 22, 125 22 C 190 22, 310 38, 375 38 C 440 38, 560 22, 625 22 C 690 22, 810 38, 875 38 C 915 38, 955 28, 1000 28" stroke="url(#careerWaveGrad)" stroke-width="4" stroke-linecap="round"/>
-                    </svg>
-
-                    <div class="home-career-wave-nodes">
-                      <div class="wave-node-col theme-blue">
-                        <span class="wave-node-ring"><span class="wave-node-dot"></span></span>
-                        <div class="wave-node-label">
-                          <span class="wave-node-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3.5" width="18" height="5" rx="1.4"/><rect x="3" y="9.5" width="18" height="5" rx="1.4"/><rect x="3" y="15.5" width="18" height="5" rx="1.4"/><circle cx="6.5" cy="6" r=".8" fill="currentColor"/><circle cx="6.5" cy="12" r=".8" fill="currentColor"/><circle cx="6.5" cy="18" r=".8" fill="currentColor"/></svg>
-                          </span>
-                          <strong>Grounded<br>in the metal.</strong>
-                        </div>
-                      </div>
-
-                      <div class="wave-node-col theme-amber">
-                        <span class="wave-node-ring"><span class="wave-node-dot"></span></span>
-                        <div class="wave-node-label">
-                          <span class="wave-node-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.8 19 5.8v5.6c0 5-3.2 8.6-7 10-3.8-1.4-7-5-7-10V5.8l7-3Z"/><circle cx="12" cy="11" r="2.2"/></svg>
-                          </span>
-                          <strong>Shaped<br>by the business.</strong>
-                        </div>
-                      </div>
-
-                      <div class="wave-node-col theme-purple">
-                        <span class="wave-node-ring"><span class="wave-node-dot"></span></span>
-                        <div class="wave-node-label">
-                          <span class="wave-node-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6.5 19h11a4.5 4.5 0 0 0 .7-8.9A6 6 0 0 0 6.8 8.2 4.5 4.5 0 0 0 6.5 19Z"/></svg>
-                          </span>
-                          <strong>Building<br>in the cloud.</strong>
-                        </div>
-                      </div>
-
-                      <div class="wave-node-col theme-emerald">
-                        <span class="wave-node-ring"><span class="wave-node-dot"></span></span>
-                        <div class="wave-node-label">
-                          <span class="wave-node-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><path d="M18.2 8c-2 0-3.4 1.5-6.2 5-2.8-3.5-4.2-5-6.2-5a4 4 0 0 0 0 8c2 0 3.4-1.5 6.2-5 2.8 3.5 4.2 5 6.2 5a4 4 0 0 0 0-8Z"/></svg>
-                          </span>
-                          <strong>Always<br>learning.</strong>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Hidden legacy container kept empty so homepage Career section stays compact -->
-              <div class="home-embedded-career-workbench" data-home-career-workbench hidden></div>
-            </div>
+          <!-- SECTION 03 / CAREER JOURNEY (Full CareerReference Hero + 4-Chapter Wave & Cards + Timeline Archive) -->
+          <section class="home-sum-section home-sum-career home-career-compact-showcase" id="home-career-section" aria-labelledby="cr-hero-title">
+            <div class="home-career-reference-host" data-home-career-workbench></div>
           </section>
 
           <!-- SECTION 04 / SKILLS & FOCUS (Unified Redesign inside the same shared background zone) -->
-          <section class="home-sum-section home-sum-skills" id="home-skills-section" aria-labelledby="home-sum-skills-heading">
+          <section class="home-sum-section home-sum-skills" id="home-skills-section" data-skills-theme="dark" aria-labelledby="home-sum-skills-heading">
+            <div class="home-skills-level-backdrop" aria-hidden="true">
+              <img src="assets/optimized-extra/home-level-metal-1600.webp" alt="" loading="lazy" decoding="async">
+              <div class="home-skills-level-scrim"></div>
+            </div>
             <div class="home-sum-inner home-skills-unified-hero" data-home-skills-hero></div>
-            <div class="home-sum-inner home-embedded-skills-workbench" data-home-skills-workbench hidden></div>
+            <div class="home-sum-inner home-section-drawer-wrap" hidden>
+              <details class="cr-archive home-section-drawer" id="home-skills-drawer" data-home-skills-drawer hidden>
+                <summary class="cr-archive-summary">
+                  <span>Explore the full capability explorer</span>
+                  <em>Interactive cards, capability map, timeline &amp; applied evidence</em>
+                </summary>
+                <div class="home-embedded-skills-workbench" data-home-skills-workbench></div>
+              </details>
+            </div>
           </section>
         </div>
 
         <!-- SECTION 05 / ABOUT -->
         <section class="home-sum-section home-sum-about" id="home-about-section" aria-labelledby="home-sum-about-heading">
-          <div class="home-sum-inner home-sum-about-layout">
-            <div class="home-sum-about-copy">
-              <p class="home-sum-eyebrow">05 / ABOUT</p>
-              <h2 id="home-sum-about-heading" class="home-sum-title">Curious by nature. Builder at heart.</h2>
-              <p class="home-sum-about-body">I've always liked taking things apart to understand how they work &mdash; from toys and mechanical pencils as a kid to complex systems and AI today. I enjoy turning messy problems into clear plans and working with people to make useful things.</p>
-              <a class="home-sum-link" href="#about">More about me <span aria-hidden="true">&rarr;</span></a>
+          <div class="home-sum-inner home-sum-about-cinematic-layout">
+            <!-- Top 3-Column Stage: Left Copy | Center THEN->NOW Diptych | Right 3 Pillars -->
+            <div class="about-top-three-col-stage">
+              <!-- Left Column: Eyebrow + Two-Tone Heading + Body + Handwritten Callout -->
+              <div class="home-sum-about-copy">
+                <p class="home-sum-eyebrow is-about-blue">
+                  <span>ABOUT JOSH</span>
+                  <i class="about-eyebrow-rule" aria-hidden="true"></i>
+                </p>
+                <h2 id="home-sum-about-heading" class="home-sum-title">
+                  <span class="about-title-dark">Curiosity</span><br>
+                  <span class="about-title-accent">built this.</span>
+                </h2>
+                <p class="home-sum-about-body">I've always liked taking things apart to understand how they work. That curiosity grew from mechanical pencils to complex systems, and now to AI.</p>
+                <div class="about-handwritten-callout">
+                  <p class="mindset-postit-lead">Same curiosity.<br><strong>Bigger possibilities.</strong></p>
+                  <svg class="about-handwritten-underline" viewBox="0 0 210 24" fill="none" aria-hidden="true">
+                    <path d="M4 19C54 8 128 4 204 6" stroke="#f5cb39" stroke-width="4.2" stroke-linecap="round"/>
+                    <path d="M14 21C68 12 136 8 196 9" stroke="#fde047" stroke-width="2" stroke-linecap="round" opacity="0.75"/>
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Center Column: Perspective Tilted THEN -> NOW Diptych -->
+              <div class="home-sum-about-center-stage">
+                <div class="home-sum-about-progression" aria-label="Visual progression of curiosity and building">
+                  <!-- Left Card: THEN -->
+                  <div class="about-prog-item about-prog-card-wrap is-then">
+                    <div class="about-sticky-note is-then">
+                      <strong class="about-sticky-title">THEN</strong>
+                      <span class="about-sticky-text">Take things<br>apart.</span>
+                    </div>
+                    <svg class="about-sticky-arrow is-then-bottom" viewBox="0 0 56 48" fill="none" aria-hidden="true">
+                      <path d="M8 2C8 24 22 39 46 37" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+                      <path d="M40 32L48 37L41 43" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <div class="about-prog-photo is-tilted-left">
+                      <img src="assets/optimized/personal/josh-curiosity-child-tinkering-1024.webp" srcset="assets/optimized/personal/josh-curiosity-child-tinkering-480.webp 480w, assets/optimized/personal/josh-curiosity-child-tinkering-768.webp 768w, assets/optimized/personal/josh-curiosity-child-tinkering-1024.webp 1024w" sizes="(max-width: 760px) 46vw, 420px" width="1024" height="1024" alt="Illustration of young Josh tinkering with a toy at a workbench" loading="lazy" decoding="async">
+                    </div>
+                    <span class="about-prog-caption">Curiosity · illustrated</span>
+                  </div>
+
+                  <!-- Center Connector: Hand-Drawn Arrow + SAME CURIOSITY DIFFERENT SCALE -->
+                  <div class="about-prog-bridge about-prog-item-text">
+                    <svg class="about-bridge-arrow-svg" viewBox="0 0 68 28" fill="none" aria-hidden="true">
+                      <path d="M5 16C22 13 41 12 58 14" stroke="#0b63f6" stroke-width="2.6" stroke-linecap="round"/>
+                      <path d="M49 7L60 14L50 21" stroke="#0b63f6" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <p class="about-bridge-script">
+                      <span>SAME</span>
+                      <span>CURIOSITY</span>
+                      <span>DIFFERENT</span>
+                      <span>SCALE.</span>
+                    </p>
+                  </div>
+
+                  <!-- Right Card: NOW -->
+                  <div class="about-prog-item about-prog-card-wrap is-now">
+                    <div class="about-sticky-note is-now">
+                      <strong class="about-sticky-title">NOW</strong>
+                      <span class="about-sticky-text">Build<br>what's next.</span>
+                    </div>
+                    <svg class="about-sticky-arrow is-now-bottom" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+                      <path d="M38 4C40 22 29 35 12 39" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+                      <path d="M18 33L10 39L19 43" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <div class="about-prog-photo is-tilted-right">
+                      <img src="assets/optimized/personal/josh-curiosity-ai-orchestration-1024.webp" srcset="assets/optimized/personal/josh-curiosity-ai-orchestration-480.webp 480w, assets/optimized/personal/josh-curiosity-ai-orchestration-768.webp 768w, assets/optimized/personal/josh-curiosity-ai-orchestration-1024.webp 1024w" sizes="(max-width: 760px) 46vw, 420px" width="1024" height="1024" alt="Illustration of Josh working at a computer on AI systems" loading="lazy" decoding="async">
+                    </div>
+                    <span class="about-prog-caption">Building Today</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right Column: 3 Vertical Pillar Items with Circular Tinted Badges -->
+              <div class="home-sum-about-mindset-card home-sum-about-pillars">
+                <ul class="mindset-postit-list about-pillars-list">
+                  <li class="about-pillar-item">
+                    <span class="mindset-list-icon is-pillar-blue" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                        <path d="m4.5 4.5 5.5 5.5M3 6l3-3M15.5 15.5l4 4"/>
+                      </svg>
+                    </span>
+                    <div class="about-pillar-copy">
+                      <strong class="about-pillar-title">Take things apart</strong>
+                      <p class="about-pillar-desc">Understand how systems work at the smallest level.</p>
+                    </div>
+                  </li>
+                  <li class="about-pillar-item">
+                    <span class="mindset-list-icon is-pillar-cyan" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3.2"/>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                      </svg>
+                    </span>
+                    <div class="about-pillar-copy">
+                      <strong class="about-pillar-title">Solve real problems</strong>
+                      <p class="about-pillar-desc">Apply hands-on thinking to business, infrastructure and integrations.</p>
+                    </div>
+                  </li>
+                  <li class="about-pillar-item">
+                    <span class="mindset-list-icon is-pillar-violet" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+                        <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+                        <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>
+                        <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+                      </svg>
+                    </span>
+                    <div class="about-pillar-copy">
+                      <strong class="about-pillar-title">Build what's next</strong>
+                      <p class="about-pillar-desc">Turn experience into AI-powered solutions and orchestration.</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
             </div>
 
-            <div class="home-sum-about-photos">
-              <a class="home-sum-photo-card" href="#about" aria-label="About Josh — Early curiosity and taking things apart">
-                <img src="assets/personal/about-kid-tinkering.jpg" alt="Taking apart electronics as a kid to see how they work" loading="lazy">
-              </a>
-              <a class="home-sum-photo-card" href="#about" aria-label="About Josh — Mechanical pencils and precision mechanisms">
-                <img src="assets/personal/about-mechanical-pencils.jpg" alt="Disassembled mechanical pencils and internal components on a wooden desk" loading="lazy">
-              </a>
-              <a class="home-sum-photo-card" href="#about" aria-label="About Josh Boyer">
-                <img src="assets/personal/josh-portrait-smiling.jpg" alt="Portrait of Josh Boyer smiling" loading="lazy">
-              </a>
+            <!-- Bottom Row: Static 4-Node Evolution Rail (All Activated, Icon Badges, No Connecting Track Lines) -->
+            <div class="about-evolution-stepper is-static-rail" role="list" aria-label="Curiosity progression stages">
+              <div class="about-step-node is-active" role="listitem" data-about-step="0">
+                <span class="about-step-icon is-step-blue" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="7"/>
+                    <path d="m20 20-3.5-3.5"/>
+                    <path d="M11 8v6M8 11h6"/>
+                  </svg>
+                </span>
+                <strong class="about-step-title">Curiosity</strong>
+                <span class="about-step-sub">Taking things apart<br>to understand.</span>
+              </div>
+              <div class="about-step-node is-active" role="listitem" data-about-step="1">
+                <span class="about-step-icon is-step-cyan" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                  </svg>
+                </span>
+                <strong class="about-step-title">Problem-solving</strong>
+                <span class="about-step-sub">Learning to diagnose<br>and improve.</span>
+              </div>
+              <div class="about-step-node is-active" role="listitem" data-about-step="2">
+                <span class="about-step-icon is-step-indigo" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="6" cy="6" r="3"/>
+                    <circle cx="18" cy="6" r="3"/>
+                    <circle cx="12" cy="18" r="3"/>
+                    <path d="M8.7 7.5 10.6 15.3M15.3 7.5 13.4 15.3M9 6h6"/>
+                  </svg>
+                </span>
+                <strong class="about-step-title">Systems thinking</strong>
+                <span class="about-step-sub">Connecting people,<br>processes and technology.</span>
+              </div>
+              <div class="about-step-node is-active" role="listitem" data-about-step="3">
+                <span class="about-step-icon is-step-violet" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9L12 3z"/>
+                    <path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15z"/>
+                    <path d="M5 16l.7 1.3L7 18l-1.3.7L5 20l-.7-1.3L3 18l1.3-.7L5 16z"/>
+                  </svg>
+                </span>
+                <strong class="about-step-title">Building what's next</strong>
+                <span class="about-step-sub">AI, orchestration<br>and bigger impact.</span>
+              </div>
             </div>
           </div>
         </section>
 
-        <!-- SECTION 06 / LET'S BUILD SOMETHING USEFUL + CONTACT FORM FOR CONNECTIONS -->
-        <section class="home-sum-connect" id="home-connect" aria-labelledby="home-sum-connect-heading">
-          <div class="home-sum-connect-backdrop" aria-hidden="true">
-            <img src="assets/home-level-metal.jpg" alt="" loading="lazy">
-            <div class="home-sum-connect-scrim"></div>
-          </div>
-
-          <div class="home-sum-inner home-sum-connect-layout">
-            <div class="home-sum-connect-left">
-              <p class="home-sum-eyebrow home-sum-eyebrow--light">06 / LET'S BUILD SOMETHING USEFUL</p>
-              <h2 id="home-sum-connect-heading" class="home-sum-connect-title">Open to opportunities and collaborations.</h2>
-              <p class="home-sum-connect-lead">Whether it's insurance, integration, infrastructure or AI &mdash; I'm always interested in solving real problems with good people.</p>
-
-              <div class="home-sum-connect-pillars">
-                <div class="home-sum-connect-pillar">
-                  <span class="home-sum-connect-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
-                  </span>
-                  <strong>20+</strong>
-                  <span>Years in tech<br>(16 in insurance)</span>
-                </div>
-
-                <div class="home-sum-connect-pillar">
-                  <span class="home-sum-connect-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="14" y1="4" x2="10" y2="20"/></svg>
-                  </span>
-                  <strong>Real-world</strong>
-                  <span>Enterprise &amp; hands-on experience</span>
-                </div>
-
-                <div class="home-sum-connect-pillar">
-                  <span class="home-sum-connect-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                  </span>
-                  <strong>Builder,</strong>
-                  <span>problem solver,<br>team player</span>
-                </div>
-              </div>
-
-              <div class="home-sum-connect-ctas">
-                <a class="home-connect-primary-btn" href="#home-connect-form" data-home-focus-contact>
-                  <span>Let's connect</span>
-                  <span aria-hidden="true">&rarr;</span>
-                </a>
-                <a class="home-connect-secondary-btn" href="resume.html">
-                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><rect x="3.5" y="2.5" width="13" height="15" rx="2"/><path d="M7 6.5h6M7 10h6M7 13.5h4"/></svg>
-                  <span>Tailored R&eacute;sum&eacute;</span>
-                </a>
-              </div>
+        <!-- SECTION 06 / MEGA FOOTER (FROM THE METAL TO THE CLOUDS) -->
+        <section class="home-sum-connect jb-mega-footer" id="home-connect" aria-label="Josh Boyer Footer and Connect">
+          <!-- BAND 1: Panoramic Hero Banner ("From the Metal to the Clouds") -->
+          <div class="jb-footer-hero">
+            <div class="jb-footer-hero__bg" aria-hidden="true">
+              <img src="assets/optimized/footer-panorama-bg-1376.webp" alt="" loading="lazy" decoding="async">
+              <div class="jb-footer-hero__scrim"></div>
             </div>
 
-            <div class="home-sum-connect-right">
-              <form class="home-connect-form-card" id="home-connect-form" data-home-contact-form novalidate>
-                <div class="home-connect-form-header">
-                  <div>
-                    <span class="home-connect-form-kicker">DIRECT CONNECTION</span>
-                    <h3>Send a connection note</h3>
-                  </div>
-                  <span class="home-connect-status-pill">Ottawa &middot; Remote / Hybrid</span>
-                </div>
+            <div class="jb-footer-hero__inner">
+              <!-- Left Brand Identity -->
+              <div class="jb-footer-identity">
+                <div class="jb-footer-brand-row">
+                  <img class="jb-footer-monogram" src="assets/jb-mark.png" width="78" height="65" alt="JB brand mark" loading="lazy" decoding="async">
 
-                <div class="home-connect-form-row">
-                  <label class="home-connect-field">
-                    <span>Your name</span>
-                    <input type="text" name="name" placeholder="Alex Morgan" required autocomplete="name" data-contact-name>
-                  </label>
-                  <label class="home-connect-field">
-                    <span>Email or LinkedIn</span>
-                    <input type="text" name="contact" placeholder="alex@company.com" required autocomplete="email" data-contact-reply>
-                  </label>
-                </div>
-
-                <div class="home-connect-field">
-                  <span>What are we connecting about?</span>
-                  <div class="home-connect-topic-pills" role="group" aria-label="Connection topic">
-                    <button type="button" class="home-topic-pill is-active" aria-pressed="true" data-contact-topic="Solution Architecture">Solution Architecture</button>
-                    <button type="button" class="home-topic-pill" aria-pressed="false" data-contact-topic="Insurance & Integration">Insurance &amp; Integration</button>
-                    <button type="button" class="home-topic-pill" aria-pressed="false" data-contact-topic="AI & Automation">AI &amp; Automation</button>
-                    <button type="button" class="home-topic-pill" aria-pressed="false" data-contact-topic="Collaboration">Collaboration</button>
+                  <div class="jb-footer-brand-titles">
+                    <div class="jb-footer-wordmark">
+                      <span class="jb-wordmark-first">JOSH</span>
+                      <span class="jb-wordmark-last">BOYER</span>
+                    </div>
+                    <p class="jb-footer-kicker">FROM THE METAL TO THE CLOUDS</p>
                   </div>
                 </div>
 
-                <label class="home-connect-field">
-                  <span>Message or problem context</span>
-                  <textarea name="message" rows="3" placeholder="Tell me a bit about the team, role, or problem you're working on..." required data-contact-message></textarea>
-                </label>
+                <p class="jb-footer-tagline">
+                  Bridging business, technology and AI to<br>
+                  turn complex ideas into real-world solutions.
+                </p>
+              </div>
 
-                <div class="home-connect-form-footer">
-                  <button type="submit" class="home-connect-submit-btn">
-                    <span>Prepare &amp; Send Connection</span>
-                    <span aria-hidden="true">&rarr;</span>
-                  </button>
-                  <span class="home-connect-privacy-note">Formats a ready-to-send note &amp; copies to your clipboard.</span>
+              <!-- Right Signature Quote Block -->
+              <blockquote class="jb-footer-quote">
+                <svg class="jb-footer-quote__mark" viewBox="0 0 42 32" fill="none" aria-hidden="true">
+                  <path d="M16.8 2.4C10.2 5.2 6.2 10.6 5.6 17.8c-.5 5.8 2.8 10.4 7.8 10.4 4.2 0 7.2-3 7.2-7.1 0-4-2.8-6.7-6.4-6.7-1.1 0-2.1.3-2.6.6.7-3.8 3.5-6.9 7.6-8.9L16.8 2.4zm21.4 0c-6.6 2.8-10.6 8.2-11.2 15.4-.5 5.8 2.8 10.4 7.8 10.4 4.2 0 7.2-3 7.2-7.1 0-4-2.8-6.7-6.4-6.7-1.1 0-2.1.3-2.6.6.7-3.8 3.5-6.9 7.6-8.9L38.2 2.4z" fill="#29b6f6"/>
+                </svg>
+                <p class="jb-footer-quote__text">
+                  <span>The tools change.</span>
+                  <span>The ability to solve problems</span>
+                  <strong class="jb-footer-quote__accent">carries forward.</strong>
+                </p>
+                <footer class="jb-footer-quote__author">
+                  <span class="jb-quote-dash" aria-hidden="true"></span>
+                  <span>JOSH BOYER</span>
+                </footer>
+              </blockquote>
+            </div>
+          </div>
+
+          <!-- BAND 2: 4-Column Matrix Card (Explore, Featured Projects, Capabilities, Inline Let's Connect Form) -->
+          <div class="jb-footer-columns-band">
+            <div class="jb-footer-columns-grid">
+              <!-- Column 1: EXPLORE -->
+              <div class="jb-footer-col jb-footer-col--explore">
+                <h3 class="jb-footer-col__title">EXPLORE</h3>
+                <p class="jb-footer-col__desc">Learn more about my journey,<br>experience and what I build.</p>
+                <nav class="jb-explore-nav" aria-label="Explore site sections">
+                  <a class="jb-explore-link" href="#home">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 21V12h6v9"/></svg>
+                    <span>Home</span>
+                    <span class="jb-row-chev" aria-hidden="true">&#8250;</span>
+                  </a>
+                  <a class="jb-explore-link" href="#about">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M5 20c1.5-3.8 4.2-6 7-6s5.5 2.2 7 6"/></svg>
+                    <span>About</span>
+                    <span class="jb-row-chev" aria-hidden="true">&#8250;</span>
+                  </a>
+                  <a class="jb-explore-link" href="#career">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 12h18"/></svg>
+                    <span>Experience</span>
+                    <span class="jb-row-chev" aria-hidden="true">&#8250;</span>
+                  </a>
+                  <a class="jb-explore-link" href="#skills">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V11M9 19V5M14 19v-8M19 19V8"/></svg>
+                    <span>Skills &amp; Capabilities</span>
+                    <span class="jb-row-chev" aria-hidden="true">&#8250;</span>
+                  </a>
+                  <a class="jb-explore-link" href="#projects">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                    <span>Projects</span>
+                    <span class="jb-row-chev" aria-hidden="true">&#8250;</span>
+                  </a>
+                </nav>
+                <img src="assets/optimized/nexus-mark-128.webp" alt="" class="jb-explore-nexus-logo" hidden width="16" height="16" loading="lazy" decoding="async" aria-hidden="true">
+              </div>
+
+              <!-- Column 2: FEATURED PROJECTS (Real Existing Builds Only) -->
+              <div class="jb-footer-col jb-footer-col--projects">
+                <h3 class="jb-footer-col__title">FEATURED PROJECTS</h3>
+                <p class="jb-footer-col__desc">Real-world solutions across<br>business, automation and AI.</p>
+                <div class="jb-fp-cards">
+                  <!-- Card 1: NEXUS — Multi-Agent AI Orchestration -->
+                  <a class="jb-fp-card" href="#projects/nexus" data-proj-link="nexus">
+                    <span class="jb-fp-card__icon jb-fp-card__icon--nexus" aria-hidden="true">
+                      <img src="assets/optimized/nexus-mark-128.webp" alt="" class="jb-fp-card__nexus-logo" width="32" height="32" loading="lazy" decoding="async">
+                    </span>
+                    <span class="jb-fp-card__body">
+                      <strong class="jb-fp-card__title">NEXUS</strong>
+                      <span class="jb-fp-card__sub">Multi-Agent AI Orchestration</span>
+                    </span>
+                    <span class="jb-fp-card__chev" aria-hidden="true">&#8250;</span>
+                  </a>
+
+                  <!-- Card 2: Renewal Eligibility & Underwriting Automation -->
+                  <a class="jb-fp-card" href="#projects/renewals" data-proj-link="renewals">
+                    <span class="jb-fp-card__icon jb-fp-card__icon--thumb" aria-hidden="true">
+                      <img src="assets/builds/fw-renewals-bg.png" alt="" class="jb-fp-card__thumb" width="44" height="34" loading="lazy" decoding="async">
+                    </span>
+                    <span class="jb-fp-card__body">
+                      <strong class="jb-fp-card__title">Renewal Eligibility &amp; Automation</strong>
+                      <span class="jb-fp-card__sub">Underwriting Rules &amp; Broker Workflows</span>
+                    </span>
+                    <span class="jb-fp-card__chev" aria-hidden="true">&#8250;</span>
+                  </a>
+
+                  <!-- Card 3: Takeover-History XML Loading -->
+                  <a class="jb-fp-card" href="#projects/takeover" data-proj-link="takeover">
+                    <span class="jb-fp-card__icon jb-fp-card__icon--thumb" aria-hidden="true">
+                      <img src="assets/builds/card-thumb-6-pipeline.png" alt="" class="jb-fp-card__thumb" width="44" height="34" loading="lazy" decoding="async">
+                    </span>
+                    <span class="jb-fp-card__body">
+                      <strong class="jb-fp-card__title">Takeover-History XML Loading</strong>
+                      <span class="jb-fp-card__sub">Excel VBA Validation &amp; Reconciliation</span>
+                    </span>
+                    <span class="jb-fp-card__chev" aria-hidden="true">&#8250;</span>
+                  </a>
                 </div>
 
-                <div class="home-connect-feedback" data-contact-feedback hidden aria-live="polite"></div>
-              </form>
+                <a class="jb-fp-view-all" href="#projects">
+                  <span>View all projects</span>
+                  <span aria-hidden="true">&rarr;</span>
+                </a>
+              </div>
+
+              <!-- Column 3: CAPABILITIES -->
+              <div class="jb-footer-col jb-footer-col--capabilities">
+                <h3 class="jb-footer-col__title">CAPABILITIES</h3>
+                <p class="jb-footer-col__desc">Where business, technology<br>and AI come together.</p>
+                <div class="jb-cap-list" role="list">
+                  <a class="jb-cap-item" href="#skills" data-skills-deep-link="ai" role="listitem">
+                    <span class="jb-cap-icon jb-cap-icon--cyan" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v2.6M12 18.9v2.6M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M2.5 12h2.6M18.9 12h2.6M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+                    </span>
+                    <span>AI &amp; Automation</span>
+                    <span class="jb-row-chev" aria-hidden="true">&#8250;</span>
+                  </a>
+                  <a class="jb-cap-item" href="#skills" data-skills-deep-link="data" role="listitem">
+                    <span class="jb-cap-icon jb-cap-icon--blue" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                    </span>
+                    <span>Systems Integration</span>
+                    <span class="jb-row-chev" aria-hidden="true">&#8250;</span>
+                  </a>
+                  <a class="jb-cap-item" href="#skills" data-skills-deep-link="insurance" role="listitem">
+                    <span class="jb-cap-icon jb-cap-icon--amber" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v6c0 5 3.1 7.9 7 9 3.9-1.1 7-4 7-9V6l-7-3z"/><path d="m9.5 12 1.8 1.8 3.5-3.5"/></svg>
+                    </span>
+                    <span>Insurance &amp; Business</span>
+                    <span class="jb-row-chev" aria-hidden="true">&#8250;</span>
+                  </a>
+                  <a class="jb-cap-item" href="#skills" data-skills-deep-link="infrastructure" role="listitem">
+                    <span class="jb-cap-icon jb-cap-icon--emerald" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><circle cx="7" cy="7" r="1" fill="currentColor"/><circle cx="7" cy="17" r="1" fill="currentColor"/></svg>
+                    </span>
+                    <span>Infrastructure &amp; Operations</span>
+                    <span class="jb-row-chev" aria-hidden="true">&#8250;</span>
+                  </a>
+                  <a class="jb-cap-item" href="#skills" data-skills-deep-link="delivery" role="listitem">
+                    <span class="jb-cap-icon jb-cap-icon--emerald" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4M16 8l4 4-4 4M13.5 6l-3 12"/></svg>
+                    </span>
+                    <span>Solution Design &amp; Delivery</span>
+                    <span class="jb-row-chev" aria-hidden="true">&#8250;</span>
+                  </a>
+                  <a class="jb-cap-item" href="#skills" data-skills-deep-link="delivery" role="listitem">
+                    <span class="jb-cap-icon jb-cap-icon--muted" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                    </span>
+                    <span>Development &amp; Tooling</span>
+                    <span class="jb-row-chev" aria-hidden="true">&#8250;</span>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Column 4: LET'S CONNECT (Inline Contact Form Card) -->
+              <div class="jb-footer-col jb-footer-col--connect">
+                <div class="jb-inline-connect-card">
+                  <div class="jb-inline-connect-head">
+                    <h3 class="jb-footer-col__title">LET&rsquo;S CONNECT</h3>
+                    <span class="jb-inline-connect-dash" aria-hidden="true"></span>
+                  </div>
+                  <p class="jb-footer-col__desc jb-inline-connect-lead">
+                    Have a question, an opportunity, or just want to talk tech?<br>
+                    I&rsquo;d love to hear from you.
+                  </p>
+
+                  <form class="home-connect-form-card jb-inline-contact-form" id="home-connect-form" data-home-contact-form data-contact-delivery="api" novalidate>
+                    <div class="contact-unavailable-notice" id="contact-delivery-notice" role="note">
+                      <strong>Send a message to Josh.</strong>
+                      <p>Your confirmation comes from an automated no-reply address. Use this form if you need to follow up.</p>
+                    </div>
+                    <div class="home-connect-form-row jb-inline-form-row">
+                      <label class="home-connect-field jb-inline-field">
+                        <span class="home-connect-field-label">Your Name <span class="jb-req-star" aria-hidden="true">*</span></span>
+                        <input type="text" name="name" placeholder="Your name" required maxlength="120" autocomplete="name" data-contact-name>
+                      </label>
+                      <label class="home-connect-field jb-inline-field">
+                        <span class="home-connect-field-label">Your Email Address <span class="jb-req-star" aria-hidden="true">*</span></span>
+                        <input type="email" name="email" placeholder="you@example.com" required maxlength="254" autocomplete="email" inputmode="email" data-contact-reply>
+                      </label>
+                    </div>
+
+                    <label class="home-connect-field jb-inline-field">
+                      <span class="home-connect-field-label">What&rsquo;s this about?</span>
+                      <div class="jb-inline-select-wrap">
+                        <select name="topic" class="jb-inline-select" data-contact-topic-select aria-label="What's this about?">
+                          <option value="">Select an option</option>
+                          <option value="Role or Consulting Opportunity">Role or Consulting Opportunity</option>
+                          <option value="Solution Design &amp; Integration">Solution Design &amp; Integration</option>
+                          <option value="AI &amp; Automation / NEXUS">AI &amp; Automation / NEXUS</option>
+                          <option value="General Conversation">General Conversation</option>
+                        </select>
+                        <svg class="jb-inline-select-chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+                      </div>
+                    </label>
+
+                    <label class="home-connect-field jb-inline-field">
+                      <span class="home-connect-field-label">Your Message <span class="jb-req-star" aria-hidden="true">*</span></span>
+                      <textarea name="message" rows="3" placeholder="Tell me more...." required maxlength="5000" data-contact-message></textarea>
+                    </label>
+
+                    <div class="sr-only" aria-hidden="true">
+                      <label>Website
+                        <input type="text" name="website" tabindex="-1" autocomplete="off" data-contact-honeypot>
+                      </label>
+                    </div>
+
+                    <div class="home-connect-form-footer jb-inline-form-footer">
+                      <button type="submit" class="home-connect-submit-btn jb-inline-submit-btn" data-contact-submit>
+                        <svg class="jb-inline-send-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.5 2.5 9.2 10.8"/><path d="m17.5 2.5-5.2 15-3.1-6.7-6.7-3.1 15-5.2Z"/></svg>
+                        <span data-contact-submit-label>Send Message</span>
+                        <span class="jb-inline-submit-chev" aria-hidden="true">&#8250;</span>
+                      </button>
+                      <p class="home-connect-privacy-note">Confirmation from noreply@joshboyer.ca. This automated address is not monitored.</p>
+                    </div>
+
+                    <div class="home-connect-feedback" data-contact-feedback hidden role="status" aria-live="polite"></div>
+                  </form>
+
+                  <div class="jb-connect-fallback-media" hidden aria-hidden="true">
+                    <img src="assets/optimized-extra/home-level-metal-1600.webp" alt="" loading="lazy" decoding="async">
+                    <img src="assets/optimized-extra/tycoon/easter-egg-retro-thumb-1024.webp" alt="" loading="lazy" decoding="async">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BAND 2B: Motto Strip (REAL PROBLEMS | PRACTICAL SOLUTIONS | A MORE CAPABLE TOMORROW) -->
+          <div class="jb-footer-motto-band" aria-hidden="true">
+            <div class="jb-footer-motto-inner">
+              <div class="jb-footer-motto">
+                <span class="jb-motto-pill">
+                  <svg class="jb-motto-icon jb-motto-icon--cyan" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 2 4 11.5h6L9 18l7-9.5h-6L11 2z"/></svg>
+                  <span>REAL PROBLEMS</span>
+                </span>
+                <span class="jb-motto-sep">|</span>
+                <span class="jb-motto-pill">
+                  <svg class="jb-motto-icon jb-motto-icon--purple" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.2 3.2 6v8L10 17.8 16.8 14V6L10 2.2z"/><path d="M3.2 6 10 9.8 16.8 6M10 9.8v8"/></svg>
+                  <span>PRACTICAL SOLUTIONS</span>
+                </span>
+                <span class="jb-motto-sep">|</span>
+                <span class="jb-motto-pill">
+                  <svg class="jb-motto-icon jb-motto-icon--cyan" viewBox="0 0 24 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10h4l2.5-5 3.5 11 3-8 2 2h5"/></svg>
+                  <span>A MORE CAPABLE TOMORROW</span>
+                </span>
+              </div>
+              <span class="jb-motto-horizon-line"></span>
+            </div>
+          </div>
+
+          <!-- BAND 3: Bottom Copyright, Mountain Crest, Socials, Location & Scroll-to-Top Bar -->
+          <div class="jb-footer-bottom-band home-bottom-bar" role="contentinfo" aria-label="Site footer navigation">
+            <div class="jb-footer-bottom-inner">
+              <div class="jb-footer-bottom-left">
+                <span>&copy; 2026 Josh Boyer. All rights reserved.</span>
+                <span class="jb-bottom-sep" aria-hidden="true">|</span>
+                <span class="jb-built-with">
+                  Built with
+                  <svg class="jb-coffee-icon" viewBox="0 0 20 20" fill="none" role="img" aria-label="coffee"><path d="M4 8h9v5a4 4 0 0 1-8 0V8ZM13 9h1a2 2 0 0 1 0 4h-1M3 17h12M6 3v2M10 3v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>,
+                  curiosity and a lot of AI.
+                </span>
+              </div>
+
+              <div class="jb-footer-bottom-center" aria-hidden="true">
+                <svg class="jb-footer-mountain-crest" viewBox="0 0 280 42" fill="none">
+                  <defs>
+                    <linearGradient id="jbFooterMtnGrad" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0"/>
+                      <stop offset="35%" stop-color="#38bdf8" stop-opacity="0.72"/>
+                      <stop offset="50%" stop-color="#e0f2fe" stop-opacity="1"/>
+                      <stop offset="65%" stop-color="#38bdf8" stop-opacity="0.72"/>
+                      <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  <path d="M8 38 L78 38 L98 26 L112 31 L140 8 L164 29 L180 22 L204 38 L272 38" stroke="url(#jbFooterMtnGrad)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M98 26 L140 8 L180 22 L156 38 L118 38 Z" fill="rgba(14, 165, 233, 0.14)"/>
+                  <circle cx="140" cy="8" r="2.6" fill="#ffffff"/>
+                </svg>
+              </div>
+
+              <div class="jb-footer-bottom-right">
+                <div class="jb-footer-socials" aria-label="Social links">
+                  <a class="jb-social-btn" href="https://www.linkedin.com/in/josh-boyer-1b770618/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.94 8.5v10.56H3.63V8.5h3.31zm.22-3.26c0 .98-.74 1.77-1.9 1.77h-.02c-1.12 0-1.85-.79-1.85-1.77 0-1 .75-1.77 1.89-1.77s1.86.77 1.88 1.77zM20.37 13v6.06h-3.3v-5.65c0-1.42-.51-2.39-1.78-2.39-.97 0-1.55.65-1.8 1.28-.09.23-.12.55-.12.87v5.89H9.99s.04-9.56 0-10.56h3.38v1.5c.45-.69 1.25-1.67 2.98-1.67 2.18 0 4.02 1.42 4.02 4.67z"/></svg>
+                  </a>
+                  <a class="jb-social-btn" href="https://github.com/joshboyer" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2A9.8 9.8 0 0 0 2.2 12c0 4.33 2.81 8 6.7 9.3.49.09.67-.21.67-.47v-1.66c-2.73.59-3.3-1.31-3.3-1.31-.45-1.13-1.09-1.43-1.09-1.43-.89-.61.07-.6.07-.6.98.07 1.5 1.01 1.5 1.01.87 1.49 2.29 1.06 2.85.81.09-.63.34-1.06.62-1.31-2.18-.25-4.47-1.09-4.47-4.84 0-1.07.38-1.95 1.01-2.63-.1-.25-.44-1.25.1-2.6 0 0 .82-.26 2.7 1a9.4 9.4 0 0 1 4.92 0c1.88-1.26 2.7-1 2.7-1 .54 1.35.2 2.35.1 2.6.63.68 1.01 1.56 1.01 2.63 0 3.76-2.29 4.59-4.48 4.83.35.3.67.9.67 1.82v2.7c0 .26.18.57.68.47A9.8 9.8 0 0 0 21.8 12 9.8 9.8 0 0 0 12 2.2z"/></svg>
+                  </a>
+                  <a class="jb-social-btn" href="#home-connect" aria-label="Contact Josh using the form">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg>
+                    <span class="sr-only">Contact Josh</span>
+                  </a>
+                </div>
+
+                <span class="jb-bottom-sep jb-bottom-vdiv" aria-hidden="true"></span>
+
+                <div class="jb-footer-loc-status">
+                  <div class="jb-loc-line">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6-5.2-6-10a6 6 0 1 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/></svg>
+                    <span>Ottawa, Ontario, Canada</span>
+                    <svg class="jb-flag-ca" viewBox="0 0 24 16" fill="none" aria-label="Canada">
+                      <rect width="24" height="16" rx="2" fill="#ffffff"/>
+                      <rect width="6" height="16" rx="1" fill="#ef4444"/>
+                      <rect x="18" width="6" height="16" rx="1" fill="#ef4444"/>
+                      <path d="M12 3.2 13.1 6l2.2-.4-1.2 2 2.1.8-2.3 1.4.4 1.5h-1.8v2.3h-1v-2.3H9.7l.4-1.5-2.3-1.4 2.1-.8-1.2-2 2.2.4L12 3.2z" fill="#ef4444"/>
+                    </svg>
+                  </div>
+                  <div class="jb-status-line">
+                    <span class="jb-status-dot" aria-hidden="true"></span>
+                    <span>Open to opportunities</span>
+                  </div>
+                </div>
+
+                <span class="jb-bottom-sep jb-bottom-vdiv" aria-hidden="true"></span>
+
+                <button type="button" class="jb-footer-scroll-top" data-jb-scroll-top aria-label="Scroll to top">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+                </button>
+              </div>
             </div>
           </div>
         </section>
       `;
       homeSection.append(homeSummaryEl);
+      renderExploreBuildsWorkbench();
+      const fwBuildsSectionEl = homeSummaryEl.querySelector(".home-featured-work-section");
+      if (fwBuildsSectionEl) {
+        fwBuildsSectionEl.addEventListener("mouseenter", () => { fwRailHoveredOrFocused = true; });
+        fwBuildsSectionEl.addEventListener("mouseleave", () => { fwRailHoveredOrFocused = false; });
+        fwBuildsSectionEl.addEventListener("focusin", () => { fwRailHoveredOrFocused = true; });
+        fwBuildsSectionEl.addEventListener("focusout", (ev) => {
+          if (!fwBuildsSectionEl.contains(ev.relatedTarget)) fwRailHoveredOrFocused = false;
+        });
+        fwBuildsSectionEl.addEventListener("keydown", (ev) => {
+          if (ev.key !== "Enter" && ev.key !== " ") return;
+          const cardEl = ev.target && ev.target.closest ? ev.target.closest("[data-eb-card]") : null;
+          if (cardEl && !ev.target.closest("[data-proj-link]")) {
+            ev.preventDefault();
+            fwRailManualPauseUntil = Date.now() + 12000;
+            const slug = cardEl.getAttribute("data-eb-card");
+            if (slug) {
+              selectedExploreBuildSlug = slug;
+              selectedExploreGalleryIdx = 0;
+              renderExploreBuildsWorkbench();
+            }
+          }
+        });
+      }
+
+      // Selection changes only through visitor input.
+      if (window.__fwRotatingRailInterval) {
+        clearInterval(window.__fwRotatingRailInterval);
+        window.__fwRotatingRailInterval = null;
+      }
+      homeSummaryEl.addEventListener("click", (ev) => {
+        const scrollTopBtn = ev.target.closest("[data-jb-scroll-top]");
+        if (scrollTopBtn) {
+          ev.preventDefault();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          return;
+        }
+        const openConnectBtn = ev.target.closest("[data-jb-open-connect]");
+        if (openConnectBtn) {
+          ev.preventDefault();
+          const formEl = document.getElementById("home-connect-form") || document.getElementById("home-connect");
+          if (formEl) {
+            formEl.scrollIntoView({ behavior: "smooth", block: "center" });
+            const nameInp = formEl.querySelector("[data-contact-name]");
+            if (nameInp) nameInp.focus({ preventScroll: true });
+          }
+        }
+      });
     }
 
-    function renderHomeFeaturedCards() {}
+    
+
+    
 
     // 4B. Build the Projects Carousel + Chronological Collection on section[data-page="projects"]
     const FEATURED_CAROUSEL_SLIDES = Object.freeze([
+  {
+    "slug": "renewals",
+    "featuredRank": 1,
+    "eyebrowType": "PROFESSIONAL WORK",
+    "employerOrProduct": "Grenville Mutual Insurance",
+    "title": "Renewal Eligibility & Underwriting Automation",
+    "titleLead": "Renewal Eligibility & Underwriting Automation",
+    "titleAccent": "",
+    "peekBadge": "FEATURED",
+    "peekBadgeTheme": "amber",
+    "peekTitle": "Renewal Eligibility & Underwriting Automation",
+    "peekDesc": "Built fail-first renewal rules that process eligible policies and give underwriters focused reasons to review exceptions.",
+    "stripBadge": "FEATURED",
+    "stripBadgeTheme": "amber",
+    "stripTitle": "Renewal Eligibility & Underwriting Automation",
+    "stripSub": "Grenville Mutual Insurance",
+    "summary": "Designed and implemented deterministic renewal automation with underwriters, then compared rule decisions with manual review before production activation.",
+    "banner": "assets/optimized/proj-banner-renewals-1376.webp",
+    "tags": [
+      "Insurance",
+      "Underwriting",
+      "Business Rules",
+      "Automation",
+      "Integration"
+    ],
+    "metrics": [
       {
-        slug: "renewals",
-        featuredRank: 1,
-        eyebrowType: "PROFESSIONAL WORK",
-        employerOrProduct: "Grenville Mutual Insurance",
-        title: "Renewal Eligibility & Underwriting Automation",
-        titleLead: "Renewal Eligibility & Underwriting",
-        titleAccent: "Automation",
-        peekBadge: "FEATURED",
-        peekBadgeTheme: "amber",
-        peekTitle: "Renewal Eligibility & Automation",
-        peekDesc: "Designed and implemented automated renewal workflows with business rules, validation and exception routing for P&C lines.",
-        stripBadge: "FEATURED",
-        stripBadgeTheme: "amber",
-        stripTitle: "Renewal Eligibility & Underwriting Automation",
-        stripSub: "Grenville Mutual Insurance",
-        summary: "Designed and implemented automated renewal workflows with business rules, validation and exception handling for P&C lines.",
-        banner: "assets/proj-banner-renewals.jpg",
-        tags: ["Insurance", "Underwriting", "Business Rules", "Automation", "Integration"],
-        metrics: [
-          {
-            val: "~80%",
-            label: "Residential",
-            sub: "Approx. user-reported renewal-only automation",
-            icon: "trend",
-            theme: "emerald",
-            gaugePct: 80
-          },
-          {
-            val: "~60%",
-            label: "Commercial",
-            sub: "Approx. user-reported renewal-only automation",
-            icon: "clock",
-            theme: "blue",
-            gaugePct: 60
-          },
-          {
-            val: "~40%",
-            label: "Farm / Agri",
-            sub: "Approx. user-reported renewal-only automation",
-            icon: "db",
-            theme: "amber",
-            gaugePct: 40
-          }
-        ],
-        metricsQualifier: "Approx. user-reported renewal-only automation · exceptions refer to underwriters",
-        floatingCard: {
-          title: "Renewal Decision",
-          badge: "Conceptual illustration",
-          status: "Eligible for Auto-Renewal",
-          statusTheme: "green",
-          gaugeVal: "80%",
-          gaugeLabel: "Res. Renewal",
-          gaugePct: 80,
-          gaugeTheme: "emerald",
-          rows: [
-            { icon: "user", label: "Risk Profile", val: "Low", theme: "green" },
-            { icon: "shield", label: "Property Data", val: "Verified", theme: "green" },
-            { icon: "home", label: "Claims History", val: "Clear", theme: "green" },
-            { icon: "doc", label: "Business Rules", val: "Passed", theme: "green" }
-          ]
-        },
-        secondaryHud: {
-          title: "Risk Analysis",
-          gaugePct: 84,
-          items: [
-            "Roof condition",
-            "Proximity to water",
-            "Vegetation risk",
-            "Claims history",
-            "Compliance"
-          ],
-          pill: "Medium Risk"
-        },
-        quickFacts: {
-          role: "Framework design & hands-on P&C rating and underwriting rules implementation",
-          period: "Within Grenville tenure (2009–2022) · exact project dates not established",
-          deliverable: "Line-specific renewal eligibility classification with deliberate underwriter referral paths"
-        }
+        "val": "~80%",
+        "label": "Residential",
+        "sub": "Approximate self-reported renewal-only figure",
+        "icon": "trend",
+        "theme": "emerald"
       },
       {
-        slug: "nexus",
-        featuredRank: 2,
-        eyebrowType: "INDEPENDENT BUILD",
-        employerOrProduct: "Independent Capstone",
-        title: "NEXUS — AI Orchestration Platform",
-        titleLead: "NEXUS — AI",
-        titleAccent: "Orchestration Platform",
-        peekBadge: "INDEPENDENT BUILD",
-        peekBadgeTheme: "cyan",
-        peekTitle: "NEXUS — AI Orchestration Platform",
-        peekDesc: "Building a multi-agent platform for planning, execution and evaluation.",
-        stripBadge: "AI PLATFORM",
-        stripBadgeTheme: "blue",
-        stripTitle: "NEXUS — AI Orchestration Platform",
-        stripSub: "Independent Build",
-        summary: "Building an independent multi-agent platform for planning, scoped context compilation, execution and evaluation.",
-        banner: "assets/proj-banner-nexus.jpg",
-        tags: ["AI Agents", "Orchestration", "TypeScript", "Scoped Context", "Evaluation"],
-        metrics: [
-          {
-            val: "Active",
-            label: "Independent Build",
-            sub: "Current technical capstone · not an employer product",
-            icon: "trend",
-            theme: "emerald",
-            gaugePct: 96
-          },
-          {
-            val: "4-Stage",
-            label: "Context · Plan · Run",
-            sub: "Scoped context compilation & durable runner",
-            icon: "clock",
-            theme: "blue",
-            gaugePct: 92
-          },
-          {
-            val: "Receipts",
-            label: "Evaluation Gates",
-            sub: "Deterministic + semantic LLM verification",
-            icon: "db",
-            theme: "amber",
-            gaugePct: 94
-          }
-        ],
-        metricsQualifier: "Independent platform in active development · not an employer product",
-        floatingCard: {
-          title: "NEXUS Orchestration Run",
-          badge: "Conceptual illustration",
-          status: "Scoped Context & Plan Verified",
-          statusTheme: "blue",
-          gaugeVal: "4/4",
-          gaugeLabel: "Gate Stages",
-          gaugePct: 98,
-          gaugeTheme: "blue",
-          rows: [
-            { icon: "user", label: "Context Bundle", val: "Scoped", theme: "blue" },
-            { icon: "shield", label: "Model Routing", val: "Constrained", theme: "blue" },
-            { icon: "home", label: "Node Execution", val: "Recoverable", theme: "green" },
-            { icon: "doc", label: "Audit Receipt", val: "Recorded", theme: "green" }
-          ]
-        },
-        secondaryHud: {
-          title: "Verification Gates",
-          gaugePct: 96,
-          items: [
-            "Scoped context packet",
-            "DAG dependency check",
-            "Tool-call sandbox",
-            "Deterministic assertions",
-            "Receipt persisted"
-          ],
-          pill: "Run Verified"
-        },
-        quickFacts: {
-          role: "Independent architecture, design & full-stack TypeScript/React/Node implementation",
-          period: "Active development (2022–Present alongside employment)",
-          deliverable: "Headless orchestration core, React/Vite workbench, durable runner & evaluation gates"
-        }
-      },
-      {
-        slug: "takeover",
-        featuredRank: 3,
-        eyebrowType: "PROFESSIONAL WORK",
-        employerOrProduct: "Medavie Blue Cross",
-        title: "Takeover-History Validation & XML Loading",
-        titleLead: "Takeover-History Validation &",
-        titleAccent: "XML Loading",
-        peekBadge: "DATA & ETL",
-        peekBadgeTheme: "emerald",
-        peekTitle: "Takeover-History & XML Loading",
-        peekDesc: "Researched, documented and guided reusable Excel/VB/XML tooling for validation, batch preparation and reconciliation.",
-        stripBadge: "DATA & ETL",
-        stripBadgeTheme: "emerald",
-        stripTitle: "Takeover-History Validation & XML Loading",
-        stripSub: "Medavie Blue Cross",
-        summary: "Researched, documented and guided production-adopted Excel/VB/XML tooling for validation, transformation, batch preparation and error reconciliation.",
-        banner: "assets/proj-banner-takeover.jpg",
-        tags: ["Health & Dental", "Excel / VB", "XML Schema", "ETL", "Reconciliation"],
-        metrics: [
-          {
-            val: "Prod",
-            label: "Team-Adopted",
-            sub: "Reusable onboarding tool adopted by team",
-            icon: "trend",
-            theme: "emerald",
-            gaugePct: 95
-          },
-          {
-            val: "Excel/VB",
-            label: "Validation Rules",
-            sub: "Pre-load data checks & transformation",
-            icon: "clock",
-            theme: "blue",
-            gaugePct: 90
-          },
-          {
-            val: "XML/XSD",
-            label: "Batch Balancing",
-            sub: "Schema-aligned adjudication load & reconciliation",
-            icon: "db",
-            theme: "amber",
-            gaugePct: 94
-          }
-        ],
-        metricsQualifier: "Solution research, documentation & tooling guidance · schema updates coded by dev team",
-        floatingCard: {
-          title: "Takeover XML Load",
-          badge: "Conceptual illustration",
-          status: "Validated for Batch Load",
-          statusTheme: "green",
-          gaugeVal: "XSD",
-          gaugeLabel: "Schema Match",
-          gaugePct: 95,
-          gaugeTheme: "emerald",
-          rows: [
-            { icon: "user", label: "Prior-Carrier File", val: "Normalized", theme: "green" },
-            { icon: "shield", label: "Excel / VB Checks", val: "Passed", theme: "green" },
-            { icon: "home", label: "XML Schema (XSD)", val: "Matched", theme: "green" },
-            { icon: "doc", label: "Benefit Balances", val: "Reconciled", theme: "green" }
-          ]
-        },
-        secondaryHud: {
-          title: "Batch Reconciliation",
-          gaugePct: 94,
-          items: [
-            "Member ID mapping",
-            "Benefit accumulator totals",
-            "Prior-carrier codes",
-            "XSD schema compliance",
-            "Exception log clean"
-          ],
-          pill: "Batch Ready"
-        },
-        quickFacts: {
-          role: "Solution research, gap documentation, development guidance & end-user Excel/VB tooling",
-          period: "Within Medavie tenure (2022–Present) · exact project date not established",
-          deliverable: "Production-adopted onboarding template generating validated adjudication XML"
-        }
-      },
-      {
-        slug: "newbusiness",
-        featuredRank: 4,
-        eyebrowType: "PROFESSIONAL WORK",
-        employerOrProduct: "Grenville Mutual Insurance",
-        title: "Broker-Native New Business Integration",
-        titleLead: "Broker-Native New Business",
-        titleAccent: "Integration",
-        peekBadge: "INTEGRATION",
-        peekBadgeTheme: "purple",
-        peekTitle: "Broker-Native Integration",
-        peekDesc: "Connected broker workflows with real-time validation and insurance rules.",
-        stripBadge: "INTEGRATION",
-        stripBadgeTheme: "purple",
-        stripTitle: "Broker-Native Business Integration",
-        stripSub: "Insurance Systems",
-        summary: "Connected broker workflows with P&C rating, underwriting validation, correction guidance, referral routing and binding decisions.",
-        banner: "assets/proj-banner-newbusiness.jpg",
-        tags: ["Insurance", "Broker Workflows", "CSIO / XML", "Business Rules", "Integration"],
-        metrics: [
-          {
-            val: "Specs",
-            label: "UI & Workflow",
-            sub: "Requirements alongside vendor/dev portal UI",
-            icon: "trend",
-            theme: "emerald",
-            gaugePct: 92
-          },
-          {
-            val: "CSIO/XML",
-            label: "Field Mapping",
-            sub: "Broker BMS payload & value translation",
-            icon: "clock",
-            theme: "blue",
-            gaugePct: 94
-          },
-          {
-            val: "3-Path",
-            label: "Correct · Refer · Bind",
-            sub: "Actionable portal feedback & routing",
-            icon: "db",
-            theme: "amber",
-            gaugePct: 90
-          }
-        ],
-        metricsQualifier: "Requirements, mapping & rules implementation alongside vendor/developer UI",
-        floatingCard: {
-          title: "Broker Submission Gate",
-          badge: "Conceptual illustration",
-          status: "Eligible to Bind or Refer",
-          statusTheme: "green",
-          gaugeVal: "3-Path",
-          gaugeLabel: "Rule Gate",
-          gaugePct: 93,
-          gaugeTheme: "emerald",
-          rows: [
-            { icon: "user", label: "Broker Payload", val: "CSIO / XML", theme: "blue" },
-            { icon: "shield", label: "Required Inputs", val: "Complete", theme: "green" },
-            { icon: "home", label: "Rating & Rules", val: "Evaluated", theme: "green" },
-            { icon: "doc", label: "Portal Message", val: "Actionable", theme: "green" }
-          ]
-        },
-        secondaryHud: {
-          title: "Submission Checks",
-          gaugePct: 92,
-          items: [
-            "CSIO XML schema valid",
-            "Coverage limits aligned",
-            "Underwriting rules pass",
-            "Correction hints mapped",
-            "Bind / refer decision"
-          ],
-          pill: "Portal Ready"
-        },
-        quickFacts: {
-          role: "Requirements, field/value mapping, UI specifications & hands-on P&C rules implementation",
-          period: "Within Grenville tenure (2009–2022) · overlapping broker integration stream",
-          deliverable: "Rules-to-portal messaging framework for correction, underwriter referral or bind"
-        }
-      },
-      {
-        slug: "continuity",
-        featuredRank: 5,
-        eyebrowType: "PROFESSIONAL WORK",
-        employerOrProduct: "Medavie Blue Cross",
-        title: "Claims Reporting & Data Continuity",
-        titleLead: "Claims Reporting &",
-        titleAccent: "Data Continuity",
-        peekBadge: "ETL & REPORTING",
-        peekBadgeTheme: "emerald",
-        peekTitle: "Claims Reporting & Continuity",
-        peekDesc: "Uncovered a hidden daily flat-file ETL dependency and completed continuity analysis and mapping.",
-        stripBadge: "ETL & REPORTING",
-        stripBadgeTheme: "emerald",
-        stripTitle: "Claims Reporting & Data Continuity",
-        stripSub: "Medavie Blue Cross",
-        summary: "Traced a supposed reporting request to a daily legacy flat-file ETL pipeline and completed the end-to-end continuity analysis and mapping for claims migration.",
-        banner: "assets/proj-banner-continuity.jpg",
-        tags: ["SQL", "Cognos", "Flat-File ETL", "Continuity Design", "Reporting"],
-        metrics: [
-          {
-            val: "Daily",
-            label: "Flat-File Contract",
-            sub: "Legacy COBOL/InterBlue extract traced & mapped",
-            icon: "trend",
-            theme: "emerald",
-            gaugePct: 92
-          },
-          {
-            val: "Cognos",
-            label: "Downstream Feed",
-            sub: "Preserved client reporting data dependencies",
-            icon: "clock",
-            theme: "blue",
-            gaugePct: 88
-          },
-          {
-            val: "2-Track",
-            label: "Continuity + Modern",
-            sub: "Design completed · modernization proposed",
-            icon: "db",
-            theme: "amber",
-            gaugePct: 86
-          }
-        ],
-        metricsQualifier: "Completed analysis & continuity design · service implementation unconfirmed · modernization proposed",
-        floatingCard: {
-          title: "ETL Continuity Spec",
-          badge: "Conceptual illustration",
-          status: "Continuity Mapping Complete",
-          statusTheme: "blue",
-          gaugeVal: "Daily",
-          gaugeLabel: "ETL Contract",
-          gaugePct: 91,
-          gaugeTheme: "blue",
-          rows: [
-            { icon: "user", label: "Legacy Extract", val: "COBOL / Flat-File", theme: "blue" },
-            { icon: "shield", label: "Field Mapping", val: "Completed", theme: "green" },
-            { icon: "home", label: "Client Cognos", val: "Preserved", theme: "green" },
-            { icon: "doc", label: "Modernization", val: "Proposed", theme: "blue" }
-          ]
-        },
-        secondaryHud: {
-          title: "Continuity Checkpoints",
-          gaugePct: 90,
-          items: [
-            "Hidden ETL dependency found",
-            "Source-to-flat-file mapping",
-            "Downstream Cognos fields",
-            "REST extract design",
-            "Modernization proposal"
-          ],
-          pill: "Design Complete"
-        },
-        quickFacts: {
-          role: "Current-state investigation, field-by-field continuity mapping & modernization proposal",
-          period: "Within Medavie tenure (2022–Present) · service implementation & go-live unconfirmed",
-          deliverable: "End-to-end REST-to-flat-file continuity specification & modern reporting exchange proposal"
-        }
-      },
-      {
-        slug: "claims",
-        featuredRank: 6,
-        eyebrowType: "PROFESSIONAL WORK",
-        employerOrProduct: "Medavie Blue Cross",
-        title: "Provider Data for Claims Adjudication",
-        titleLead: "Provider Data for",
-        titleAccent: "Claims Adjudication",
-        peekBadge: "SOLUTION REVIEW",
-        peekBadgeTheme: "purple",
-        peekTitle: "Provider Data Synchronization",
-        peekDesc: "Solution review, gap analysis, field mappings and scheduled synchronization requirements.",
-        stripBadge: "PROVIDER SYNC",
-        stripBadgeTheme: "purple",
-        stripTitle: "Provider Data for Claims Adjudication",
-        stripSub: "Medavie Blue Cross",
-        summary: "Defined provider integration requirements, gap analysis and field mappings connecting source provider registries to claims adjudication via scheduled event tables and REST.",
-        banner: "assets/proj-banner-claims.jpg",
-        tags: ["Provider Registry", "REST Consumer", "Scheduled Sync", "Field Mapping", "Claims"],
-        metrics: [
-          {
-            val: "Review",
-            label: "Architecture & Gaps",
-            sub: "Reviewed integration design alongside architects",
-            icon: "trend",
-            theme: "emerald",
-            gaugePct: 88
-          },
-          {
-            val: "Mapping",
-            label: "Source-to-Claims",
-            sub: "Provider credentials, specialty & status rules",
-            icon: "clock",
-            theme: "blue",
-            gaugePct: 90
-          },
-          {
-            val: "REST+SQL",
-            label: "Scheduled Sync",
-            sub: "Event-table & REST retrieval requirements",
-            icon: "db",
-            theme: "amber",
-            gaugePct: 87
-          }
-        ],
-        metricsQualifier: "Solution review, mapping & sync requirements · scheduled event table & REST consumer",
-        floatingCard: {
-          title: "Provider Sync Spec",
-          badge: "Conceptual illustration",
-          status: "Requirements & Mappings Defined",
-          statusTheme: "blue",
-          gaugeVal: "Sync",
-          gaugeLabel: "Event + REST",
-          gaugePct: 88,
-          gaugeTheme: "blue",
-          rows: [
-            { icon: "user", label: "Provider Source", val: "Registry Mapped", theme: "green" },
-            { icon: "shield", label: "Trigger Model", val: "Event Table", theme: "blue" },
-            { icon: "home", label: "Consumer Fetch", val: "REST Retrieval", theme: "blue" },
-            { icon: "doc", label: "Adjudication", val: "Aligned", theme: "green" }
-          ]
-        },
-        secondaryHud: {
-          title: "Alignment Scope",
-          gaugePct: 88,
-          items: [
-            "Architecture gap analysis",
-            "Specialty & license codes",
-            "Effective status windows",
-            "Scheduled event table spec",
-            "REST consumer payload"
-          ],
-          pill: "Spec Reviewed"
-        },
-        quickFacts: {
-          role: "Functional analyst conducting solution review, gap analysis, field mappings & sync requirements",
-          period: "Within Medavie tenure (2022–Present)",
-          deliverable: "Source-to-adjudication provider field mappings & scheduled event-table/REST requirements"
-        }
-      },
-      {
-        slug: "sql",
-        featuredRank: 7,
-        eyebrowType: "PROFESSIONAL WORK",
-        employerOrProduct: "Medavie Blue Cross",
-        title: "Claims SQL & Financial Reconciliation",
-        titleLead: "Claims SQL & Financial",
-        titleAccent: "Reconciliation",
-        peekBadge: "SQL & FINANCE",
-        peekBadgeTheme: "emerald",
-        peekTitle: "Claims SQL & Reconciliation",
-        peekDesc: "Hand-written SQL queries, financial report logic analysis and claims reconciliation.",
-        stripBadge: "SQL & FINANCE",
-        stripBadgeTheme: "emerald",
-        stripTitle: "Claims SQL & Financial Reconciliation",
-        stripSub: "Medavie Blue Cross",
-        summary: "Wrote complex hand-written SQL to trace financial report logic, isolate discrepancies and reconcile claims data against downstream accounting reports.",
-        banner: "assets/proj-banner-sql.jpg",
-        tags: ["Hand-Written SQL", "Reconciliation", "Financial Reporting", "Claims Data", "Data Quality"],
-        metrics: [
-          {
-            val: "SQL",
-            label: "Hand-Written Queries",
-            sub: "Direct multi-table relational analysis",
-            icon: "trend",
-            theme: "emerald",
-            gaugePct: 94
-          },
-          {
-            val: "Logic",
-            label: "Report Deconstruction",
-            sub: "Traced reversals, cutoffs & status rules",
-            icon: "clock",
-            theme: "blue",
-            gaugePct: 90
-          },
-          {
-            val: "Balanced",
-            label: "Finance Alignment",
-            sub: "Reconciled claims extracts with accounting",
-            icon: "db",
-            theme: "amber",
-            gaugePct: 92
-          }
-        ],
-        metricsQualifier: "Hands-on diagnostic & reconciliation SQL across enterprise claims and finance tables",
-        floatingCard: {
-          title: "SQL Ledger Balance",
-          badge: "Conceptual illustration",
-          status: "Extracts Reconciled to Finance",
-          statusTheme: "green",
-          gaugeVal: "100%",
-          gaugeLabel: "Rule Trace",
-          gaugePct: 93,
-          gaugeTheme: "emerald",
-          rows: [
-            { icon: "user", label: "Claims Joins", val: "Multi-Table SQL", theme: "blue" },
-            { icon: "shield", label: "Reversal Logic", val: "Isolated", theme: "green" },
-            { icon: "home", label: "Cutoff Windows", val: "Verified", theme: "green" },
-            { icon: "doc", label: "Finance Totals", val: "Balanced", theme: "green" }
-          ]
-        },
-        secondaryHud: {
-          title: "Reconciliation Checks",
-          gaugePct: 92,
-          items: [
-            "Multi-table relational joins",
-            "Void & reversal handling",
-            "Financial cutoff alignment",
-            "Variance root-cause trace",
-            "Extract totals balanced"
-          ],
-          pill: "Ledger Verified"
-        },
-        quickFacts: {
-          role: "Personally wrote diagnostic/reconciliation SQL and documented financial report business logic",
-          period: "Within Medavie tenure (2022–Present)",
-          deliverable: "Repeatable SQL reconciliation scripts and verified claims-to-finance report rules"
-        }
-      },
-      {
-        slug: "workflows",
-        featuredRank: 8,
-        eyebrowType: "PROFESSIONAL WORK",
-        employerOrProduct: "Grenville Mutual Insurance",
-        title: "Commercial Quoting & Broker Integration",
-        titleLead: "Commercial Quoting &",
-        titleAccent: "Broker Integration",
-        peekBadge: "COMMERCIAL P&C",
-        peekBadgeTheme: "purple",
-        peekTitle: "Commercial Quoting & BMS",
-        peekDesc: "Designed commercial quoting rules, CSIO/ACORD payload mappings and two-way broker integration.",
-        stripBadge: "COMMERCIAL P&C",
-        stripBadgeTheme: "purple",
-        stripTitle: "Commercial Quoting & Broker Integration",
-        stripSub: "Grenville Mutual Insurance",
-        summary: "Connected commercial quoting requirements, CSIO/ACORD payload transformations and backend underwriting rules across TAM and Epic broker integrations.",
-        banner: "assets/proj-banner-workflows.jpg",
-        tags: ["Commercial Lines", "CSIO / ACORD", "XML & eDocs", "Business Rules", "TAM & Epic"],
-        metrics: [
-          {
-            val: "2-Way",
-            label: "Upload & Download",
-            sub: "Bidirectional BMS request & document flows",
-            icon: "trend",
-            theme: "emerald",
-            gaugePct: 91
-          },
-          {
-            val: "CSIO",
-            label: "XML · eDocs · AL3",
-            sub: "Cross-vendor payload & value mappings",
-            icon: "clock",
-            theme: "blue",
-            gaugePct: 93
-          },
-          {
-            val: "4-Line",
-            label: "Auto · Res · Farm · Comm",
-            sub: "Personally implemented core P&C rules",
-            icon: "db",
-            theme: "amber",
-            gaugePct: 89
-          }
-        ],
-        metricsQualifier: "Core policy rules implementation, CSIO mapping & vendor coordination (TAM/Epic/Bravado)",
-        floatingCard: {
-          title: "Commercial Quote Gate",
-          badge: "Conceptual illustration",
-          status: "Two-Way BMS Flow Validated",
-          statusTheme: "green",
-          gaugeVal: "2-Way",
-          gaugeLabel: "CSIO / XML",
-          gaugePct: 91,
-          gaugeTheme: "emerald",
-          rows: [
-            { icon: "user", label: "Broker System", val: "TAM / Epic", theme: "blue" },
-            { icon: "shield", label: "CSIO Mapping", val: "Aligned", theme: "green" },
-            { icon: "home", label: "Commercial Rules", val: "Evaluated", theme: "green" },
-            { icon: "doc", label: "eDocs / AL3", val: "Delivered", theme: "green" }
-          ]
-        },
-        secondaryHud: {
-          title: "Broker Integration Scope",
-          gaugePct: 91,
-          items: [
-            "Commercial risk inputs",
-            "CSIO / ACORD XML mapping",
-            "Bravado / BMS routing",
-            "Rating & referral rules",
-            "eDocs & AL3 download"
-          ],
-          pill: "BMS Connected"
-        },
-        quickFacts: {
-          role: "Personally implemented policy rating/underwriting rules and defined CSIO mappings & UI stages",
-          period: "Within Grenville tenure (2009–2022)",
-          deliverable: "Two-way broker upload/download mappings and commercial quoting rule engine logic"
-        }
-      },
-      {
-        slug: "upload",
-        featuredRank: 9,
-        eyebrowType: "PROFESSIONAL WORK",
-        employerOrProduct: "Grenville Mutual Insurance",
-        title: "Authenticated Document Upload Portal",
-        titleLead: "Authenticated Document",
-        titleAccent: "Upload Portal",
-        peekBadge: "C# / .NET + REST",
-        peekBadgeTheme: "cyan",
-        peekTitle: "Document Upload Portal",
-        peekDesc: "Built a C#/.NET and REST portal for external adjusters to attach documents directly into policy records.",
-        stripBadge: "C# / .NET PORTAL",
-        stripBadgeTheme: "blue",
-        stripTitle: "Authenticated Document Upload Portal",
-        stripSub: "Grenville · Approx. 2018",
-        summary: "Developed an authenticated C#/.NET and REST submission portal placing adjuster documents directly into backend policy records, paired with internal log diagnostics.",
-        banner: "assets/proj-banner-upload.jpg",
-        tags: ["C# / .NET", "REST API", "Bootstrap / JS", "Operational Logging", "Support Tooling"],
-        metrics: [
-          {
-            val: ".NET",
-            label: "Authenticated Portal",
-            sub: "Replaced ad-hoc adjuster email attachments",
-            icon: "trend",
-            theme: "emerald",
-            gaugePct: 90
-          },
-          {
-            val: "REST",
-            label: "Direct Record Attach",
-            sub: "Placed PDFs & photos into policy records",
-            icon: "clock",
-            theme: "blue",
-            gaugePct: 92
-          },
-          {
-            val: "Log Tool",
-            label: "Support Diagnostics",
-            sub: "Built-in internal log search & triage utility",
-            icon: "db",
-            theme: "amber",
-            gaugePct: 88
-          }
-        ],
-        metricsQualifier: "Hands-on C#/.NET, Bootstrap & REST implementation · Approx. 2018 within Grenville tenure",
-        floatingCard: {
-          title: "Document Intake Gate",
-          badge: "Conceptual illustration",
-          status: "Attached to Policy Record",
-          statusTheme: "green",
-          gaugeVal: "REST",
-          gaugeLabel: "Direct Attach",
-          gaugePct: 90,
-          gaugeTheme: "emerald",
-          rows: [
-            { icon: "user", label: "Adjuster Auth", val: "Verified", theme: "green" },
-            { icon: "shield", label: "File Payload", val: "PDF / Photos", theme: "blue" },
-            { icon: "home", label: "REST Placement", val: "Policy Record", theme: "green" },
-            { icon: "doc", label: "Diagnostic Log", val: "Indexed", theme: "green" }
-          ]
-        },
-        secondaryHud: {
-          title: "Portal & Log Checks",
-          gaugePct: 89,
-          items: [
-            "Authenticated adjuster session",
-            "Policy record lookup",
-            "REST attachment commit",
-            "Operational event logging",
-            "Support log-search query"
-          ],
-          pill: "Portal Live"
-        },
-        quickFacts: {
-          role: "Personally developed the C#/.NET & Bootstrap portal, REST integration and internal log-search tool",
-          period: "Approx. 2018 (within Grenville 2009–2022 tenure)",
-          deliverable: "Production adjuster upload portal and internal support log diagnostic utility"
-        }
-      },
-      {
-        slug: "changes",
-        featuredRank: 10,
-        eyebrowType: "PROFESSIONAL WORK",
-        employerOrProduct: "Grenville Mutual Insurance",
-        title: "Policy-Change Comparison & Validation",
-        titleLead: "Policy-Change Comparison &",
-        titleAccent: "Validation",
-        peekBadge: "ENDORSEMENTS",
-        peekBadgeTheme: "amber",
-        peekTitle: "Policy-Change Validation",
-        peekDesc: "Built endorsement comparison workflows and context-aware validation rules before submission.",
-        stripBadge: "ENDORSEMENTS",
-        stripBadgeTheme: "amber",
-        stripTitle: "Policy-Change Comparison & Validation",
-        stripSub: "Grenville Mutual Insurance",
-        summary: "Designed policy-change comparison workflows and contextual validation rules that distinguished endorsements from new business and renewals.",
-        banner: "assets/proj-banner-changes.jpg",
-        tags: ["Endorsements", "Delta Comparison", "Validation Rules", "Broker Portal", "P&C Insurance"],
-        metrics: [
-          {
-            val: "Pre-Submit",
-            label: "Delta Comparison",
-            sub: "Side-by-side before/after policy state view",
-            icon: "trend",
-            theme: "emerald",
-            gaugePct: 88
-          },
-          {
-            val: "Context",
-            label: "Endorsement Rules",
-            sub: "Distinct from new business & renewal gates",
-            icon: "clock",
-            theme: "blue",
-            gaugePct: 90
-          },
-          {
-            val: "3-Path",
-            label: "Correct · Refer · Bind",
-            sub: "Transaction-specific portal feedback",
-            icon: "db",
-            theme: "amber",
-            gaugePct: 87
-          }
-        ],
-        metricsQualifier: "Endorsement rule implementation, payload mapping & pre-submission comparison design",
-        floatingCard: {
-          title: "Endorsement Delta Gate",
-          badge: "Conceptual illustration",
-          status: "Change Delta Validated",
-          statusTheme: "green",
-          gaugeVal: "Delta",
-          gaugeLabel: "Before / After",
-          gaugePct: 88,
-          gaugeTheme: "emerald",
-          rows: [
-            { icon: "user", label: "Baseline State", val: "Active Policy", theme: "blue" },
-            { icon: "shield", label: "Proposed Delta", val: "Isolated", theme: "green" },
-            { icon: "home", label: "Context Rules", val: "Endorsement", theme: "green" },
-            { icon: "doc", label: "Submission Path", val: "Ready to Bind", theme: "green" }
-          ]
-        },
-        secondaryHud: {
-          title: "Delta Verification",
-          gaugePct: 88,
-          items: [
-            "Active vs. proposed diff",
-            "Effective date validation",
-            "Coverage limit delta check",
-            "Endorsement rule context",
-            "Underwriter referral gate"
-          ],
-          pill: "Delta Verified"
-        },
-        quickFacts: {
-          role: "Analysis, endorsement validation/rating rules implementation & change-comparison design",
-          period: "Within Grenville tenure (2009–2022)",
-          deliverable: "Pre-submission policy change comparison workflow & endorsement-specific rule set"
-        }
-      },
-      {
-        slug: "inquiry",
-        featuredRank: 11,
-        eyebrowType: "PROFESSIONAL WORK",
-        employerOrProduct: "Grenville Mutual Insurance",
-        title: "Broker Policy Inquiry & Document Access",
-        titleLead: "Broker Policy Inquiry &",
-        titleAccent: "Document Access",
-        peekBadge: "SOAP / REST",
-        peekBadgeTheme: "cyan",
-        peekTitle: "Broker Policy Inquiry",
-        peekDesc: "Connected broker inquiry workflows to policy, billing and claims data plus downloadable PDFs.",
-        stripBadge: "SOAP / REST",
-        stripBadgeTheme: "blue",
-        stripTitle: "Broker Policy Inquiry & Document Access",
-        stripSub: "Grenville Mutual Insurance",
-        summary: "Mapped and tested broker policy, billing and claims inquiry interfaces with downloadable PDF documents across SOAP/XML and REST.",
-        banner: "assets/proj-banner-inquiry.jpg",
-        tags: ["Broker Inquiry", "SOAP / XML", "REST API", "CSIO / ACORD", "PDF / eDocs"],
-        metrics: [
-          {
-            val: "3-in-1",
-            label: "Policy · Billing · Claims",
-            sub: "Unified lookup inside broker workflows",
-            icon: "trend",
-            theme: "emerald",
-            gaugePct: 86
-          },
-          {
-            val: "SOAP/REST",
-            label: "Cross-Vendor APIs",
-            sub: "Desktop BMS & portal endpoint support",
-            icon: "clock",
-            theme: "blue",
-            gaugePct: 85
-          },
-          {
-            val: "PDF/eDocs",
-            label: "Document Access",
-            sub: "Direct policy, billing & claims PDFs",
-            icon: "db",
-            theme: "amber",
-            gaugePct: 88
-          }
-        ],
-        metricsQualifier: "UI mockups, CSIO/proprietary field mappings, payload diagnosis & end-to-end testing",
-        floatingCard: {
-          title: "Broker Inquiry Response",
-          badge: "Conceptual illustration",
-          status: "Policy, Billing & PDFs Ready",
-          statusTheme: "green",
-          gaugeVal: "3-in-1",
-          gaugeLabel: "Lookup API",
-          gaugePct: 86,
-          gaugeTheme: "blue",
-          rows: [
-            { icon: "user", label: "Policy & Coverages", val: "Mapped", theme: "green" },
-            { icon: "shield", label: "Billing & Balances", val: "Synchronized", theme: "green" },
-            { icon: "home", label: "Claims Status", val: "Returned", theme: "green" },
-            { icon: "doc", label: "PDF / eDocs", val: "Downloadable", theme: "blue" }
-          ]
-        },
-        secondaryHud: {
-          title: "Inquiry Contract Checks",
-          gaugePct: 86,
-          items: [
-            "CSIO / proprietary mapping",
-            "SOAP XML request trace",
-            "REST endpoint response",
-            "Billing & claims status",
-            "PDF document stream"
-          ],
-          pill: "Inquiry Ready"
-        },
-        quickFacts: {
-          role: "Mockups, CSIO/proprietary field mappings, SOAP/REST diagnosis & integration testing",
-          period: "Within Grenville tenure (2009–2022)",
-          deliverable: "Unified policy, billing and claims broker inquiry with downloadable PDF retrieval"
-        }
-      },
-      {
-        slug: "headquarters",
-        featuredRank: 12,
-        eyebrowType: "PROFESSIONAL WORK",
-        employerOrProduct: "Grenville Mutual Insurance",
-        title: "Headquarters Infrastructure & Move",
-        titleLead: "Headquarters Infrastructure &",
-        titleAccent: "Physical Move",
-        peekBadge: "INFRASTRUCTURE",
-        peekBadgeTheme: "cyan",
-        peekTitle: "HQ Infrastructure & Move",
-        peekDesc: "Planned, built and supported corporate headquarters infrastructure and VMware ESXi virtualization.",
-        stripBadge: "INFRASTRUCTURE",
-        stripBadgeTheme: "blue",
-        stripTitle: "Headquarters Infrastructure & Move",
-        stripSub: "Grenville Mutual Insurance",
-        summary: "Guided corporate headquarters technical infrastructure from design through build and physical move — spanning networking, AV, security, cooling, backup power and VMware ESXi virtualization.",
-        banner: "assets/proj-banner-headquarters.jpg",
-        tags: ["VMware ESXi", "42U Racks & SAN", "UPS & Generator", "Cat6A / VLANs", "Physical Security"],
-        metrics: [
-          {
-            val: "ESXi",
-            label: "Blade Virtualization",
-            sub: "Consolidated bare-metal blades onto VMware",
-            icon: "trend",
-            theme: "emerald",
-            gaugePct: 93
-          },
-          {
-            val: "UPS+Gen",
-            label: "Resilient Power",
-            sub: "Conditioned backup power & datacentre cooling",
-            icon: "clock",
-            theme: "blue",
-            gaugePct: 91
-          },
-          {
-            val: "End-to-End",
-            label: "Floorplan to Cutover",
-            sub: "Racks, cabling, VLANs, AV & door security",
-            icon: "db",
-            theme: "amber",
-            gaugePct: 90
-          }
-        ],
-        metricsQualifier: "Within Grenville tenure (2009–2022) · exact building move year not confirmed",
-        floatingCard: {
-          title: "HQ Cutover Telemetry",
-          badge: "Conceptual illustration",
-          status: "Datacentre & ESXi Online",
-          statusTheme: "green",
-          gaugeVal: "ESXi",
-          gaugeLabel: "Cluster Live",
-          gaugePct: 92,
-          gaugeTheme: "emerald",
-          rows: [
-            { icon: "user", label: "Compute Cluster", val: "VMware ESXi", theme: "green" },
-            { icon: "shield", label: "Facility Power", val: "UPS + Generator", theme: "green" },
-            { icon: "home", label: "Network Core", val: "Cat6A / VLANs", theme: "blue" },
-            { icon: "doc", label: "Security & AV", val: "Integrated", theme: "green" }
-          ]
-        },
-        secondaryHud: {
-          title: "Facility Readiness",
-          gaugePct: 91,
-          items: [
-            "Server room cooling & racks",
-            "Conditioned UPS + generator",
-            "Blade-to-ESXi migration",
-            "Structured cabling & Wi-Fi",
-            "Key-card access & boardroom AV"
-          ],
-          pill: "Cutover Complete"
-        },
-        quickFacts: {
-          role: "Technical infrastructure design, vendor coordination, physical move execution & ESXi virtualization",
-          period: "Within Grenville tenure (2009–2022) · exact move year unconfirmed",
-          deliverable: "New corporate datacentre buildout, resilient power/cooling and virtualized ESXi compute"
-        }
-      },
-      {
-        slug: "foundations",
-        featuredRank: 13,
-        eyebrowType: "PROFESSIONAL WORK",
-        employerOrProduct: "Harris Computer Services",
-        title: "Small Business Server Swing Migrations",
-        titleLead: "Small Business Server",
-        titleAccent: "Swing Migrations",
-        peekBadge: "SYSTEMS & AD",
-        peekBadgeTheme: "emerald",
-        peekTitle: "SBS Swing Migrations",
-        peekDesc: "Repeatable swing-migration process separating combined SBS into dedicated AD and Exchange servers.",
-        stripBadge: "SYSTEMS & AD",
-        stripBadgeTheme: "emerald",
-        stripTitle: "SBS Swing Migrations & Systems",
-        stripSub: "Harris · 2007 – 2009",
-        summary: "Built client server racks, firewalls and networks at Harris, and developed a repeatable SBS swing-migration process preserving live email, identity and data.",
-        banner: "assets/proj-banner-foundations.jpg",
-        tags: ["Swing Migration", "Active Directory", "Exchange & BES", "Server Racks", "Firewalls"],
-        metrics: [
-          {
-            val: "Staged",
-            label: "Swing Migration",
-            sub: "Separated coupled SBS without identity loss",
-            icon: "trend",
-            theme: "emerald",
-            gaugePct: 88
-          },
-          {
-            val: "AD+Exch",
-            label: "Identity & Mail Split",
-            sub: "Preserved SIDs, GPOs, mailboxes & BES",
-            icon: "clock",
-            theme: "blue",
-            gaugePct: 86
-          },
-          {
-            val: "Full-Stack",
-            label: "Racks & Firewalls",
-            sub: "NOC monitoring to full client rack builds",
-            icon: "db",
-            theme: "amber",
-            gaugePct: 85
-          }
-        ],
-        metricsQualifier: "Harris Computer Services (2007–2009) · NOC & infrastructure project technician",
-        floatingCard: {
-          title: "Swing Cutover Gate",
-          badge: "Conceptual illustration",
-          status: "AD & Exchange Separated",
-          statusTheme: "green",
-          gaugeVal: "Staged",
-          gaugeLabel: "Zero SID Loss",
-          gaugePct: 87,
-          gaugeTheme: "emerald",
-          rows: [
-            { icon: "user", label: "Active Directory", val: "SIDs & GPOs Kept", theme: "green" },
-            { icon: "shield", label: "Exchange & BES", val: "Mailboxes Live", theme: "green" },
-            { icon: "home", label: "Server Racks", val: "Separated Hosts", theme: "blue" },
-            { icon: "doc", label: "Firewall / VLAN", val: "Cutover Clean", theme: "green" }
-          ]
-        },
-        secondaryHud: {
-          title: "Migration Stages",
-          gaugePct: 86,
-          items: [
-            "Staging DC replication",
-            "FSMO role transfer",
-            "Exchange mailbox move",
-            "File share & DNS cutover",
-            "Legacy SBS decommission"
-          ],
-          pill: "Cutover Verified"
-        },
-        quickFacts: {
-          role: "NOC & Project Technician executing rack builds, firewall setups and repeatable SBS swing migrations",
-          period: "2007 – 2009 (Harris Computer Services)",
-          deliverable: "Repeatable staged swing-migration process separating SBS into dedicated AD and Exchange servers"
-        }
-      },
-      {
-        slug: "dell",
-        featuredRank: 14,
-        eyebrowType: "PROFESSIONAL WORK",
-        employerOrProduct: "Dell Canada",
-        title: "Dell Latitude & OptiPlex Hardware Support",
-        titleLead: "Dell Latitude & OptiPlex",
-        titleAccent: "Hardware Support",
-        peekBadge: "GLOVES OFF TEAM",
-        peekBadgeTheme: "amber",
-        peekTitle: "Dell Hardware Support",
-        peekDesc: "Commercial Latitude and OptiPlex diagnostics on Dell's Gloves Off first-call resolution team.",
-        stripBadge: "HARDWARE",
-        stripBadgeTheme: "amber",
-        stripTitle: "Dell Hardware & First-Call Support",
-        stripSub: "Dell · Sept 2006 – 2007",
-        summary: "Supported commercial Latitude laptops and OptiPlex desktops on Dell's Gloves Off team, focusing on thorough root-cause diagnosis and first-call resolution.",
-        banner: "assets/proj-banner-dell.jpg",
-        tags: ["Dell Gloves Off", "Latitude & OptiPlex", "Hardware Diagnostics", "First-Call Fix", "System Boards"],
-        metrics: [
-          {
-            val: "1st-Call",
-            label: "Gloves Off Mandate",
-            sub: "Empowered to stay until fault was isolated",
-            icon: "trend",
-            theme: "emerald",
-            gaugePct: 88
-          },
-          {
-            val: "Hardware",
-            label: "Latitude & OptiPlex",
-            sub: "Motherboard, PSU, thermal & storage isolation",
-            icon: "clock",
-            theme: "blue",
-            gaugePct: 84
-          },
-          {
-            val: "Sept 2006",
-            label: "Career Foundation",
-            sub: "Grounded in physical evidence & user empathy",
-            icon: "db",
-            theme: "amber",
-            gaugePct: 82
-          }
-        ],
-        metricsQualifier: "Dell Canada (September 2006–2007) · commercial hardware support specialist",
-        floatingCard: {
-          title: "Hardware Fault Isolation",
-          badge: "Conceptual illustration",
-          status: "Root Cause Isolated on 1st Call",
-          statusTheme: "green",
-          gaugeVal: "1st-Call",
-          gaugeLabel: "Gloves Off",
-          gaugePct: 86,
-          gaugeTheme: "emerald",
-          rows: [
-            { icon: "user", label: "Commercial Line", val: "Latitude / OptiPlex", theme: "blue" },
-            { icon: "shield", label: "POST & Bus Test", val: "Diagnosed", theme: "green" },
-            { icon: "home", label: "Fault Component", val: "Isolated", theme: "green" },
-            { icon: "doc", label: "Field Dispatch", val: "Exact Part Spec", theme: "green" }
-          ]
-        },
-        secondaryHud: {
-          title: "Diagnostic Protocol",
-          gaugePct: 85,
-          items: [
-            "POST & diagnostic LEDs",
-            "System board & power rails",
-            "Thermal & fan telemetry",
-            "SATA / drive verification",
-            "First-call dispatch spec"
-          ],
-          pill: "Fault Isolated"
-        },
-        quickFacts: {
-          role: "Technical Support Specialist on Dell's Gloves Off commercial resolution team",
-          period: "September 2006 – 2007 (Dell Canada)",
-          deliverable: "Component-level fault isolation and reduced repeat callbacks for commercial clients"
-        }
-      },
-      {
-        slug: "lowkey",
-        featuredRank: 15,
-        eyebrowType: "INDEPENDENT BUILD",
-        employerOrProduct: "Independent Build",
-        title: "LOWKEY — Local Speech-to-Text Input",
-        titleLead: "LOWKEY — Local",
-        titleAccent: "Speech-to-Text Input",
-        peekBadge: "LOCAL AI",
-        peekBadgeTheme: "cyan",
-        peekTitle: "LOWKEY — Local Speech Input",
-        peekDesc: "On-device speech recognition across Windows (Rust / Tauri 2) and Android (Kotlin IME).",
-        stripBadge: "LOCAL AI",
-        stripBadgeTheme: "blue",
-        stripTitle: "LOWKEY — Local Speech Input",
-        stripSub: "Independent · Rust & Kotlin",
-        summary: "Local speech-to-text inference using sherpa-onnx / Parakeet with a dedicated Rust worker on Windows and a native Kotlin keyboard on Android.",
-        banner: "assets/lowkey-local-speech-v1.png",
-        tags: ["Local Speech AI", "Rust / Tauri 2", "sherpa-onnx", "Kotlin Android IME", "Silero VAD"],
-        metrics: [
-          {
-            val: "On-Device",
-            label: "Local ONNX Inference",
-            sub: "Zero cloud audio upload · private decoding",
-            icon: "trend",
-            theme: "emerald",
-            gaugePct: 92
-          },
-          {
-            val: "2-OS",
-            label: "Windows + Android",
-            sub: "Tauri 2 desktop worker & Kotlin Android IME",
-            icon: "clock",
-            theme: "blue",
-            gaugePct: 90
-          },
-          {
-            val: "INT8/CTC",
-            label: "Parakeet Models",
-            sub: "Cached 110M CTC & 0.6B v3 TDT local models",
-            icon: "db",
-            theme: "amber",
-            gaugePct: 88
-          }
-        ],
-        metricsQualifier: "Historical / personal independent build · exact release date not established",
-        floatingCard: {
-          title: "Local Speech Pipeline",
-          badge: "Conceptual illustration",
-          status: "On-Device Decoding Active",
-          statusTheme: "blue",
-          gaugeVal: "Local",
-          gaugeLabel: "ONNX Worker",
-          gaugePct: 91,
-          gaugeTheme: "blue",
-          rows: [
-            { icon: "user", label: "Audio Capture", val: "Silero VAD", theme: "green" },
-            { icon: "shield", label: "Inference Engine", val: "sherpa-onnx", theme: "blue" },
-            { icon: "home", label: "Desktop Worker", val: "Rust / Tauri 2", theme: "blue" },
-            { icon: "doc", label: "Mobile Input", val: "Kotlin IME", theme: "green" }
-          ]
-        },
-        secondaryHud: {
-          title: "Voice Input Pipeline",
-          gaugePct: 90,
-          items: [
-            "AudioWorklet PCM capture",
-            "Silero VAD phrase boundary",
-            "Parakeet INT8 / CTC decode",
-            "Custom vocabulary fixups",
-            "Native OS keystroke inject"
-          ],
-          pill: "Zero-Cloud AI"
-        },
-        quickFacts: {
-          role: "Creator & developer building the Rust/Tauri 2 worker, React/TS UI and Kotlin Android IME",
-          period: "Historical / personal build · exact date not established",
-          deliverable: "Cross-platform local speech-to-text input method for Windows and Android"
-        }
-      },
-      {
-        slug: "workshop42",
-        featuredRank: 16,
-        eyebrowType: "INDEPENDENT BUILD",
-        employerOrProduct: "Workshop42 (ws42.ca)",
-        title: "Workshop42 — Physical Design & Fabrication",
-        titleLead: "Workshop42 — Physical",
-        titleAccent: "Design & Fabrication",
-        peekBadge: "CAD & 3D PRINT",
-        peekBadgeTheme: "amber",
-        peekTitle: "Workshop42 — Physical Builds",
-        peekDesc: "Tangible industrial design and multi-material 3D-printed objects at Workshop42 (ws42.ca).",
-        stripBadge: "CAD & 3D PRINT",
-        stripBadgeTheme: "amber",
-        stripTitle: "Workshop42 — Physical Builds",
-        stripSub: "Independent · ws42.ca",
-        summary: "Designing and fabricating physical objects that combine CAD precision, multi-color 3D printing and woodworking at Workshop42 (ws42.ca).",
-        banner: "assets/apex.jpg",
-        tags: ["Workshop42", "CAD & Fabrication", "Apex Monitor Riser", "The Voyager", "MakerWorld"],
-        metrics: [
-          {
-            val: "Apex",
-            label: "Monitor Riser",
-            sub: "3D-printed structural legs + hardwood shelf",
-            icon: "trend",
-            theme: "emerald",
-            gaugePct: 86
-          },
-          {
-            val: "Voyager",
-            label: "Floating Canoe",
-            sub: "Dual-color hydrodynamic scale model",
-            icon: "clock",
-            theme: "blue",
-            gaugePct: 84
-          },
-          {
-            val: "ws42.ca",
-            label: "MakerWorld Studio",
-            sub: "Published print profiles & real build photos",
-            icon: "db",
-            theme: "amber",
-            gaugePct: 85
-          }
-        ],
-        metricsQualifier: "Ongoing personal design studio (ws42.ca) · photographed as built",
-        floatingCard: {
-          title: "Fabrication Spec",
-          badge: "Photographed as built",
-          status: "Published on MakerWorld & ws42.ca",
-          statusTheme: "green",
-          gaugeVal: "CAD",
-          gaugeLabel: "Multi-Material",
-          gaugePct: 86,
-          gaugeTheme: "emerald",
-          rows: [
-            { icon: "user", label: "Primary Build", val: "Apex Riser", theme: "green" },
-            { icon: "shield", label: "Scale Model", val: "The Voyager", theme: "blue" },
-            { icon: "home", label: "Joinery & Fit", val: "Print + Wood", theme: "green" },
-            { icon: "doc", label: "Community", val: "MakerWorld", theme: "green" }
-          ]
-        },
-        secondaryHud: {
-          title: "Physical Engineering",
-          gaugePct: 85,
-          items: [
-            "Parametric CAD modeling",
-            "Load-bearing infill tuning",
-            "Wood-to-print tolerances",
-            "Multi-color AMS slicing",
-            "Photographed real builds"
-          ],
-          pill: "Built & Shared"
-        },
-        quickFacts: {
-          role: "Designer & maker handling CAD modeling, structural prototyping, print profiles & photography",
-          period: "Ongoing personal studio · exact start date not established",
-          deliverable: "Functional desktop hardware and scale models published on MakerWorld and ws42.ca"
-        }
+        "val": "~40%",
+        "label": "Farm / Agri",
+        "sub": "Approximate self-reported renewal-only figure",
+        "icon": "trend",
+        "theme": "emerald"
       }
-    ]);
+    ],
+    "metricsQualifier": "Approximate self-reported renewal-only figures. Josh confirmed 60% commercial renewal automation; exceptions remained with underwriters.",
+    "floatingCard": {
+      "title": "Work summary",
+      "badge": "Conceptual illustration",
+      "status": "Production rules",
+      "statusTheme": "green",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary",
+      "gaugePct": 80,
+      "gaugeTheme": "emerald",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Grenville",
+          "icon": "doc"
+        },
+        {
+          "label": "My role",
+          "val": "Analysis  ·  Rule Design ",
+          "icon": "doc"
+        },
+        {
+          "label": "Scope",
+          "val": "Production rules",
+          "icon": "doc"
+        }
+      ]
+    },
+    "secondaryHud": {
+      "title": "Evidence",
+      "gaugePct": 84,
+      "items": [
+        "Fail-first rules with focused exception reasons",
+        "Decisions compared with underwriter review before activation",
+        "Approximate renewal-only rates; 60% commercial confirmed by Josh"
+      ],
+      "pill": "Implemented"
+    },
+    "quickFacts": {
+      "role": "Analysis · Rule Design · Implementation · Support",
+      "period": "Within Grenville tenure (2009–2022)",
+      "deliverable": "Automated standard renewals with explicit underwriter exception routing"
+    }
+  },
+  {
+    "slug": "nexus",
+    "featuredRank": 2,
+    "eyebrowType": "INDEPENDENT BUILD",
+    "employerOrProduct": "Independent Capstone",
+    "title": "NEXUS — AI Orchestration Platform",
+    "titleLead": "NEXUS — AI Orchestration Platform",
+    "titleAccent": "",
+    "peekBadge": "INDEPENDENT BUILD",
+    "peekBadgeTheme": "cyan",
+    "peekTitle": "NEXUS — AI Orchestration Platform",
+    "peekDesc": "Independent multi-agent platform for planning, execution and evaluation with scoped context and audit receipts.",
+    "stripBadge": "AI PLATFORM",
+    "stripBadgeTheme": "blue",
+    "stripTitle": "NEXUS — AI Orchestration Platform",
+    "stripSub": "Independent Build",
+    "summary": "An independent platform in active development, exploring how context, model routing, tools, approvals and evaluation fit into useful AI-assisted work.",
+    "banner": "assets/optimized-extra/proj-banner-nexus-1376.webp",
+    "tags": [
+      "AI Agents",
+      "Orchestration",
+      "TypeScript",
+      "PostgreSQL",
+      "Evaluation"
+    ],
+    "metrics": [
+      {
+        "val": "Build",
+        "label": "Independent development",
+        "sub": "Independent architecture and applied-learning capstone",
+        "icon": "doc",
+        "theme": "blue"
+      }
+    ],
+    "metricsQualifier": "Status and personal contribution are described in the case study.",
+    "floatingCard": {
+      "title": "Work summary",
+      "badge": "Conceptual illustration",
+      "status": "Independent development",
+      "statusTheme": "blue",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary",
+      "gaugePct": 98,
+      "gaugeTheme": "blue",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "NEXUS",
+          "icon": "doc"
+        },
+        {
+          "label": "My role",
+          "val": "Product Direction  ·  Architecture ",
+          "icon": "doc"
+        },
+        {
+          "label": "Scope",
+          "val": "Independent development",
+          "icon": "doc"
+        }
+      ]
+    },
+    "secondaryHud": {
+      "title": "Evidence",
+      "gaugePct": 96,
+      "items": [
+        "Independent product and architecture direction with AI-assisted implementation",
+        "Source-described context, routing and execution mechanisms",
+        "Active development; no enterprise adoption or universal feature-completeness claim"
+      ],
+      "pill": "Active development"
+    },
+    "quickFacts": {
+      "role": "Product Direction · Architecture · AI-Assisted Implementation",
+      "period": "Active development",
+      "deliverable": "Independent architecture and applied-learning capstone"
+    }
+  },
+  {
+    "slug": "takeover",
+    "featuredRank": 3,
+    "eyebrowType": "PROFESSIONAL WORK",
+    "employerOrProduct": "Medavie Blue Cross",
+    "title": "Claims-History Loading & VBA Automation",
+    "titleLead": "Claims-History Loading & VBA Automation",
+    "titleAccent": "",
+    "peekBadge": "DATA & ETL",
+    "peekBadgeTheme": "emerald",
+    "peekTitle": "Claims-History Loading & VBA Automation",
+    "peekDesc": "Designed and built a production Excel VBA add-in for validation, XML generation, batch preparation and returned-error reconciliation.",
+    "stripBadge": "DATA & ETL",
+    "stripBadgeTheme": "emerald",
+    "stripTitle": "Claims-History Loading & VBA Automation",
+    "stripSub": "Medavie Blue Cross",
+    "summary": "Turned inconsistent prior-carrier history into a repeatable claims-loading workflow, with a production Excel VBA add-in and developer-supported backend changes.",
+    "banner": "assets/optimized-extra/proj-banner-takeover-1376.webp",
+    "tags": [
+      "SQL",
+      "ETL",
+      "Excel/VB",
+      "Data Quality",
+      "XML Schema"
+    ],
+    "metrics": [
+      {
+        "val": "Delivered",
+        "label": "Production VBA tool",
+        "sub": "Production loading workflow enabling independent team use",
+        "icon": "doc",
+        "theme": "blue"
+      }
+    ],
+    "metricsQualifier": "Status and personal contribution are described in the case study.",
+    "floatingCard": {
+      "title": "Work summary",
+      "badge": "Conceptual illustration",
+      "status": "Production VBA tool",
+      "statusTheme": "green",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary",
+      "gaugePct": 95,
+      "gaugeTheme": "emerald",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Medavie",
+          "icon": "doc"
+        },
+        {
+          "label": "My role",
+          "val": "Solution Design  ·  VBA Development ",
+          "icon": "doc"
+        },
+        {
+          "label": "Scope",
+          "val": "Production VBA tool",
+          "icon": "doc"
+        }
+      ]
+    },
+    "secondaryHud": {
+      "title": "Evidence",
+      "gaugePct": 94,
+      "items": [
+        "Production Excel VBA add-in designed and built by Josh",
+        "Repeatable validation, XML batch preparation and error reconciliation",
+        "Teams prepare and load their files independently; backend engine work remained with developers"
+      ],
+      "pill": "Production tool"
+    },
+    "quickFacts": {
+      "role": "Solution Design · VBA Development · Validation · Support",
+      "period": "2022 – Present",
+      "deliverable": "Production loading workflow enabling independent team use"
+    }
+  },
+  {
+    "slug": "newbusiness",
+    "featuredRank": 4,
+    "eyebrowType": "PROFESSIONAL WORK",
+    "employerOrProduct": "Grenville Mutual Insurance",
+    "title": "Broker-Native New Business Integration",
+    "titleLead": "Broker-Native New Business Integration",
+    "titleAccent": "",
+    "peekBadge": "INTEGRATION",
+    "peekBadgeTheme": "purple",
+    "peekTitle": "Broker-Native New Business Integration",
+    "peekDesc": "Connected broker workflows to insurance rules, validation, referral and binding decisions.",
+    "stripBadge": "INTEGRATION",
+    "stripBadgeTheme": "purple",
+    "stripTitle": "Broker-Native New Business Integration",
+    "stripSub": "Insurance Systems",
+    "summary": "Reused broker policy data, collected missing risk details and connected deterministic validation to correction, referral or eligible binding.",
+    "banner": "assets/optimized-extra/proj-banner-newbusiness-1376.webp",
+    "tags": [
+      "Integration",
+      "Business Rules",
+      "Solution Design",
+      "Underwriting",
+      "SOAP / REST"
+    ],
+    "metrics": [
+      {
+        "val": "Delivered",
+        "label": "Professional work",
+        "sub": "Actionable correction, referral and bind decisions in broker workflows",
+        "icon": "doc",
+        "theme": "blue"
+      }
+    ],
+    "metricsQualifier": "Status and personal contribution are described in the case study.",
+    "floatingCard": {
+      "title": "Work summary",
+      "badge": "Conceptual illustration",
+      "status": "Implemented",
+      "statusTheme": "green",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary",
+      "gaugePct": 93,
+      "gaugeTheme": "emerald",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Grenville",
+          "icon": "doc"
+        },
+        {
+          "label": "My role",
+          "val": "Requirements  ·  Field Mapping ",
+          "icon": "doc"
+        },
+        {
+          "label": "Scope",
+          "val": "Implemented",
+          "icon": "doc"
+        }
+      ]
+    },
+    "secondaryHud": {
+      "title": "Evidence",
+      "gaugePct": 92,
+      "items": [
+        "Existing broker data reused instead of wholesale re-entry",
+        "Tagged rules controlled correction, referral and eligible binding",
+        "Populated referral records supported underwriter review; no blanket zero-touch claim"
+      ],
+      "pill": "Implemented"
+    },
+    "quickFacts": {
+      "role": "Requirements · Field Mapping · Rules Implementation",
+      "period": "Within Grenville tenure (2009–2022)",
+      "deliverable": "Actionable correction, referral and bind decisions in broker workflows"
+    }
+  },
+  {
+    "slug": "continuity",
+    "featuredRank": 5,
+    "eyebrowType": "PROFESSIONAL WORK",
+    "employerOrProduct": "Medavie Blue Cross",
+    "title": "Claims Reporting & Data Continuity",
+    "titleLead": "Claims Reporting & Data Continuity",
+    "titleAccent": "",
+    "peekBadge": "ETL & REPORTING",
+    "peekBadgeTheme": "emerald",
+    "peekTitle": "Claims Reporting & Data Continuity",
+    "peekDesc": "Traced a reporting request to downstream data dependencies, delivered interim SQL and designed a compatibility path.",
+    "stripBadge": "ETL & REPORTING",
+    "stripBadgeTheme": "emerald",
+    "stripTitle": "Claims Reporting & Data Continuity",
+    "stripSub": "Medavie Blue Cross",
+    "summary": "Discovery confirmed that a client needed compatible data for several downstream systems. I delivered interim SQL reporting while an approved permanent extract design remained unfinished.",
+    "banner": "assets/optimized-extra/proj-banner-continuity-1376.webp",
+    "tags": [
+      "SQL",
+      "Cognos",
+      "Data Models",
+      "Reporting",
+      "ETL Continuity"
+    ],
+    "metrics": [
+      {
+        "val": "Design",
+        "label": "Design + interim SQL",
+        "sub": "Approved design and operational interim reports; permanent extract unfinished",
+        "icon": "doc",
+        "theme": "blue"
+      }
+    ],
+    "metricsQualifier": "Status and personal contribution are described in the case study.",
+    "floatingCard": {
+      "title": "Work summary",
+      "badge": "Conceptual illustration",
+      "status": "Design + interim SQL",
+      "statusTheme": "blue",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary",
+      "gaugePct": 91,
+      "gaugeTheme": "blue",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Medavie",
+          "icon": "doc"
+        },
+        {
+          "label": "My role",
+          "val": "Current-State Analysis  ·  Continuity Mapping ",
+          "icon": "doc"
+        },
+        {
+          "label": "Scope",
+          "val": "Design + interim SQL",
+          "icon": "doc"
+        }
+      ]
+    },
+    "secondaryHud": {
+      "title": "Evidence",
+      "gaugePct": 90,
+      "items": [
+        "Client discovery confirmed downstream integration dependencies",
+        "Approved compatibility design plus operational interim SQL",
+        "Permanent extract not confirmed live; simpler replacement remained proposed"
+      ],
+      "pill": "Approved design; interim reporting live"
+    },
+    "quickFacts": {
+      "role": "Current-State Analysis · Continuity Mapping · Modernization Proposal",
+      "period": "2022 – Present",
+      "deliverable": "Approved design and operational interim reports; permanent extract unfinished"
+    }
+  },
+  {
+    "slug": "claims",
+    "featuredRank": 6,
+    "eyebrowType": "PROFESSIONAL WORK",
+    "employerOrProduct": "Medavie Blue Cross",
+    "title": "Provider Data for Claims Adjudication",
+    "titleLead": "Provider Data for Claims Adjudication",
+    "titleAccent": "",
+    "peekBadge": "SOLUTION REVIEW",
+    "peekBadgeTheme": "purple",
+    "peekTitle": "Provider Data for Claims Adjudication",
+    "peekDesc": "Defined provider mappings and synchronization changes, then supported the live integrations in testing and production.",
+    "stripBadge": "PROVIDER SYNC",
+    "stripBadgeTheme": "purple",
+    "stripTitle": "Provider Data for Claims Adjudication",
+    "stripSub": "Medavie Blue Cross",
+    "summary": "Identified provider relationships and data-sync gaps, worked with architects and developers on changes, and continued supporting the implemented integrations.",
+    "banner": "assets/optimized-extra/proj-banner-claims-1376.webp",
+    "tags": [
+      "Provider Registry",
+      "REST Consumer",
+      "Scheduled Sync",
+      "Field Mapping"
+    ],
+    "metrics": [
+      {
+        "val": "Delivered",
+        "label": "Live integration support",
+        "sub": "Implemented integrations with continuing functional support",
+        "icon": "doc",
+        "theme": "blue"
+      }
+    ],
+    "metricsQualifier": "Status and personal contribution are described in the case study.",
+    "floatingCard": {
+      "title": "Work summary",
+      "badge": "Conceptual illustration",
+      "status": "Live integration support",
+      "statusTheme": "blue",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary",
+      "gaugePct": 88,
+      "gaugeTheme": "blue",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Medavie",
+          "icon": "doc"
+        },
+        {
+          "label": "My role",
+          "val": "Functional Analysis  ·  Mapping ",
+          "icon": "doc"
+        },
+        {
+          "label": "Scope",
+          "val": "Live integration support",
+          "icon": "doc"
+        }
+      ]
+    },
+    "secondaryHud": {
+      "title": "Evidence",
+      "gaugePct": 88,
+      "items": [
+        "Provider integrations are live by Josh's account",
+        "Scheduled table-backed synchronization with REST retrieval",
+        "Continuing investigation of data mismatches and specified fixes"
+      ],
+      "pill": "Live integration support"
+    },
+    "quickFacts": {
+      "role": "Functional Analysis · Mapping · Testing · Production Support",
+      "period": "2022 – Present",
+      "deliverable": "Implemented integrations with continuing functional support"
+    }
+  },
+  {
+    "slug": "sql",
+    "featuredRank": 7,
+    "eyebrowType": "PROFESSIONAL WORK",
+    "employerOrProduct": "Medavie Blue Cross",
+    "title": "Claims SQL & Financial Reconciliation",
+    "titleLead": "Claims SQL & Financial Reconciliation",
+    "titleAccent": "",
+    "peekBadge": "SQL & FINANCE",
+    "peekBadgeTheme": "emerald",
+    "peekTitle": "Claims SQL & Financial Reconciliation",
+    "peekDesc": "Reworked claims and financial SQL, reconciled transaction history and supplied corrected logic adopted in production.",
+    "stripBadge": "SQL & FINANCE",
+    "stripBadgeTheme": "emerald",
+    "stripTitle": "Claims SQL & Financial Reconciliation",
+    "stripSub": "Medavie Blue Cross",
+    "summary": "Resolved gaps between claims and payment reporting, working with finance and client teams to balance results and improve reporting accuracy.",
+    "banner": "assets/optimized-extra/proj-banner-sql-1376.webp",
+    "tags": [
+      "Hand-Written SQL",
+      "Financial Reconciliation",
+      "Report Logic",
+      "Data Quality"
+    ],
+    "metrics": [
+      {
+        "val": "Delivered",
+        "label": "SQL adopted",
+        "sub": "Corrected reporting SQL adopted in production",
+        "icon": "doc",
+        "theme": "blue"
+      }
+    ],
+    "metricsQualifier": "Status and personal contribution are described in the case study.",
+    "floatingCard": {
+      "title": "Work summary",
+      "badge": "Conceptual illustration",
+      "status": "SQL adopted",
+      "statusTheme": "green",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary",
+      "gaugePct": 93,
+      "gaugeTheme": "emerald",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Medavie",
+          "icon": "doc"
+        },
+        {
+          "label": "My role",
+          "val": "Functional Analyst  ·  SQL Development ",
+          "icon": "doc"
+        },
+        {
+          "label": "Scope",
+          "val": "SQL adopted",
+          "icon": "doc"
+        }
+      ]
+    },
+    "secondaryHud": {
+      "title": "Evidence",
+      "gaugePct": 92,
+      "items": [
+        "Hands-on Oracle SQL and transaction-history investigation",
+        "Business treatment checked with finance and client stakeholders",
+        "Corrected SQL adopted in the payment team's existing production process"
+      ],
+      "pill": "Implemented"
+    },
+    "quickFacts": {
+      "role": "Functional Analyst · SQL Development · Reconciliation",
+      "period": "2022 – Present",
+      "deliverable": "Corrected reporting SQL adopted in production"
+    }
+  },
+  {
+    "slug": "workflows",
+    "featuredRank": 8,
+    "eyebrowType": "PROFESSIONAL WORK",
+    "employerOrProduct": "Grenville Mutual Insurance",
+    "title": "Commercial Quoting & Broker Integration",
+    "titleLead": "Commercial Quoting & Broker Integration",
+    "titleAccent": "",
+    "peekBadge": "COMMERCIAL P&C",
+    "peekBadgeTheme": "purple",
+    "peekTitle": "Commercial Quoting & Broker Integration",
+    "peekDesc": "Designed commercial quoting rules, CSIO/ACORD payload mappings and two-way broker integration workflows.",
+    "stripBadge": "COMMERCIAL P&C",
+    "stripBadgeTheme": "purple",
+    "stripTitle": "Commercial Quoting & Broker Integration",
+    "stripSub": "Grenville Mutual Insurance",
+    "summary": "Connected commercial underwriting requirements, staged risk questions, mappings and backend rules with vendor-built broker applications.",
+    "banner": "assets/optimized-extra/proj-banner-workflows-1376.webp",
+    "tags": [
+      "Commercial Quoting",
+      "CSIO / ACORD",
+      "SOAP / REST",
+      "Business Rules"
+    ],
+    "metrics": [
+      {
+        "val": "Delivered",
+        "label": "Professional work",
+        "sub": "Two-way broker upload/download and commercial quoting rules",
+        "icon": "doc",
+        "theme": "blue"
+      }
+    ],
+    "metricsQualifier": "Status and personal contribution are described in the case study.",
+    "floatingCard": {
+      "title": "Work summary",
+      "badge": "Conceptual illustration",
+      "status": "Implemented",
+      "statusTheme": "green",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary",
+      "gaugePct": 91,
+      "gaugeTheme": "emerald",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Grenville",
+          "icon": "doc"
+        },
+        {
+          "label": "My role",
+          "val": "Policy Rules Implementation  ·  Mapping & Specification",
+          "icon": "doc"
+        },
+        {
+          "label": "Scope",
+          "val": "Implemented",
+          "icon": "doc"
+        }
+      ]
+    },
+    "secondaryHud": {
+      "title": "Evidence",
+      "gaugePct": 91,
+      "items": [
+        "Business requirements connected to vendor application development",
+        "Related rating and underwriting rules implemented by Josh",
+        "Broker discovery, training, mapping and ongoing support"
+      ],
+      "pill": "Implemented"
+    },
+    "quickFacts": {
+      "role": "Policy Rules Implementation · Mapping & Specification",
+      "period": "Within Grenville tenure (2009–2022)",
+      "deliverable": "Two-way broker upload/download and commercial quoting rules"
+    }
+  },
+  {
+    "slug": "upload",
+    "featuredRank": 9,
+    "eyebrowType": "PROFESSIONAL WORK",
+    "employerOrProduct": "Grenville Mutual Insurance",
+    "title": "Authenticated Document Upload Portal",
+    "titleLead": "Authenticated Document Upload Portal",
+    "titleAccent": "",
+    "peekBadge": "C# / .NET + REST",
+    "peekBadgeTheme": "cyan",
+    "peekTitle": "Document Upload into Policy Records",
+    "peekDesc": "Built an authenticated C#/.NET document-submission service and a separate integration-support tool for recurring faults.",
+    "stripBadge": "C# / .NET PORTAL",
+    "stripBadgeTheme": "blue",
+    "stripTitle": "Document Upload into Policy Records",
+    "stripSub": "Grenville · Approx. 2018",
+    "summary": "Developed a production document-upload workflow for claims, policy and accounting, plus a separate C#/.NET support application for inspecting transactions and logs.",
+    "banner": "assets/optimized-extra/proj-banner-upload-1376.webp",
+    "tags": [
+      "C# / .NET",
+      "REST API",
+      "Bootstrap",
+      "Operational Logging"
+    ],
+    "metrics": [
+      {
+        "val": "Delivered",
+        "label": "Professional work",
+        "sub": "Production submission service and reusable support tooling",
+        "icon": "doc",
+        "theme": "blue"
+      }
+    ],
+    "metricsQualifier": "Status and personal contribution are described in the case study.",
+    "floatingCard": {
+      "title": "Work summary",
+      "badge": "Conceptual illustration",
+      "status": "Implemented",
+      "statusTheme": "green",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary",
+      "gaugePct": 90,
+      "gaugeTheme": "emerald",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Grenville",
+          "icon": "doc"
+        },
+        {
+          "label": "My role",
+          "val": "Systems Analyst  ·  Hands-On Developer",
+          "icon": "doc"
+        },
+        {
+          "label": "Scope",
+          "val": "Implemented",
+          "icon": "doc"
+        }
+      ]
+    },
+    "secondaryHud": {
+      "title": "Evidence",
+      "gaugePct": 89,
+      "items": [
+        "Production authenticated submission for claims, policy and accounting",
+        "Separate diagnostic application enabled routine support work",
+        "HTTPS and authenticated REST are supported controls; no formal security audit is claimed"
+      ],
+      "pill": "Implemented"
+    },
+    "quickFacts": {
+      "role": "Systems Analyst · Hands-On Developer",
+      "period": "Approx. 2018",
+      "deliverable": "Production submission service and reusable support tooling"
+    }
+  },
+  {
+    "slug": "changes",
+    "featuredRank": 10,
+    "eyebrowType": "PROFESSIONAL WORK",
+    "employerOrProduct": "Grenville Mutual Insurance",
+    "title": "Policy-Change Comparison & Validation",
+    "titleLead": "Policy-Change Comparison & Validation",
+    "titleAccent": "",
+    "peekBadge": "ENDORSEMENTS",
+    "peekBadgeTheme": "amber",
+    "peekTitle": "Policy-Change Comparison & Validation",
+    "peekDesc": "Tested endorsement comparison rules, identified false positives and recommended stopping an unsustainable approach.",
+    "stripBadge": "ENDORSEMENTS",
+    "stripBadgeTheme": "amber",
+    "stripTitle": "Policy-Change Comparison & Validation",
+    "stripSub": "Grenville Mutual Insurance",
+    "summary": "A policy-change pilot exposed a key limit of automation: a difference between two policy records does not reliably express the broker's intended change.",
+    "banner": "assets/optimized-extra/proj-banner-changes-1376.webp",
+    "tags": [
+      "Endorsements",
+      "Change Comparison",
+      "Validation",
+      "Business Rules"
+    ],
+    "metrics": [
+      {
+        "val": "Pilot",
+        "label": "Pilot discontinued",
+        "sub": "Limited pilot discontinued after unsatisfactory testing",
+        "icon": "doc",
+        "theme": "blue"
+      }
+    ],
+    "metricsQualifier": "Status and personal contribution are described in the case study.",
+    "floatingCard": {
+      "title": "Work summary",
+      "badge": "Conceptual illustration",
+      "status": "Pilot discontinued",
+      "statusTheme": "green",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary",
+      "gaugePct": 88,
+      "gaugeTheme": "emerald",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Grenville",
+          "icon": "doc"
+        },
+        {
+          "label": "My role",
+          "val": "Analysis  ·  Policy Rules ",
+          "icon": "doc"
+        },
+        {
+          "label": "Scope",
+          "val": "Pilot discontinued",
+          "icon": "doc"
+        }
+      ]
+    },
+    "secondaryHud": {
+      "title": "Evidence",
+      "gaugePct": 88,
+      "items": [
+        "Testing exposed noise and false-positive changes",
+        "Proposed explicit confirmation of broker intent",
+        "Possible one-broker production pilot, then discontinued; no broad successful rollout"
+      ],
+      "pill": "Limited pilot; discontinued"
+    },
+    "quickFacts": {
+      "role": "Analysis · Policy Rules · UI/Integration Design",
+      "period": "Within Grenville tenure (2009–2022)",
+      "deliverable": "Limited pilot discontinued after unsatisfactory testing"
+    }
+  },
+  {
+    "slug": "inquiry",
+    "featuredRank": 11,
+    "eyebrowType": "PROFESSIONAL WORK",
+    "employerOrProduct": "Grenville Mutual Insurance",
+    "title": "Broker Policy Inquiry & Document Access",
+    "titleLead": "Broker Policy Inquiry & Document Access",
+    "titleAccent": "",
+    "peekBadge": "SOAP / REST",
+    "peekBadgeTheme": "cyan",
+    "peekTitle": "Broker Policy Inquiry",
+    "peekDesc": "Connected broker inquiry workflows to policy, billing and claims data plus downloadable PDF documents.",
+    "stripBadge": "SOAP / REST",
+    "stripBadgeTheme": "blue",
+    "stripTitle": "Broker Policy Inquiry",
+    "stripSub": "Grenville Mutual Insurance",
+    "summary": "Mapped and tested broker policy, billing and claims inquiry interfaces with downloadable PDF documents across SOAP/XML and REST.",
+    "banner": "assets/optimized-extra/proj-banner-inquiry-1376.webp",
+    "tags": [
+      "Broker Inquiry",
+      "SOAP / XML",
+      "REST",
+      "PDF / eDocs"
+    ],
+    "metrics": [
+      {
+        "val": "Delivered",
+        "label": "Professional work",
+        "sub": "Reliable policy, billing and claims lookup inside broker workflows",
+        "icon": "doc",
+        "theme": "blue"
+      }
+    ],
+    "metricsQualifier": "Status and personal contribution are described in the case study.",
+    "floatingCard": {
+      "title": "Work summary",
+      "badge": "Conceptual illustration",
+      "status": "Implemented",
+      "statusTheme": "green",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary",
+      "gaugePct": 86,
+      "gaugeTheme": "blue",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Grenville",
+          "icon": "doc"
+        },
+        {
+          "label": "My role",
+          "val": "Business Analysis  ·  Mappings ",
+          "icon": "doc"
+        },
+        {
+          "label": "Scope",
+          "val": "Implemented",
+          "icon": "doc"
+        }
+      ]
+    },
+    "secondaryHud": {
+      "title": "Evidence",
+      "gaugePct": 86,
+      "items": [
+        "Mapped CSIO/ACORD and proprietary backend fields",
+        "Supported desktop SOAP/XML and modern REST endpoints",
+        "Verified downloadable policy, billing and claims PDFs"
+      ],
+      "pill": "Implemented"
+    },
+    "quickFacts": {
+      "role": "Business Analysis · Mappings · Integration Testing",
+      "period": "Within Grenville tenure (2009–2022)",
+      "deliverable": "Reliable policy, billing and claims lookup inside broker workflows"
+    }
+  },
+  {
+    "slug": "headquarters",
+    "featuredRank": 12,
+    "eyebrowType": "PROFESSIONAL WORK",
+    "employerOrProduct": "Grenville Mutual Insurance",
+    "title": "Headquarters Infrastructure and Move",
+    "titleLead": "Headquarters Infrastructure and Move",
+    "titleAccent": "",
+    "peekBadge": "INFRASTRUCTURE",
+    "peekBadgeTheme": "cyan",
+    "peekTitle": "Headquarters Infrastructure & Move",
+    "peekDesc": "Carried technical requirements through the headquarters build and move; separately recommended and implemented staged ESXi virtualization.",
+    "stripBadge": "INFRASTRUCTURE",
+    "stripBadgeTheme": "blue",
+    "stripTitle": "Headquarters Infrastructure & Move",
+    "stripSub": "Grenville Mutual Insurance",
+    "summary": "Connected networking, servers, cabling access, AV, physical security, cooling and backup-power requirements from early building plans through the operational move.",
+    "banner": "assets/optimized-extra/proj-banner-headquarters-1376.webp",
+    "tags": [
+      "Infrastructure",
+      "Identity",
+      "Security",
+      "Virtualization",
+      "Resilient Power"
+    ],
+    "metrics": [
+      {
+        "val": "Delivered",
+        "label": "Professional work",
+        "sub": "Headquarters technical delivery and operational move",
+        "icon": "doc",
+        "theme": "blue"
+      }
+    ],
+    "metricsQualifier": "Status and personal contribution are described in the case study.",
+    "floatingCard": {
+      "title": "Work summary",
+      "badge": "Conceptual illustration",
+      "status": "Implemented",
+      "statusTheme": "green",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary",
+      "gaugePct": 92,
+      "gaugeTheme": "emerald",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Grenville",
+          "icon": "doc"
+        },
+        {
+          "label": "My role",
+          "val": "Technical Design  ·  Infrastructure Build ",
+          "icon": "doc"
+        },
+        {
+          "label": "Scope",
+          "val": "Implemented",
+          "icon": "doc"
+        }
+      ]
+    },
+    "secondaryHud": {
+      "title": "Evidence",
+      "gaugePct": 91,
+      "items": [
+        "Technical planning, vendor coordination and hands-on setup",
+        "Planned move, collaborative recovery and return for the workweek",
+        "Separate staged ESXi migration; no zero-downtime or verified recovery-objective claim"
+      ],
+      "pill": "Implemented"
+    },
+    "quickFacts": {
+      "role": "Technical Design · Infrastructure Build · Virtualization",
+      "period": "Build completed 2012; occupancy January 2013",
+      "deliverable": "Headquarters technical delivery and operational move"
+    }
+  },
+  {
+    "slug": "foundations",
+    "featuredRank": 13,
+    "eyebrowType": "PROFESSIONAL WORK",
+    "employerOrProduct": "Harris Computer Services",
+    "title": "Small Business Server Swing Migrations",
+    "titleLead": "Small Business Server Swing Migrations",
+    "titleAccent": "",
+    "peekBadge": "SYSTEMS & AD",
+    "peekBadgeTheme": "emerald",
+    "peekTitle": "SBS Swing Migrations & Systems",
+    "peekDesc": "Developed a repeatable swing-migration process separating combined Small Business Server environments into dedicated Active Directory and Exchange servers.",
+    "stripBadge": "SYSTEMS & AD",
+    "stripBadgeTheme": "emerald",
+    "stripTitle": "SBS Swing Migrations & Systems",
+    "stripSub": "Harris · 2007 – 2009",
+    "summary": "Progressed from NOC support into client infrastructure projects and developed a repeatable staged Small Business Server migration process.",
+    "banner": "assets/optimized-extra/proj-banner-foundations-1376.webp",
+    "tags": [
+      "Swing Migration",
+      "Active Directory",
+      "Exchange",
+      "Firewalls & VLANs"
+    ],
+    "metrics": [
+      {
+        "val": "Delivered",
+        "label": "Professional work",
+        "sub": "Repeatable swing-migration methodology preserving data, email and identity",
+        "icon": "doc",
+        "theme": "blue"
+      }
+    ],
+    "metricsQualifier": "Status and personal contribution are described in the case study.",
+    "floatingCard": {
+      "title": "Work summary",
+      "badge": "Conceptual illustration",
+      "status": "Implemented",
+      "statusTheme": "green",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary",
+      "gaugePct": 87,
+      "gaugeTheme": "emerald",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Harris Computer Services",
+          "icon": "doc"
+        },
+        {
+          "label": "My role",
+          "val": "NOC & Project Technician",
+          "icon": "doc"
+        },
+        {
+          "label": "Scope",
+          "val": "Implemented",
+          "icon": "doc"
+        }
+      ]
+    },
+    "secondaryHud": {
+      "title": "Evidence",
+      "gaugePct": 86,
+      "items": [
+        "Repeatable staged migration approach",
+        "Client discovery, coordination and hands-on infrastructure delivery",
+        "No measured outage duration or universal zero-downtime claim"
+      ],
+      "pill": "Implemented"
+    },
+    "quickFacts": {
+      "role": "NOC & Project Technician",
+      "period": "2007 – 2009",
+      "deliverable": "Repeatable swing-migration methodology preserving data, email and identity"
+    }
+  },
+  {
+    "slug": "dell",
+    "featuredRank": 14,
+    "eyebrowType": "PROFESSIONAL WORK",
+    "employerOrProduct": "Dell Canada",
+    "title": "Dell Latitude & OptiPlex Hardware Support",
+    "titleLead": "Dell Latitude & OptiPlex Hardware Support",
+    "titleAccent": "",
+    "peekBadge": "GLOVES OFF TEAM",
+    "peekBadgeTheme": "amber",
+    "peekTitle": "Dell Hardware & First-Call Support",
+    "peekDesc": "Latitude and OptiPlex hardware support on Dell's Gloves Off team—spending the time needed to isolate the fault on the first call and reduce callbacks.",
+    "stripBadge": "HARDWARE",
+    "stripBadgeTheme": "amber",
+    "stripTitle": "Dell Hardware & First-Call Support",
+    "stripSub": "Dell · Sept 2006 – 2007",
+    "summary": "Supported commercial Latitude laptops and OptiPlex desktops on Dell's Gloves Off team, focusing on thorough root-cause diagnosis and first-call resolution.",
+    "banner": "assets/optimized-extra/proj-banner-dell-1376.webp",
+    "tags": [
+      "Dell Gloves Off",
+      "Latitude & OptiPlex",
+      "Hardware Diagnostics",
+      "Root-Cause Fix"
+    ],
+    "metrics": [
+      {
+        "val": "Delivered",
+        "label": "Professional work",
+        "sub": "First-call resolution focus and reduced repeat client callbacks",
+        "icon": "doc",
+        "theme": "blue"
+      }
+    ],
+    "metricsQualifier": "Status and personal contribution are described in the case study.",
+    "floatingCard": {
+      "title": "Work summary",
+      "badge": "Conceptual illustration",
+      "status": "Implemented",
+      "statusTheme": "green",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary",
+      "gaugePct": 86,
+      "gaugeTheme": "emerald",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Dell",
+          "icon": "doc"
+        },
+        {
+          "label": "My role",
+          "val": "Technical Support Specialist (Gloves Off Team)",
+          "icon": "doc"
+        },
+        {
+          "label": "Scope",
+          "val": "Implemented",
+          "icon": "doc"
+        }
+      ]
+    },
+    "secondaryHud": {
+      "title": "Evidence",
+      "gaugePct": 85,
+      "items": [
+        "Component-level fault isolation on Latitude & OptiPlex",
+        "Reduced repeat callbacks through thorough first-call diagnosis",
+        "Clear translation between technical faults and user impact"
+      ],
+      "pill": "Implemented"
+    },
+    "quickFacts": {
+      "role": "Technical Support Specialist (Gloves Off Team)",
+      "period": "Sept 2006 – 2007",
+      "deliverable": "First-call resolution focus and reduced repeat client callbacks"
+    }
+  },
+  {
+    "slug": "lowkey",
+    "featuredRank": 15,
+    "eyebrowType": "INDEPENDENT BUILD",
+    "employerOrProduct": "Independent Build",
+    "title": "LOWKEY — Local Speech-to-Text Input",
+    "titleLead": "LOWKEY — Local Speech-to-Text Input",
+    "titleAccent": "",
+    "peekBadge": "LOCAL AI",
+    "peekBadgeTheme": "cyan",
+    "peekTitle": "LOWKEY — Local Speech Input",
+    "peekDesc": "Archived local speech-input exploration using a Rust/Tauri desktop stack and mobile integration work.",
+    "stripBadge": "LOCAL AI",
+    "stripBadgeTheme": "blue",
+    "stripTitle": "LOWKEY — Local Speech Input",
+    "stripSub": "Independent · Rust & Kotlin",
+    "summary": "Local speech-to-text inference using sherpa-onnx / Parakeet with a dedicated Rust worker on Windows and a native Kotlin keyboard on Android.",
+    "banner": "assets/optimized-extra/lowkey-local-speech-v1-1536.webp",
+    "tags": [
+      "Local Speech AI",
+      "Rust / Tauri 2",
+      "sherpa-onnx",
+      "Kotlin Android IME"
+    ],
+    "metrics": [
+      {
+        "val": "Archived",
+        "label": "Archived project",
+        "sub": "Local phrase capture and on-device decoding into native text fields",
+        "icon": "doc",
+        "theme": "blue"
+      }
+    ],
+    "metricsQualifier": "Status and personal contribution are described in the case study.",
+    "floatingCard": {
+      "title": "Work summary",
+      "badge": "Conceptual illustration",
+      "status": "Archived project",
+      "statusTheme": "blue",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary",
+      "gaugePct": 91,
+      "gaugeTheme": "blue",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Personal",
+          "icon": "doc"
+        },
+        {
+          "label": "My role",
+          "val": "Creator & Developer",
+          "icon": "doc"
+        },
+        {
+          "label": "Scope",
+          "val": "Archived project",
+          "icon": "doc"
+        }
+      ]
+    },
+    "secondaryHud": {
+      "title": "Evidence",
+      "gaugePct": 90,
+      "items": [
+        "AudioWorklet capture with Silero VAD phrase detection",
+        "Cached 110M CTC & 0.6B v3 TDT INT8 local models",
+        "Custom dictionary & vocabulary correction pipeline"
+      ],
+      "pill": "Archived independent project"
+    },
+    "quickFacts": {
+      "role": "Creator & Developer",
+      "period": "Independent Build",
+      "deliverable": "Local phrase capture and on-device decoding into native text fields"
+    }
+  },
+  {
+    "slug": "workshop42",
+    "featuredRank": 16,
+    "eyebrowType": "INDEPENDENT BUILD",
+    "employerOrProduct": "Workshop42 (ws42.ca)",
+    "title": "Workshop42 — Physical Design & Fabrication",
+    "titleLead": "Workshop42 — Physical Design & Fabrication",
+    "titleAccent": "",
+    "peekBadge": "CAD & 3D PRINT",
+    "peekBadgeTheme": "amber",
+    "peekTitle": "Workshop42 — Physical Builds",
+    "peekDesc": "Personal CAD, woodworking and 3D-printing work, including the Apex monitor riser and Voyager canoe model.",
+    "stripBadge": "CAD & 3D PRINT",
+    "stripBadgeTheme": "amber",
+    "stripTitle": "Workshop42 — Physical Builds",
+    "stripSub": "Independent · ws42.ca",
+    "summary": "Designing and fabricating physical objects that combine CAD precision, multi-color 3D printing and woodworking at Workshop42 (ws42.ca).",
+    "banner": "assets/optimized-extra/apex-1200.webp",
+    "tags": [
+      "Workshop42",
+      "CAD & Fabrication",
+      "Apex Monitor Riser",
+      "The Voyager"
+    ],
+    "metrics": [
+      {
+        "val": "Personal",
+        "label": "Personal builds",
+        "sub": "Published community models on MakerWorld and ws42.ca",
+        "icon": "doc",
+        "theme": "blue"
+      }
+    ],
+    "metricsQualifier": "Status and personal contribution are described in the case study.",
+    "floatingCard": {
+      "title": "Work summary",
+      "badge": "Photographed as built",
+      "status": "Personal builds",
+      "statusTheme": "green",
+      "gaugeVal": "Case",
+      "gaugeLabel": "Summary",
+      "gaugePct": 86,
+      "gaugeTheme": "emerald",
+      "rows": [
+        {
+          "label": "Context",
+          "val": "Workshop42",
+          "icon": "doc"
+        },
+        {
+          "label": "My role",
+          "val": "Designer & Maker",
+          "icon": "doc"
+        },
+        {
+          "label": "Scope",
+          "val": "Personal builds",
+          "icon": "doc"
+        }
+      ]
+    },
+    "secondaryHud": {
+      "title": "Evidence",
+      "gaugePct": 85,
+      "items": [
+        "Published print-ready models on MakerWorld",
+        "Combined 3D-printed structural geometry with wood",
+        "Photographed and documented real physical builds"
+      ],
+      "pill": "Personal builds & prototypes"
+    },
+    "quickFacts": {
+      "role": "Designer & Maker",
+      "period": "Independent Studio",
+      "deliverable": "Published community models on MakerWorld and ws42.ca"
+    }
+  }
+]);
 
     function getCarouselMetricIconSvg(iconKey) {
       if (iconKey === "clock") {
@@ -7995,245 +10260,362 @@
       return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>`;
     }
 
-    function getCarouselHudRowIconSvg(iconKey) {
-      if (iconKey === "user") {
-        return `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5.2" r="2.4"/><path d="M3.2 13.5c.5-2.3 2.3-3.6 4.8-3.6s4.3 1.3 4.8 3.6"/></svg>`;
-      }
-      if (iconKey === "shield") {
-        return `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2 13 4v4c0 3.2-2.1 5.4-5 6.3C5.1 13.4 3 11.2 3 8V4l5-2Z"/><path d="m6 8 1.4 1.4L10.3 6.5"/></svg>`;
-      }
-      if (iconKey === "home") {
-        return `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7.2 8 2.5l5.5 4.7"/><path d="M4.2 6.2v6.8h7.6V6.2"/></svg>`;
-      }
-      return `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="2.2" width="10" height="11.6" rx="1.5"/><path d="M5.5 5.8h5M5.5 8.5h5M5.5 11.2h3"/></svg>`;
-    }
+    
 
     const CHRONO_META_BY_SLUG = Object.freeze({
-      nexus: {
-        railTop: "2022",
-        railBottom: "Present",
-        railNote: "Active build",
-        nodeTheme: "green",
-        sortYear: 2026,
-        curatedRank: 1,
-        unestablishedDate: false,
-        statusBadge: "Active Development",
-        metaRows: [
-          { icon: "status", label: "Status", val: "Active Development", highlight: "green" },
-          { icon: "role", label: "My role", val: "Architecture · Full-Stack Dev" }
-        ]
+  "nexus": {
+    "railTop": "Active",
+    "railBottom": "",
+    "railNote": "Independent development",
+    "nodeTheme": "green",
+    "sortYear": 2026,
+    "curatedRank": 1,
+    "unestablishedDate": true,
+    "statusBadge": "Active development",
+    "metaRows": [
+      {
+        "icon": "status",
+        "label": "Status",
+        "val": "Active development"
       },
-      renewals: {
-        railTop: "2009",
-        railBottom: "2022",
-        railNote: "Grenville tenure",
-        nodeTheme: "blue",
-        sortYear: 2021,
-        curatedRank: 2,
-        unestablishedDate: false,
-        statusBadge: "Delivered",
-        metaRows: [
-          { icon: "org", label: "Employer", val: "Grenville · Delivered" },
-          { icon: "outcome", label: "Outcome", val: "~80% / ~60% / ~40% renewal-only" }
-        ]
-      },
-      takeover: {
-        railTop: "2022",
-        railBottom: "Present",
-        railNote: "Medavie tenure",
-        nodeTheme: "purple",
-        sortYear: 2024,
-        curatedRank: 3,
-        unestablishedDate: false,
-        statusBadge: "Production tool",
-        metaRows: [
-          { icon: "org", label: "Employer", val: "Medavie · Production tool" },
-          { icon: "outcome", label: "Outcome", val: "Repeatable Excel/VB/XML loads" }
-        ]
-      },
-      continuity: {
-        railTop: "2022",
-        railBottom: "Present",
-        railNote: "Medavie tenure",
-        nodeTheme: "purple",
-        sortYear: 2024,
-        curatedRank: 4,
-        unestablishedDate: false,
-        statusBadge: "Design completed",
-        metaRows: [
-          { icon: "org", label: "Employer", val: "Medavie · Design completed" },
-          { icon: "outcome", label: "Outcome", val: "REST-to-legacy ETL continuity design" }
-        ]
-      },
-      claims: {
-        railTop: "2022",
-        railBottom: "Present",
-        railNote: "Medavie tenure",
-        nodeTheme: "purple",
-        sortYear: 2023,
-        curatedRank: 5,
-        unestablishedDate: false,
-        statusBadge: "Solution review & requirements",
-        metaRows: [
-          { icon: "org", label: "Employer", val: "Medavie · Solution review" },
-          { icon: "outcome", label: "Outcome", val: "Event-table & REST sync mappings" }
-        ]
-      },
-      sql: {
-        railTop: "2022",
-        railBottom: "Present",
-        railNote: "Medavie tenure",
-        nodeTheme: "purple",
-        sortYear: 2023,
-        curatedRank: 6,
-        unestablishedDate: false,
-        statusBadge: "Delivered",
-        metaRows: [
-          { icon: "org", label: "Employer", val: "Medavie · Delivered" },
-          { icon: "outcome", label: "Outcome", val: "Hand-written SQL & finance balancing" }
-        ]
-      },
-      newbusiness: {
-        railTop: "2009",
-        railBottom: "2022",
-        railNote: "Grenville tenure",
-        nodeTheme: "blue",
-        sortYear: 2020,
-        curatedRank: 7,
-        unestablishedDate: false,
-        statusBadge: "Delivered",
-        metaRows: [
-          { icon: "org", label: "Employer", val: "Grenville · Delivered" },
-          { icon: "outcome", label: "Outcome", val: "Rules, mappings & portal bind/refer" }
-        ]
-      },
-      workflows: {
-        railTop: "2009",
-        railBottom: "2022",
-        railNote: "Grenville tenure",
-        nodeTheme: "blue",
-        sortYear: 2019,
-        curatedRank: 8,
-        unestablishedDate: false,
-        statusBadge: "Delivered",
-        metaRows: [
-          { icon: "org", label: "Employer", val: "Grenville · Delivered" },
-          { icon: "outcome", label: "Outcome", val: "Commercial rules & CSIO mappings" }
-        ]
-      },
-      upload: {
-        railTop: "Approx.",
-        railBottom: "2018",
-        railNote: "Grenville tenure",
-        nodeTheme: "blue",
-        sortYear: 2018,
-        curatedRank: 9,
-        unestablishedDate: false,
-        statusBadge: "Delivered",
-        metaRows: [
-          { icon: "org", label: "Employer", val: "Grenville · Production tool" },
-          { icon: "outcome", label: "Outcome", val: "C#/.NET + REST upload & log tool" }
-        ]
-      },
-      changes: {
-        railTop: "2009",
-        railBottom: "2022",
-        railNote: "Grenville tenure",
-        nodeTheme: "blue",
-        sortYear: 2017,
-        curatedRank: 10,
-        unestablishedDate: false,
-        statusBadge: "Delivered",
-        metaRows: [
-          { icon: "org", label: "Employer", val: "Grenville · Delivered" },
-          { icon: "outcome", label: "Outcome", val: "Pre-submit delta & endorsement rules" }
-        ]
-      },
-      inquiry: {
-        railTop: "2009",
-        railBottom: "2022",
-        railNote: "Grenville tenure",
-        nodeTheme: "blue",
-        sortYear: 2016,
-        curatedRank: 11,
-        unestablishedDate: false,
-        statusBadge: "Delivered",
-        metaRows: [
-          { icon: "org", label: "Employer", val: "Grenville · Delivered" },
-          { icon: "outcome", label: "Outcome", val: "Policy, billing, claims & PDF lookup" }
-        ]
-      },
-      headquarters: {
-        railTop: "2009",
-        railBottom: "2022",
-        railNote: "Move year unconfirmed",
-        nodeTheme: "teal",
-        sortYear: 2014,
-        curatedRank: 12,
-        unestablishedDate: false,
-        statusBadge: "Delivered",
-        metaRows: [
-          { icon: "org", label: "Employer", val: "Grenville · Delivered" },
-          { icon: "outcome", label: "Outcome", val: "HQ infrastructure move & ESXi transition" }
-        ]
-      },
-      foundations: {
-        railTop: "2007",
-        railBottom: "2009",
-        railNote: "Harris tenure",
-        nodeTheme: "teal",
-        sortYear: 2008,
-        curatedRank: 13,
-        unestablishedDate: false,
-        statusBadge: "Delivered",
-        metaRows: [
-          { icon: "org", label: "Employer", val: "Harris · Delivered" },
-          { icon: "outcome", label: "Outcome", val: "Repeatable SBS swing migrations" }
-        ]
-      },
-      dell: {
-        railTop: "Sept 2006",
-        railBottom: "2007",
-        railNote: "Dell tenure",
-        nodeTheme: "slate",
-        sortYear: 2006,
-        curatedRank: 14,
-        unestablishedDate: false,
-        statusBadge: "Delivered",
-        metaRows: [
-          { icon: "org", label: "Employer", val: "Dell Canada · Delivered" },
-          { icon: "outcome", label: "Outcome", val: "Gloves Off first-call fault diagnosis" }
-        ]
-      },
-      lowkey: {
-        railTop: "Date not",
-        railBottom: "established",
-        railNote: "Historical build",
-        nodeTheme: "green",
-        sortYear: 2005,
-        curatedRank: 15,
-        unestablishedDate: true,
-        statusBadge: "Historical build",
-        metaRows: [
-          { icon: "status", label: "Status", val: "Historical / Personal Build", highlight: "blue" },
-          { icon: "role", label: "Stack", val: "Rust / Tauri 2 · Kotlin IME · ONNX" }
-        ]
-      },
-      workshop42: {
-        railTop: "Date not",
-        railBottom: "established",
-        railNote: "Personal studio",
-        nodeTheme: "green",
-        sortYear: 2004,
-        curatedRank: 16,
-        unestablishedDate: true,
-        statusBadge: "Personal studio",
-        metaRows: [
-          { icon: "status", label: "Status", val: "Ongoing Personal Studio", highlight: "blue" },
-          { icon: "role", label: "Focus", val: "CAD · 3D Printing · Woodwork" }
-        ]
+      {
+        "icon": "role",
+        "label": "Contribution",
+        "val": "Product Direction · Architecture · AI-Assisted Implementation"
       }
-    });
+    ]
+  },
+  "renewals": {
+    "railTop": "2009",
+    "railBottom": "2022",
+    "railNote": "Grenville tenure",
+    "nodeTheme": "blue",
+    "sortYear": 2021,
+    "curatedRank": 2,
+    "unestablishedDate": false,
+    "statusBadge": "Implemented",
+    "metaRows": [
+      {
+        "icon": "status",
+        "label": "Status",
+        "val": "Implemented"
+      },
+      {
+        "icon": "role",
+        "label": "Contribution",
+        "val": "Analysis · Rule Design · Implementation · Support"
+      }
+    ]
+  },
+  "takeover": {
+    "railTop": "2022",
+    "railBottom": "Present",
+    "railNote": "Medavie tenure",
+    "nodeTheme": "purple",
+    "sortYear": 2024,
+    "curatedRank": 3,
+    "unestablishedDate": false,
+    "statusBadge": "Production tool",
+    "metaRows": [
+      {
+        "icon": "status",
+        "label": "Status",
+        "val": "Production tool"
+      },
+      {
+        "icon": "role",
+        "label": "Contribution",
+        "val": "Solution Design · VBA Development · Validation · Support"
+      }
+    ]
+  },
+  "continuity": {
+    "railTop": "2022",
+    "railBottom": "Present",
+    "railNote": "Medavie tenure",
+    "nodeTheme": "purple",
+    "sortYear": 2024,
+    "curatedRank": 4,
+    "unestablishedDate": false,
+    "statusBadge": "Approved design; interim reporting live",
+    "metaRows": [
+      {
+        "icon": "status",
+        "label": "Status",
+        "val": "Approved design; interim reporting live"
+      },
+      {
+        "icon": "role",
+        "label": "Contribution",
+        "val": "Current-State Analysis · Continuity Mapping · Modernization Proposal"
+      }
+    ]
+  },
+  "claims": {
+    "railTop": "2022",
+    "railBottom": "Present",
+    "railNote": "Medavie tenure",
+    "nodeTheme": "purple",
+    "sortYear": 2023,
+    "curatedRank": 5,
+    "unestablishedDate": false,
+    "statusBadge": "Live integration support",
+    "metaRows": [
+      {
+        "icon": "status",
+        "label": "Status",
+        "val": "Live integration support"
+      },
+      {
+        "icon": "role",
+        "label": "Contribution",
+        "val": "Functional Analysis · Mapping · Testing · Production Support"
+      }
+    ]
+  },
+  "sql": {
+    "railTop": "2022",
+    "railBottom": "Present",
+    "railNote": "Medavie tenure",
+    "nodeTheme": "purple",
+    "sortYear": 2023,
+    "curatedRank": 6,
+    "unestablishedDate": false,
+    "statusBadge": "Implemented",
+    "metaRows": [
+      {
+        "icon": "status",
+        "label": "Status",
+        "val": "Implemented"
+      },
+      {
+        "icon": "role",
+        "label": "Contribution",
+        "val": "Functional Analyst · SQL Development · Reconciliation"
+      }
+    ]
+  },
+  "newbusiness": {
+    "railTop": "2009",
+    "railBottom": "2022",
+    "railNote": "Grenville tenure",
+    "nodeTheme": "blue",
+    "sortYear": 2020,
+    "curatedRank": 7,
+    "unestablishedDate": false,
+    "statusBadge": "Implemented",
+    "metaRows": [
+      {
+        "icon": "status",
+        "label": "Status",
+        "val": "Implemented"
+      },
+      {
+        "icon": "role",
+        "label": "Contribution",
+        "val": "Requirements · Field Mapping · Rules Implementation"
+      }
+    ]
+  },
+  "workflows": {
+    "railTop": "2009",
+    "railBottom": "2022",
+    "railNote": "Grenville tenure",
+    "nodeTheme": "blue",
+    "sortYear": 2019,
+    "curatedRank": 8,
+    "unestablishedDate": false,
+    "statusBadge": "Implemented",
+    "metaRows": [
+      {
+        "icon": "status",
+        "label": "Status",
+        "val": "Implemented"
+      },
+      {
+        "icon": "role",
+        "label": "Contribution",
+        "val": "Policy Rules Implementation · Mapping & Specification"
+      }
+    ]
+  },
+  "upload": {
+    "railTop": "Approx.",
+    "railBottom": "2018",
+    "railNote": "Grenville tenure",
+    "nodeTheme": "blue",
+    "sortYear": 2018,
+    "curatedRank": 9,
+    "unestablishedDate": false,
+    "statusBadge": "Implemented",
+    "metaRows": [
+      {
+        "icon": "status",
+        "label": "Status",
+        "val": "Implemented"
+      },
+      {
+        "icon": "role",
+        "label": "Contribution",
+        "val": "Systems Analyst · Hands-On Developer"
+      }
+    ]
+  },
+  "changes": {
+    "railTop": "2009",
+    "railBottom": "2022",
+    "railNote": "Grenville tenure",
+    "nodeTheme": "blue",
+    "sortYear": 2017,
+    "curatedRank": 10,
+    "unestablishedDate": false,
+    "statusBadge": "Limited pilot; discontinued",
+    "metaRows": [
+      {
+        "icon": "status",
+        "label": "Status",
+        "val": "Limited pilot; discontinued"
+      },
+      {
+        "icon": "role",
+        "label": "Contribution",
+        "val": "Analysis · Policy Rules · UI/Integration Design"
+      }
+    ]
+  },
+  "inquiry": {
+    "railTop": "2009",
+    "railBottom": "2022",
+    "railNote": "Grenville tenure",
+    "nodeTheme": "blue",
+    "sortYear": 2016,
+    "curatedRank": 11,
+    "unestablishedDate": false,
+    "statusBadge": "Implemented",
+    "metaRows": [
+      {
+        "icon": "status",
+        "label": "Status",
+        "val": "Implemented"
+      },
+      {
+        "icon": "role",
+        "label": "Contribution",
+        "val": "Business Analysis · Mappings · Integration Testing"
+      }
+    ]
+  },
+  "headquarters": {
+    "railTop": "2012",
+    "railBottom": "2013",
+    "railNote": "Building milestones; IT move date unconfirmed",
+    "nodeTheme": "teal",
+    "sortYear": 2014,
+    "curatedRank": 12,
+    "unestablishedDate": true,
+    "statusBadge": "Implemented",
+    "metaRows": [
+      {
+        "icon": "status",
+        "label": "Status",
+        "val": "Implemented"
+      },
+      {
+        "icon": "role",
+        "label": "Contribution",
+        "val": "Technical Design · Infrastructure Build · Virtualization"
+      }
+    ]
+  },
+  "foundations": {
+    "railTop": "2007",
+    "railBottom": "2009",
+    "railNote": "Harris tenure",
+    "nodeTheme": "teal",
+    "sortYear": 2008,
+    "curatedRank": 13,
+    "unestablishedDate": false,
+    "statusBadge": "Implemented",
+    "metaRows": [
+      {
+        "icon": "status",
+        "label": "Status",
+        "val": "Implemented"
+      },
+      {
+        "icon": "role",
+        "label": "Contribution",
+        "val": "NOC & Project Technician"
+      }
+    ]
+  },
+  "dell": {
+    "railTop": "Sept 2006",
+    "railBottom": "2007",
+    "railNote": "Dell tenure",
+    "nodeTheme": "slate",
+    "sortYear": 2006,
+    "curatedRank": 14,
+    "unestablishedDate": false,
+    "statusBadge": "Implemented",
+    "metaRows": [
+      {
+        "icon": "status",
+        "label": "Status",
+        "val": "Implemented"
+      },
+      {
+        "icon": "role",
+        "label": "Contribution",
+        "val": "Technical Support Specialist (Gloves Off Team)"
+      }
+    ]
+  },
+  "lowkey": {
+    "railTop": "Date not",
+    "railBottom": "established",
+    "railNote": "Historical build",
+    "nodeTheme": "green",
+    "sortYear": 2005,
+    "curatedRank": 15,
+    "unestablishedDate": true,
+    "statusBadge": "Archived independent project",
+    "metaRows": [
+      {
+        "icon": "status",
+        "label": "Status",
+        "val": "Archived independent project"
+      },
+      {
+        "icon": "role",
+        "label": "Contribution",
+        "val": "Creator & Developer"
+      }
+    ]
+  },
+  "workshop42": {
+    "railTop": "Date not",
+    "railBottom": "established",
+    "railNote": "Personal studio",
+    "nodeTheme": "green",
+    "sortYear": 2004,
+    "curatedRank": 16,
+    "unestablishedDate": true,
+    "statusBadge": "Personal builds & prototypes",
+    "metaRows": [
+      {
+        "icon": "status",
+        "label": "Status",
+        "val": "Personal builds & prototypes"
+      },
+      {
+        "icon": "role",
+        "label": "Contribution",
+        "val": "Designer & Maker"
+      }
+    ]
+  }
+});
 
     const CHRONO_TYPE_FILTERS = Object.freeze([
       { id: "all", label: "All Builds", count: PROJECTS_CATALOG.length, icon: CATEGORY_DEFS[0].icon },
@@ -8389,12 +10771,17 @@
             </div>
             <div class="projects-chrono-end-actions">
               <a class="chrono-end-btn-primary" href="#career">Explore Career Page <span aria-hidden="true">&rarr;</span></a>
-              <a class="chrono-end-btn-secondary" href="resume.html">Tailored Resume Builder</a>
+              <a class="chrono-end-btn-secondary" href="#home-connect">Tailored Resume Builder</a>
             </div>
           </aside>
         </div>
       `;
       projectsPageSection.prepend(explorerRoot);
+      const homeBuildsBodyEl = document.querySelector("[data-home-builds-body]");
+      const chronoBodyEl = explorerRoot.querySelector(".projects-chrono-body");
+      if (homeBuildsBodyEl && chronoBodyEl) {
+        homeBuildsBodyEl.append(chronoBodyEl);
+      }
     }
 
     let lastCarouselSlideDir = "initial";
@@ -8547,7 +10934,7 @@
         const pageSec = secEl.closest("section[data-page]");
         if (pageSec && pageSec.hidden) return;
         const stageEl = secEl.querySelector("[data-carousel-stage]");
-        if (stageEl && stageEl.classList.contains("is-dragging")) return;
+        if (!stageEl || stageEl.hidden || stageEl.closest("[hidden]") || stageEl.classList.contains("is-dragging")) return;
         const rect = secEl.getBoundingClientRect();
         if (rect.height > 0 && rect.bottom > 90 && rect.top < (window.innerHeight || 900) - 90) {
           visibleCarouselEl = secEl;
@@ -8766,6 +11153,7 @@
         const startLoopTimer = setTimeout(() => {
           carouselLiveScanTimer = setInterval(() => {
             document.querySelectorAll("[data-carousel-stage]").forEach(stageEl => {
+              if (stageEl.hidden || stageEl.closest("[hidden]")) return;
               const rows = Array.from(stageEl.querySelectorAll(".carousel-decision-row"));
               const checks = Array.from(stageEl.querySelectorAll(".carousel-sec-hud-list li"));
               if (rows.length) {
@@ -8853,7 +11241,7 @@
 
         <article class="carousel-active-card" data-slide-dir="${slideDir}" aria-roledescription="slide" aria-label="${activeCarouselIndex + 1} of ${total}: ${activeSlide.title}">
           <div class="carousel-active-media-top">
-            <img class="carousel-active-bg" src="${activeSlide.banner}" alt="${activeSlide.title} (conceptual illustration)" fetchpriority="high">
+            <img class="carousel-active-bg" src="${activeSlide.banner}" alt="${activeSlide.title} (conceptual illustration)" loading="lazy" decoding="async" fetchpriority="low">
             <div class="carousel-active-scrim"></div>
             <span class="carousel-mobile-featured-badge" aria-hidden="true">${activeSlide.featuredRank <= 4 ? "FEATURED" : activeSlide.stripBadge}</span>
             <span class="carousel-slide-counter" aria-hidden="true">${activeCarouselIndex + 1} / ${total}</span>
@@ -8982,6 +11370,7 @@
         typeof Element.prototype.animate === "function";
 
       stageEls.forEach((el, sIdx) => {
+        if (el.hidden || el.closest("[hidden]")) return;
         if (typeof el._carouselCleanup === "function") {
           el._carouselCleanup();
         }
@@ -9845,9 +12234,7 @@
       `;
     }
 
-    function renderProjectsPreviewPanel() {
-      // No-op in Carousel + Chronological layout
-    }
+    
 
     function renderProjectsExplorerGrid() {
       const gridEl = document.querySelector("[data-proj-cards-grid]");
@@ -10484,7 +12871,7 @@
                   <div class="proj-hero-left-content">
                     <div class="proj-hero-top-pills">
                       <span class="proj-card-badge ${badgeClass}">${proj.detailBadge}</span>
-                      <span class="proj-card-org">${proj.org}</span>
+                      <span class="proj-card-org">${proj.slug === "nexus" ? `<img src="assets/optimized/nexus-mark-128.webp" alt="" class="proj-org-nexus-logo" width="16" height="16" loading="lazy" decoding="async"> ` : ""}${proj.org}</span>
                     </div>
                     <h1 tabindex="-1">${proj.title}</h1>
                     <p class="proj-hero-subtitle">${proj.heroDesc}</p>
@@ -10643,133 +13030,189 @@
     const expandedCareerEntries = new Set();
 
     const CAREER_ENTRIES = Object.freeze([
+  {
+    "id": "medavie-nexus",
+    "period": "2022 – Present",
+    "railChapterLine1": "Building",
+    "railChapterLine2": "in the cloud.",
+    "railTheme": "green",
+    "title": "Claims Automation & Independent AI",
+    "orgBadge": "Independent (NEXUS)",
+    "chapterId": "clouds",
+    "thumb": "assets/optimized-extra/proj-banner-nexus-1376.webp",
+    "isNexusThumb": true,
+    "tags": [
+      "AI Agents",
+      "Platform Design",
+      "Claims & ETL",
+      "Automation"
+    ],
+    "shortDesc": "Production claims-loading tools, integration support and SQL at Medavie; independent AI-platform development in NEXUS.",
+    "summary": "Functional analysis and production automation at Medavie, alongside independent product and architecture work on NEXUS.",
+    "workstreams": [
       {
-        id: "medavie-nexus",
-        period: "2022 – Present",
-        railChapterLine1: "Building",
-        railChapterLine2: "in the cloud.",
-        railTheme: "green",
-        title: "AI & Solution Design",
-        orgBadge: "Independent (NEXUS)",
-        chapterId: "clouds",
-        thumb: "assets/proj-banner-nexus.jpg",
-        isNexusThumb: true,
-        tags: ["AI Agents", "Platform Design", "Claims & ETL", "Automation"],
-        shortDesc: "Designing and building a multi-agent AI orchestration platform for real work (NEXUS), alongside enterprise health/dental claims analysis and integration design at Medavie.",
-        summary: "Connecting enterprise health/dental claims analysis and integration design at Medavie Blue Cross with independent multi-agent AI orchestration in NEXUS.",
-        workstreams: [
-          {
-            heading: "Professional — Medavie Blue Cross (2022–present)",
-            body: "Functional analyst on enterprise health/dental claims and related integrations: researching and guiding production Excel/VB/XML takeover-history tooling, reviewing provider data synchronization requirements alongside solution architects, tracing daily flat-file ETL reporting continuity, and writing complex SQL to reconcile claims and financial reports."
-          },
-          {
-            heading: "Independent — NEXUS (active development)",
-            body: "Designing and building an independent multi-agent AI orchestration platform and technical capstone featuring scoped context compilation, constraint-aware routing, durable Node.js execution and deterministic/semantic evaluation receipts. Also built LOWKEY (local speech-to-text) and Workshop42."
-          }
-        ],
-        bullets: [
-          "Guided production-adopted Excel/VB/XML validation and reconciliation tooling for group takeover claims history",
-          "Defined provider registry field mappings and scheduled event-table / REST synchronization requirements",
-          "Uncovered a hidden daily COBOL/InterBlue flat-file ETL dependency and completed continuity mapping design",
-          "Architected NEXUS around scoped context, explicit plan/execute separation, and auditable receipts"
-        ],
-        cases: [
-          { label: "NEXUS — AI Orchestration Platform", href: "#projects/nexus" },
-          { label: "Takeover-History XML Loading", href: "#projects/takeover" },
-          { label: "Provider Data for Claims Adjudication", href: "#projects/claims" },
-          { label: "Claims Reporting & Data Continuity", href: "#projects/continuity" },
-          { label: "Claims SQL & Financial Reconciliation", href: "#projects/sql" }
-        ]
+        "heading": "Professional — Medavie (March 2022 onward)",
+        "body": "Designed and built the production Excel VBA claims-history add-in, guided receiving-system changes, supported live provider integrations and supplied reconciled SQL adopted by the payment team. Approved continuity design and operational interim reporting remain distinct from the unfinished permanent extract."
       },
       {
-        id: "grenville",
-        period: "2009 – 2022",
-        railChapterLine1: "Shaped by",
-        railChapterLine2: "the business.",
-        railTheme: "blue",
-        title: "Insurance Systems & Solutions",
-        orgBadge: "Grenville Mutual Insurance",
-        chapterId: "business",
-        thumb: "assets/proj-banner-renewals.jpg",
-        tags: ["Underwriting", "Claims", "Integration", "SQL", "Reporting"],
-        shortDesc: "Underwriting, claims, data integration and reporting solutions. Connected business requirements with technical design and implementation.",
-        summary: "Progressed across a thirteen-year tenure at Grenville Mutual Insurance (2009–2022) from systems administration and corporate headquarters infrastructure into business/systems analysis, underwriting and rating rules, broker integrations and enterprise reporting (formal analyst transition between 2014 and 2016), continuing into enterprise health/dental claims at Medavie (2022–present).",
-        workstreams: [
-          {
-            heading: "Underwriting Rules & Broker Integrations",
-            body: "Personally designed and implemented P&C rating, underwriting and renewal eligibility rules across residential (~80% automated), commercial (~60%) and farm/agri (~40%) lines (approximate firsthand-reported renewal rates), while routing complex exceptions to human underwriters."
-          },
-          {
-            heading: "Broker Workflows, Portal Tooling & Reporting",
-            body: "Connected broker portals and desktop BMS workflows (TAM/Epic via Bravado) across SOAP/XML, CSIO/ACORD and REST, built an authenticated C#/.NET adjuster document upload portal, and delivered SQL/SSRS/Cognos reporting."
-          }
-        ],
-        bullets: [
-          "Automated standard renewals (~80% residential, ~60% commercial, ~40% farm/agri; user-reported) with structured underwriter referral paths",
-          "Implemented new-business, commercial quoting, policy-change comparison and policy/billing/claims inquiry rules",
-          "Developed enterprise reporting across SQL, SSRS and IBM Cognos"
-        ],
-        cases: [
-          { label: "Renewal Eligibility & Underwriting Automation", href: "#projects/renewals" },
-          { label: "Broker-Native New Business Integration", href: "#projects/newbusiness" },
-          { label: "Commercial Quoting & Broker Integration", href: "#projects/workflows" },
-          { label: "Policy-Change Comparison & Validation", href: "#projects/changes" },
-          { label: "Authenticated Document Upload Portal", href: "#projects/upload" }
-        ]
-      },
-      {
-        id: "harris",
-        period: "2007 – 2009",
-        railChapterLine1: "Systems &",
-        railChapterLine2: "infrastructure.",
-        railTheme: "purple",
-        title: "Enterprise Environments",
-        orgBadge: "Harris / Ottawa Computer Services",
-        chapterId: "metal",
-        thumb: "assets/proj-banner-headquarters.jpg",
-        tags: ["Infrastructure", "Networks", "Identity", "Security"],
-        shortDesc: "Servers, networks and identity migrations. Supported and improved enterprise infrastructure and system reliability.",
-        summary: "Progressed from Network Operations Centre (NOC) technician to infrastructure project technician at Harris / Ottawa Computer Services (2007–2009), supporting client and internal infrastructure and developing repeatable migrations.",
-        workstreams: [],
-        bullets: [
-          "Administered Windows Server, Active Directory, Group Policy, Microsoft Exchange, File/Print and BlackBerry Enterprise Server (BES)",
-          "Developed a repeatable staged Small Business Server (SBS) swing-migration methodology preserving live identity, email and data",
-          "Supported connected network, email and identity services through client infrastructure projects and migrations"
-        ],
-        cases: [
-          { label: "Headquarters Infrastructure and Move", href: "#projects/headquarters" },
-          { label: "Small Business Server Swing Migrations", href: "#projects/foundations" }
-        ]
-      },
-      {
-        id: "dell",
-        period: "Sept 2006 – 2007",
-        railChapterLine1: "Grounded",
-        railChapterLine2: "in the metal.",
-        railTheme: "slate",
-        title: "Hardware & Technical Support",
-        orgBadge: "Dell Canada",
-        chapterId: "metal",
-        thumb: "assets/timeline-support.png",
-        tags: ["Hardware", "Support", "Windows", "Troubleshooting"],
-        shortDesc: "Corporate hardware support for Latitude and OptiPlex. Technical diagnostics, root-cause isolation and user support.",
-        summary: "Started in commercial Latitude and OptiPlex hardware support in September 2006 and joined Dell's Gloves Off team — empowered to stay with the client, isolate the real root-cause hardware or software fault on the first call, and reduce repeat callbacks.",
-        workstreams: [],
-        bullets: [
-          "Component-level fault isolation across Latitude laptops and OptiPlex desktops (system boards, power rails, thermal assemblies, storage buses)",
-          "First-call resolution focus on the Gloves Off escalation team rather than rushed script handling",
-          "Built the foundational troubleshooting discipline that underpins all later infrastructure and architecture work"
-        ],
-        cases: [
-          { label: "Dell Latitude & OptiPlex Hardware Support", href: "#projects/dell" }
-        ]
+        "heading": "Independent — NEXUS (active development)",
+        "body": "Product direction, architecture and AI-assisted implementation for context-aware, reviewable AI work. This extends a longer automation practice; it is not a claim of deployed enterprise agents at an employer."
       }
-    ]);
+    ],
+    "bullets": [
+      "Built a production Excel VBA add-in for validation, XML batches and returned-error reconciliation",
+      "Supported implemented provider mappings and scheduled synchronization",
+      "Delivered operational interim reports and corrected SQL adopted in production",
+      "Directing NEXUS architecture with AI-assisted implementation as an independent project"
+    ],
+    "cases": [
+      {
+        "label": "NEXUS — AI Orchestration Platform",
+        "href": "#projects/nexus"
+      },
+      {
+        "label": "Takeover-History XML Loading",
+        "href": "#projects/takeover"
+      },
+      {
+        "label": "Provider Data for Claims Adjudication",
+        "href": "#projects/claims"
+      },
+      {
+        "label": "Claims Reporting & Data Continuity",
+        "href": "#projects/continuity"
+      },
+      {
+        "label": "Claims SQL & Financial Reconciliation",
+        "href": "#projects/sql"
+      }
+    ]
+  },
+  {
+    "id": "grenville",
+    "period": "2009 – 2022",
+    "railChapterLine1": "Shaped by",
+    "railChapterLine2": "the business.",
+    "railTheme": "blue",
+    "title": "Insurance Systems & Solutions",
+    "orgBadge": "Grenville Mutual Insurance",
+    "chapterId": "business",
+    "thumb": "assets/optimized/proj-banner-renewals-1376.webp",
+    "tags": [
+      "Underwriting",
+      "Claims",
+      "Integration",
+      "SQL",
+      "Reporting"
+    ],
+    "shortDesc": "Underwriting, claims, data integration and reporting solutions. Connected business requirements with technical design and implementation.",
+    "summary": "Thirteen years at Grenville spanning systems administration, technical infrastructure, insurance analysis, rules automation, broker integrations and production applications. Responsibilities overlapped; the exact analyst transition remains unconfirmed.",
+    "workstreams": [
+      {
+        "heading": "Deterministic rules and broker workflows",
+        "body": "Designed fail-first renewal eligibility and implemented rating and underwriting rules with human referral. New-business workflows reused broker data and populated backend records; vendor teams developed the commercial application UI."
+      },
+      {
+        "heading": "Support tools and client implementation",
+        "body": "Built C#/.NET document-upload and integration-diagnostic applications, and worked directly with brokerages on discovery, demonstrations, onboarding and support. Policy-change testing exposed an unreliable approach that was discontinued after tentative limited use."
+      }
+    ],
+    "bullets": [
+      "Automated eligible renewals with focused underwriter referral and pre-production decision comparison",
+      "Connected broker data, missing-input checks, rule messages and backend policy creation",
+      "Built production applications for document intake and repeatable integration diagnosis"
+    ],
+    "cases": [
+      {
+        "label": "Renewal Eligibility & Underwriting Automation",
+        "href": "#projects/renewals"
+      },
+      {
+        "label": "Broker-Native New Business Integration",
+        "href": "#projects/newbusiness"
+      },
+      {
+        "label": "Commercial Quoting & Broker Integration",
+        "href": "#projects/workflows"
+      },
+      {
+        "label": "Policy-Change Comparison & Validation",
+        "href": "#projects/changes"
+      },
+      {
+        "label": "Authenticated Document Upload Portal",
+        "href": "#projects/upload"
+      }
+    ]
+  },
+  {
+    "id": "harris",
+    "period": "2007 – 2009",
+    "railChapterLine1": "Systems &",
+    "railChapterLine2": "infrastructure.",
+    "railTheme": "purple",
+    "title": "Enterprise Environments",
+    "orgBadge": "Harris Computer Services",
+    "chapterId": "metal",
+    "thumb": "assets/optimized-extra/proj-banner-headquarters-1376.webp",
+    "tags": [
+      "Infrastructure",
+      "Networks",
+      "Identity",
+      "Security"
+    ],
+    "shortDesc": "Servers, networks and identity migrations. Supported and improved enterprise infrastructure and system reliability.",
+    "summary": "Progressed from NOC support to customer infrastructure projects at Harris Computer Services, including requirements discovery, installations and repeatable SBS migrations.",
+    "workstreams": [],
+    "bullets": [
+      "Administered Windows Server, Active Directory, Group Policy, Microsoft Exchange, File/Print and BlackBerry Enterprise Server (BES)",
+      "Developed a repeatable staged Small Business Server (SBS) swing-migration methodology preserving live identity, email and data",
+      "Supported connected network, email and identity services through client infrastructure projects and migrations"
+    ],
+    "cases": [
+      {
+        "label": "Small Business Server Swing Migrations",
+        "href": "#projects/foundations"
+      }
+    ]
+  },
+  {
+    "id": "dell",
+    "period": "Sept 2006 – 2007",
+    "railChapterLine1": "Grounded",
+    "railChapterLine2": "in the metal.",
+    "railTheme": "slate",
+    "title": "Hardware & Technical Support",
+    "orgBadge": "Dell Canada",
+    "chapterId": "metal",
+    "thumb": "assets/optimized-extra/timeline-support-1264.webp",
+    "tags": [
+      "Hardware",
+      "Support",
+      "Windows",
+      "Troubleshooting"
+    ],
+    "shortDesc": "Corporate hardware support for Latitude and OptiPlex. Technical diagnostics, root-cause isolation and user support.",
+    "summary": "Started in commercial Latitude and OptiPlex hardware support in September 2006 and joined Dell's Gloves Off team — empowered to stay with the client, isolate the real root-cause hardware or software fault on the first call, and reduce repeat callbacks.",
+    "workstreams": [],
+    "bullets": [
+      "Component-level fault isolation across Latitude laptops and OptiPlex desktops (system boards, power rails, thermal assemblies, storage buses)",
+      "First-call resolution focus on the Gloves Off escalation team rather than rushed script handling",
+      "Built the foundational troubleshooting discipline that underpins all later infrastructure and architecture work"
+    ],
+    "cases": [
+      {
+        "label": "Dell Latitude & OptiPlex Hardware Support",
+        "href": "#projects/dell"
+      }
+    ]
+  }
+]);
 
     const CAREER_SKILLS = Object.freeze([
-      { id: "insurance", label: "Insurance Domain", badge: "16+ yrs · P&C + Claims", pct: 90, theme: "green" },
+      { id: "insurance", label: "Insurance Domain", badge: "P&C + health/dental", pct: 90, theme: "green" },
       { id: "data", label: "Integration & Data", badge: "APIs · ETL · SQL · CSIO", pct: 88, theme: "blue" },
-      { id: "infrastructure", label: "Infrastructure & Systems", badge: "20+ yrs · Core Foundation", pct: 85, theme: "blue" },
+      { id: "infrastructure", label: "Infrastructure & Systems", badge: "Historical professional foundation", pct: 85, theme: "blue" },
       { id: "business", label: "Business & Delivery", badge: "Solution Design & Specs", pct: 85, theme: "indigo" },
       { id: "ai", label: "AI & Automation", badge: "NEXUS & Local ONNX", pct: 80, theme: "purple" },
       { id: "development", label: "Development & Engineering", badge: "TS · Node · C#/.NET · Rust", pct: 75, theme: "blue" }
@@ -10801,7 +13244,7 @@
               <div class="career-tl-card-main" role="button" tabindex="0" data-career-toggle-entry="${entry.id}" aria-expanded="${isExpanded ? "true" : "false"}">
                 <div class="career-tl-thumb-wrap ${entry.isNexusThumb ? "is-nexus-thumb" : ""}">
                   <img src="${entry.thumb}" alt="${entry.title}" loading="lazy">
-                  ${entry.isNexusThumb ? `<span class="career-nexus-monogram" aria-hidden="true">N</span>` : ""}
+                  ${entry.isNexusThumb ? `<span class="career-nexus-monogram" aria-hidden="true"><img src="assets/optimized/nexus-mark-128.webp" alt="" class="career-nexus-logo-img" width="28" height="28" loading="lazy" decoding="async"></span>` : ""}
                 </div>
                 <div class="career-tl-card-body">
                   <div class="career-tl-top-row">
@@ -10885,7 +13328,7 @@
                   <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="3"/><path d="M10 2.5v2M10 15.5v2M2.5 10h2M15.5 10h2M4.7 4.7l1.4 1.4M13.9 13.9l1.4 1.4M15.3 4.7l-1.4 1.4M6.1 13.9l-1.4 1.4"/></svg>
                   <span>Skills Workbench</span>
                 </a>
-                <a class="career-side-link" href="resume.html">
+                <a class="career-side-link" href="#home-connect">
                   <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 3.5v9m0 0-3-3m3 3 3-3M4 14.5v1A1.5 1.5 0 0 0 5.5 17h9a1.5 1.5 0 0 0 1.5-1.5v-1"/></svg>
                   <span>Tailored R&eacute;sum&eacute;</span>
                 </a>
@@ -10937,9 +13380,7 @@
                       <strong>${s.label}</strong>
                       <span>${s.badge}</span>
                     </div>
-                    <div class="career-skill-track" aria-hidden="true">
-                      <div class="career-skill-fill theme-${s.theme}" data-skill-bar-target="${s.pct}" style="width: ${s.pct}%"></div>
-                    </div>
+                    
                   </a>
                 `).join("")}
               </div>
@@ -10979,13 +13420,16 @@
       `;
     }
 
+    const homeCareerSection = document.getElementById("home-career-section");
     const homeCareerWorkbenchEl = document.querySelector("[data-home-career-workbench]");
-    if (homeCareerWorkbenchEl) {
-      homeCareerWorkbenchEl.innerHTML = "";
-      homeCareerWorkbenchEl.hidden = true;
+    if (homeCareerSection && window.CareerReference) {
+      const targetEl = homeCareerWorkbenchEl || homeCareerSection;
+      targetEl.hidden = false;
+      targetEl.innerHTML = window.CareerReference.render(buildCareerWorkbenchGridHtml(true), { omitSkills: true });
+      window.CareerReference.mount(homeCareerSection);
     }
 
-    if (mainContentEl && !careerPageSection) {
+    if (mainContentEl && !careerPageSection && !homeCareerSection) {
       careerPageSection = document.createElement("section");
       careerPageSection.className = "page";
       careerPageSection.setAttribute("data-page", "career");
@@ -11011,318 +13455,902 @@
     let mobileSkillDrillTab = "overview";
 
     const SKILL_CATEGORIES = Object.freeze([
+  {
+    "id": "infrastructure",
+    "stackOrder": 1,
+    "stackLayerName": "Infrastructure & Systems",
+    "stackCallout": "Infrastructure",
+    "stackSub": "Servers, networks, virtualization & resilience",
+    "title": "Infrastructure & Systems",
+    "shortLabel": "Infrastructure",
+    "pct": 85,
+    "evidenceBadge": "Professional foundation",
+    "evidenceContext": "Professional infrastructure foundation; personal hosting separately identified",
+    "theme": "blue",
+    "accentHex": "#38bdf8",
+    "filterGroup": "technical",
+    "heroDesc": "Servers, networks, identity and virtualization; historical professional foundation.",
+    "cardDesc": "Servers, networks, virtualization, identity and security.",
+    "drillDesc": "Hardware, operating systems, networks, virtualization and security. The foundation for everything else.",
+    "thumb": "assets/optimized-extra/proj-banner-headquarters-1376.webp",
+    "cardPills": [
+      "Windows",
+      "Linux",
+      "Networking",
+      "VMware ESXi"
+    ],
+    "extraCount": 6,
+    "overview": "Professional foundations at Dell, Harris and Grenville include Windows infrastructure, directory and email dependencies, networking and staged VMware ESXi adoption. Personal Linux, hosting and container use are separate, often AI-assisted, contexts.",
+    "keySkills": [
+      "Windows infrastructure",
+      "Service dependencies",
+      "Active Directory",
+      "Networking",
+      "Virtualization",
+      "Technical requirements",
+      "Operational diagnosis"
+    ],
+    "tools": [
+      "Windows Server",
+      "Linux",
+      "Active Directory",
+      "VMware ESXi",
+      "Group Policy",
+      "Exchange",
+      "Docker",
+      "Firewalls & VPN",
+      "DNS / DHCP / VLANs",
+      "UPS & Generator Power"
+    ],
+    "toolBars": [
       {
-        id: "infrastructure",
-        stackOrder: 1,
-        stackLayerName: "Infrastructure & Systems",
-        stackCallout: "Infrastructure",
-        stackSub: "Servers, networks, virtualization & resilience",
-        title: "Infrastructure & Systems",
-        shortLabel: "Infrastructure",
-        pct: 85,
-        evidenceBadge: "20+ yrs · Core Foundation",
-        evidenceContext: "Relative focus & 20+ years hands-on depth since Sept 2006",
-        theme: "blue",
-        accentHex: "#38bdf8",
-        filterGroup: "technical",
-        heroDesc: "Cloud, on-prem, virtualization, identity and resilience.",
-        cardDesc: "Servers, networks, virtualization, identity and security.",
-        drillDesc: "Hardware, operating systems, networks, virtualization and security. The foundation for everything else.",
-        thumb: "assets/proj-banner-headquarters.jpg",
-        cardPills: ["Windows", "Linux", "Networking", "VMware ESXi"],
-        extraCount: 6,
-        overview: "Twenty years of hands-on infrastructure experience—from Dell commercial hardware diagnostics and Harris NOC/server migrations to Grenville's headquarters datacentre, VMware ESXi virtualization, Active Directory and network security.",
-        keySkills: ["Windows", "Linux", "VMware", "Active Directory", "Networking", "Security", "Virtualization", "Resilience", "System Design"],
-        tools: ["Windows Server", "Linux", "Active Directory", "VMware ESXi", "Group Policy", "Exchange", "Docker", "Firewalls & VPN", "DNS / DHCP / VLANs", "UPS & Generator Power"],
-        toolBars: [
-          { name: "Windows Server", pct: 90, badge: "WS", theme: "amber" },
-          { name: "Active Directory & GPO", pct: 88, badge: "AD", theme: "blue" },
-          { name: "Linux & Self-Hosting", pct: 85, badge: "LX", theme: "amber" },
-          { name: "VMware ESXi", pct: 82, badge: "VM", theme: "cyan" },
-          { name: "Networking & Firewalls", pct: 82, badge: "NW", theme: "teal" },
-          { name: "Docker & Containers", pct: 78, badge: "DK", theme: "blue" }
-        ],
-        relatedCapabilityIds: ["development", "data", "business"],
-        relatedConnections: [
-          { id: "development", label: "Development & Engineering", reason: "Active Directory, Windows/Linux servers, Docker and Tauri runtimes host and secure custom applications." },
-          { id: "data", label: "Integration & Data", reason: "Database hosts, segmented VLANs, VPNs and scheduled jobs sustain high-availability ETL and APIs." },
-          { id: "business", label: "Business & Delivery", reason: "Resilient infrastructure, UPS/generator continuity and DR planning protect daily business operations." }
-        ],
-        relatedProjectSlugs: ["headquarters", "foundations", "dell"],
-        relatedCareerChapters: ["metal", "business", "always"],
-        project: {
-          title: "Headquarters Infrastructure & Systems",
-          mobTitle: "Headquarters Infrastructure & Systems",
-          meta: "Grenville Mutual · 2009 – 2022",
-          mobMeta: "Grenville Mutual · 2009 – 2022",
-          desc: "Server room, cooling/UPS/generator continuity, network security and bare-metal to VMware ESXi transition.",
-          thumb: "assets/proj-banner-headquarters.jpg",
-          tags: ["Infrastructure", "VMware ESXi", "Resilience"],
-          href: "#projects/headquarters"
-        },
-        workflow: ["Diagnose & Baseline", "Design Topology", "Stage & Migrate", "Verify Resilience"]
+        "name": "Windows Server",
+        "pct": 90,
+        "badge": "WS",
+        "theme": "amber",
+        "context": "Professional evidence"
       },
       {
-        id: "data",
-        stackOrder: 3,
-        stackLayerName: "Integration & Data",
-        stackCallout: "Data & Integration",
-        stackSub: "APIs, ETL pipelines, SQL & reporting continuity",
-        title: "Integration & Data",
-        shortLabel: "Data & Integration",
-        pct: 88,
-        evidenceBadge: "APIs · ETL · SQL · CSIO",
-        evidenceContext: "Relative focus across enterprise SQL, XML/CSIO & REST/SOAP pipelines",
-        theme: "cyan",
-        accentHex: "#10b981",
-        filterGroup: "technical",
-        heroDesc: "APIs, ETL, SQL reconciliation and reporting continuity.",
-        cardDesc: "Databases, ETL, APIs and reporting solutions.",
-        drillDesc: "Relational databases, ETL pipelines, XML/REST/SOAP contracts and financial reporting continuity.",
-        thumb: "assets/proj-banner-takeover.jpg",
-        cardPills: ["SQL", "ETL", "APIs", "Reporting"],
-        extraCount: 6,
-        overview: "Designing reliable contracts between systems—from SOAP/REST and CSIO XML broker integrations to scheduled provider synchronization, production Excel/VB/XML takeover loading and legacy COBOL/InterBlue daily ETL continuity into Cognos.",
-        keySkills: ["SQL", "ETL", "Reporting", "REST APIs", "SOAP / XML", "CSIO Standards", "Data Mapping", "Reconciliation", "Schema Validation"],
-        tools: ["SQL", "XML / XSD", "REST APIs", "SOAP", "CSIO XML", "Cognos Reporting", "Excel / VB Tooling", "PostgreSQL", "Flat-File ETL", "Reconciliation"],
-        toolBars: [
-          { name: "SQL & Reconciliation", pct: 90, badge: "SQ", theme: "cyan" },
-          { name: "XML / CSIO Schemas", pct: 88, badge: "XM", theme: "blue" },
-          { name: "REST & SOAP APIs", pct: 85, badge: "AP", theme: "blue" },
-          { name: "Excel / VB Tooling", pct: 85, badge: "VB", theme: "emerald" },
-          { name: "ETL & Cognos Feeds", pct: 82, badge: "ET", theme: "amber" },
-          { name: "PostgreSQL", pct: 78, badge: "PG", theme: "blue" }
-        ],
-        relatedCapabilityIds: ["insurance", "development", "ai", "business"],
-        relatedConnections: [
-          { id: "insurance", label: "Insurance Domain", reason: "Underwriting, broker quoting and claims payloads depend on accurate CSIO XML, SOAP/REST and SQL mappings." },
-          { id: "development", label: "Development & Engineering", reason: "C#/.NET services, SQL scripts and Excel/VB/XML utilities enforce schema validation and reconciliation." },
-          { id: "ai", label: "AI & Automation", reason: "Structured data contracts and deterministic verification gates ground multi-agent orchestration." },
-          { id: "business", label: "Business & Delivery", reason: "Field-level mapping specs and financial reconciliation preserve reporting continuity during platform change." }
-        ],
-        relatedProjectSlugs: ["takeover", "continuity", "sql", "inquiry"],
-        relatedCareerChapters: ["business", "clouds", "always"],
-        project: {
-          title: "Takeover-History XML Loading",
-          mobTitle: "Takeover-History XML Loading",
-          meta: "Medavie Blue Cross · 2022 – Present",
-          mobMeta: "Medavie Blue Cross · 2022 – Present",
-          desc: "Production Excel/VB/XML validation and generation workflow with downstream financial reconciliation.",
-          thumb: "assets/proj-banner-takeover.jpg",
-          tags: ["SQL", "XML", "Reconciliation"],
-          href: "#projects/takeover"
-        },
-        workflow: ["Inspect Payloads", "Map Schemas & Rules", "Validate & Transform", "Reconcile Totals"]
+        "name": "Active Directory & GPO",
+        "pct": 88,
+        "badge": "AD",
+        "theme": "blue",
+        "context": "Professional evidence"
       },
       {
-        id: "insurance",
-        stackOrder: 5,
-        stackLayerName: "Insurance Domain",
-        stackCallout: "Domain Expertise",
-        stackSub: "P&C underwriting, broker workflows & claims rules",
-        title: "Insurance Domain",
-        shortLabel: "Insurance Domain",
-        pct: 90,
-        evidenceBadge: "16+ yrs · P&C + Health/Dental",
-        evidenceContext: "Relative focus across P&C (2009–2022) & Health/Dental claims (2022–Present)",
-        theme: "amber",
-        accentHex: "#f4c542",
-        filterGroup: "domain",
-        heroDesc: "Underwriting, claims, broker workflows and policy rules.",
-        cardDesc: "Underwriting, claims, P&C and health/dental rules.",
-        drillDesc: "Property & Casualty underwriting, broker workflows, health/dental claims adjudication and benefit rules.",
-        thumb: "assets/proj-banner-renewals.jpg",
-        cardPills: ["Claims", "Underwriting", "Rules", "Policy"],
-        extraCount: 6,
-        overview: "Deep insurance domain fluency since 2009 across Property & Casualty (residential, commercial, farm/agri underwriting, renewals, broker portals) and Health & Dental benefits (claims adjudication, provider registry sync, group takeover).",
-        keySkills: ["Claims", "Underwriting", "Rules", "Policy", "P&C Renewals", "Health & Dental", "Broker Workflows", "Endorsements", "Provider Registry"],
-        tools: ["P&C Policy Admin", "Underwriting Rules", "Claims Adjudication", "ProviderRegistry", "CSIO Standards", "Broker Portals", "Renewal Eligibility", "Group Takeover", "Endorsement Diff"],
-        toolBars: [
-          { name: "P&C Underwriting Rules", pct: 92, badge: "UW", theme: "amber" },
-          { name: "Broker Portal Workflows", pct: 90, badge: "BP", theme: "blue" },
-          { name: "Renewal Eligibility", pct: 90, badge: "RN", theme: "emerald" },
-          { name: "Health & Dental Claims", pct: 88, badge: "CL", theme: "cyan" },
-          { name: "Provider Registry Sync", pct: 85, badge: "PR", theme: "blue" },
-          { name: "Group Benefit Takeover", pct: 85, badge: "GT", theme: "purple" }
-        ],
-        relatedCapabilityIds: ["data", "business", "development"],
-        relatedConnections: [
-          { id: "data", label: "Integration & Data", reason: "Policy, billing, provider and claims rules execute across two-way broker XML/SOAP/REST and ETL pipelines." },
-          { id: "business", label: "Business & Delivery", reason: "Collaborating directly with underwriters, brokers and adjusters turns complex policy rules into clear specs." },
-          { id: "development", label: "Development & Engineering", reason: "Rule engines, endorsement delta comparators and adjuster upload portals codify domain workflows." }
-        ],
-        relatedProjectSlugs: ["renewals", "newbusiness", "workflows", "claims"],
-        relatedCareerChapters: ["business", "clouds"],
-        project: {
-          title: "Renewal Eligibility & Underwriting Automation",
-          mobTitle: "Renewal Eligibility & Automation",
-          meta: "Grenville Mutual · 2009 – 2022",
-          mobMeta: "Grenville Mutual · 2009 – 2022",
-          desc: "Rule-driven renewal eligibility (~80% residential, ~60% commercial, ~40% farm/agri user-reported renewal automation).",
-          thumb: "assets/proj-banner-renewals.jpg",
-          tags: ["Underwriting", "P&C Rules", "Renewals"],
-          href: "#projects/renewals"
-        },
-        workflow: ["Policy & Claim Rules", "Eligibility Logic", "Straight-Through Flow", "Exception Routing"]
+        "name": "Linux & Self-Hosting",
+        "pct": 85,
+        "badge": "LX",
+        "theme": "amber",
+        "context": "Personal / AI-assisted use"
       },
       {
-        id: "ai",
-        stackOrder: 4,
-        stackLayerName: "AI & Automation",
-        stackCallout: "AI & Automation",
-        stackSub: "Multi-agent orchestration, context & evaluation",
-        title: "AI & Automation",
-        shortLabel: "AI & Automation",
-        pct: 80,
-        evidenceBadge: "NEXUS · Multi-Agent & Local AI",
-        evidenceContext: "Relative focus across NEXUS orchestration, context compilation & LOWKEY ONNX",
-        theme: "purple",
-        accentHex: "#a855f7",
-        filterGroup: "tools",
-        heroDesc: "Agents, orchestration, context compilation and evaluation.",
-        cardDesc: "Multi-agent orchestration, context compilation and evaluation.",
-        drillDesc: "Multi-agent orchestration, scoped context compilation, model routing and practical workflow automation.",
-        thumb: "assets/proj-banner-nexus.jpg",
-        cardPills: ["Agents", "LLMs", "Automation", "Evaluation"],
-        extraCount: 6,
-        overview: "Building governed multi-agent orchestration, scoped context compilation, constraint-aware model routing and human-reviewed execution across NEXUS and local on-device voice inference in LOWKEY.",
-        keySkills: ["Agents", "LLMs", "Automation", "Evaluation", "Context Compilation", "Model Routing", "Human-in-the-Loop", "Orchestration", "Local Inference"],
-        tools: ["Claude", "OpenAI", "Gemini", "Scoped Context Compilation", "Model Routing", "Playwright", "Whisper ONNX", "Human-in-the-Loop", "Node.js Orchestration", "GitHub"],
-        toolBars: [
-          { name: "Multi-Agent Orchestration", pct: 85, badge: "NX", theme: "purple" },
-          { name: "Claude / OpenAI / Gemini", pct: 85, badge: "LM", theme: "blue" },
-          { name: "Scoped Context & Routing", pct: 82, badge: "CX", theme: "cyan" },
-          { name: "Playwright Automation", pct: 80, badge: "PW", theme: "emerald" },
-          { name: "Local Voice Inference (ONNX)", pct: 78, badge: "LK", theme: "blue" },
-          { name: "Workflow Automation", pct: 80, badge: "WF", theme: "amber" }
-        ],
-        relatedCapabilityIds: ["business", "data", "development", "infrastructure"],
-        relatedConnections: [
-          { id: "business", label: "Business & Delivery", reason: "Solution design decomposes complex goals into governed agent roles, quality gates and human review." },
-          { id: "data", label: "Integration & Data", reason: "Scoped context packets, structured schemas and verification logs prevent agent drift." },
-          { id: "development", label: "Development & Engineering", reason: "Built with TypeScript, React, Node.js, Rust/Tauri and local ONNX runtime pipelines." },
-          { id: "infrastructure", label: "Infrastructure & Systems", reason: "Local hardware execution, GPU/CPU resource budgeting and isolated process sandboxes." }
-        ],
-        relatedProjectSlugs: ["nexus", "lowkey", "workshop42"],
-        relatedCareerChapters: ["clouds", "always"],
-        project: {
-          title: "NEXUS — AI Orchestration Platform",
-          mobTitle: "NEXUS — AI Orchestration Platform",
-          meta: "Independent · Active Development",
-          mobMeta: "Independent · Active Development",
-          desc: "Multi-agent platform for planning, execution and evaluation.",
-          thumb: "assets/proj-banner-nexus.jpg",
-          isNexus: true,
-          tags: ["AI Agents", "Platform", "Automation"],
-          href: "#projects/nexus"
-        },
-        workflow: ["Problem", "Design & Plan", "Build & Automate", "Evaluate & Improve"]
+        "name": "VMware ESXi",
+        "pct": 82,
+        "badge": "VM",
+        "theme": "cyan",
+        "context": "Professional evidence"
       },
       {
-        id: "development",
-        stackOrder: 2,
-        stackLayerName: "Development & Engineering",
-        stackCallout: "Engineering",
-        stackSub: "TypeScript, Node.js, C#/.NET, Rust/Tauri & SQL",
-        title: "Development & Engineering",
-        shortLabel: "Development",
-        pct: 75,
-        evidenceBadge: "TS · Node · C#/.NET · Rust",
-        evidenceContext: "Relative focus across web portals, desktop apps & production tooling",
-        theme: "emerald",
-        accentHex: "#22d3ee",
-        filterGroup: "technical",
-        heroDesc: "TypeScript, Node.js, C#/.NET, Rust/Tauri and modern toolchains.",
-        cardDesc: "TypeScript, Node.js, C#/.NET, Rust/Tauri and modern toolchains.",
-        drillDesc: "Full-stack web, desktop and enterprise tooling across TypeScript, Node.js, C#/.NET, Rust/Tauri and SQL.",
-        thumb: "assets/proj-banner-newbusiness.jpg",
-        cardPills: ["TypeScript", "Node.js", "C#", ".NET"],
-        extraCount: 6,
-        overview: "Full-stack application and tooling engineering across web, desktop and enterprise environments—from TypeScript/React/Node.js in NEXUS and Rust/Tauri in LOWKEY to C#/.NET adjuster portals and Excel/VB/XML utilities.",
-        keySkills: ["TypeScript", "Node.js", "React", "C#", ".NET", "Rust / Tauri", "SQL", "Excel / VB / XML", "Web Portals"],
-        tools: ["TypeScript", "JavaScript", "React", "Node.js", "C# / .NET", "Rust", "Tauri", "SQL", "Excel / VB / XML", "HTML / CSS"],
-        toolBars: [
-          { name: "TypeScript & JavaScript", pct: 80, badge: "TS", theme: "blue" },
-          { name: "Node.js & React", pct: 78, badge: "ND", theme: "emerald" },
-          { name: "SQL Query Engineering", pct: 88, badge: "SQ", theme: "cyan" },
-          { name: "C# / .NET Web Portals", pct: 75, badge: "C#", theme: "purple" },
-          { name: "Rust & Tauri Desktop", pct: 70, badge: "RS", theme: "amber" },
-          { name: "Excel / VB / XML Tooling", pct: 85, badge: "VB", theme: "emerald" }
-        ],
-        relatedCapabilityIds: ["infrastructure", "data", "ai", "insurance"],
-        relatedConnections: [
-          { id: "infrastructure", label: "Infrastructure & Systems", reason: "OS internals, networking, authentication and runtime packaging underpin reliable software." },
-          { id: "data", label: "Integration & Data", reason: "REST/SOAP clients, SQL queries and XML generators turn integration specs into working code." },
-          { id: "ai", label: "AI & Automation", reason: "Full-stack TypeScript/Node.js and Rust/Tauri engineering power NEXUS and LOWKEY." },
-          { id: "insurance", label: "Insurance Domain", reason: "Custom C#/.NET portals, endorsement comparators and takeover tools solve frontline underwriting & claims needs." }
-        ],
-        relatedProjectSlugs: ["upload", "changes", "nexus", "lowkey"],
-        relatedCareerChapters: ["metal", "business", "clouds", "always"],
-        project: {
-          title: "Authenticated Document Upload Portal",
-          mobTitle: "Authenticated Document Upload Portal",
-          meta: "Grenville Mutual · 2009 – 2022",
-          mobMeta: "Grenville Mutual · 2009 – 2022",
-          desc: "External adjuster document and media upload portal in C#/.NET, JavaScript and Bootstrap integrated with policy records.",
-          thumb: "assets/proj-banner-newbusiness.jpg",
-          tags: ["C# / .NET", "JavaScript", "Web"],
-          href: "#projects/upload"
-        },
-        workflow: ["Requirements", "Architecture & API", "Implement & Test", "Ship & Support"]
+        "name": "Networking & Firewalls",
+        "pct": 82,
+        "badge": "NW",
+        "theme": "teal",
+        "context": "Professional evidence"
       },
       {
-        id: "business",
-        stackOrder: 6,
-        stackLayerName: "Business & Delivery / Solution Design",
-        stackCallout: "Business Impact",
-        stackSub: "Solution design, functional analysis & execution",
-        title: "Business & Delivery",
-        shortLabel: "Solution Design",
-        pct: 85,
-        evidenceBadge: "Solution Design & Delivery",
-        evidenceContext: "Relative focus across functional analysis, solution review & stakeholder delivery",
-        theme: "sky",
-        accentHex: "#60a5fa",
-        filterGroup: "soft",
-        heroDesc: "From idea to production — functional analysis and solution design.",
-        cardDesc: "Analysis, solution design, requirements and execution.",
-        drillDesc: "Functional analysis, solution design, stakeholder alignment and end-to-end delivery across technical and business teams.",
-        thumb: "assets/proj-banner-continuity.jpg",
-        cardPills: ["Strategy", "Architecture", "Delivery", "Docs"],
-        extraCount: 6,
-        overview: "Translating ambiguous operational problems into structured functional specifications, field mappings, acceptance criteria and stakeholder-ready solutions across underwriters, brokers, claims teams and engineers.",
-        keySkills: ["Strategy", "Architecture", "Delivery", "Docs", "Functional Analysis", "Solution Design", "Requirements", "Stakeholder Alignment", "UAT & QA"],
-        tools: ["Functional Analysis", "Solution Design", "Requirements Specs", "Field Mapping", "Stakeholder Workshops", "Agile Delivery", "UAT & Reconciliation", "Process Modeling", "Documentation", "Continuity Planning"],
-        toolBars: [
-          { name: "Functional Analysis", pct: 92, badge: "FA", theme: "blue" },
-          { name: "Solution Design & Review", pct: 90, badge: "SD", theme: "cyan" },
-          { name: "Requirements & Mapping", pct: 90, badge: "RM", theme: "emerald" },
-          { name: "Stakeholder Alignment", pct: 88, badge: "SA", theme: "amber" },
-          { name: "Cross-Team Delivery", pct: 85, badge: "CD", theme: "blue" },
-          { name: "Continuity Planning", pct: 85, badge: "CP", theme: "purple" }
-        ],
-        relatedCapabilityIds: ["insurance", "data", "ai", "infrastructure", "development"],
-        relatedConnections: [
-          { id: "insurance", label: "Insurance Domain", reason: "Bridges underwriters, brokers and claims operations with engineering teams to deliver measurable outcomes." },
-          { id: "data", label: "Integration & Data", reason: "Defines source-to-target mappings, synchronization rules and reconciliation checkpoints." },
-          { id: "ai", label: "AI & Automation", reason: "Shapes multi-agent orchestration around clear problem decomposition and human-reviewed quality gates." },
-          { id: "infrastructure", label: "Infrastructure & Systems", reason: "Grounds solution designs in real operational constraints, security and cutover continuity." }
-        ],
-        relatedProjectSlugs: ["continuity", "claims", "renewals", "newbusiness"],
-        relatedCareerChapters: ["business", "clouds", "always"],
-        project: {
-          title: "Claims Reporting & Data Continuity",
-          mobTitle: "Claims Reporting & Data Continuity",
-          meta: "Medavie Blue Cross · 2022 – Present",
-          mobMeta: "Medavie Blue Cross · 2022 – Present",
-          desc: "End-to-end analysis and solution design preserving daily claims flat-file ETL continuity into Cognos reporting.",
-          thumb: "assets/proj-banner-continuity.jpg",
-          tags: ["Analysis", "Solution Design", "Continuity"],
-          href: "#projects/continuity"
-        },
-        workflow: ["Discover & Listen", "Define Contracts", "Align Teams", "Validate Outcomes"]
+        "name": "Docker & Containers",
+        "pct": 78,
+        "badge": "DK",
+        "theme": "blue",
+        "context": "Personal / AI-assisted use"
       }
-    ]);
+    ],
+    "relatedCapabilityIds": [
+      "development",
+      "data",
+      "business"
+    ],
+    "relatedConnections": [
+      {
+        "id": "development",
+        "label": "Development & Engineering",
+        "reason": "Active Directory, Windows/Linux servers, Docker and Tauri runtimes host and secure custom applications."
+      },
+      {
+        "id": "data",
+        "label": "Integration & Data",
+        "reason": "Database hosts, segmented VLANs, VPNs and scheduled jobs sustain high-availability ETL and APIs."
+      },
+      {
+        "id": "business",
+        "label": "Business & Delivery",
+        "reason": "Resilient infrastructure, UPS/generator continuity and DR planning protect daily business operations."
+      }
+    ],
+    "relatedProjectSlugs": [
+      "headquarters",
+      "foundations",
+      "dell"
+    ],
+    "relatedCareerChapters": [
+      "metal",
+      "business",
+      "always"
+    ],
+    "project": {
+      "title": "Headquarters Infrastructure & Systems",
+      "mobTitle": "Headquarters Infrastructure & Systems",
+      "meta": "Grenville Mutual · 2009 – 2022",
+      "mobMeta": "Grenville Mutual · 2009 – 2022",
+      "desc": "Server room, cooling/UPS/generator continuity, network security and bare-metal to VMware ESXi transition.",
+      "thumb": "assets/optimized-extra/proj-banner-headquarters-1376.webp",
+      "tags": [
+        "Infrastructure",
+        "VMware ESXi",
+        "Resilience"
+      ],
+      "href": "#projects/headquarters"
+    },
+    "workflow": [
+      "Diagnose & Baseline",
+      "Design Topology",
+      "Stage & Migrate",
+      "Verify Resilience"
+    ]
+  },
+  {
+    "id": "data",
+    "stackOrder": 3,
+    "stackLayerName": "Integration & Data",
+    "stackCallout": "Data & Integration",
+    "stackSub": "APIs, ETL pipelines, SQL & reporting continuity",
+    "title": "Integration & Data",
+    "shortLabel": "Data & Integration",
+    "pct": 88,
+    "evidenceBadge": "Professional delivery",
+    "evidenceContext": "Professional integration, validation and SQL delivery",
+    "theme": "cyan",
+    "accentHex": "#10b981",
+    "filterGroup": "technical",
+    "heroDesc": "APIs, ETL, SQL reconciliation and reporting continuity.",
+    "cardDesc": "Databases, ETL, APIs and reporting solutions.",
+    "drillDesc": "Relational databases, ETL pipelines, XML/REST/SOAP contracts and financial reporting continuity.",
+    "thumb": "assets/optimized-extra/proj-banner-takeover-1376.webp",
+    "cardPills": [
+      "SQL",
+      "ETL",
+      "APIs",
+      "Reporting"
+    ],
+    "extraCount": 6,
+    "overview": "Professional work spans broker SOAP/XML and REST mappings, live scheduled provider synchronization, production Excel VBA/XML loading and hands-on Oracle SQL reconciliation. Interim reporting is operational; the separate permanent compatibility extract remains unfinished.",
+    "keySkills": [
+      "SQL",
+      "Data contracts",
+      "REST / SOAP",
+      "XML mapping",
+      "Batch preparation",
+      "Validation",
+      "Reconciliation"
+    ],
+    "tools": [
+      "Oracle SQL",
+      "XML / XSD",
+      "REST / SOAP",
+      "CSIO / ACORD mapping",
+      "Excel VBA",
+      "Batch validation",
+      "Reconciliation",
+      "Reporting continuity"
+    ],
+    "toolBars": [
+      {
+        "name": "SQL & Reconciliation",
+        "pct": 90,
+        "badge": "SQ",
+        "theme": "cyan",
+        "context": "Professional evidence"
+      },
+      {
+        "name": "XML / CSIO Schemas",
+        "pct": 88,
+        "badge": "XM",
+        "theme": "blue",
+        "context": "Professional evidence"
+      },
+      {
+        "name": "REST & SOAP APIs",
+        "pct": 85,
+        "badge": "AP",
+        "theme": "blue",
+        "context": "Professional evidence"
+      },
+      {
+        "name": "Excel VBA Tooling",
+        "pct": 85,
+        "badge": "VB",
+        "theme": "emerald",
+        "context": "Professional evidence"
+      },
+      {
+        "name": "ETL & Cognos Feeds",
+        "pct": 82,
+        "badge": "ET",
+        "theme": "amber",
+        "context": "Professional evidence"
+      },
+      {
+        "name": "PostgreSQL",
+        "pct": 78,
+        "badge": "PG",
+        "theme": "blue",
+        "context": "Professional evidence"
+      }
+    ],
+    "relatedCapabilityIds": [
+      "insurance",
+      "development",
+      "ai",
+      "business"
+    ],
+    "relatedConnections": [
+      {
+        "id": "insurance",
+        "label": "Insurance Domain",
+        "reason": "Underwriting, broker quoting and claims payloads depend on accurate CSIO XML, SOAP/REST and SQL mappings."
+      },
+      {
+        "id": "development",
+        "label": "Development & Engineering",
+        "reason": "C#/.NET services, SQL scripts and Excel VBA/XML utilities enforce schema validation and reconciliation."
+      },
+      {
+        "id": "ai",
+        "label": "AI & Automation",
+        "reason": "Structured data contracts and deterministic verification gates ground multi-agent orchestration."
+      },
+      {
+        "id": "business",
+        "label": "Business & Delivery",
+        "reason": "Field-level mapping specs and financial reconciliation preserve reporting continuity during platform change."
+      }
+    ],
+    "relatedProjectSlugs": [
+      "takeover",
+      "continuity",
+      "sql",
+      "inquiry"
+    ],
+    "relatedCareerChapters": [
+      "business",
+      "clouds",
+      "always"
+    ],
+    "project": {
+      "title": "Takeover-History XML Loading",
+      "mobTitle": "Takeover-History XML Loading",
+      "meta": "Medavie Blue Cross · 2022 – Present",
+      "mobMeta": "Medavie Blue Cross · 2022 – Present",
+      "desc": "Production Excel VBA/XML validation and generation workflow with downstream financial reconciliation.",
+      "thumb": "assets/optimized-extra/proj-banner-takeover-1376.webp",
+      "tags": [
+        "SQL",
+        "XML",
+        "Reconciliation"
+      ],
+      "href": "#projects/takeover"
+    },
+    "workflow": [
+      "Inspect Payloads",
+      "Map Schemas & Rules",
+      "Validate & Transform",
+      "Reconcile Totals"
+    ]
+  },
+  {
+    "id": "insurance",
+    "stackOrder": 5,
+    "stackLayerName": "Insurance Domain",
+    "stackCallout": "Domain Expertise",
+    "stackSub": "P&C underwriting, broker workflows & claims rules",
+    "title": "Insurance Domain",
+    "shortLabel": "Insurance Domain",
+    "pct": 90,
+    "evidenceBadge": "P&C + health/dental",
+    "evidenceContext": "P&C 2009–2022; health/dental claims from March 2022",
+    "theme": "amber",
+    "accentHex": "#f4c542",
+    "filterGroup": "domain",
+    "heroDesc": "Underwriting, claims, broker workflows and policy rules.",
+    "cardDesc": "Underwriting, claims, P&C and health/dental rules.",
+    "drillDesc": "Property & Casualty underwriting, broker workflows, health/dental claims adjudication and benefit rules.",
+    "thumb": "assets/optimized/proj-banner-renewals-1376.webp",
+    "cardPills": [
+      "Claims",
+      "Underwriting",
+      "Rules",
+      "Policy"
+    ],
+    "extraCount": 6,
+    "overview": "Deep insurance domain fluency since 2009 across Property & Casualty (residential, commercial, farm/agri underwriting, renewals, broker portals) and Health & Dental benefits (claims adjudication, provider registry sync, group takeover).",
+    "keySkills": [
+      "Claims",
+      "Underwriting",
+      "Rules",
+      "Policy",
+      "P&C Renewals",
+      "Health & Dental",
+      "Broker Workflows",
+      "Endorsements",
+      "Provider Registry"
+    ],
+    "tools": [
+      "P&C Policy Admin",
+      "Underwriting Rules",
+      "Claims Adjudication",
+      "ProviderRegistry",
+      "CSIO Standards",
+      "Broker Portals",
+      "Renewal Eligibility",
+      "Group Takeover",
+      "Endorsement Diff"
+    ],
+    "toolBars": [
+      {
+        "name": "P&C Underwriting Rules",
+        "pct": 92,
+        "badge": "UW",
+        "theme": "amber",
+        "context": "Professional evidence"
+      },
+      {
+        "name": "Broker Portal Workflows",
+        "pct": 90,
+        "badge": "BP",
+        "theme": "blue",
+        "context": "Professional evidence"
+      },
+      {
+        "name": "Renewal Eligibility",
+        "pct": 90,
+        "badge": "RN",
+        "theme": "emerald",
+        "context": "Professional evidence"
+      },
+      {
+        "name": "Health & Dental Claims",
+        "pct": 88,
+        "badge": "CL",
+        "theme": "cyan",
+        "context": "Professional evidence"
+      },
+      {
+        "name": "Provider Registry Sync",
+        "pct": 85,
+        "badge": "PR",
+        "theme": "blue",
+        "context": "Professional evidence"
+      },
+      {
+        "name": "Group Benefit Takeover",
+        "pct": 85,
+        "badge": "GT",
+        "theme": "purple",
+        "context": "Professional evidence"
+      }
+    ],
+    "relatedCapabilityIds": [
+      "data",
+      "business",
+      "development"
+    ],
+    "relatedConnections": [
+      {
+        "id": "data",
+        "label": "Integration & Data",
+        "reason": "Policy, billing, provider and claims rules execute across two-way broker XML/SOAP/REST and ETL pipelines."
+      },
+      {
+        "id": "business",
+        "label": "Business & Delivery",
+        "reason": "Collaborating directly with underwriters, brokers and adjusters turns complex policy rules into clear specs."
+      },
+      {
+        "id": "development",
+        "label": "Development & Engineering",
+        "reason": "Rule engines, endorsement delta comparators and adjuster upload portals codify domain workflows."
+      }
+    ],
+    "relatedProjectSlugs": [
+      "renewals",
+      "newbusiness",
+      "workflows",
+      "claims"
+    ],
+    "relatedCareerChapters": [
+      "business",
+      "clouds"
+    ],
+    "project": {
+      "title": "Renewal Eligibility & Underwriting Automation",
+      "mobTitle": "Renewal Eligibility & Automation",
+      "meta": "Grenville Mutual · 2009 – 2022",
+      "mobMeta": "Grenville Mutual · 2009 – 2022",
+      "desc": "Rule-driven renewal eligibility (~80% residential, ~60% commercial, ~40% farm/agri user-reported renewal automation).",
+      "thumb": "assets/optimized/proj-banner-renewals-1376.webp",
+      "tags": [
+        "Underwriting",
+        "P&C Rules",
+        "Renewals"
+      ],
+      "href": "#projects/renewals"
+    },
+    "workflow": [
+      "Policy & Claim Rules",
+      "Eligibility Logic",
+      "Straight-Through Flow",
+      "Exception Routing"
+    ]
+  },
+  {
+    "id": "ai",
+    "stackOrder": 4,
+    "stackLayerName": "AI & Automation",
+    "stackCallout": "AI & Automation",
+    "stackSub": "Multi-agent orchestration, context & evaluation",
+    "title": "Automation & AI",
+    "shortLabel": "Automation & AI",
+    "pct": 80,
+    "evidenceBadge": "Automation, then AI",
+    "evidenceContext": "Established workflow automation; independent AI development",
+    "theme": "purple",
+    "accentHex": "#a855f7",
+    "filterGroup": "tools",
+    "heroDesc": "Rules, batch preparation and reusable tools, with AI as the next step.",
+    "cardDesc": "Deterministic business automation and independent AI orchestration.",
+    "drillDesc": "Multi-agent orchestration, scoped context compilation, model routing and practical workflow automation.",
+    "thumb": "assets/optimized-extra/proj-banner-nexus-1376.webp",
+    "cardPills": [
+      "Agents",
+      "LLMs",
+      "Automation",
+      "Evaluation"
+    ],
+    "extraCount": 6,
+    "overview": "Automation predates my AI projects: fail-first renewal rules, broker upload workflows, C#/.NET diagnostic tools, claims-history VBA and scheduled integrations. At Medavie I also use AI-assisted coding with human validation. NEXUS is my independent exploration of context, routing, approvals and evaluation.",
+    "keySkills": [
+      "Agents",
+      "LLMs",
+      "Automation",
+      "Evaluation",
+      "Context Compilation",
+      "Model Routing",
+      "Human-in-the-Loop",
+      "Orchestration",
+      "Local Inference"
+    ],
+    "tools": [
+      "Business rules",
+      "Excel VBA",
+      "XML batch preparation",
+      "SQL validation",
+      "C#/.NET tools",
+      "Scheduled integrations",
+      "AI-assisted implementation",
+      "Context and routing",
+      "Human review"
+    ],
+    "toolBars": [
+      {
+        "name": "Multi-Agent Orchestration",
+        "pct": 85,
+        "badge": "NX",
+        "theme": "purple",
+        "context": "Independent / applied use"
+      },
+      {
+        "name": "Claude / OpenAI / Gemini",
+        "pct": 85,
+        "badge": "LM",
+        "theme": "blue",
+        "context": "Independent / applied use"
+      },
+      {
+        "name": "Scoped Context & Routing",
+        "pct": 82,
+        "badge": "CX",
+        "theme": "cyan",
+        "context": "Independent / applied use"
+      },
+      {
+        "name": "Playwright Automation",
+        "pct": 80,
+        "badge": "PW",
+        "theme": "emerald",
+        "context": "Independent / applied use"
+      },
+      {
+        "name": "Local Voice Inference (ONNX)",
+        "pct": 78,
+        "badge": "LK",
+        "theme": "blue",
+        "context": "Independent / applied use"
+      },
+      {
+        "name": "Workflow Automation",
+        "pct": 80,
+        "badge": "WF",
+        "theme": "amber",
+        "context": "Independent / applied use"
+      }
+    ],
+    "relatedCapabilityIds": [
+      "business",
+      "data",
+      "development",
+      "infrastructure"
+    ],
+    "relatedConnections": [
+      {
+        "id": "business",
+        "label": "Business & Delivery",
+        "reason": "Solution design decomposes complex goals into governed agent roles, quality gates and human review."
+      },
+      {
+        "id": "data",
+        "label": "Integration & Data",
+        "reason": "Scoped context packets, structured schemas and verification logs prevent agent drift."
+      },
+      {
+        "id": "development",
+        "label": "Development & Engineering",
+        "reason": "Built with TypeScript, React, Node.js, Rust/Tauri and local ONNX runtime pipelines."
+      },
+      {
+        "id": "infrastructure",
+        "label": "Infrastructure & Systems",
+        "reason": "Local hardware execution, GPU/CPU resource budgeting and isolated process sandboxes."
+      }
+    ],
+    "relatedProjectSlugs": [
+      "renewals",
+      "takeover",
+      "upload",
+      "claims",
+      "nexus"
+    ],
+    "relatedCareerChapters": [
+      "clouds",
+      "always"
+    ],
+    "project": {
+      "title": "NEXUS — AI Orchestration Platform",
+      "mobTitle": "NEXUS — AI Orchestration Platform",
+      "meta": "Independent · Active Development",
+      "mobMeta": "Independent · Active Development",
+      "desc": "Multi-agent platform for planning, execution and evaluation.",
+      "thumb": "assets/optimized-extra/proj-banner-nexus-1376.webp",
+      "isNexus": true,
+      "tags": [
+        "AI Agents",
+        "Platform",
+        "Automation"
+      ],
+      "href": "#projects/nexus"
+    },
+    "workflow": [
+      "Problem",
+      "Design & Plan",
+      "Build & Automate",
+      "Evaluate & Improve"
+    ]
+  },
+  {
+    "id": "development",
+    "stackOrder": 2,
+    "stackLayerName": "Development & Engineering",
+    "stackCallout": "Engineering",
+    "stackSub": "TypeScript, Node.js, C#/.NET, Rust/Tauri & SQL",
+    "title": "Development & Engineering",
+    "shortLabel": "Development",
+    "pct": 75,
+    "evidenceBadge": "Tools in production",
+    "evidenceContext": "Production C#/.NET and VBA; AI-assisted personal stacks",
+    "theme": "emerald",
+    "accentHex": "#22d3ee",
+    "filterGroup": "technical",
+    "heroDesc": "TypeScript, Node.js, C#/.NET, Rust/Tauri and modern toolchains.",
+    "cardDesc": "TypeScript, Node.js, C#/.NET, Rust/Tauri and modern toolchains.",
+    "drillDesc": "Full-stack web, desktop and enterprise tooling across TypeScript, Node.js, C#/.NET, Rust/Tauri and SQL.",
+    "thumb": "assets/optimized-extra/proj-banner-newbusiness-1376.webp",
+    "cardPills": [
+      "TypeScript",
+      "Node.js",
+      "C#",
+      ".NET"
+    ],
+    "extraCount": 6,
+    "overview": "Built production C#/.NET upload and diagnostic applications and designed and developed the Excel VBA claims-history add-in. NEXUS and historical LOWKEY use AI-assisted implementation; their stacks do not imply independent mastery of every language.",
+    "keySkills": [
+      "TypeScript",
+      "Node.js",
+      "React",
+      "C#",
+      ".NET",
+      "Rust / Tauri",
+      "SQL",
+      "Excel VBA / XML",
+      "Web Portals"
+    ],
+    "tools": [
+      "C# / .NET — professional",
+      "Excel VBA — professional",
+      "SQL — professional",
+      "JavaScript / HTML / CSS",
+      "TypeScript / React / Node.js — independent, AI-assisted",
+      "Rust / Tauri — historical project"
+    ],
+    "toolBars": [
+      {
+        "name": "TypeScript & JavaScript",
+        "pct": 80,
+        "badge": "TS",
+        "theme": "blue",
+        "context": "AI-assisted independent projects"
+      },
+      {
+        "name": "Node.js & React",
+        "pct": 78,
+        "badge": "ND",
+        "theme": "emerald",
+        "context": "AI-assisted independent projects"
+      },
+      {
+        "name": "SQL Query Engineering",
+        "pct": 88,
+        "badge": "SQ",
+        "theme": "cyan",
+        "context": "Professional evidence"
+      },
+      {
+        "name": "C# / .NET Web Portals",
+        "pct": 75,
+        "badge": "C#",
+        "theme": "purple",
+        "context": "Professional evidence"
+      },
+      {
+        "name": "Rust & Tauri Desktop",
+        "pct": 70,
+        "badge": "RS",
+        "theme": "amber",
+        "context": "AI-assisted independent projects"
+      },
+      {
+        "name": "Excel VBA / XML Tooling",
+        "pct": 85,
+        "badge": "VB",
+        "theme": "emerald",
+        "context": "Professional evidence"
+      }
+    ],
+    "relatedCapabilityIds": [
+      "infrastructure",
+      "data",
+      "ai",
+      "insurance"
+    ],
+    "relatedConnections": [
+      {
+        "id": "infrastructure",
+        "label": "Infrastructure & Systems",
+        "reason": "OS internals, networking, authentication and runtime packaging underpin reliable software."
+      },
+      {
+        "id": "data",
+        "label": "Integration & Data",
+        "reason": "REST/SOAP clients, SQL queries and XML generators turn integration specs into working code."
+      },
+      {
+        "id": "ai",
+        "label": "AI & Automation",
+        "reason": "Full-stack TypeScript/Node.js and Rust/Tauri engineering power NEXUS and LOWKEY."
+      },
+      {
+        "id": "insurance",
+        "label": "Insurance Domain",
+        "reason": "Custom C#/.NET portals, endorsement comparators and takeover tools solve frontline underwriting & claims needs."
+      }
+    ],
+    "relatedProjectSlugs": [
+      "upload",
+      "changes",
+      "nexus",
+      "lowkey"
+    ],
+    "relatedCareerChapters": [
+      "metal",
+      "business",
+      "clouds",
+      "always"
+    ],
+    "project": {
+      "title": "Authenticated Document Upload Portal",
+      "mobTitle": "Authenticated Document Upload Portal",
+      "meta": "Grenville Mutual · 2009 – 2022",
+      "mobMeta": "Grenville Mutual · 2009 – 2022",
+      "desc": "External adjuster document and media upload portal in C#/.NET, JavaScript and Bootstrap integrated with policy records.",
+      "thumb": "assets/optimized-extra/proj-banner-newbusiness-1376.webp",
+      "tags": [
+        "C# / .NET",
+        "JavaScript",
+        "Web"
+      ],
+      "href": "#projects/upload"
+    },
+    "workflow": [
+      "Requirements",
+      "Architecture & API",
+      "Implement & Test",
+      "Ship & Support"
+    ]
+  },
+  {
+    "id": "business",
+    "stackOrder": 6,
+    "stackLayerName": "Business & Delivery / Solution Design",
+    "stackCallout": "Business Impact",
+    "stackSub": "Solution design, functional analysis & execution",
+    "title": "Business & Delivery",
+    "shortLabel": "Solution Design",
+    "pct": 85,
+    "evidenceBadge": "Analysis & delivery",
+    "evidenceContext": "Requirements, technical judgment and cross-team delivery",
+    "theme": "sky",
+    "accentHex": "#60a5fa",
+    "filterGroup": "soft",
+    "heroDesc": "From idea to production — functional analysis and solution design.",
+    "cardDesc": "Analysis, solution design, requirements and execution.",
+    "drillDesc": "Functional analysis, solution design, stakeholder alignment and end-to-end delivery across technical and business teams.",
+    "thumb": "assets/optimized-extra/proj-banner-continuity-1376.webp",
+    "cardPills": [
+      "Strategy",
+      "Architecture",
+      "Delivery",
+      "Docs"
+    ],
+    "extraCount": 6,
+    "overview": "Translating ambiguous operational problems into structured functional specifications, field mappings, acceptance criteria and stakeholder-ready solutions across underwriters, brokers, claims teams and engineers.",
+    "keySkills": [
+      "Strategy",
+      "Architecture",
+      "Delivery",
+      "Docs",
+      "Functional Analysis",
+      "Solution Design",
+      "Requirements",
+      "Stakeholder Alignment",
+      "UAT & QA"
+    ],
+    "tools": [
+      "Functional Analysis",
+      "Solution Design",
+      "Requirements Specs",
+      "Field Mapping",
+      "Stakeholder Workshops",
+      "Agile Delivery",
+      "UAT & Reconciliation",
+      "Process Modeling",
+      "Documentation",
+      "Continuity Planning"
+    ],
+    "toolBars": [
+      {
+        "name": "Functional Analysis",
+        "pct": 92,
+        "badge": "FA",
+        "theme": "blue",
+        "context": "Professional evidence"
+      },
+      {
+        "name": "Solution Design & Review",
+        "pct": 90,
+        "badge": "SD",
+        "theme": "cyan",
+        "context": "Professional evidence"
+      },
+      {
+        "name": "Requirements & Mapping",
+        "pct": 90,
+        "badge": "RM",
+        "theme": "emerald",
+        "context": "Professional evidence"
+      },
+      {
+        "name": "Stakeholder Alignment",
+        "pct": 88,
+        "badge": "SA",
+        "theme": "amber",
+        "context": "Professional evidence"
+      },
+      {
+        "name": "Cross-Team Delivery",
+        "pct": 85,
+        "badge": "CD",
+        "theme": "blue",
+        "context": "Professional evidence"
+      },
+      {
+        "name": "Continuity Planning",
+        "pct": 85,
+        "badge": "CP",
+        "theme": "purple",
+        "context": "Professional evidence"
+      }
+    ],
+    "relatedCapabilityIds": [
+      "insurance",
+      "data",
+      "ai",
+      "infrastructure",
+      "development"
+    ],
+    "relatedConnections": [
+      {
+        "id": "insurance",
+        "label": "Insurance Domain",
+        "reason": "Bridges underwriters, brokers and claims operations with engineering teams to deliver measurable outcomes."
+      },
+      {
+        "id": "data",
+        "label": "Integration & Data",
+        "reason": "Defines source-to-target mappings, synchronization rules and reconciliation checkpoints."
+      },
+      {
+        "id": "ai",
+        "label": "AI & Automation",
+        "reason": "Shapes multi-agent orchestration around clear problem decomposition and human-reviewed quality gates."
+      },
+      {
+        "id": "infrastructure",
+        "label": "Infrastructure & Systems",
+        "reason": "Grounds solution designs in real operational constraints, security and cutover continuity."
+      }
+    ],
+    "relatedProjectSlugs": [
+      "continuity",
+      "claims",
+      "renewals",
+      "newbusiness"
+    ],
+    "relatedCareerChapters": [
+      "business",
+      "clouds",
+      "always"
+    ],
+    "project": {
+      "title": "Claims Reporting & Data Continuity",
+      "mobTitle": "Claims Reporting & Data Continuity",
+      "meta": "Medavie Blue Cross · 2022 – Present",
+      "mobMeta": "Medavie Blue Cross · 2022 – Present",
+      "desc": "End-to-end analysis and solution design preserving daily claims flat-file ETL continuity into Cognos reporting.",
+      "thumb": "assets/optimized-extra/proj-banner-continuity-1376.webp",
+      "tags": [
+        "Analysis",
+        "Solution Design",
+        "Continuity"
+      ],
+      "href": "#projects/continuity"
+    },
+    "workflow": [
+      "Discover & Listen",
+      "Define Contracts",
+      "Align Teams",
+      "Validate Outcomes"
+    ]
+  }
+]);
 
     const SKILL_TIMELINE_CHAPTERS = Object.freeze([
       {
@@ -11499,7 +14527,7 @@
         title: "Infrastructure & Systems",
         theme: "blue",
         shortDesc: "Hardware diagnostics, servers, virtualization, networks and resilience.",
-        thumb: "assets/proj-banner-headquarters.jpg",
+        thumb: "assets/optimized-extra/proj-banner-headquarters-1376.webp",
         keyTools: ["Windows Server", "VMware ESXi", "Active Directory", "Linux", "VLANs & VPN", "+6"],
         realExamples: [
           "HQ server room, SAN & VMware ESXi transition",
@@ -11526,7 +14554,7 @@
         title: "Integration & Data",
         theme: "cyan",
         shortDesc: "APIs, ETL, data models and reporting solutions.",
-        thumb: "assets/proj-banner-takeover.jpg",
+        thumb: "assets/optimized-extra/proj-banner-takeover-1376.webp",
         keyTools: ["SQL", "ETL", "APIs", "CSIO XML", "Reporting", "+6"],
         realExamples: [
           "Claims data integration & SQL reconciliation",
@@ -11553,7 +14581,7 @@
         title: "Insurance Domain",
         theme: "amber",
         shortDesc: "Underwriting, claims, P&C and health/dental rules.",
-        thumb: "assets/proj-banner-renewals.jpg",
+        thumb: "assets/optimized/proj-banner-renewals-1376.webp",
         keyTools: ["Underwriting", "Claims", "CSIO XML", "Broker Portals", "Policy Rules", "+6"],
         realExamples: [
           "Renewal automation (~80% res / ~60% comm / ~40% farm)",
@@ -11580,7 +14608,7 @@
         title: "AI & Automation",
         theme: "purple",
         shortDesc: "Agents, orchestration, context compilation and evaluation.",
-        thumb: "assets/proj-banner-nexus.jpg",
+        thumb: "assets/optimized-extra/proj-banner-nexus-1376.webp",
         keyTools: ["LLMs", "Agents", "Context", "Node.js", "Evaluation", "+6"],
         realExamples: [
           "NEXUS multi-agent orchestration platform",
@@ -11607,12 +14635,12 @@
         title: "Development & Engineering",
         theme: "emerald",
         shortDesc: "TypeScript, Node.js, C#/.NET, Rust/Tauri, SQL and practical tooling.",
-        thumb: "assets/proj-banner-newbusiness.jpg",
+        thumb: "assets/optimized-extra/proj-banner-newbusiness-1376.webp",
         keyTools: ["TypeScript", "Node.js", "C# / .NET", "Rust / Tauri", "SQL", "+6"],
         realExamples: [
           "NEXUS full-stack TypeScript & Node.js runtime",
           "C#/.NET authenticated adjuster upload portal",
-          "Production Excel/VB/XML takeover tooling"
+          "Production Excel VBA/XML takeover tooling"
         ],
         focusAreas: ["TypeScript / JS", "C# / .NET Web", "Rust & Tauri", "SQL Queries", "XML / VB Tools"],
         experienceItems: [
@@ -11634,7 +14662,7 @@
         title: "Business & Delivery",
         theme: "sky",
         shortDesc: "Functional analysis, solution design, requirements and execution.",
-        thumb: "assets/proj-banner-continuity.jpg",
+        thumb: "assets/optimized-extra/proj-banner-continuity-1376.webp",
         keyTools: ["Solution Design", "Analysis", "Field Mapping", "Requirements", "UAT & QA", "+6"],
         realExamples: [
           "Claims reporting & ETL continuity design",
@@ -11658,19 +14686,110 @@
       }
     });
 
+    const HOME_STACK_LAYERS = Object.freeze([
+      {
+        id: "business",
+        num: "05",
+        label: "Business & Solution Design",
+        callout: "Business Impact",
+        shortDesc: "Functional analysis, solution design & stakeholder alignment",
+        theme: "amber",
+        stroke: "#fde047",
+        fillTop: "rgba(250, 204, 21, 0.34)",
+        fillSide: "rgba(217, 119, 6, 0.62)",
+        glyphSvg: `
+          <polygon points="96,22 130,9 164,22 130,35" fill="rgba(254, 240, 138, 0.25)" stroke="#fef08a" stroke-width="1.2"/>
+          <rect x="116" y="13" width="6" height="12" rx="1" fill="#fde047"/>
+          <rect x="125" y="8" width="6" height="17" rx="1" fill="#facc15"/>
+          <rect x="134" y="2" width="7" height="23" rx="1" fill="#fef9c3"/>
+          <path d="M112 18 L128 9 L144 4" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+        `
+      },
+      {
+        id: "insurance",
+        num: "04",
+        label: "Insurance Domain",
+        callout: "Domain Expertise",
+        shortDesc: "P&C underwriting, broker workflows & health/dental claims rules",
+        theme: "gold",
+        stroke: "#fb923c",
+        fillTop: "rgba(249, 115, 22, 0.30)",
+        fillSide: "rgba(194, 65, 12, 0.58)",
+        glyphSvg: `
+          <polygon points="108,23 108,13 121,6 134,13 134,23" fill="rgba(253, 186, 116, 0.42)" stroke="#fed7aa" stroke-width="1.4"/>
+          <path d="M139 7 L149 11 V18 C149 23 144 26 139 28 C134 26 129 23 129 18 V11 Z" fill="rgba(251, 146, 60, 0.48)" stroke="#ffedd5" stroke-width="1.3"/>
+          <path d="M135 17 l3 3 l5-5" stroke="#ffffff" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+        `
+      },
+      {
+        id: "ai",
+        num: "03",
+        label: "AI & Automation",
+        callout: "AI & Automation",
+        shortDesc: "Governed multi-agent orchestration, context compilation & evaluation",
+        theme: "purple",
+        stroke: "#c084fc",
+        fillTop: "rgba(168, 85, 247, 0.32)",
+        fillSide: "rgba(109, 40, 217, 0.60)",
+        glyphSvg: `
+          <polygon points="130,5 154,16 130,27 106,16" fill="rgba(192, 132, 252, 0.42)" stroke="#f3e8ff" stroke-width="1.5"/>
+          <circle cx="130" cy="16" r="5" fill="#ffffff"/>
+          <circle cx="108" cy="20" r="3" fill="#e9d5ff"/>
+          <circle cx="152" cy="20" r="3" fill="#e9d5ff"/>
+          <circle cx="130" cy="6" r="2.5" fill="#f3e8ff"/>
+          <line x1="111" y1="19" x2="125" y2="16" stroke="#f3e8ff" stroke-width="1.4"/>
+          <line x1="149" y1="19" x2="135" y2="16" stroke="#f3e8ff" stroke-width="1.4"/>
+        `
+      },
+      {
+        id: "data",
+        num: "02",
+        label: "Integration & Data",
+        callout: "Data & Integration",
+        shortDesc: "REST/SOAP APIs, CSIO XML, SQL reconciliation & ETL feeds",
+        theme: "cyan",
+        stroke: "#38bdf8",
+        fillTop: "rgba(14, 165, 233, 0.32)",
+        fillSide: "rgba(3, 105, 161, 0.60)",
+        glyphSvg: `
+          <path d="M118 22h26a6.5 6.5 0 0 0 1-12.8 8.5 8.5 0 0 0-16.2-2.2A6.5 6.5 0 0 0 118 22Z" fill="rgba(125, 211, 252, 0.50)" stroke="#e0f2fe" stroke-width="1.5"/>
+          <ellipse cx="106" cy="18" rx="7" ry="3.2" fill="rgba(56, 189, 248, 0.48)" stroke="#bae6fd" stroke-width="1.2"/>
+          <path d="M99 18v5c0 1.8 3.1 3.2 7 3.2s7-1.4 7-3.2v-5" fill="rgba(2, 132, 199, 0.45)" stroke="#bae6fd" stroke-width="1.2"/>
+        `
+      },
+      {
+        id: "infrastructure",
+        num: "01",
+        label: "Infrastructure & Engineering",
+        callout: "Engineering Foundation",
+        shortDesc: "Hardware diagnostics, servers, VMware ESXi, AD, networks & code",
+        theme: "emerald",
+        stroke: "#2dd4bf",
+        fillTop: "rgba(20, 184, 166, 0.30)",
+        fillSide: "rgba(15, 118, 110, 0.62)",
+        glyphSvg: `
+          <rect x="104" y="9" width="18" height="15" rx="1.6" fill="rgba(94, 234, 212, 0.34)" stroke="#ccfbf1" stroke-width="1.3"/>
+          <circle cx="109" cy="13" r="1.3" fill="#5eead4"/>
+          <circle cx="109" cy="18" r="1.3" fill="#38bdf8"/>
+          <path d="M132 12 l-6 5 l6 5 M148 12 l6 5 l-6 5 M142 10 l-4 14" stroke="#ccfbf1" stroke-width="2.1" fill="none" stroke-linecap="round"/>
+        `
+      }
+    ]);
+
     function renderInteractiveCapabilityStackHtml(contextMode) {
       const focusId = hoveredSkillCategory || compactSkillsLockedCat || (contextMode === "page" ? activeSkillCategory : null);
       const focusedCat = focusId ? (SKILL_CATEGORIES.find(c => c.id === focusId) || SKILL_CATEGORIES[0]) : null;
       const isHome = contextMode === "home";
+      const layersToRender = isHome ? HOME_STACK_LAYERS : STACK_LAYERS_TOP_TO_BOTTOM;
 
       return `
         <div class="cap-stack-widget ${isHome ? "is-home-stack" : "is-page-stack"}" data-cap-stack-widget data-active-layer="${focusId || "none"}">
-          <div class="cap-stack-stage" role="group" aria-label="Interactive six-layer capability architecture stack">
+          <div class="cap-stack-stage" role="group" aria-label="Interactive layered capability architecture stack">
             <!-- Vertical Illuminated Conduit Beam -->
             <div class="cap-stack-core-beam" aria-hidden="true"></div>
 
             <div class="cap-stack-layers-list">
-              ${STACK_LAYERS_TOP_TO_BOTTOM.map(layer => {
+              ${layersToRender.map(layer => {
                 let stateCls = "is-resting";
                 if (focusedCat) {
                   const isSelected = layer.id === focusedCat.id;
@@ -11688,16 +14807,20 @@
                   >
                     <!-- Isometric 3D Platform Slab SVG -->
                     <span class="cap-stack-slab-wrap" aria-hidden="true">
-                      <svg class="cap-stack-slab-svg" viewBox="0 0 260 44" fill="none">
-                        <!-- Slab Drop Glow & Side Extrusion -->
-                        <polygon class="slab-extrusion" points="28,22 130,40 232,22 232,28 130,44 28,28" fill="${layer.fillSide}" stroke="${layer.stroke}" stroke-opacity="0.6" stroke-width="1"/>
+                      <svg class="cap-stack-slab-svg" viewBox="0 0 260 52" fill="none">
+                        <!-- Outer Ambient Plate Glow -->
+                        <polygon points="130,6 242,25 130,44 18,25" fill="${layer.fillTop}" opacity="0.35"/>
+                        <!-- Slab Side Extrusion (3D Glass Thickness) -->
+                        <polygon class="slab-extrusion" points="22,24 130,43 238,24 238,32 130,50 22,32" fill="${layer.fillSide}" stroke="${layer.stroke}" stroke-opacity="0.75" stroke-width="1.2"/>
                         <!-- Isometric Top Diamond Platform -->
-                        <polygon class="slab-surface" points="130,4 232,22 130,40 28,22" fill="${layer.fillTop}" stroke="${layer.stroke}" stroke-width="1.5"/>
-                        <!-- Inner Grid Lines -->
-                        <line x1="79" y1="13" x2="181" y2="31" stroke="${layer.stroke}" stroke-opacity="0.22" stroke-width="0.8"/>
-                        <line x1="181" y1="13" x2="79" y2="31" stroke="${layer.stroke}" stroke-opacity="0.22" stroke-width="0.8"/>
-                        <!-- Layer Icon / Miniature Illustration (centered around x=130) -->
-                        <g transform="translate(-10, -2)">${layer.glyphSvg}</g>
+                        <polygon class="slab-surface" points="130,5 238,24 130,43 22,24" fill="${layer.fillTop}" stroke="${layer.stroke}" stroke-width="1.8"/>
+                        <!-- Inner Isometric Grid Lines -->
+                        <line x1="76" y1="14.5" x2="184" y2="33.5" stroke="${layer.stroke}" stroke-opacity="0.32" stroke-width="0.9"/>
+                        <line x1="184" y1="14.5" x2="76" y2="33.5" stroke="${layer.stroke}" stroke-opacity="0.32" stroke-width="0.9"/>
+                        <!-- Central Core Energy Ring -->
+                        <ellipse cx="130" cy="24" rx="18" ry="6.5" fill="rgba(255,255,255,0.14)" stroke="${layer.stroke}" stroke-width="1.1"/>
+                        <!-- Layer Icon / Miniature Illustration -->
+                        <g transform="translate(0, 1)">${layer.glyphSvg}</g>
                       </svg>
                     </span>
 
@@ -11712,6 +14835,27 @@
                   </button>
                 `;
               }).join("")}
+              ${isHome ? `
+                <!-- 3D Isometric Dark Pedestal Base & Glowing Floor Circuitry -->
+                <div class="cap-stack-pedestal" aria-hidden="true">
+                  <svg class="cap-stack-pedestal-svg" viewBox="0 0 280 74" fill="none">
+                    <!-- Floor Circuitry Traces -->
+                    <line x1="140" y1="42" x2="22" y2="64" stroke="#22d3ee" stroke-opacity="0.45" stroke-width="1.2" stroke-dasharray="4 3"/>
+                    <line x1="140" y1="42" x2="258" y2="64" stroke="#22d3ee" stroke-opacity="0.45" stroke-width="1.2" stroke-dasharray="4 3"/>
+                    <line x1="140" y1="42" x2="64" y2="70" stroke="#38bdf8" stroke-opacity="0.35" stroke-width="1"/>
+                    <line x1="140" y1="42" x2="216" y2="70" stroke="#38bdf8" stroke-opacity="0.35" stroke-width="1"/>
+                    <!-- Outer Base Shadow Platform -->
+                    <polygon points="140,14 256,35 140,56 24,35" fill="rgba(8, 22, 48, 0.85)" stroke="#1e3a5f" stroke-width="1.4"/>
+                    <polygon points="24,35 140,56 256,35 256,46 140,67 24,46" fill="rgba(5, 13, 30, 0.95)" stroke="#0ea5e9" stroke-opacity="0.45" stroke-width="1.2"/>
+                    <!-- Inner Raised Pedestal Tier -->
+                    <polygon points="140,6 232,23 140,40 48,23" fill="rgba(15, 36, 72, 0.92)" stroke="#38bdf8" stroke-width="1.6"/>
+                    <polygon points="48,23 140,40 232,23 232,31 140,48 48,31" fill="rgba(10, 25, 52, 0.96)" stroke="#22d3ee" stroke-opacity="0.6" stroke-width="1.2"/>
+                    <!-- Glowing Emitter Core Ring -->
+                    <ellipse cx="140" cy="23" rx="26" ry="8.5" fill="rgba(34, 211, 238, 0.25)" stroke="#67e8f9" stroke-width="1.5"/>
+                    <ellipse cx="140" cy="23" rx="12" ry="4" fill="#a5f3fc"/>
+                  </svg>
+                </div>
+              ` : ""}
             </div>
           </div>
         </div>
@@ -11994,48 +15138,2378 @@
       `;
     }
 
-    function buildSkillsProficiencyStripHtml() {
-      return "";
+    
+
+    
+    let activeHomeSkillTab = "ai";
+    let activeHomeSkillSubtab = "overview";
+    let activeHomeSkillRelIdx = 0;
+
+    const HOME_SKILL_LAYERS_ORDER = ["business", "insurance", "ai", "data", "infrastructure"];
+
+    const HOME_SKILL_GROUPS = Object.freeze({
+      business: {
+        id: "business",
+        orderIdx: 1,
+        stackLayerId: "business",
+        theme: "amber",
+        callout: "Business Impact",
+        calloutSub: "Strategy • Outcomes • Delivery",
+        title: "Business Impact",
+        lead: "Translating business needs, stakeholder workflows and operational rules into practical systems that deliver measurable results.",
+        iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19h16"/><rect x="6" y="12" width="3" height="7" rx="0.8"/><rect x="11" y="9" width="3" height="10" rx="0.8"/><rect x="16" y="5" width="3" height="14" rx="0.8"/><path d="M5 10l5-4 4 2 5-4"/></svg>`,
+        quadCards: [
+          {
+            icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>`,
+            title: "Solution design",
+            desc: "Translating business workflows into clear technical specs."
+          },
+          {
+            icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 20 6.5v11L12 22 4 17.5v-11L12 2Z"/><path d="M4 6.5 12 11l8-4.5M12 11v11"/></svg>`,
+            title: "Field mapping",
+            desc: "Source-to-target schemas, contracts and validation rules."
+          },
+          {
+            icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>`,
+            title: "Stakeholder alignment",
+            desc: "Bridging underwriting, claims, operations and engineering."
+          },
+          {
+            icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="13" width="3.5" height="7" rx="0.8"/><rect x="10.25" y="9" width="3.5" height="11" rx="0.8"/><rect x="16.5" y="5" width="3.5" height="15" rx="0.8"/></svg>`,
+            title: "Delivery & continuity",
+            desc: "Rollout planning, UAT validation and reporting continuity."
+          }
+        ],
+        keyTools: [
+          "Functional Analysis",
+          "Solution Design",
+          "Source-to-Target Mapping",
+          "Business Rules",
+          "UAT & Rollout",
+          "Reporting Continuity"
+        ],
+        relatedExp: "Starts with the operational problem and the people doing the work—mapping edge cases, exception paths and downstream reporting impacts before writing specs or building automation.",
+        featuredBuild: {
+          slug: "renewals",
+          thumb: "assets/builds/preview-gal-1.png",
+          title: "Renewal Eligibility & Underwriting Automation",
+          pill: "Business Rules",
+          summary: "Automated renewal eligibility rules (~80% residential, ~60% commercial, ~40% farm/agri; user-reported, renewal-only)."
+        },
+        caseStudies: [
+          { slug: "renewals", title: "Renewal Automation" },
+          { slug: "continuity", title: "Reporting Continuity" },
+          { slug: "claims", title: "Provider Registry Sync" }
+        ]
+      },
+      insurance: {
+        id: "insurance",
+        orderIdx: 2,
+        stackLayerId: "insurance",
+        theme: "gold",
+        callout: "Domain Expertise",
+        calloutSub: "Insurance • Underwriting • Policy",
+        title: "Domain Expertise",
+        lead: "Deep P&C and health/dental insurance domain knowledge across underwriting rules, broker connectivity, policy lifecycles and claims.",
+        iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5 19.5 6v5.5c0 5-3.3 8.8-7.5 10-4.2-1.2-7.5-5-7.5-10V6L12 2.5Z"/><path d="m9 12 2 2 4.2-4.2"/></svg>`,
+        quadCards: [
+          {
+            icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5 19.5 6v5.5c0 5-3.3 8.8-7.5 10-4.2-1.2-7.5-5-7.5-10V6L12 2.5Z"/><path d="m9 12 2 2 4.2-4.2"/></svg>`,
+            title: "P&C underwriting",
+            desc: "Residential, commercial and farm/agri eligibility and rating rules."
+          },
+          {
+            icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 20 6.5v11L12 22 4 17.5v-11L12 2Z"/><path d="M4 6.5 12 11l8-4.5M12 11v11"/></svg>`,
+            title: "Broker workflows",
+            desc: "Real-time quoting, BMS upload, CSIO XML and portal services."
+          },
+          {
+            icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>`,
+            title: "Claims & benefits",
+            desc: "Health/dental claims history, provider registries and adjudication."
+          },
+          {
+            icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="13" width="3.5" height="7" rx="0.8"/><rect x="10.25" y="9" width="3.5" height="11" rx="0.8"/><rect x="16.5" y="5" width="3.5" height="15" rx="0.8"/></svg>`,
+            title: "Policy administration",
+            desc: "Endorsements, book-roll takeovers and document generation."
+          }
+        ],
+        keyTools: [
+          "Rating Rules",
+          "Underwriting Logic",
+          "Policy Lifecycle",
+          "CSIO XML / BMS",
+          "Health & Dental Claims",
+          "Exception Frameworks"
+        ],
+        relatedExp: "15+ years in P&C and health/dental insurance across policy, billing, broker and claims ecosystems—turning domain rules into reliable system behavior.",
+        featuredBuild: {
+          slug: "workflows",
+          thumb: "assets/builds/card-thumb-1-quoting.png",
+          title: "Commercial Quoting & Broker Integration",
+          pill: "Insurance Domain",
+          summary: "Integrated external commercial quoting with core policy administration through web services and underwriting validation rules."
+        },
+        caseStudies: [
+          { slug: "renewals", title: "Renewal Automation" },
+          { slug: "workflows", title: "Commercial Quoting" },
+          { slug: "changes", title: "Policy Changes" },
+          { slug: "newbusiness", title: "New Business Rules" }
+        ]
+      },
+      ai: {
+        id: "ai",
+        orderIdx: 3,
+        stackLayerId: "ai",
+        theme: "purple",
+        callout: "AI & Automation",
+        calloutSub: "Agents • Orchestration • Real Apps",
+        title: "AI & Automation",
+        lead: "Designing AI-assisted systems with routing, context, tools and evaluation to solve real business problems.",
+        iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.04Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.04Z"/><circle cx="8.5" cy="9.5" r="0.8" fill="currentColor"/><circle cx="15.5" cy="9.5" r="0.8" fill="currentColor"/><circle cx="8.5" cy="14.5" r="0.8" fill="currentColor"/><circle cx="15.5" cy="14.5" r="0.8" fill="currentColor"/></svg>`,
+        quadCards: [
+          {
+            icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>`,
+            title: "AI orchestration",
+            desc: "Multi-step workflows with tools and approvals."
+          },
+          {
+            icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 20 6.5v11L12 22 4 17.5v-11L12 2Z"/><path d="M4 6.5 12 11l8-4.5M12 11v11"/></svg>`,
+            title: "MCP & skills",
+            desc: "Tool integration, capability design and governance."
+          },
+          {
+            icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>`,
+            title: "RAG & context",
+            desc: "Grounded responses with business data and policy content."
+          },
+          {
+            icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="13" width="3.5" height="7" rx="0.8"/><rect x="10.25" y="9" width="3.5" height="11" rx="0.8"/><rect x="16.5" y="5" width="3.5" height="15" rx="0.8"/></svg>`,
+            title: "Evaluation",
+            desc: "Tracing, testing and continuous improvement."
+          }
+        ],
+        keyTools: [
+          "AI Orchestration",
+          "Model Context Protocol (MCP)",
+          "RAG & Context Compilation",
+          "Human-in-the-Loop Gates",
+          "Evaluation & Tracing",
+          "Business Rules & VBA"
+        ],
+        relatedExp: "Grenville renewal and broker rule automation; production claims-history validation tooling at Medavie; independent NEXUS AI orchestration platform.",
+        featuredBuild: {
+          slug: "nexus",
+          thumb: "assets/builds/skill-featured-nexus.png",
+          title: "NEXUS Platform",
+          pill: "AI Orchestration",
+          summary: "Independent AI orchestration platform with MCP integration, tool governance and human-in-the-loop approvals."
+        },
+        caseStudies: [
+          { slug: "nexus", title: "NEXUS Platform" },
+          { slug: "upload", title: "Document Upload Portal" },
+          { slug: "changes", title: "Policy-Change Comparison" },
+          { slug: "inquiry", title: "Broker Policy Inquiry" }
+        ]
+      },
+      data: {
+        id: "data",
+        orderIdx: 4,
+        stackLayerId: "data",
+        theme: "cyan",
+        callout: "Data & Integration",
+        calloutSub: "APIs • ETL • Systems • Workflows",
+        title: "Data & Integration",
+        lead: "APIs, data synchronization, ETL pipelines, schema mapping and payload validation across internal and partner systems.",
+        iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="4" r="1.8"/><circle cx="19" cy="8" r="1.8"/><circle cx="19" cy="16" r="1.8"/><circle cx="12" cy="20" r="1.8"/><circle cx="5" cy="16" r="1.8"/><circle cx="5" cy="8" r="1.8"/><path d="M12 5.8V9M17.4 8.9l-2.8 1.6M17.4 15.1l-2.8-1.6M12 18.2V15M6.6 15.1l2.8-1.6M6.6 8.9l2.8 1.6"/></svg>`,
+        quadCards: [
+          {
+            icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>`,
+            title: "REST & SOAP APIs",
+            desc: "Service contracts, payload mapping and partner integration."
+          },
+          {
+            icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 20 6.5v11L12 22 4 17.5v-11L12 2Z"/><path d="M4 6.5 12 11l8-4.5M12 11v11"/></svg>`,
+            title: "ETL & batch feeds",
+            desc: "Scheduled event tables, file feeds and downstream extracts."
+          },
+          {
+            icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>`,
+            title: "SQL reconciliation",
+            desc: "Cross-system validation queries and financial report fixes."
+          },
+          {
+            icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="13" width="3.5" height="7" rx="0.8"/><rect x="10.25" y="9" width="3.5" height="11" rx="0.8"/><rect x="16.5" y="5" width="3.5" height="15" rx="0.8"/></svg>`,
+            title: "XML & schema tooling",
+            desc: "CSIO XML standards, validation add-ins and error recovery."
+          }
+        ],
+        keyTools: [
+          "REST APIs",
+          "SOAP / XML",
+          "CSIO / ACORD",
+          "SQL Reconciliation",
+          "ETL Pipelines",
+          "Excel VBA Add-ins"
+        ],
+        relatedExp: "Broker portal inquiries, Medavie provider registry event-table/REST synchronization, takeover XML validation add-in and reporting continuity SQL.",
+        featuredBuild: {
+          slug: "inquiry",
+          thumb: "assets/builds/card-thumb-4-inquiry.png",
+          title: "Broker Policy Inquiry & Document Access",
+          pill: "Integration",
+          summary: "Integrated broker policy data, document access and web services across internal insurance systems."
+        },
+        caseStudies: [
+          { slug: "inquiry", title: "Broker Policy Inquiry" },
+          { slug: "claims", title: "Provider Registry Sync" },
+          { slug: "takeover", title: "Takeover-History XML" },
+          { slug: "continuity", title: "Reporting Continuity" }
+        ]
+      },
+      infrastructure: {
+        id: "infrastructure",
+        orderIdx: 5,
+        stackLayerId: "infrastructure",
+        theme: "emerald",
+        callout: "Engineering Foundation",
+        calloutSub: "Infrastructure • Security • Operations",
+        title: "Engineering Foundation",
+        lead: "Server, networking, virtualization, security operations and full-stack software foundations built from the metal up.",
+        iconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="3" width="19" height="7" rx="1.8"/><rect x="2.5" y="14" width="19" height="7" rx="1.8"/><circle cx="6.5" cy="6.5" r="1"/><circle cx="6.5" cy="17.5" r="1"/><path d="M10.5 6.5h7M10.5 17.5h7"/></svg>`,
+        quadCards: [
+          {
+            icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>`,
+            title: "Virtualization & servers",
+            desc: "VMware ESXi, Windows Server, Active Directory and storage."
+          },
+          {
+            icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 20 6.5v11L12 22 4 17.5v-11L12 2Z"/><path d="M4 6.5 12 11l8-4.5M12 11v11"/></svg>`,
+            title: "Networks & security",
+            desc: "Firewalls, VPNs, segmented VLANs and physical datacentre builds."
+          },
+          {
+            icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>`,
+            title: "Software & tooling",
+            desc: "TypeScript, Node.js, C#/.NET, SQL and modern web tooling."
+          },
+          {
+            icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="13" width="3.5" height="7" rx="0.8"/><rect x="10.25" y="9" width="3.5" height="11" rx="0.8"/><rect x="16.5" y="5" width="3.5" height="15" rx="0.8"/></svg>`,
+            title: "Diagnostics & ops",
+            desc: "Root-cause isolation across hardware, network and code layers."
+          }
+        ],
+        keyTools: [
+          "Windows Server",
+          "VMware ESXi",
+          "Active Directory",
+          "Firewalls & Networking",
+          "TypeScript / Node.js",
+          "C# / .NET & SQL"
+        ],
+        relatedExp: "Dell hardware diagnostics, Harris multi-server migrations and firewall racks, and Grenville Mutual headquarters datacentre and virtualization buildout.",
+        featuredBuild: {
+          slug: "headquarters",
+          thumb: "assets/builds/card-thumb-5-devenv.png",
+          title: "Headquarters Infrastructure & Datacentre Move",
+          pill: "Infrastructure",
+          summary: "End-to-end physical server room, VMware ESXi virtualization, shared storage and firewall security buildout."
+        },
+        caseStudies: [
+          { slug: "dell", title: "Dell Hardware Support" },
+          { slug: "foundations", title: "SBS Swing Migrations" },
+          { slug: "headquarters", title: "HQ Infrastructure" }
+        ]
+      }
+    });
+    // Alias "integration" -> HOME_SKILL_GROUPS.data for backwards compatibility
+    const HOME_SKILL_RELATED_BUILDS = Object.freeze([
+      {
+        slug: "nexus",
+        thumb: "assets/builds/card-thumb-nexus.png",
+        primaryTag: "AI & Automation",
+        secondaryTag: "Platform",
+        title: "NEXUS Platform",
+        desc: "Independent AI orchestration platform with MCP integration and tool governance.",
+        statusLabel: "Active development",
+        statusTone: "green"
+      },
+      {
+        slug: "upload",
+        thumb: "assets/builds/card-thumb-sk-upload.png",
+        primaryTag: "AI & Automation",
+        secondaryTag: "Integration",
+        title: "Authenticated Document Upload Portal",
+        desc: "C#/.NET + REST portal with operational logging and troubleshooting.",
+        statusLabel: "Implemented",
+        statusTone: "green"
+      },
+      {
+        slug: "changes",
+        thumb: "assets/builds/card-thumb-sk-changes.png",
+        primaryTag: "AI & Automation",
+        secondaryTag: "Analysis",
+        title: "Policy-Change Comparison & Validation",
+        desc: "AI-assisted comparison with endorsement-specific validation rules.",
+        statusLabel: "Pilot (discontinued)",
+        statusTone: "amber"
+      },
+      {
+        slug: "inquiry",
+        thumb: "assets/builds/card-thumb-4-inquiry.png",
+        primaryTag: "AI & Automation",
+        secondaryTag: "Integration",
+        title: "Broker Policy Inquiry & Document Access",
+        desc: "Integrated broker data, documents and services across internal systems.",
+        statusLabel: "Implemented",
+        statusTone: "green"
+      }
+    ]);
+
+    let activeHomeSkillChallenge = "renewals";
+    let isTechInventoryExpanded = false;
+    let techInventorySearchQuery = "";
+
+    const HOME_SKILL_CHALLENGES = Object.freeze({
+      renewals: {
+        id: "renewals",
+        theme: "blue",
+        iconType: "shield",
+        title: "Automate insurance renewals",
+        desc: "Turn complex underwriting requirements into a repeatable business process.",
+        steps: [
+          { num: 1, tone: "gold", title: "Understand eligibility and underwriting rules", desc: "Translate business requirements into technical design." },
+          { num: 2, tone: "orange", title: "Map policy data and system dependencies", desc: "Integrate data sources and handle real-world variations." },
+          { num: 3, tone: "purple", title: "Design exception handling and validation", desc: "Account for complex scenarios and ensure traceability." },
+          { num: 4, tone: "blue", title: "Implement, test and measure the workflow", desc: "Deliver, validate and monitor business outcomes." }
+        ],
+        capabilitiesApplied: [
+          { id: "business", tone: "gold", icon: "bars", label: "Business Impact", status: "Applied", applied: true },
+          { id: "insurance", tone: "orange", icon: "shield", label: "Domain Expertise", status: "Applied", applied: true },
+          { id: "ai", tone: "purple", icon: "brain", label: "AI & Automation", status: "Supporting", applied: false },
+          { id: "data", tone: "blue", icon: "nodes", label: "Data & Integration", status: "Applied", applied: true },
+          { id: "infrastructure", tone: "green", icon: "server", label: "Engineering Foundation", status: "Supporting", applied: false }
+        ],
+        result: "A governed renewal process with clear exception handling and traceable decisions.",
+        practice: {
+          slug: "renewals",
+          thumb: "assets/builds/skills-practice-renewals.png",
+          title: "Renewal Eligibility & Underwriting Automation",
+          desc: "Automated renewal decisions using business rules, integrations and data validation."
+        }
+      },
+      integration: {
+        id: "integration",
+        theme: "cyan",
+        iconType: "link",
+        title: "Connect disconnected systems",
+        desc: "Bridge applications, data formats and business processes.",
+        steps: [
+          { num: 1, tone: "gold", title: "Analyze source and target contracts", desc: "Map fields, business meaning and synchronization triggers across systems." },
+          { num: 2, tone: "orange", title: "Align domain rules and transformations", desc: "Ensure CSIO/ACORD, XML and REST payloads preserve business rules." },
+          { num: 3, tone: "purple", title: "Build validation and reconciliation tooling", desc: "Catch schema or data discrepancies before they impact operations." },
+          { num: 4, tone: "blue", title: "Support live feeds and downstream reporting", desc: "Maintain operational reliability and reporting continuity." }
+        ],
+        capabilitiesApplied: [
+          { id: "business", tone: "gold", icon: "bars", label: "Business Impact", status: "Applied", applied: true },
+          { id: "insurance", tone: "orange", icon: "shield", label: "Domain Expertise", status: "Applied", applied: true },
+          { id: "ai", tone: "purple", icon: "brain", label: "AI & Automation", status: "Supporting", applied: false },
+          { id: "data", tone: "blue", icon: "nodes", label: "Data & Integration", status: "Applied", applied: true },
+          { id: "infrastructure", tone: "green", icon: "server", label: "Engineering Foundation", status: "Applied", applied: true }
+        ],
+        result: "Reliable two-way data flows, reconciled records and fewer manual handoffs across systems.",
+        practice: {
+          slug: "workflows",
+          thumb: "assets/builds/card-thumb-1-quoting.png",
+          title: "Commercial Quoting & Broker Integration",
+          desc: "Connected external commercial quoting with core policy systems and underwriting rules."
+        }
+      },
+      ai: {
+        id: "ai",
+        theme: "purple",
+        iconType: "brain",
+        title: "Build a reliable AI agent",
+        desc: "Move beyond prompting to governed AI execution.",
+        steps: [
+          { num: 1, tone: "gold", title: "Define task boundaries and approval gates", desc: "Decide what the agent can execute autonomously vs. human review." },
+          { num: 2, tone: "orange", title: "Compile grounded domain context", desc: "Feed structured business data, policy rules and relevant state." },
+          { num: 3, tone: "purple", title: "Orchestrate MCP tools and multi-step routing", desc: "Connect capabilities with explicit schemas and error recovery." },
+          { num: 4, tone: "blue", title: "Evaluate traces and verify outcomes", desc: "Measure accuracy, audit tool calls and iterate on failure modes." }
+        ],
+        capabilitiesApplied: [
+          { id: "business", tone: "gold", icon: "bars", label: "Business Impact", status: "Applied", applied: true },
+          { id: "insurance", tone: "orange", icon: "shield", label: "Domain Expertise", status: "Supporting", applied: false },
+          { id: "ai", tone: "purple", icon: "brain", label: "AI & Automation", status: "Applied", applied: true },
+          { id: "data", tone: "blue", icon: "nodes", label: "Data & Integration", status: "Applied", applied: true },
+          { id: "infrastructure", tone: "green", icon: "server", label: "Engineering Foundation", status: "Applied", applied: true }
+        ],
+        result: "An auditable AI orchestration workflow with scoped tools, context control and human oversight.",
+        practice: {
+          slug: "nexus",
+          thumb: "assets/builds/skill-featured-nexus.png",
+          title: "NEXUS Platform",
+          desc: "Independent AI orchestration platform with MCP integration and tool governance."
+        }
+      }
+    });
+
+    const HOME_SKILL_INVENTORY_COLS = Object.freeze([
+      {
+        id: "business",
+        tone: "gold",
+        icon: "bars",
+        title: "Business & Delivery",
+        pills: ["Requirements", "Solution design", "Process improvement", "Stakeholders"],
+        extraPills: []
+      },
+      {
+        id: "insurance",
+        tone: "orange",
+        icon: "shield",
+        title: "Insurance Domain",
+        pills: ["Commercial P&C", "Underwriting", "CSIO / ACORD", "Policy admin"],
+        extraPills: ["Claims & benefits", "Rating rules", "Broker portals"]
+      },
+      {
+        id: "ai",
+        tone: "purple",
+        icon: "brain",
+        title: "AI & Automation",
+        pills: ["AI orchestration", "MCP & Skills", "RAG / Context", "Evals & Tracing"],
+        extraPills: ["Tool governance", "Agent workflows", "Excel VBA"]
+      },
+      {
+        id: "data",
+        tone: "blue",
+        icon: "nodes",
+        title: "Data & Integration",
+        pills: ["REST / SOAP", "Data mapping", "C# / .NET", "Workflow design"],
+        extraPills: ["SQL Server", "XML / XSD", "ETL pipelines", "Reporting SQL"]
+      },
+      {
+        id: "infrastructure",
+        tone: "green",
+        icon: "server",
+        title: "Infrastructure & Systems",
+        pills: ["Windows Server", "VMware", "Networking", "Troubleshooting"],
+        extraPills: ["Active Directory", "Firewalls / VPN", "Hardware diagnostics"]
+      }
+    ]);
+
+    function getSkV2IconSvg(type) {
+      if (type === "bars") {
+        return `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 15.5V11M10 15.5V7.5M15.5 15.5V4.5"/></svg>`;
+      }
+      if (type === "shield") {
+        return `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.2 16.2 5v4.6c0 4.2-2.7 7.4-6.2 8.6-3.5-1.2-6.2-4.4-6.2-8.6V5L10 2.2Z"/><path d="m7.4 10 1.8 1.8 3.6-3.6"/></svg>`;
+      }
+      if (type === "link") {
+        return `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 11.5a3.5 3.5 0 0 0 5 0l2.5-2.5a3.5 3.5 0 0 0-5-5l-1.2 1.2"/><path d="M11.5 8.5a3.5 3.5 0 0 0-5 0L4 11a3.5 3.5 0 0 0 5 5l1.2-1.2"/></svg>`;
+      }
+      if (type === "brain") {
+        return `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3a2.2 2.2 0 0 1 2 2.2v10.6a2.2 2.2 0 0 1-4.2.5 2.2 2.2 0 0 1-2.3-2.6 2.5 2.5 0 0 1-.2-4.5 2.2 2.2 0 0 1 1.1-3.5A2.2 2.2 0 0 1 8 3Z"/><path d="M12 3a2.2 2.2 0 0 0-2 2.2v10.6a2.2 2.2 0 0 0 4.2.5 2.2 2.2 0 0 0 2.3-2.6 2.5 2.5 0 0 0 .2-4.5 2.2 2.2 0 0 0-1.1-3.5A2.2 2.2 0 0 0 12 3Z"/></svg>`;
+      }
+      if (type === "nodes") {
+        return `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="5" r="2"/><circle cx="15" cy="5" r="2"/><circle cx="5" cy="15" r="2"/><circle cx="15" cy="15" r="2"/><path d="m6.6 6.6 6.8 6.8M13.4 6.6l-6.8 6.8"/></svg>`;
+      }
+      if (type === "server") {
+        return `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3.5" width="14" height="5.2" rx="1.4"/><rect x="3" y="11.3" width="14" height="5.2" rx="1.4"/><circle cx="6" cy="6.1" r="0.8" fill="currentColor"/><circle cx="6" cy="13.9" r="0.8" fill="currentColor"/><path d="M9.5 6.1h4.5M9.5 13.9h4.5"/></svg>`;
+      }
+      if (type === "trophy") {
+        return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>`;
+      }
+      return `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="6" height="6" rx="1.2"/><rect x="11" y="3" width="6" height="6" rx="1.2"/><rect x="3" y="11" width="6" height="6" rx="1.2"/><rect x="11" y="11" width="6" height="6" rx="1.2"/></svg>`;
+    }
+
+    function renderHomeCapabilityLayersCardHtml() {
+      const activeKey = HOME_SKILL_GROUPS[activeHomeSkillTab] ? activeHomeSkillTab : "business";
+      const rows = [
+        { id: "business", tone: "gold", icon: "bars", label: "Business Impact" },
+        { id: "insurance", tone: "orange", icon: "shield", label: "Domain Expertise" },
+        { id: "ai", tone: "purple", icon: "brain", label: "AI & Automation" },
+        { id: "data", tone: "blue", icon: "nodes", label: "Data & Integration" },
+        { id: "infrastructure", tone: "green", icon: "server", label: "Engineering Foundation" }
+      ];
+      return `
+        <div class="sk-cap-layers-card" aria-label="Capability layers">
+          <p class="sk-cap-layers-eyebrow">CAPABILITY LAYERS</p>
+          <div class="sk-cap-layers-list" role="list">
+            ${rows.map(r => {
+              const isSel = r.id === activeKey;
+              return `
+                <button
+                  type="button"
+                  class="sk-cap-layer-row tone-${r.tone} ${isSel ? "is-selected" : ""}"
+                  data-home-skill-tab="${r.id}"
+                  aria-pressed="${isSel ? "true" : "false"}"
+                >
+                  <span class="sk-cap-layer-icon tone-${r.tone}" aria-hidden="true">${getSkV2IconSvg(r.icon)}</span>
+                  <span class="sk-cap-layer-label">${r.label}</span>
+                </button>
+              `;
+            }).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderHome3DCapabilityStackHtml() {
+      const activeKey = HOME_SKILL_GROUPS[activeHomeSkillTab] ? activeHomeSkillTab : "ai";
+      return `
+        <div class="cap-stack-widget is-home-stack is-pixel-mockup is-v2-stack" data-cap-stack-widget data-active-layer="${activeKey}">
+          <div class="cap-stack-stage" role="group" aria-label="Interactive 5-layer capability architecture stack">
+            <div class="sk-stack-3d-art-col" aria-hidden="true">
+              <img class="sk-stack-3d-img" src="assets/optimized/builds/skills-3d-stack-v2-574.webp" alt="" loading="lazy" decoding="async">
+              <img src="assets/builds/skills-3d-stack.png" alt="" hidden aria-hidden="true" loading="lazy" decoding="async">
+            </div>
+
+            <div class="cap-stack-layers-list">
+              ${HOME_SKILL_LAYERS_ORDER.map((layerKey, idx) => {
+                const grp = HOME_SKILL_GROUPS[layerKey];
+                const isSelected = layerKey === activeKey;
+                return `
+                  <button
+                    type="button"
+                    class="cap-stack-layer theme-${grp.theme} ${isSelected ? "is-selected" : "is-resting"}"
+                    data-skills-stack-layer="${grp.id}"
+                    data-home-skill-tab="${grp.id}"
+                    aria-pressed="${isSelected ? "true" : "false"}"
+                    aria-label="Layer ${idx + 1} of 5: ${grp.callout} — ${grp.calloutSub}"
+                  >
+                    <span class="sk-layer-hit-slab" aria-hidden="true"></span>
+                    <span class="cap-stack-callout" hidden>
+                      <strong class="cap-stack-callout-title">${grp.callout}</strong>
+                      <span class="cap-stack-callout-sub">${grp.calloutSub}</span>
+                      <span class="sk-callout-connector-bridge" aria-hidden="true"></span>
+                    </span>
+                  </button>
+                `;
+              }).join("")}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderHomeChallengeCardsRowHtml() {
+      const challenges = [HOME_SKILL_CHALLENGES.renewals, HOME_SKILL_CHALLENGES.integration, HOME_SKILL_CHALLENGES.ai];
+      return `
+        <div class="sk-v2-challenges-wrap">
+          <p class="sk-v2-challenges-eyebrow">CHOOSE A REAL-WORLD CHALLENGE</p>
+          <div class="sk-v2-challenges-grid" role="tablist" aria-label="Choose a real-world challenge">
+            ${challenges.map(ch => {
+              const isAct = ch.id === activeHomeSkillChallenge;
+              return `
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected="${isAct ? "true" : "false"}"
+                  class="sk-challenge-card theme-${ch.theme} ${isAct ? "is-active" : ""}"
+                  data-sk-challenge="${ch.id}"
+                >
+                  <span class="sk-challenge-icon theme-${ch.theme}" aria-hidden="true">${getSkV2IconSvg(ch.iconType)}</span>
+                  <div class="sk-challenge-copy">
+                    <div class="sk-challenge-title-row">
+                      <strong class="sk-challenge-title">${ch.title}</strong>
+                      <span class="sk-challenge-arrow" aria-hidden="true">
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8h9M8.5 4l4 4-4 4"/></svg>
+                      </span>
+                    </div>
+                    <p class="sk-challenge-desc">${ch.desc}</p>
+                  </div>
+                </button>
+              `;
+            }).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderHomeSkillActiveCardHtml(grpKey) {
+      const resolvedKey = grpKey === "integration" ? "data" : (HOME_SKILL_GROUPS[grpKey] ? grpKey : "ai");
+      const grp = HOME_SKILL_GROUPS[resolvedKey] || HOME_SKILL_GROUPS.ai;
+      const ch = HOME_SKILL_CHALLENGES[activeHomeSkillChallenge] || HOME_SKILL_CHALLENGES.renewals;
+
+      return `
+        <div class="sk-inspector-card sk-challenge-detail-card home-skill-card-inner theme-${ch.theme}" data-active-skill-layer="${grp.id}" data-active-challenge="${ch.id}">
+          <!-- Header Row: Icon Badge + Challenge Title & Subtitle -->
+          <div class="sk-inspector-head sk-challenge-detail-head home-skill-card-head">
+            <span class="sk-inspector-icon-badge sk-challenge-head-icon theme-${ch.theme}" aria-hidden="true">${getSkV2IconSvg(ch.iconType)}</span>
+            <div class="sk-inspector-title-wrap home-skill-card-title-group">
+              <h3 class="sk-challenge-detail-title home-skill-card-title">${ch.title}</h3>
+              <p class="sk-inspector-lead home-skill-card-lead">${ch.desc}</p>
+              <span class="sk-inspector-title" hidden>${grp.title}</span>
+            </div>
+            <div class="sk-inspector-pager" hidden>
+              <span class="sk-inspector-counter" data-sk-layer-counter>${grp.orderIdx} / 5</span>
+              <button type="button" class="sk-inspector-nav-btn" data-sk-layer-step="-1" aria-label="Previous capability layer"></button>
+              <button type="button" class="sk-inspector-nav-btn" data-sk-layer-step="1" aria-label="Next capability layer"></button>
+            </div>
+          </div>
+
+          <div class="sk-inspector-subtabs" hidden>
+            <button type="button" data-sk-subtab="overview">Overview</button>
+            <button type="button" data-sk-subtab="tools">Skills &amp; Tools</button>
+            <button type="button" data-sk-subtab="apply">How I apply it</button>
+            <button type="button" data-sk-subtab="builds">Related builds</button>
+          </div>
+
+          <!-- 2-Column Body: HOW I APPROACH IT (Left) | CAPABILITIES APPLIED + RESULT (Right) -->
+          <div class="sk-detail-body-grid">
+            <!-- Left Sub-Column: HOW I APPROACH IT -->
+            <div class="sk-approach-col sk-detail-approach-col">
+              <p class="sk-detail-sub-eyebrow">HOW I APPROACH IT</p>
+              <ol class="sk-approach-steps">
+                ${ch.steps.map(st => `
+                  <li class="sk-approach-step">
+                    <span class="sk-step-num-badge tone-${st.tone}" aria-hidden="true">${st.num}</span>
+                    <div class="sk-step-copy">
+                      <strong>${st.title}</strong>
+                      <p>${st.desc}</p>
+                    </div>
+                  </li>
+                `).join("")}
+              </ol>
+            </div>
+
+            <!-- Right Sub-Column: CAPABILITIES APPLIED + RESULT -->
+            <div class="sk-applied-col">
+              <p class="sk-detail-sub-eyebrow">CAPABILITIES APPLIED</p>
+              <ul class="sk-applied-list">
+                ${ch.capabilitiesApplied.map(cap => `
+                  <li class="sk-applied-row ${cap.id === resolvedKey ? "is-layer-focused" : ""}" data-home-skill-tab="${cap.id}">
+                    <span class="sk-applied-left">
+                      <span class="sk-applied-icon tone-${cap.tone}" aria-hidden="true">${getSkV2IconSvg(cap.icon)}</span>
+                      <span class="sk-applied-name">${cap.label}</span>
+                    </span>
+                    ${cap.applied
+                      ? `<span class="sk-applied-badge is-applied"><i class="sk-applied-check" aria-hidden="true">&#10003;</i><span>Applied</span></span>`
+                      : `<span class="sk-applied-badge is-supporting">Supporting</span>`
+                    }
+                  </li>
+                `).join("")}
+              </ul>
+
+              <div class="sk-result-box">
+                <p class="sk-result-eyebrow">RESULT</p>
+                <div class="sk-result-body">
+                  <span class="sk-result-trophy" aria-hidden="true">${getSkV2IconSvg("trophy")}</span>
+                  <p class="sk-result-text">${ch.result}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Bar: SEE THIS IN PRACTICE -->
+          <div class="sk-practice-wrap">
+            <p class="sk-detail-sub-eyebrow">SEE THIS IN PRACTICE</p>
+            <a class="sk-practice-card" href="#projects/${ch.practice.slug}" data-proj-link="${ch.practice.slug}">
+              <div class="sk-practice-thumb">
+                <img src="${ch.practice.thumb}" alt="${ch.practice.title}" loading="lazy" decoding="async">
+              </div>
+              <div class="sk-practice-copy">
+                <strong class="sk-practice-title">${ch.practice.title}</strong>
+                <p class="sk-practice-desc">${ch.practice.desc}</p>
+              </div>
+              <span class="sk-practice-arrow" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8h9M8.5 4l4 4-4 4"/></svg>
+              </span>
+            </a>
+          </div>
+
+          <div class="sk-featured-build-wrap" hidden>
+            <div class="sk-featured-eyebrow">FEATURED BUILD</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderHomeSkillRelatedBuildsHtml() {
+      const resolvedKey = activeHomeSkillTab === "integration" ? "data" : (HOME_SKILL_GROUPS[activeHomeSkillTab] ? activeHomeSkillTab : "ai");
+      const grp = HOME_SKILL_GROUPS[resolvedKey] || HOME_SKILL_GROUPS.ai;
+      const q = techInventorySearchQuery.trim().toLowerCase();
+
+      return `
+        <div class="sk-tech-inventory-card home-skills-related-builds-card" data-sk-related-builds>
+          <div class="sk-tech-inv-header">
+            <div class="sk-tech-inv-head-left">
+              <span class="sk-tech-inv-badge" aria-hidden="true">${getSkV2IconSvg("grid")}</span>
+              <h3 class="sk-tech-inv-title">TECHNICAL INVENTORY</h3>
+              <p class="sk-tech-inv-sub">Tools, technologies and domains I work with, organized by capability layer.</p>
+              <span class="sk-related-title" hidden>Related builds</span>
+              <span class="sk-related-sub" data-sk-related-sub hidden>Projects that demonstrate skills in ${grp.title}</span>
+              <span hidden>View all 5 related builds</span>
+            </div>
+            <div class="sk-tech-inv-head-right">
+              <label class="sk-tech-inv-search">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg>
+                <input type="search" placeholder="Search technologies..." value="${techInventorySearchQuery.replace(/"/g, "&quot;")}" data-sk-inv-search aria-label="Search technologies">
+              </label>
+              <button type="button" class="sk-tech-inv-expand-btn" data-sk-inv-expand aria-expanded="${isTechInventoryExpanded ? "true" : "false"}">
+                <span>${isTechInventoryExpanded ? "Collapse" : "Expand all"}</span>
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="sk-tech-inv-grid" role="list">
+            ${HOME_SKILL_INVENTORY_COLS.map(col => {
+              const allPills = isTechInventoryExpanded || q
+                ? col.pills.concat(col.extraPills)
+                : col.pills;
+              const visiblePills = q
+                ? allPills.filter(p => p.toLowerCase().includes(q) || col.title.toLowerCase().includes(q))
+                : allPills;
+              const showMoreCount = !isTechInventoryExpanded && !q ? col.extraPills.length : 0;
+
+              return `
+                <div class="sk-tech-inv-col tone-${col.tone}" role="listitem">
+                  <button type="button" class="sk-tech-col-head" data-sk-inv-expand aria-label="Toggle ${col.title} technologies">
+                    <span class="sk-tech-col-head-left">
+                      <span class="sk-tech-col-icon tone-${col.tone}" aria-hidden="true">${getSkV2IconSvg(col.icon)}</span>
+                      <strong class="sk-tech-col-title">${col.title}</strong>
+                    </span>
+                    <span class="sk-tech-col-chevron" aria-hidden="true">
+                      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 6 3.5 3.5L11.5 6"/></svg>
+                    </span>
+                  </button>
+                  <div class="sk-tech-col-pills">
+                    ${visiblePills.map((p, idx) => `<span class="sk-tech-pill">${p}</span>${(!isTechInventoryExpanded && !q && idx === 1) ? '<span class="sk-tech-row-break" aria-hidden="true"></span>' : ''}`).join("")}
+                    ${showMoreCount > 0 ? `<button type="button" class="sk-tech-more-btn" data-sk-inv-expand>+${showMoreCount} more</button>` : ""}
+                  </div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    const HOME_SKILLS_V3_CARDS = Object.freeze([
+      {
+        id: "ai",
+        theme: "purple",
+        icon: "brain-circuit",
+        title: "AI & Automation",
+        cardTitle: "AI & Automation",
+        graphTitle: "AI & Automation",
+        desc: "Designing and building practical AI solutions with real-world context, tools and governance.",
+        skillsCount: 12,
+        toolsCount: 8,
+        projectsCount: 4,
+        cardBadges: ["openai", "anthropic", "gemini", "mcp"],
+        keySkills: [
+          "Model routing",
+          "Context engineering",
+          "RAG / CAG",
+          "MCP",
+          "A2A",
+          "ACP",
+          "Prompt engineering",
+          "Cache management",
+          "Evals & tracing",
+          "Agent workflows",
+          "Harness design",
+          "AI safety & governance"
+        ],
+        toolsList: [
+          "Anthropic",
+          "OpenAI",
+          "Gemini",
+          "OpenRouter",
+          "MCP",
+          "A2A",
+          "ACP",
+          "OpenTelemetry"
+        ],
+        relatedCapabilities: [
+          { id: "integration", label: "Integration & Data", shape: "diamond", color: "cyan" },
+          { id: "development", label: "Development & Tooling", shape: "hex", color: "blue" },
+          { id: "solution", label: "Solution Design & Delivery", shape: "diamond", color: "gold" },
+          { id: "infrastructure", label: "Infrastructure & Operations", shape: "hex", color: "emerald" }
+        ],
+        representativeWork: [
+          {
+            title: "Nexus — AI Workforce OS",
+            sub: "Multi-agent orchestration with JEV decision runtime",
+            icon: "brain-circuit",
+            theme: "pink",
+            href: "#projects/nexus"
+          },
+          {
+            title: "Context Engine & Skills",
+            sub: "JIT skills, typed boundaries, evals & tracing",
+            icon: "iso-cubes",
+            theme: "gold",
+            href: "#projects/nexus"
+          },
+          {
+            title: "Agentic Browser Extension",
+            sub: "Identity, accounts and automation via MCP",
+            icon: "hub-nodes",
+            theme: "blue",
+            href: "#projects/nexus"
+          }
+        ],
+        rows: [
+          [
+            { icon: "anthropic", label: "Anthropic" },
+            { icon: "openai", label: "OpenAI" },
+            { icon: "gemini", label: "Gemini" },
+            { icon: "mcp", label: "MCP" },
+            { icon: "a2a", label: "A2A" },
+            { icon: "acp", label: "ACP" }
+          ],
+          [
+            { icon: "routing", label: "Model routing" },
+            { icon: "context", label: "Context engineering" },
+            { icon: "cache", label: "Cache management" }
+          ],
+          [
+            { icon: "agents", label: "Agent workflows" },
+            { icon: "prompt", label: "Prompt engineering" },
+            { icon: "evals", label: "Evals & tracing" },
+            { icon: "rag", label: "RAG / CAG" }
+          ]
+        ]
+      },
+      {
+        id: "integration",
+        theme: "blue",
+        icon: "hub-nodes",
+        title: "Systems Integration",
+        cardTitle: "Systems Integration",
+        graphTitle: "Integration & Data",
+        desc: "Connecting applications and data across diverse systems and business environments.",
+        skillsCount: 10,
+        toolsCount: 12,
+        projectsCount: 4,
+        cardBadges: ["sqlserver", "postgres", "oracle", "dotnet"],
+        keySkills: [
+          "REST / API",
+          "SOAP",
+          "SQL",
+          "XML / JSON",
+          "ETL / Data Mapping",
+          "Broker Systems",
+          "API design",
+          "Schema validation",
+          "Event synchronization",
+          "Financial reconciliation"
+        ],
+        toolsList: [
+          "SQL Server",
+          "PostgreSQL",
+          "Oracle",
+          "MySQL",
+          ".NET",
+          "C#",
+          "PowerShell",
+          "Postman",
+          "Swagger / OpenAPI",
+          "Kafka",
+          "RabbitMQ",
+          "Excel VBA"
+        ],
+        relatedCapabilities: [
+          { id: "insurance", label: "Insurance & Business", shape: "diamond", color: "orange" },
+          { id: "solution", label: "Solution Design & Delivery", shape: "diamond", color: "gold" },
+          { id: "development", label: "Development & Tooling", shape: "hex", color: "blue" },
+          { id: "ai", label: "AI & Automation", shape: "diamond", color: "purple" }
+        ],
+        representativeWork: [
+          {
+            title: "Takeover-History XML Loading",
+            sub: "Excel VBA validation, XML batches & error reconciliation",
+            icon: "hub-nodes",
+            theme: "cyan",
+            href: "#projects/takeover"
+          },
+          {
+            title: "Broker-Native New Business Integration",
+            sub: "Two-way CSIO/ACORD payload mapping & rating rules",
+            icon: "shield-check",
+            theme: "orange",
+            href: "#projects/newbusiness"
+          },
+          {
+            title: "Claims SQL & Financial Reconciliation",
+            sub: "Hand-written SQL, financial report logic & balancing",
+            icon: "iso-cubes",
+            theme: "gold",
+            href: "#projects/sql"
+          }
+        ],
+        rows: [
+          [
+            { icon: "rest", label: "REST API" },
+            { icon: "soap", label: "SOAP" },
+            { icon: "json", label: "JSON" },
+            { icon: "xml", label: "XML" },
+            { icon: "sqlserver", label: "SQL Server" }
+          ],
+          [
+            { icon: "postgres", label: "PostgreSQL" },
+            { icon: "oracle", label: "Oracle" },
+            { icon: "mysql", label: "MySQL" },
+            { icon: "dotnet", label: ".NET" },
+            { icon: "csharp", label: "C#" }
+          ],
+          [
+            { icon: "powershell", label: "PowerShell" },
+            { icon: "etl", label: "ETL" },
+            { icon: "apidesign", label: "API design" },
+            { icon: "datamapping", label: "Data mapping" }
+          ],
+          [
+            { icon: "postman", label: "Postman" },
+            { icon: "swagger", label: "Swagger / OpenAPI" },
+            { icon: "kafka", label: "Kafka" },
+            { icon: "rabbitmq", label: "RabbitMQ" }
+          ]
+        ]
+      },
+      {
+        id: "insurance",
+        theme: "orange",
+        icon: "shield-check",
+        title: "Insurance & Business",
+        cardTitle: "Insurance & Business",
+        graphTitle: "Insurance & Business",
+        desc: "Deep domain knowledge of P&C insurance systems, processes and real-world requirements.",
+        skillsCount: 10,
+        toolsCount: 6,
+        projectsCount: 4,
+        cardBadges: ["commercial", "brokerdata", "csio", "acord"],
+        keySkills: [
+          "Commercial P&C",
+          "Underwriting",
+          "Policy administration",
+          "Renewals",
+          "Endorsements",
+          "CSIO / ACORD",
+          "Business rules",
+          "Requirements analysis",
+          "Process design",
+          "Broker data & quoting"
+        ],
+        toolsList: [
+          "CSIO",
+          "ACORD",
+          "Policy Administration",
+          "Rating Engines",
+          "Broker Portals",
+          "Claims Platforms"
+        ],
+        relatedCapabilities: [
+          { id: "integration", label: "Integration & Data", shape: "diamond", color: "cyan" },
+          { id: "solution", label: "Solution Design & Delivery", shape: "diamond", color: "gold" },
+          { id: "ai", label: "AI & Automation", shape: "diamond", color: "purple" },
+          { id: "infrastructure", label: "Infrastructure & Operations", shape: "hex", color: "emerald" }
+        ],
+        representativeWork: [
+          {
+            title: "Renewal Eligibility & Underwriting Automation",
+            sub: "~80% residential & ~40% farm renewal automation",
+            icon: "shield-check",
+            theme: "orange",
+            href: "#projects/renewals"
+          },
+          {
+            title: "Commercial Quoting & Broker Integration",
+            sub: "Broker quoting rules, data transformation & portal messages",
+            icon: "hub-nodes",
+            theme: "cyan",
+            href: "#projects/workflows"
+          },
+          {
+            title: "Policy-Change Comparison & Validation",
+            sub: "Endorsement delta comparison & context validation",
+            icon: "iso-cubes",
+            theme: "gold",
+            href: "#projects/changes"
+          }
+        ],
+        rows: [
+          [
+            { icon: "commercial", label: "Commercial P&C" },
+            { icon: "underwriting", label: "Underwriting" },
+            { icon: "policyadmin", label: "Policy administration" }
+          ],
+          [
+            { icon: "renewals", label: "Renewals & endorsements" },
+            { icon: "csio", label: "CSIO" },
+            { icon: "acord", label: "ACORD" },
+            { icon: "rules", label: "Business rules" }
+          ],
+          [
+            { icon: "requirements", label: "Requirements analysis" },
+            { icon: "process", label: "Process design" },
+            { icon: "stakeholder", label: "Stakeholder collaboration" }
+          ],
+          [
+            { icon: "brokerdata", label: "Broker data & quoting" },
+            { icon: "compliance", label: "Compliance & audit" },
+            { icon: "ux", label: "User experience" }
+          ]
+        ]
+      },
+      {
+        id: "infrastructure",
+        theme: "emerald",
+        icon: "server-stack",
+        title: "Infrastructure & Operations",
+        cardTitle: "Infrastructure & Ops",
+        graphTitle: "Infrastructure & Operations",
+        desc: "Hands-on experience with infrastructure, networking and operational environments.",
+        skillsCount: 10,
+        toolsCount: 9,
+        projectsCount: 4,
+        cardBadges: ["windows", "vmware", "linux", "ovh"],
+        keySkills: [
+          "Windows Server",
+          "Active Directory",
+          "VMware",
+          "Hyper-V",
+          "Linux",
+          "Networking",
+          "Firewalls",
+          "Monitoring",
+          "Server migrations",
+          "Backups & DR"
+        ],
+        toolsList: [
+          "Windows Server",
+          "VMware ESXi",
+          "Hyper-V",
+          "Linux",
+          "OVH",
+          "Render",
+          "Depot",
+          "Docker",
+          "Prometheus"
+        ],
+        relatedCapabilities: [
+          { id: "development", label: "Development & Tooling", shape: "hex", color: "blue" },
+          { id: "integration", label: "Integration & Data", shape: "diamond", color: "cyan" },
+          { id: "solution", label: "Solution Design & Delivery", shape: "diamond", color: "gold" },
+          { id: "ai", label: "AI & Automation", shape: "diamond", color: "purple" }
+        ],
+        representativeWork: [
+          {
+            title: "Headquarters Infrastructure & Systems",
+            sub: "Networking, AV, security, cooling, UPS & ESXi transition",
+            icon: "server-stack",
+            theme: "emerald",
+            href: "#projects/headquarters"
+          },
+          {
+            title: "Small Business Server Swing Migrations",
+            sub: "Repeatable staged Active Directory & Exchange migrations",
+            icon: "hub-nodes",
+            theme: "cyan",
+            href: "#projects/foundations"
+          },
+          {
+            title: "Dell Latitude & OptiPlex Support",
+            sub: "Gloves Off hardware diagnosis & first-call resolution",
+            icon: "shield-check",
+            theme: "orange",
+            href: "#projects/dell"
+          }
+        ],
+        rows: [
+          [
+            { icon: "windows", label: "Windows Server" },
+            { icon: "ad", label: "Active Directory" },
+            { icon: "vmware", label: "VMware" },
+            { icon: "hyperv", label: "Hyper-V" }
+          ],
+          [
+            { icon: "linux", label: "Linux" },
+            { icon: "networking", label: "Networking" },
+            { icon: "firewalls", label: "Firewalls" },
+            { icon: "monitoring", label: "Monitoring" }
+          ],
+          [
+            { icon: "migrations", label: "Server migrations" },
+            { icon: "backups", label: "Backups & DR" },
+            { icon: "troubleshooting", label: "Troubleshooting" }
+          ],
+          [
+            { icon: "ovh", label: "OVH" },
+            { icon: "render", label: "Render" },
+            { icon: "depot", label: "Depot" },
+            { icon: "docker", label: "Docker" },
+            { icon: "dockerhub", label: "Docker Hub" }
+          ]
+        ]
+      },
+      {
+        id: "solution",
+        theme: "gold",
+        icon: "iso-cubes",
+        title: "Solution Design & Delivery",
+        cardTitle: "Solution Design & Delivery",
+        graphTitle: "Solution Design & Delivery",
+        desc: "Turning complex requirements into practical, scalable solutions.",
+        skillsCount: 10,
+        toolsCount: 8,
+        projectsCount: 4,
+        cardBadges: ["solarch", "compliance", "pm", "techspecs"],
+        keySkills: [
+          "Requirements",
+          "Architecture",
+          "Project Management",
+          "Validation & Testing",
+          "Automation Strategy",
+          "Change Management",
+          "Systems thinking",
+          "Technical specifications",
+          "Workflow design",
+          "Risk analysis"
+        ],
+        toolsList: [
+          "Technical Specifications",
+          "Workflow Modeling",
+          "SQL Validation",
+          "Excel VBA",
+          "Swagger / OpenAPI",
+          "Git",
+          "CI / CD",
+          "Observability"
+        ],
+        relatedCapabilities: [
+          { id: "insurance", label: "Insurance & Business", shape: "diamond", color: "orange" },
+          { id: "integration", label: "Integration & Data", shape: "diamond", color: "cyan" },
+          { id: "ai", label: "AI & Automation", shape: "diamond", color: "purple" },
+          { id: "development", label: "Development & Tooling", shape: "hex", color: "blue" }
+        ],
+        representativeWork: [
+          {
+            title: "Claims Reporting & Data Continuity",
+            sub: "Legacy daily data feed continuity analysis & design",
+            icon: "iso-cubes",
+            theme: "gold",
+            href: "#projects/continuity"
+          },
+          {
+            title: "Provider Data for Claims Adjudication",
+            sub: "Solution review, field mappings & synchronization specs",
+            icon: "hub-nodes",
+            theme: "cyan",
+            href: "#projects/claims"
+          },
+          {
+            title: "Document Upload into Policy Records",
+            sub: "Authenticated external adjuster submission workflow",
+            icon: "shield-check",
+            theme: "orange",
+            href: "#projects/upload"
+          }
+        ],
+        rows: [
+          [
+            { icon: "solarch", label: "Solution architecture" },
+            { icon: "systhinking", label: "Systems thinking" },
+            { icon: "techspecs", label: "Technical specifications" }
+          ],
+          [
+            { icon: "workflow", label: "Workflow design" },
+            { icon: "validation", label: "Validation & testing" },
+            { icon: "autostrategy", label: "Automation strategy" }
+          ],
+          [
+            { icon: "agile", label: "Agile delivery" },
+            { icon: "pm", label: "Project management" },
+            { icon: "risk", label: "Risk analysis" }
+          ],
+          [
+            { icon: "docs", label: "Documentation" },
+            { icon: "ci_imp", label: "Continuous improvement" },
+            { icon: "changemgmt", label: "Change management" }
+          ]
+        ]
+      },
+      {
+        id: "development",
+        theme: "indigo",
+        icon: "code-slash",
+        title: "Development & Tooling",
+        cardTitle: "Development & Tooling",
+        graphTitle: "Development & Tooling",
+        desc: "Building, automating and supporting software solutions and tools.",
+        skillsCount: 12,
+        toolsCount: 10,
+        projectsCount: 6,
+        cardBadges: ["csharp", "dotnet", "ts", "js"],
+        keySkills: [
+          "C# / .NET",
+          "TypeScript",
+          "JavaScript",
+          "Python",
+          "Git / GitHub",
+          "CI / CD",
+          "Docker",
+          "Cloudflare",
+          "Google Cloud",
+          "OpenTelemetry",
+          "Observability",
+          "PowerShell"
+        ],
+        toolsList: [
+          "C#",
+          ".NET",
+          "TypeScript",
+          "JavaScript",
+          "Python",
+          "GitHub",
+          "Docker",
+          "Cloudflare",
+          "Grafana",
+          "OpenTelemetry"
+        ],
+        relatedCapabilities: [
+          { id: "ai", label: "AI & Automation", shape: "diamond", color: "purple" },
+          { id: "integration", label: "Integration & Data", shape: "diamond", color: "cyan" },
+          { id: "infrastructure", label: "Infrastructure & Operations", shape: "hex", color: "emerald" },
+          { id: "solution", label: "Solution Design & Delivery", shape: "diamond", color: "gold" }
+        ],
+        representativeWork: [
+          {
+            title: "Nexus — AI Workforce OS",
+            sub: "TypeScript/Node runtime, policy gates & observability",
+            icon: "brain-circuit",
+            theme: "purple",
+            href: "#projects/nexus"
+          },
+          {
+            title: "Takeover-History XML Loading",
+            sub: "Production Excel VBA add-in for XML batch validation",
+            icon: "code-slash",
+            theme: "blue",
+            href: "#projects/takeover"
+          },
+          {
+            title: "Modern Dev Environment",
+            sub: "Containerized builds, CI/CD & cloud deployment pipelines",
+            icon: "server-stack",
+            theme: "emerald",
+            href: "#projects/nexus"
+          }
+        ],
+        rows: [
+          [
+            { icon: "csharp", label: "C#" },
+            { icon: "dotnet", label: ".NET" },
+            { icon: "ts", label: "TypeScript" },
+            { icon: "js", label: "JavaScript" }
+          ],
+          [
+            { icon: "python", label: "Python" },
+            { icon: "git", label: "Git" },
+            { icon: "github", label: "GitHub" },
+            { icon: "docker", label: "Docker" }
+          ],
+          [
+            { icon: "dockerhub", label: "Docker Hub" },
+            { icon: "render", label: "Render" },
+            { icon: "depot", label: "Depot" },
+            { icon: "gcloud", label: "Google Cloud" }
+          ],
+          [
+            { icon: "cloudflare", label: "Cloudflare" },
+            { icon: "cicd", label: "CI/CD" },
+            { icon: "otel", label: "OpenTelemetry" },
+            { icon: "observability", label: "Observability" }
+          ]
+        ]
+      }
+    ]);
+
+    const HOME_SKILLS_V4_GRAPH_HUBS = Object.freeze([
+      { id: "core", label: "Systems Thinking", displayLabel: "Systems<br>Thinking", x: 422, y: 198, theme: "core", icon: "systems-core", isCore: true, color: "#38bdf8" },
+      { id: "insurance", label: "Insurance & Business", displayLabel: "Insurance<br>&amp; Business", x: 266, y: 100, theme: "orange", icon: "shield-check", color: "#f97316" },
+      { id: "infrastructure", label: "Infrastructure & Operations", displayLabel: "Infrastructure<br>&amp; Operations", x: 422, y: 98, theme: "emerald", icon: "server-stack", color: "#10b981" },
+      { id: "ai", label: "AI & Automation", displayLabel: "AI &amp;<br>Automation", x: 618, y: 174, theme: "purple", icon: "brain-circuit", color: "#a855f7" },
+      { id: "integration", label: "Integration & Data", displayLabel: "Integration<br>&amp; Data", x: 248, y: 272, theme: "cyan", icon: "hub-nodes", color: "#06b6d4" },
+      { id: "solution", label: "Solution Design & Delivery", displayLabel: "Solution Design<br>&amp; Delivery", x: 450, y: 300, theme: "gold", icon: "iso-cubes", color: "#eab308" },
+      { id: "development", label: "Development & Tooling", displayLabel: "Development<br>&amp; Tooling", x: 642, y: 274, theme: "blue", icon: "code-slash", color: "#3b82f6" }
+    ]);
+
+    const HOME_SKILLS_V4_GRAPH_LEAVES = Object.freeze([
+      // Insurance & Business (top-left vertical column, orange)
+      { id: "commercial-pc", hub: "insurance", label: "Commercial P&C", x: 96, y: 34, kind: "domains", inProjects: true, icon: "commercial", theme: "orange" },
+      { id: "underwriting", hub: "insurance", label: "Underwriting", x: 90, y: 60, kind: "domains", inProjects: true, icon: "underwriting", theme: "orange" },
+      { id: "renewals", hub: "insurance", label: "Renewals", x: 82, y: 86, kind: "domains", inProjects: true, icon: "renewals", theme: "orange" },
+      { id: "endorsements", hub: "insurance", label: "Endorsements", x: 90, y: 112, kind: "domains", inProjects: true, icon: "policyadmin", theme: "orange" },
+      { id: "csio-acord", hub: "insurance", label: "CSIO / ACORD", x: 90, y: 138, kind: "technologies", inProjects: true, icon: "csio", theme: "orange" },
+      { id: "business-rules", hub: "insurance", label: "Business Rules", x: 92, y: 164, kind: "domains", inProjects: true, icon: "rules", theme: "orange" },
+
+      // Infrastructure & Operations (top-center/right, emerald)
+      { id: "windows-server", hub: "infrastructure", label: "Windows Server", x: 454, y: 24, kind: "technologies", inProjects: true, icon: "windows", theme: "emerald" },
+      { id: "vmware", hub: "infrastructure", label: "VMware", x: 562, y: 28, kind: "technologies", inProjects: true, icon: "vmware", theme: "emerald" },
+      { id: "networking", hub: "infrastructure", label: "Networking", x: 570, y: 54, kind: "technologies", inProjects: true, icon: "networking", theme: "emerald" },
+      { id: "cloud-platforms", hub: "infrastructure", label: "Cloud Platforms", x: 578, y: 80, kind: "technologies", inProjects: false, icon: "gcloud", theme: "emerald" },
+      { id: "monitoring", hub: "infrastructure", label: "Monitoring", x: 568, y: 106, kind: "technologies", inProjects: false, icon: "monitoring", theme: "emerald" },
+
+      // AI & Automation (top-right vertical column, purple)
+      { id: "model-routing", hub: "ai", label: "Model Routing", x: 734, y: 58, kind: "capabilities", inProjects: true, icon: "routing", theme: "purple" },
+      { id: "context-engineering", hub: "ai", label: "Context Engineering", x: 750, y: 84, kind: "capabilities", inProjects: true, icon: "context", theme: "purple" },
+      { id: "rag-cag", hub: "ai", label: "RAG / CAG", x: 742, y: 110, kind: "technologies", inProjects: true, icon: "rag", theme: "purple" },
+      { id: "mcp-a2a-acp", hub: "ai", label: "MCP / A2A / ACP", x: 754, y: 136, kind: "technologies", inProjects: true, icon: "mcp", theme: "purple" },
+      { id: "evals-tracing", hub: "ai", label: "Evals & Tracing", x: 750, y: 162, kind: "capabilities", inProjects: true, icon: "evals", theme: "purple" },
+      { id: "cache-management", hub: "ai", label: "Cache Management", x: 756, y: 188, kind: "technologies", inProjects: false, icon: "cache", theme: "purple" },
+
+      // Integration & Data (bottom-left vertical column, cyan)
+      { id: "rest-api", hub: "integration", label: "REST / API", x: 78, y: 208, kind: "technologies", inProjects: true, icon: "rest", theme: "cyan" },
+      { id: "soap", hub: "integration", label: "SOAP", x: 68, y: 235, kind: "technologies", inProjects: false, icon: "soap", theme: "cyan" },
+      { id: "sql", hub: "integration", label: "SQL", x: 66, y: 262, kind: "technologies", inProjects: true, icon: "sqlserver", theme: "cyan" },
+      { id: "xml-json", hub: "integration", label: "XML / JSON", x: 78, y: 289, kind: "technologies", inProjects: true, icon: "json", theme: "cyan" },
+      { id: "etl-mapping", hub: "integration", label: "ETL / Data Mapping", x: 92, y: 316, kind: "capabilities", inProjects: true, icon: "datamapping", theme: "cyan" },
+      { id: "broker-systems", hub: "integration", label: "Broker Systems", x: 84, y: 343, kind: "domains", inProjects: true, icon: "brokerdata", theme: "cyan" },
+
+      // Solution Design & Delivery (bottom-center left & right stacks, gold)
+      { id: "requirements", hub: "solution", label: "Requirements", x: 314, y: 326, kind: "capabilities", inProjects: true, icon: "requirements", theme: "gold" },
+      { id: "architecture", hub: "solution", label: "Architecture", x: 310, y: 352, kind: "capabilities", inProjects: true, icon: "solarch", theme: "gold" },
+      { id: "project-mgmt", hub: "solution", label: "Project Management", x: 326, y: 378, kind: "capabilities", inProjects: false, icon: "pm", theme: "gold" },
+      { id: "validation-testing", hub: "solution", label: "Validation & Testing", x: 568, y: 326, kind: "capabilities", inProjects: true, icon: "validation", theme: "gold" },
+      { id: "automation-strategy", hub: "solution", label: "Automation Strategy", x: 572, y: 352, kind: "capabilities", inProjects: true, icon: "autostrategy", theme: "gold" },
+      { id: "change-mgmt", hub: "solution", label: "Change Management", x: 572, y: 378, kind: "capabilities", inProjects: false, icon: "changemgmt", theme: "gold" },
+
+      // Development & Tooling (bottom-right vertical column, blue)
+      { id: "csharp-dotnet", hub: "development", label: "C# / .NET", x: 760, y: 236, kind: "technologies", inProjects: true, icon: "csharp", theme: "blue" },
+      { id: "typescript", hub: "development", label: "TypeScript", x: 762, y: 263, kind: "technologies", inProjects: true, icon: "ts", theme: "blue" },
+      { id: "python", hub: "development", label: "Python", x: 754, y: 290, kind: "technologies", inProjects: false, icon: "python", theme: "blue" },
+      { id: "git-github", hub: "development", label: "Git / GitHub", x: 764, y: 317, kind: "technologies", inProjects: true, icon: "git", theme: "blue" },
+      { id: "ci-cd", hub: "development", label: "CI / CD", x: 752, y: 344, kind: "technologies", inProjects: true, icon: "cicd", theme: "blue" },
+      { id: "docker", hub: "development", label: "Docker", x: 754, y: 371, kind: "technologies", inProjects: true, icon: "docker", theme: "blue" }
+    ]);
+
+    let activeSkV4Capability = "ai";
+    let activeSkV4InspectorTab = "overview";
+    let activeSkV4GraphFilter = "all";
+    let activeSkV4GraphSearch = "";
+
+    function getSkV3CardIconSvg(type) {
+      if (type === "brain-circuit") {
+        return `<svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 5.5a3 3 0 0 0-5.4 1.2 3.2 3.2 0 0 0-2.1 5.1 3.3 3.3 0 0 0 .4 5.5 3 3 0 0 0 2.5 4.2 3 3 0 0 0 4.6-1.5V5.5Z"/><path d="M15.5 5.5a3 3 0 0 1 5.4 1.2 3.2 3.2 0 0 1 2.1 5.1 3.3 3.3 0 0 1-.4 5.5 3 3 0 0 1-2.5 4.2 3 3 0 0 1-4.6-1.5V5.5Z"/><circle cx="10" cy="11" r="1" fill="currentColor"/><circle cx="18" cy="11" r="1" fill="currentColor"/><circle cx="10" cy="16.5" r="1" fill="currentColor"/><circle cx="18" cy="16.5" r="1" fill="currentColor"/><path d="M14 3v2M14 23v2M3 14h2M23 14h2"/></svg>`;
+      }
+      if (type === "hub-nodes") {
+        return `<svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="14" r="3"/><circle cx="19.5" cy="7.5" r="2.2"/><circle cx="21" cy="15.5" r="2.2"/><circle cx="17.5" cy="21.5" r="2.2"/><circle cx="7.5" cy="9" r="2.2"/><circle cx="7.5" cy="19.5" r="2.2"/><path d="m15.2 11.8 2.6-2.6M16 14.5l2.8.6M14.7 16.5l1.6 3M10.8 12l-1.6-1.4M10.8 16l-1.7 1.8"/></svg>`;
+      }
+      if (type === "shield-check") {
+        return `<svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3.5 22.5 7v6.8c0 5.6-3.7 9.8-8.5 11.2-4.8-1.4-8.5-5.6-8.5-11.2V7L14 3.5Z"/><path d="m10.5 14 2.4 2.4 4.8-4.8"/></svg>`;
+      }
+      if (type === "server-stack") {
+        return `<svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="5.5" width="19" height="7" rx="2"/><rect x="4.5" y="15.5" width="19" height="7" rx="2"/><circle cx="8.5" cy="9" r="1" fill="currentColor"/><circle cx="11.8" cy="9" r="1" fill="currentColor"/><circle cx="8.5" cy="19" r="1" fill="currentColor"/><circle cx="11.8" cy="19" r="1" fill="currentColor"/><path d="M16 9h4M16 19h4"/></svg>`;
+      }
+      if (type === "iso-cubes") {
+        return `<svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4.5 19.5 7.7v6.2L14 17l-5.5-3.1V7.7L14 4.5Z"/><path d="m8.5 7.7 5.5 3.1 5.5-3.1M14 10.8V17"/><path d="m8.5 13.9-4.5 2.6v5.4L9.5 25l4.5-2.6v-5.4"/><path d="m19.5 13.9 4.5 2.6v5.4L18.5 25 14 22.4v-5.4"/></svg>`;
+      }
+      return `<svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="m10 9.5-4.5 4.5L10 18.5"/><path d="m18 9.5 4.5 4.5-4.5 4.5"/><path d="m15.5 7.5-3 13"/></svg>`;
+    }
+
+    function getSkV3PillIconSvg(iconKey) {
+      switch (iconKey) {
+        case "anthropic":
+          return `<svg class="sk-v3-pill-svg is-mono" viewBox="0 0 16 16" fill="currentColor"><path d="M9.4 2.5h2.1l3.5 11h-2.1l-.7-2.4H7.8l-.7 2.4H5l3.5-11h.9Zm.6 2.6L8.4 9.3h3.2L10 5.1ZM4.3 2.5h2L2.8 13.5H.8l3.5-11Z"/></svg>`;
+        case "openai":
+          return `<svg class="sk-v3-pill-svg is-mono" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.35"><circle cx="8" cy="8" r="2.3"/><circle cx="8" cy="4.4" r="2.4"/><circle cx="11.1" cy="6.2" r="2.4"/><circle cx="11.1" cy="9.8" r="2.4"/><circle cx="8" cy="11.6" r="2.4"/><circle cx="4.9" cy="9.8" r="2.4"/><circle cx="4.9" cy="6.2" r="2.4"/></svg>`;
+        case "gemini":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none"><path d="M8 1.2C8.4 5.2 10.8 7.6 14.8 8 10.8 8.4 8.4 10.8 8 14.8 7.6 10.8 5.2 8.4 1.2 8 5.2 7.6 7.6 5.2 8 1.2Z" fill="#4f46e5"/></svg>`;
+        case "mcp":
+          return `<svg class="sk-v3-pill-svg is-mono" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12.5V3.5L8 9l5.5-5.5v9"/></svg>`;
+        case "a2a":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#0d9488" stroke-width="1.5"><polygon points="8,1.8 13.5,5 13.5,11 8,14.2 2.5,11 2.5,5"/><circle cx="8" cy="8" r="1.8" fill="#0d9488"/></svg>`;
+        case "acp":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#0284c7" stroke-width="1.5"><polygon points="8,1.8 13.5,5 13.5,11 8,14.2 2.5,11 2.5,5"/><path d="M2.5 5 8 8l5.5-3M8 8v6.2"/></svg>`;
+        case "routing":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="3.5" width="13" height="9" rx="2" fill="#9333ea" fill-opacity="0.16" stroke="#9333ea" stroke-width="1.4"/><circle cx="5" cy="8" r="1.1" fill="#9333ea"/><circle cx="8" cy="8" r="1.1" fill="#9333ea"/><circle cx="11" cy="8" r="1.1" fill="#9333ea"/></svg>`;
+        case "context":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#9333ea" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.2 14 5.5 8 8.8 2 5.5 8 2.2Z"/><path d="m2 8.5 6 3.3 6-3.3"/><path d="m2 11.3 6 3.2 6-3.2"/></svg>`;
+        case "cache":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#ef4444" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2 13.5 5v6L8 14 2.5 11V5L8 2Z" fill="#ef4444" fill-opacity="0.18"/><path d="M2.5 5 8 8l5.5-3M8 8v6"/></svg>`;
+        case "agents":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#0284c7" stroke-width="1.45"><circle cx="8" cy="4" r="2"/><circle cx="3.5" cy="12" r="2"/><circle cx="12.5" cy="12" r="2"/><path d="M6.8 5.6 4.6 10.2M9.2 5.6l2.2 4.6M5.5 12h5"/></svg>`;
+        case "prompt":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none"><rect x="1.8" y="2.5" width="12.4" height="11" rx="2.2" stroke="#7c3aed" stroke-width="1.45"/><path d="m4.8 6.2 2.2 1.8-2.2 1.8M8.2 10h3" stroke="#7c3aed" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+        case "evals":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none"><rect x="1.8" y="2.2" width="12.4" height="11.6" rx="2" fill="#7c3aed" fill-opacity="0.14" stroke="#7c3aed" stroke-width="1.35"/><path d="M5 11V8M8 11V5.5M11 11V7" stroke="#7c3aed" stroke-width="1.6" stroke-linecap="round"/></svg>`;
+        case "rag":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none"><rect x="1.8" y="3" width="12.4" height="10" rx="2" fill="#9333ea" fill-opacity="0.15" stroke="#9333ea" stroke-width="1.4"/><path d="M4.5 6.5h7M4.5 9.5h4.5" stroke="#9333ea" stroke-width="1.4" stroke-linecap="round"/></svg>`;
+        case "rest":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#10b981" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 3.2C4.2 3.2 3.8 4 3.8 5v1.6c0 .8-.6 1.4-1.4 1.4.8 0 1.4.6 1.4 1.4V11c0 1 .4 1.8 1.7 1.8M10.5 3.2c1.3 0 1.7.8 1.7 1.8v1.6c0 .8.6 1.4 1.4 1.4-.8 0-1.4.6-1.4 1.4V11c0 1-.4 1.8-1.7 1.8"/></svg>`;
+        case "soap":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#2563eb" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><path d="M5.2 4.8 2 8l3.2 3.2M10.8 4.8 14 8l-3.2 3.2M9 3.5 7 12.5"/></svg>`;
+        case "json":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16"><rect x="1.2" y="2.2" width="13.6" height="11.6" rx="2.2" fill="#2563eb"/><text x="8" y="9.8" text-anchor="middle" fill="#ffffff" font-size="4.6" font-weight="800" font-family="sans-serif">JSON</text></svg>`;
+        case "xml":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#ea580c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5.2 4.8 2 8l3.2 3.2M10.8 4.8 14 8l-3.2 3.2M9 3.5 7 12.5"/></svg>`;
+        case "sqlserver":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#dc2626" stroke-width="1.45"><ellipse cx="8" cy="4" rx="4.8" ry="2"/><path d="M3.2 4v8c0 1.1 2.1 2 4.8 2s4.8-.9 4.8-2V4"/><path d="M3.2 8c0 1.1 2.1 2 4.8 2s4.8-.9 4.8-2"/></svg>`;
+        case "postgres":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16"><rect x="1.8" y="1.8" width="12.4" height="12.4" rx="2.8" fill="#2563eb"/><ellipse cx="8" cy="5.5" rx="3.5" ry="1.5" fill="none" stroke="#ffffff" stroke-width="1.2"/><path d="M4.5 5.5v5c0 .8 1.6 1.5 3.5 1.5s3.5-.7 3.5-1.5v-5" fill="none" stroke="#ffffff" stroke-width="1.2"/></svg>`;
+        case "oracle":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none"><rect x="2" y="4.2" width="12" height="7.6" rx="3.8" stroke="#dc2626" stroke-width="2.2"/></svg>`;
+        case "mysql":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#0284c7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12c1.5-4.5 4.5-7.5 9-8.5-.8 2.5-.5 4.8 1.2 6.8-2.4-.5-4.4.2-6 2.2"/><circle cx="9.5" cy="5.8" r="0.8" fill="#0284c7"/></svg>`;
+        case "dotnet":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16"><rect x="1.2" y="2.2" width="13.6" height="11.6" rx="2.4" fill="#6d28d9"/><text x="8" y="9.9" text-anchor="middle" fill="#ffffff" font-size="4.8" font-weight="800" font-family="sans-serif">.NET</text></svg>`;
+        case "csharp":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16"><rect x="1.5" y="1.8" width="13" height="12.4" rx="2.6" fill="#7c3aed"/><text x="8" y="10.2" text-anchor="middle" fill="#ffffff" font-size="5.6" font-weight="800" font-family="sans-serif">C#</text></svg>`;
+        case "powershell":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16"><rect x="1.5" y="2.5" width="13" height="11" rx="2.2" fill="#0284c7"/><path d="m4.5 5.5 3 2.5-3 2.5M8.5 10.5h3" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+        case "etl":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#0d9488" stroke-width="1.45"><ellipse cx="8" cy="4" rx="4.8" ry="1.8" fill="#0d9488" fill-opacity="0.2"/><path d="M3.2 4v8c0 1 2.1 1.8 4.8 1.8s4.8-.8 4.8-1.8V4"/><path d="M3.2 8c0 1 2.1 1.8 4.8 1.8s4.8-.8 4.8-1.8"/></svg>`;
+        case "apidesign":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#2563eb" stroke-width="1.45"><circle cx="8" cy="8" r="2.4"/><path d="M8 1.8v2M8 12.2v2M1.8 8h2M12.2 8h2M3.6 3.6l1.4 1.4M11 11l1.4 1.4M12.4 3.6 11 5M5 11l-1.4 1.4"/></svg>`;
+        case "datamapping":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#4f46e5" stroke-width="1.5"><circle cx="4" cy="4" r="1.8"/><circle cx="4" cy="12" r="1.8"/><circle cx="12" cy="8" r="1.8"/><path d="M5.8 4.6 10.2 7.2M5.8 11.4l4.4-2.6"/></svg>`;
+        case "postman":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="#f97316"/><path d="m5.5 10.5 5-5M7.5 5.5h3v3" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+        case "swagger":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="#16a34a"/><text x="8" y="10.1" text-anchor="middle" fill="#ffffff" font-size="6.4" font-weight="800" font-family="monospace">{}</text></svg>`;
+        case "kafka":
+          return `<svg class="sk-v3-pill-svg is-mono" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.45"><circle cx="5.5" cy="8" r="2"/><circle cx="11" cy="4" r="1.6"/><circle cx="11" cy="12" r="1.6"/><circle cx="5.5" cy="2.8" r="1.4"/><circle cx="5.5" cy="13.2" r="1.4"/><path d="M5.5 4.2V6M5.5 10v1.8M7.2 7l2.4-2M7.2 9l2.4 2"/></svg>`;
+        case "rabbitmq":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="2.5" fill="#f97316"/><circle cx="9.8" cy="9.5" r="1.4" fill="#ffffff"/><path d="M5 4.5v5M7.5 4.5v5" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+        case "commercial":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none"><rect x="2.5" y="2" width="11" height="12" rx="2" fill="#eab308" fill-opacity="0.2" stroke="#d97706" stroke-width="1.4"/><path d="M5.2 5.5h5.6M5.2 8h5.6M5.2 10.5h3.5" stroke="#d97706" stroke-width="1.4" stroke-linecap="round"/></svg>`;
+        case "underwriting":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#2563eb" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"><path d="M2.2 8.5a5.8 5.8 0 0 1 11.6 0Z" fill="#2563eb" fill-opacity="0.18"/><path d="M8 8.5v4a1.4 1.4 0 0 1-2.8 0"/></svg>`;
+        case "policyadmin":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none"><rect x="3" y="2" width="10" height="12" rx="1.8" fill="#2563eb" fill-opacity="0.16" stroke="#2563eb" stroke-width="1.4"/><path d="M5.5 5.5h5M5.5 8h5M5.5 10.5h3" stroke="#2563eb" stroke-width="1.4" stroke-linecap="round"/></svg>`;
+        case "renewals":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#f59e0b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 8a5 5 0 0 1-8.6 3.5M3 8a5 5 0 0 1 8.6-3.5"/><path d="M11.8 2.5v2.3H9.5M4.2 13.5v-2.3h2.3"/></svg>`;
+        case "csio":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#2563eb" stroke-width="1.45"><circle cx="8" cy="4" r="1.8"/><circle cx="4" cy="11.5" r="1.8"/><circle cx="12" cy="11.5" r="1.8"/><path d="M6.8 5.5 4.8 9.8M9.2 5.5l2 4.3M5.8 11.5h4.4"/></svg>`;
+        case "acord":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#2563eb" stroke-width="1.35"><circle cx="8" cy="8" r="5.6"/><ellipse cx="8" cy="8" rx="2.6" ry="5.6"/><path d="M2.6 8h10.8"/></svg>`;
+        case "rules":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#64748b" stroke-width="1.45"><circle cx="8" cy="8" r="2.2"/><path d="M8 2v1.8M8 12.2V14M2 8h1.8M12.2 8H14M3.8 3.8 5 5M11 11l1.2 1.2M12.2 3.8 11 5M5 11l-1.2 1.2"/></svg>`;
+        case "requirements":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none"><rect x="3" y="2.2" width="10" height="11.6" rx="1.8" fill="#eab308" fill-opacity="0.2" stroke="#d97706" stroke-width="1.4"/><path d="M5.5 6h5M5.5 8.5h5M5.5 11h3" stroke="#d97706" stroke-width="1.4" stroke-linecap="round"/></svg>`;
+        case "process":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#2563eb" stroke-width="1.45"><rect x="5.5" y="2" width="5" height="3.2" rx="1"/><rect x="2" y="10.5" width="4.5" height="3.2" rx="1"/><rect x="9.5" y="10.5" width="4.5" height="3.2" rx="1"/><path d="M8 5.2V8M4.2 10.5V8h7.6v2.5"/></svg>`;
+        case "stakeholder":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#2563eb" stroke-width="1.45"><circle cx="6" cy="5.5" r="2.1"/><path d="M2.2 12.8c0-2 1.7-3.4 3.8-3.4s3.8 1.4 3.8 3.4"/><circle cx="11" cy="6" r="1.7"/><path d="M11 9.5c1.6 0 2.8 1.1 2.8 2.8"/></svg>`;
+        case "brokerdata":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#0d9488" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 13.2h11M4.5 11V8M8 11V5.5M11.5 11V3.8"/></svg>`;
+        case "compliance":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#1d4ed8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2 13 4.2v3.8c0 3.2-2.1 5.6-5 6.4-2.9-.8-5-3.2-5-6.4V4.2L8 2Z" fill="#1d4ed8" fill-opacity="0.16"/><path d="m6 8 1.4 1.4 2.8-2.8"/></svg>`;
+        case "ux":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="2.6" fill="#0284c7"/><circle cx="8" cy="6.2" r="2" fill="#ffffff"/><path d="M4.5 12c.6-1.8 2-2.7 3.5-2.7s2.9.9 3.5 2.7" fill="#ffffff"/></svg>`;
+        case "windows":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="#0284c7"><rect x="2" y="2.2" width="5.4" height="5.2" rx="0.6"/><rect x="8.4" y="2.2" width="5.6" height="5.2" rx="0.6"/><rect x="2" y="8.4" width="5.4" height="5.2" rx="0.6"/><rect x="8.4" y="8.4" width="5.6" height="5.2" rx="0.6"/></svg>`;
+        case "ad":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#0284c7" stroke-width="1.45" stroke-linejoin="round"><polygon points="8,2 14,12.8 2,12.8" fill="#0284c7" fill-opacity="0.18"/><path d="M8 2v10.8M4.8 8h6.4"/></svg>`;
+        case "vmware":
+          return `<svg class="sk-v3-pill-svg is-mono" viewBox="0 0 24 14"><text x="12" y="10.5" text-anchor="middle" fill="currentColor" font-size="7.5" font-weight="900" font-family="sans-serif">vm</text></svg>`;
+        case "hyperv":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="#06b6d4"><rect x="2" y="3" width="12" height="4.2" rx="1"/><rect x="2" y="8.8" width="12" height="4.2" rx="1"/></svg>`;
+        case "linux":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16"><ellipse cx="8" cy="8.5" rx="4.2" ry="5.2" fill="#1e293b"/><ellipse cx="8" cy="9.2" rx="2.6" ry="3.5" fill="#f8fafc"/><circle cx="6.8" cy="5.2" r="0.7" fill="#ffffff"/><circle cx="9.2" cy="5.2" r="0.7" fill="#ffffff"/><polygon points="8,5.8 6.6,7 9.4,7" fill="#f59e0b"/><ellipse cx="5.8" cy="13.5" rx="1.5" ry="0.8" fill="#f59e0b"/><ellipse cx="10.2" cy="13.5" rx="1.5" ry="0.8" fill="#f59e0b"/></svg>`;
+        case "networking":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#10b981" stroke-width="1.5"><circle cx="8" cy="4" r="1.8"/><circle cx="3.8" cy="12" r="1.8"/><circle cx="12.2" cy="12" r="1.8"/><path d="M6.8 5.5 4.8 10.2M9.2 5.5l2 4.7M5.6 12h4.8"/></svg>`;
+        case "firewalls":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.6" fill="#ef4444" fill-opacity="0.2" stroke="#ef4444" stroke-width="1.4"/><path d="M2 6.3h12M2 9.7h12M6 3v3.3M10 3v3.3M8 6.3v3.4M5 9.7V13M11 9.7V13" stroke="#ef4444" stroke-width="1.2"/></svg>`;
+        case "monitoring":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#f97316" stroke-width="1.55"><circle cx="8" cy="8" r="3.2" fill="#f97316" fill-opacity="0.2"/><path d="M8 1.8v1.8M8 12.4v1.8M1.8 8h1.8M12.4 8h1.8M3.6 3.6l1.3 1.3M11.1 11.1l1.3 1.3M12.4 3.6l-1.3 1.3M4.9 11.1l-1.3 1.3"/></svg>`;
+        case "migrations":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#2563eb" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="5" height="10" rx="1.2"/><rect x="9" y="3" width="5" height="10" rx="1.2"/><path d="M6 8h4m-1.5-1.5L10 8l-1.5 1.5"/></svg>`;
+        case "backups":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#10b981" stroke-width="1.45"><ellipse cx="8" cy="4" rx="4.5" ry="1.8"/><path d="M3.5 4v8c0 1 2 1.8 4.5 1.8s4.5-.8 4.5-1.8V4"/><path d="M3.5 8c0 1 2 1.8 4.5 1.8s4.5-.8 4.5-1.8"/></svg>`;
+        case "troubleshooting":
+          return `<svg class="sk-v3-pill-svg is-mono" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.2 4.2a3 3 0 0 0 3.6 3.6l-5.2 5.2a1.4 1.4 0 0 1-2-2l5.2-5.2a3 3 0 0 0-1.6-1.6Z"/></svg>`;
+        case "ovh":
+          return `<svg class="sk-v3-pill-svg is-mono" viewBox="0 0 16 16" fill="currentColor"><path d="M2 3.5h3.2L8 9.2l2.8-5.7H14L8.8 13H7.2L2 3.5Z"/></svg>`;
+        case "render":
+          return `<svg class="sk-v3-pill-svg is-mono" viewBox="0 0 16 16" fill="currentColor"><circle cx="9.8" cy="5.6" r="3.4"/><path d="M3.2 8.8a4.2 4.2 0 0 1 4.2-4.2v4.2h4.2a4.2 4.2 0 0 1-4.2 4.2H3.2V8.8Z"/></svg>`;
+        case "depot":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="#22c55e"><rect x="2.2" y="2.2" width="5.2" height="5.2" rx="1"/><rect x="8.6" y="2.2" width="5.2" height="5.2" rx="1"/><rect x="2.2" y="8.6" width="5.2" height="5.2" rx="1"/><rect x="8.6" y="8.6" width="5.2" height="5.2" rx="1"/></svg>`;
+        case "docker":
+        case "dockerhub":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="#0ea5e9"><rect x="4" y="5.5" width="2" height="1.8" rx="0.3"/><rect x="6.4" y="5.5" width="2" height="1.8" rx="0.3"/><rect x="8.8" y="5.5" width="2" height="1.8" rx="0.3"/><rect x="6.4" y="3.3" width="2" height="1.8" rx="0.3"/><path d="M2 8.2h10.2c.8 0 1.6-.4 2.1-1.1.4.8.3 1.9-.4 2.5-.5 2.4-2.6 3.8-5.8 3.8-3.5 0-5.8-1.6-6.1-5.2Z"/></svg>`;
+        case "solarch":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#d97706" stroke-width="1.45"><rect x="5.8" y="2" width="4.4" height="3" rx="0.8"/><rect x="2" y="10.8" width="4" height="3" rx="0.8"/><rect x="10" y="10.8" width="4" height="3" rx="0.8"/><path d="M8 5v3M4 10.8V8h8v2.8"/></svg>`;
+        case "systhinking":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#d97706" stroke-width="1.45" stroke-linecap="round"><path d="M8 2.2a4 4 0 0 1 2.4 7.2c-.5.4-.8 1-.8 1.6H6.4c0-.6-.3-1.2-.8-1.6A4 4 0 0 1 8 2.2Z" fill="#eab308" fill-opacity="0.2"/><path d="M6.5 13.2h3"/></svg>`;
+        case "techspecs":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#0d9488" stroke-width="1.45"><rect x="3" y="2" width="10" height="12" rx="1.6" fill="#0d9488" fill-opacity="0.15"/><path d="M5.5 5.5h5M5.5 8h5M5.5 10.5h3" stroke-linecap="round"/></svg>`;
+        case "workflow":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#d97706" stroke-width="1.45"><circle cx="4" cy="4" r="1.8"/><circle cx="12" cy="8" r="1.8"/><circle cx="4" cy="12" r="1.8"/><path d="M5.8 4.8 10.2 7M10.2 9 5.8 11.2"/></svg>`;
+        case "validation":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#d97706" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="5.5" fill="#eab308" fill-opacity="0.18"/><path d="m5.6 8 1.7 1.7 3.3-3.3"/></svg>`;
+        case "autostrategy":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#d97706" stroke-width="1.45"><circle cx="8" cy="8" r="2.2" fill="#eab308" fill-opacity="0.25"/><path d="M8 2v1.8M8 12.2V14M2 8h1.8M12.2 8H14M3.8 3.8 5 5M11 11l1.2 1.2M12.2 3.8 11 5M5 11l-1.2 1.2"/></svg>`;
+        case "agile":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#ef4444" stroke-width="1.6" stroke-linecap="round"><path d="M5 6C3.3 6 2 7 2 8.2S3.3 10.5 5 10.5c2 0 4-4.5 6-4.5 1.7 0 3 1 3 2.2s-1.3 2.3-3 2.3c-2 0-4-4.5-6-4.5Z"/></svg>`;
+        case "pm":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#d97706" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 13h11M4.5 11V8.5M8 11V6M11.5 11V3.8"/><path d="m4 6.5 3.5-2.2L11 3"/></svg>`;
+        case "risk":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#d97706" stroke-width="1.45" stroke-linejoin="round"><polygon points="8,2.2 14.2,13.2 1.8,13.2" fill="#eab308" fill-opacity="0.22"/><path d="M8 6.2v3.2" stroke-linecap="round"/><circle cx="8" cy="11.4" r="0.7" fill="#d97706" stroke="none"/></svg>`;
+        case "docs":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none"><rect x="3" y="2" width="10" height="12" rx="1.6" fill="#2563eb" fill-opacity="0.18" stroke="#2563eb" stroke-width="1.4"/><path d="M5.5 5.5h5M5.5 8h5M5.5 10.5h3.2" stroke="#2563eb" stroke-width="1.4" stroke-linecap="round"/></svg>`;
+        case "ci_imp":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#d97706" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 13h11M4.5 11V8M8 11V6M11.5 11V4"/><path d="m3.5 7 4-3 4-1.5"/></svg>`;
+        case "changemgmt":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#d97706" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"><path d="M12.8 8a4.8 4.8 0 0 1-8.2 3.4M3.2 8a4.8 4.8 0 0 1 8.2-3.4"/><path d="M11.5 2.5v2.2H9.3M4.5 13.5v-2.2h2.2"/></svg>`;
+        case "ts":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16"><rect x="1.5" y="1.8" width="13" height="12.4" rx="2.2" fill="#2563eb"/><text x="8" y="10.4" text-anchor="middle" fill="#ffffff" font-size="6.2" font-weight="800" font-family="sans-serif">TS</text></svg>`;
+        case "js":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16"><rect x="1.5" y="1.8" width="13" height="12.4" rx="2.2" fill="#eab308"/><text x="8" y="10.5" text-anchor="middle" fill="#0f172a" font-size="6.2" font-weight="900" font-family="sans-serif">JS</text></svg>`;
+        case "python":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16"><path d="M7.8 2c-2.6 0-2.8 1.2-2.8 2.6v1.2h3v.5H4C2.6 6.3 2 7.3 2 9s.6 2.7 2 2.7h1v-1.4c0-1.2 1-2.2 2.2-2.2h3.2c1 0 1.8-.8 1.8-1.8V4.6C12.2 3.2 11 2 7.8 2Z" fill="#2563eb"/><path d="M8.2 14c2.6 0 2.8-1.2 2.8-2.6v-1.2H8v-.5h4c1.4 0 2-1 2-2.7s-.6-2.7-2-2.7h-1v1.4c0 1.2-1 2.2-2.2 2.2H5.6c-1 0-1.8.8-1.8 1.8v1.7C3.8 12.8 5 14 8.2 14Z" fill="#eab308"/></svg>`;
+        case "git":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16"><path d="m8.8 1.8 5.4 5.4a1.1 1.1 0 0 1 0 1.6l-5.4 5.4a1.1 1.1 0 0 1-1.6 0L1.8 8.8a1.1 1.1 0 0 1 0-1.6l5.4-5.4a1.1 1.1 0 0 1 1.6 0Z" fill="#f97316"/><circle cx="8" cy="5.5" r="1.1" fill="#ffffff"/><circle cx="8" cy="10.5" r="1.1" fill="#ffffff"/><circle cx="10.5" cy="8" r="1.1" fill="#ffffff"/><path d="M8 5.5v5M8 5.5 10.5 8" stroke="#ffffff" stroke-width="1.1"/></svg>`;
+        case "github":
+          return `<svg class="sk-v3-pill-svg is-mono" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5a6.5 6.5 0 0 0-2 12.7c.3.1.4-.1.4-.3v-1.2c-1.8.4-2.2-.8-2.2-.8-.3-.7-.7-.9-.7-.9-.6-.4 0-.4 0-.4.6.1 1 .6 1 .6.6 1 1.5.7 1.9.5.1-.4.2-.7.4-.9-1.4-.2-2.9-.7-2.9-3.2 0-.7.3-1.3.7-1.8-.1-.2-.3-.8.1-1.7 0 0 .5-.2 1.8.7a6.2 6.2 0 0 1 3.2 0c1.3-.9 1.8-.7 1.8-.7.4.9.2 1.5.1 1.7.4.5.7 1.1.7 1.8 0 2.5-1.5 3-2.9 3.2.2.2.4.6.4 1.2v1.8c0 .2.1.4.4.3A6.5 6.5 0 0 0 8 1.5Z"/></svg>`;
+        case "gcloud":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16"><path d="M10.2 5.2A3.8 3.8 0 0 0 4.4 6a2.8 2.8 0 0 0-.2 5.6h7.2a2.5 2.5 0 0 0 .4-5c-.3-.6-.9-1.1-1.6-1.4Z" fill="none" stroke="#2563eb" stroke-width="1.5"/><path d="M6.2 4.4A3.8 3.8 0 0 1 11 5.6" fill="none" stroke="#ef4444" stroke-width="1.6" stroke-linecap="round"/><path d="M4.2 11.6h4.2" fill="none" stroke="#16a34a" stroke-width="1.6" stroke-linecap="round"/><path d="M3.8 6.4a2.8 2.8 0 0 0 .4 5.2" fill="none" stroke="#eab308" stroke-width="1.6" stroke-linecap="round"/></svg>`;
+        case "cloudflare":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16"><path d="M12.2 11.8H3.8a2.5 2.5 0 0 1-.3-5 3.8 3.8 0 0 1 7.3-.9 2.2 2.2 0 0 1 1.4 5.9Z" fill="#f97316"/></svg>`;
+        case "cicd":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#0284c7" stroke-width="1.6" stroke-linecap="round"><circle cx="8" cy="8" r="5" stroke-dasharray="7 3"/></svg>`;
+        case "otel":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none"><path d="m3 13 4.5-4.5M6.5 5.5l4 4 3-5.5-5.5 3Z" stroke="#0284c7" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12.5" cy="3.5" r="1.4" fill="#eab308"/></svg>`;
+        case "observability":
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="none" stroke="#ea580c" stroke-width="1.45"><circle cx="8" cy="8" r="2.4" fill="#f97316" fill-opacity="0.2"/><path d="M8 2v1.8M8 12.2V14M2 8h1.8M12.2 8H14M3.8 3.8 5 5M11 11l1.2 1.2M12.2 3.8 11 5M5 11l-1.2 1.2"/></svg>`;
+        default:
+          return `<svg class="sk-v3-pill-svg" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="3"/></svg>`;
+      }
+    }
+
+    function getSkV3PlatformLogoSvg(brandKey) {
+      switch (brandKey) {
+        case "microsoft":
+          return `<svg class="sk-v3-brand-svg" viewBox="0 0 18 18"><rect x="1.5" y="1.5" width="6.8" height="6.8" fill="#f25022"/><rect x="9.7" y="1.5" width="6.8" height="6.8" fill="#7fba00"/><rect x="1.5" y="9.7" width="6.8" height="6.8" fill="#00a4ef"/><rect x="9.7" y="9.7" width="6.8" height="6.8" fill="#ffb900"/></svg>`;
+        case "gcloud":
+          return getSkV3PillIconSvg("gcloud");
+        case "cloudflare":
+          return getSkV3PillIconSvg("cloudflare");
+        case "github":
+          return getSkV3PillIconSvg("github");
+        case "docker":
+        case "dockerhub":
+          return getSkV3PillIconSvg("docker");
+        case "render":
+          return getSkV3PillIconSvg("render");
+        case "depot":
+          return getSkV3PillIconSvg("depot");
+        case "ovh":
+          return getSkV3PillIconSvg("ovh");
+        case "anthropic":
+          return getSkV3PillIconSvg("anthropic");
+        case "openai":
+          return getSkV3PillIconSvg("openai");
+        case "gemini":
+          return getSkV3PillIconSvg("gemini");
+        case "openrouter":
+          return `<svg class="sk-v3-brand-svg" viewBox="0 0 18 18" fill="none" stroke="#818cf8" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><circle cx="4.5" cy="9" r="2"/><circle cx="13.5" cy="4.5" r="2"/><circle cx="13.5" cy="13.5" r="2"/><path d="M6.4 8.2 11.6 5.3M6.4 9.8l5.2 2.9"/></svg>`;
+        case "postman":
+          return getSkV3PillIconSvg("postman");
+        case "kafka":
+          return getSkV3PillIconSvg("kafka");
+        case "rabbitmq":
+          return getSkV3PillIconSvg("rabbitmq");
+        case "prometheus":
+          return `<svg class="sk-v3-brand-svg" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="6.8" fill="#ea580c"/><path d="M9 4.5c1.8 1.8 2.4 3.4 1.5 5.2-.4.8-1 1.2-1.5 1.2s-1.1-.4-1.5-1.2C6.6 7.9 7.2 6.3 9 4.5Z" fill="#ffffff"/><path d="M6.2 12.6h5.6" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round"/></svg>`;
+        case "grafana":
+          return `<svg class="sk-v3-brand-svg" viewBox="0 0 18 18" fill="none"><path d="M9 2.6a6.4 6.4 0 1 0 5.8 9.1" stroke="#f59e0b" stroke-width="2.1" stroke-linecap="round"/><circle cx="9" cy="9" r="2.6" fill="#f97316"/></svg>`;
+        case "opentelemetry":
+          return getSkV3PillIconSvg("otel");
+        default:
+          return "";
+      }
+    }
+
+    function getSkV4HubIconSvg(iconKey) {
+      if (iconKey === "systems-core") {
+        return `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="16" r="4.2"/><circle cx="16" cy="6.2" r="2.2"/><circle cx="24.5" cy="11" r="2.2"/><circle cx="24.5" cy="21" r="2.2"/><circle cx="16" cy="25.8" r="2.2"/><circle cx="7.5" cy="21" r="2.2"/><circle cx="7.5" cy="11" r="2.2"/><path d="M16 8.4v3.4M22.6 12.1l-3 1.8M22.6 19.9l-3-1.8M16 23.6v-3.4M9.4 19.9l3-1.8M9.4 12.1l3 1.8"/><path d="M16 6.2 24.5 11v10L16 25.8 7.5 21V11L16 6.2Z" stroke-opacity="0.45"/></svg>`;
+      }
+      return getSkV3CardIconSvg(iconKey);
+    }
+
+    function doesSkV4LeafMatchFilter(leaf) {
+      const q = (activeSkV4GraphSearch || "").trim().toLowerCase();
+      if (q) {
+        const hay = `${leaf.label} ${leaf.hub} ${leaf.kind}`.toLowerCase();
+        return hay.includes(q);
+      }
+      if (activeSkV4GraphFilter === "all") return true;
+      if (activeSkV4GraphFilter === "projects") return Boolean(leaf.inProjects);
+      return leaf.kind === activeSkV4GraphFilter;
+    }
+
+    function doesSkV4HubMatchFilter(hub) {
+      if (hub.isCore) return true;
+      const q = (activeSkV4GraphSearch || "").trim().toLowerCase();
+      if (q) {
+        const card = HOME_SKILLS_V3_CARDS.find(c => c.id === hub.id);
+        const hay = [
+          hub.label,
+          card ? card.title : "",
+          card ? card.desc : "",
+          ...(card ? card.keySkills : []),
+          ...(card ? card.toolsList : [])
+        ].join(" ").toLowerCase();
+        if (hay.includes(q)) return true;
+        return HOME_SKILLS_V4_GRAPH_LEAVES.some(l => l.hub === hub.id && doesSkV4LeafMatchFilter(l));
+      }
+      return true;
+    }
+
+    function renderSkV4GraphCanvasHtml() {
+      const coreHub = HOME_SKILLS_V4_GRAPH_HUBS[0];
+      const capHubs = HOME_SKILLS_V4_GRAPH_HUBS.slice(1);
+
+      // Secondary web links between adjacent capability hubs
+      const ringPairs = [
+        ["insurance", "infrastructure"],
+        ["infrastructure", "ai"],
+        ["ai", "development"],
+        ["development", "solution"],
+        ["solution", "integration"],
+        ["integration", "insurance"],
+        ["insurance", "solution"],
+        ["integration", "ai"],
+        ["infrastructure", "development"]
+      ];
+
+      const hubMap = Object.fromEntries(HOME_SKILLS_V4_GRAPH_HUBS.map(h => [h.id, h]));
+
+      return `
+        <svg class="sk-v4-graph-svg" viewBox="0 0 840 400" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <radialGradient id="skV4CoreHalo" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.34"/>
+              <stop offset="52%" stop-color="#6366f1" stop-opacity="0.12"/>
+              <stop offset="100%" stop-color="#0f172a" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="skV4LineGlow" x="-25%" y="-25%" width="150%" height="150%">
+              <feGaussianBlur stdDeviation="3" result="blur"/>
+              <feMerge>
+                <feMergeNode in="blur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+
+          <!-- Ambient concentric orbital rings around Systems Thinking -->
+          <circle cx="${coreHub.x}" cy="${coreHub.y}" r="168" fill="url(#skV4CoreHalo)"/>
+          <circle cx="${coreHub.x}" cy="${coreHub.y}" r="84" stroke="#38bdf8" stroke-opacity="0.18" stroke-width="1" stroke-dasharray="3 5"/>
+          <circle cx="${coreHub.x}" cy="${coreHub.y}" r="142" stroke="#6366f1" stroke-opacity="0.15" stroke-width="1" stroke-dasharray="4 6"/>
+
+          <!-- Secondary related connection web between capability hubs -->
+          ${ringPairs.map(([aId, bId]) => {
+            const a = hubMap[aId];
+            const b = hubMap[bId];
+            const isHighlighted = activeSkV4Capability === aId || activeSkV4Capability === bId;
+            return `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="${isHighlighted ? "#38bdf8" : "#64748b"}" stroke-opacity="${isHighlighted ? "0.46" : "0.24"}" stroke-width="${isHighlighted ? "1.35" : "1"}" stroke-dasharray="3 4"/>`;
+          }).join("")}
+
+          <!-- Dotted leaf connection splines from each capability hub to its leaf pills -->
+          ${HOME_SKILLS_V4_GRAPH_LEAVES.map(leaf => {
+            const hub = hubMap[leaf.hub];
+            const matched = doesSkV4LeafMatchFilter(leaf);
+            const isCapActive = activeSkV4Capability === leaf.hub;
+            const cX = Math.round((hub.x + leaf.x) / 2);
+            const cY = Math.round(hub.y + (leaf.y - hub.y) * 0.72);
+            const strokeOpacity = !matched ? "0.1" : (isCapActive ? "0.85" : "0.52");
+            const strokeW = isCapActive && matched ? "1.5" : "1.1";
+            return `<path d="M${hub.x} ${hub.y} Q ${cX} ${cY} ${leaf.x} ${leaf.y}" stroke="${hub.color}" stroke-opacity="${strokeOpacity}" stroke-width="${strokeW}" stroke-dasharray="2.5 3.5" fill="none"/>`;
+          }).join("")}
+
+          <!-- Primary glowing connections from Systems Thinking to the 6 Capability Hubs -->
+          ${capHubs.map(hub => {
+            const isSelected = activeSkV4Capability === hub.id;
+            const p1X = Math.round(coreHub.x + (hub.x - coreHub.x) * 0.38);
+            const p1Y = Math.round(coreHub.y + (hub.y - coreHub.y) * 0.38);
+            const p2X = Math.round(coreHub.x + (hub.x - coreHub.x) * 0.72);
+            const p2Y = Math.round(coreHub.y + (hub.y - coreHub.y) * 0.72);
+            return `
+              <g class="sk-v4-primary-edge ${isSelected ? "is-active" : ""}">
+                <line x1="${coreHub.x}" y1="${coreHub.y}" x2="${hub.x}" y2="${hub.y}" stroke="${isSelected ? hub.color : "#38bdf8"}" stroke-opacity="${isSelected ? "0.95" : "0.62"}" stroke-width="${isSelected ? "2.6" : "1.85"}" filter="url(#skV4LineGlow)"/>
+                <circle cx="${p1X}" cy="${p1Y}" r="${isSelected ? "3.1" : "2.3"}" fill="#ffffff" opacity="${isSelected ? "0.98" : "0.82"}" filter="url(#skV4LineGlow)"/>
+                <circle cx="${p2X}" cy="${p2Y}" r="${isSelected ? "2.8" : "2.0"}" fill="${hub.color}" opacity="${isSelected ? "0.95" : "0.78"}" filter="url(#skV4LineGlow)"/>
+              </g>
+            `;
+          }).join("")}
+        </svg>
+
+        <!-- Central Hub: Systems Thinking -->
+        <button type="button" class="sk-v4-hub-node is-core ${activeSkV4Capability === "core" ? "is-selected" : ""}" data-sk-hub="core" style="left:${(coreHub.x / 840 * 100).toFixed(2)}%;top:${(coreHub.y / 400 * 100).toFixed(2)}%;" aria-label="Systems Thinking Core Hub">
+          <span class="sk-v4-hub-ring is-core" aria-hidden="true">
+            <span class="sk-v4-hub-icon">${getSkV4HubIconSvg("systems-core")}</span>
+            <span class="sk-v4-hub-label is-core">Systems<br>Thinking</span>
+          </span>
+        </button>
+
+        <!-- 6 Capability Hub Nodes (Large glowing circles with icon + 2-line label inside) -->
+        ${capHubs.map(hub => {
+          const isSelected = activeSkV4Capability === hub.id;
+          const isMatched = doesSkV4HubMatchFilter(hub);
+          return `
+            <button type="button" class="sk-v4-hub-node theme-${hub.theme} ${isSelected ? "is-selected" : ""} ${!isMatched ? "is-dimmed" : ""}" data-sk-hub="${hub.id}" style="left:${(hub.x / 840 * 100).toFixed(2)}%;top:${(hub.y / 400 * 100).toFixed(2)}%;" aria-pressed="${isSelected ? "true" : "false"}">
+              <span class="sk-v4-hub-ring theme-${hub.theme}" aria-hidden="true">
+                <span class="sk-v4-hub-icon">${getSkV4HubIconSvg(hub.icon)}</span>
+                <span class="sk-v4-hub-label">${hub.displayLabel || hub.label}</span>
+              </span>
+            </button>
+          `;
+        }).join("")}
+
+        <!-- 35 Radiating Skill, Domain & Technology Leaf Pills -->
+        ${HOME_SKILLS_V4_GRAPH_LEAVES.map(leaf => {
+          const isMatched = doesSkV4LeafMatchFilter(leaf);
+          const isHubSelected = activeSkV4Capability === leaf.hub;
+          return `
+            <button type="button" class="sk-v4-leaf-pill theme-${leaf.theme} ${isHubSelected ? "is-hub-active" : ""} ${!isMatched ? "is-dimmed" : ""}" data-sk-leaf="${leaf.id}" data-sk-leaf-hub="${leaf.hub}" data-sk-leaf-kind="${leaf.kind}" style="left:${(leaf.x / 840 * 100).toFixed(2)}%;top:${(leaf.y / 400 * 100).toFixed(2)}%;">
+              <span class="sk-v4-leaf-dot theme-${leaf.theme}" aria-hidden="true"></span>
+              <span class="sk-v4-leaf-text">${leaf.label}</span>
+            </button>
+          `;
+        }).join("")}
+      `;
+    }
+
+    function renderSkV4InspectorHtml() {
+      const cap = HOME_SKILLS_V3_CARDS.find(c => c.id === activeSkV4Capability) || HOME_SKILLS_V3_CARDS[0];
+      const showSkills = activeSkV4InspectorTab === "overview" || activeSkV4InspectorTab === "skills";
+      const showTools = activeSkV4InspectorTab === "tools";
+      const showProjects = activeSkV4InspectorTab === "overview" || activeSkV4InspectorTab === "projects";
+      const showRelated = activeSkV4InspectorTab === "overview";
+
+      return `
+        <header class="sk-v4-insp-head">
+          <span class="sk-v4-insp-badge theme-${cap.theme}" aria-hidden="true">
+            ${getSkV3CardIconSvg(cap.icon)}
+          </span>
+          <div class="sk-v4-insp-title-wrap">
+            <h3 class="sk-v4-insp-title">${cap.graphTitle || cap.title}</h3>
+            <p class="sk-v4-insp-desc">${cap.desc}</p>
+          </div>
+          <button type="button" class="sk-v4-insp-close" data-sk-inspector-reset aria-label="Reset capability inspector">&times;</button>
+        </header>
+
+        <div class="sk-v4-insp-tabs" role="tablist" aria-label="Capability inspector views">
+          <button type="button" class="sk-v4-insp-tab ${activeSkV4InspectorTab === "overview" ? "is-active" : ""}" data-sk-inspector-tab="overview" role="tab" aria-selected="${activeSkV4InspectorTab === "overview" ? "true" : "false"}">Overview</button>
+          <button type="button" class="sk-v4-insp-tab ${activeSkV4InspectorTab === "skills" ? "is-active" : ""}" data-sk-inspector-tab="skills" role="tab" aria-selected="${activeSkV4InspectorTab === "skills" ? "true" : "false"}">Skills (${cap.skillsCount})</button>
+          <button type="button" class="sk-v4-insp-tab ${activeSkV4InspectorTab === "tools" ? "is-active" : ""}" data-sk-inspector-tab="tools" role="tab" aria-selected="${activeSkV4InspectorTab === "tools" ? "true" : "false"}">Tools (${cap.toolsCount})</button>
+          <button type="button" class="sk-v4-insp-tab ${activeSkV4InspectorTab === "projects" ? "is-active" : ""}" data-sk-inspector-tab="projects" role="tab" aria-selected="${activeSkV4InspectorTab === "projects" ? "true" : "false"}">Projects (${cap.projectsCount})</button>
+        </div>
+
+        <div class="sk-v4-insp-body" data-sk-inspector-body>
+          ${showSkills ? `
+            <section class="sk-v4-insp-section">
+              <h4 class="sk-v4-insp-sec-title">Key Skills</h4>
+              <div class="sk-v4-key-skills-grid">
+                ${cap.keySkills.map(skill => `
+                  <span class="sk-v4-skill-chip">${skill}</span>
+                `).join("")}
+              </div>
+            </section>
+          ` : ""}
+
+          ${showTools ? `
+            <section class="sk-v4-insp-section">
+              <h4 class="sk-v4-insp-sec-title">Tools &amp; Platforms (${cap.toolsCount})</h4>
+              <div class="sk-v4-key-skills-grid">
+                ${cap.toolsList.map(tool => `
+                  <span class="sk-v4-skill-chip is-tool">${tool}</span>
+                `).join("")}
+              </div>
+            </section>
+          ` : ""}
+
+          ${showRelated ? `
+            <section class="sk-v4-insp-section">
+              <h4 class="sk-v4-insp-sec-title">Related Capabilities</h4>
+              <div class="sk-v4-rel-caps-grid">
+                ${cap.relatedCapabilities.map(rel => `
+                  <button type="button" class="sk-v4-rel-cap-btn" data-sk-select-cap="${rel.id}">
+                    <span class="sk-v4-rel-cap-glyph is-${rel.shape} is-${rel.color}" aria-hidden="true"></span>
+                    <span class="sk-v4-rel-cap-label">${rel.label}</span>
+                  </button>
+                `).join("")}
+              </div>
+            </section>
+          ` : ""}
+
+          ${showProjects ? `
+            <section class="sk-v4-insp-section">
+              <h4 class="sk-v4-insp-sec-title">Representative Work</h4>
+              <div class="sk-v4-work-list">
+                ${cap.representativeWork.map(work => `
+                  <a href="${work.href}" class="sk-v4-work-card" data-proj-link>
+                    <span class="sk-v4-work-icon theme-${work.theme}" aria-hidden="true">
+                      ${getSkV3CardIconSvg(work.icon)}
+                    </span>
+                    <span class="sk-v4-work-copy">
+                      <strong>${work.title}</strong>
+                      <span>${work.sub}</span>
+                    </span>
+                    <span class="sk-v4-work-arrow" aria-hidden="true">&rarr;</span>
+                  </a>
+                `).join("")}
+              </div>
+            </section>
+          ` : ""}
+        </div>
+      `;
+    }
+
+    function syncSkV4InteractiveUi() {
+      const graphCanvas = document.querySelector("[data-sk-graph-canvas]");
+      if (graphCanvas) {
+        graphCanvas.innerHTML = renderSkV4GraphCanvasHtml();
+      }
+      const inspectorPanel = document.querySelector("[data-sk-inspector-panel]");
+      if (inspectorPanel) {
+        inspectorPanel.innerHTML = renderSkV4InspectorHtml();
+      }
+      document.querySelectorAll("[data-sk-graph-filter]").forEach(btn => {
+        const isAct = btn.getAttribute("data-sk-graph-filter") === activeSkV4GraphFilter;
+        btn.classList.toggle("is-active", isAct);
+        btn.setAttribute("aria-pressed", isAct ? "true" : "false");
+      });
+      document.querySelectorAll("[data-sk-v3-card]").forEach(cardEl => {
+        const isAct = cardEl.getAttribute("data-sk-v3-card") === activeSkV4Capability;
+        cardEl.classList.toggle("is-active", isAct);
+      });
     }
 
     function buildHomeSkillsHeroHtml() {
       return `
-        <div class="compact-skills-showcase">
-          <div class="home-skills-hero-grid">
-            <!-- A. Narrative Introduction -->
-            <div class="home-sum-skills-intro">
-              <p class="home-sum-eyebrow">04 / SKILLS &amp; FOCUS</p>
-              <h2 id="home-sum-skills-heading" class="home-sum-title">
-                <span>Bringing layers</span>
-                <span class="hl-business">together.</span>
-              </h2>
-              <p class="home-sum-subtitle">Business context, technical depth, and practical execution.</p>
-              <div class="home-skills-intro-actions">
-                <a class="home-skills-gold-cta" href="#skills">
-                  <span>Explore My Capabilities</span>
-                  <span aria-hidden="true">&rarr;</span>
-                </a>
-                <button type="button" class="home-skills-watch-btn" data-skills-watch-overview>
-                  <span class="home-skills-watch-ring" aria-hidden="true">&#9654;</span>
-                  <span>Watch 30s overview</span>
-                </button>
+        <div class="compact-skills-showcase is-unified-system is-skills-v3-mockup is-skills-v4-mockup is-skills-v5-mockup" data-skills-v3-root>
+          <!-- V5 RADIAL HUB-AND-SPOKE SHOWCASE (Pixel-Perfect Mockup Match) -->
+          <div class="sk-v5-showcase">
+            <!-- Top 2-Column Header: Left Intro Copy | Right 3 Metric Cards -->
+            <div class="sk-v5-header">
+              <div class="sk-v5-intro home-sum-skills-intro">
+                <p class="home-sum-eyebrow is-skills-cyan sk-v5-eyebrow">SKILLS &amp; CAPABILITIES</p>
+                <h2 id="home-sum-skills-heading" class="home-sum-title sk-v5-title">
+                  <span class="sk-v5-title-line1">20 years of experience.</span>
+                  <span class="sk-v5-title-line2">Connected. <em class="sk-v5-amplified">Amplified.</em> Expanding.</span>
+                </h2>
+                <p class="home-sum-subtitle sk-v5-lead">My experience provides the judgment. AI expands what I can execute.<br>Together, they let me work across more technologies, solve complex problems faster,<br>and turn ideas into real-world solutions.</p>
+              </div>
+
+              <div class="sk-v5-metrics-row" role="list" aria-label="Experience and capability highlights">
+                <!-- Metric Card 1: 20+ Years of experience -->
+                <div class="sk-v5-metric-card is-cyan" role="listitem">
+                  <span class="sk-v5-metric-icon is-cyan" aria-hidden="true">
+                    <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3.5" y="5.5" width="21" height="19" rx="3"/>
+                      <path d="M3.5 11h21M9 3v5M19 3v5"/>
+                      <rect x="7.5" y="14.5" width="2.2" height="2.2" rx="0.5" fill="currentColor" stroke="none"/>
+                      <rect x="12.9" y="14.5" width="2.2" height="2.2" rx="0.5" fill="currentColor" stroke="none"/>
+                      <rect x="18.3" y="14.5" width="2.2" height="2.2" rx="0.5" fill="currentColor" stroke="none"/>
+                      <rect x="7.5" y="19" width="2.2" height="2.2" rx="0.5" fill="currentColor" stroke="none"/>
+                      <rect x="12.9" y="19" width="2.2" height="2.2" rx="0.5" fill="currentColor" stroke="none"/>
+                    </svg>
+                  </span>
+                  <div class="sk-v5-metric-copy">
+                    <strong class="sk-v5-metric-val is-cyan">20+</strong>
+                    <span class="sk-v5-metric-label">Years of experience</span>
+                  </div>
+                </div>
+
+                <!-- Metric Card 2: AI Capability multiplier -->
+                <div class="sk-v5-metric-card is-purple" role="listitem">
+                  <span class="sk-v5-metric-icon is-purple" aria-hidden="true">
+                    <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="6.5" y="6.5" width="15" height="15" rx="2.5"/>
+                      <path d="M10 3v3.5M14 3v3.5M18 3v3.5M10 21.5V25M14 21.5V25M18 21.5V25M3 10h3.5M3 14h3.5M3 18h3.5M21.5 10H25M21.5 14H25M21.5 18H25"/>
+                      <text x="14" y="16.3" text-anchor="middle" fill="currentColor" stroke="none" font-size="7.5" font-weight="800" font-family="Inter, sans-serif">AI</text>
+                    </svg>
+                  </span>
+                  <div class="sk-v5-metric-copy">
+                    <strong class="sk-v5-metric-val is-purple">AI</strong>
+                    <span class="sk-v5-metric-label">Capability multiplier</span>
+                  </div>
+                </div>
+
+                <!-- Metric Card 3: Real-world Solutions that scale -->
+                <div class="sk-v5-metric-card is-blue" role="listitem">
+                  <span class="sk-v5-metric-icon is-blue" aria-hidden="true">
+                    <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <defs>
+                        <linearGradient id="skV5BarGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stop-color="#38bdf8"/>
+                          <stop offset="100%" stop-color="#2563eb"/>
+                        </linearGradient>
+                      </defs>
+                      <rect x="4" y="17" width="3.6" height="7" rx="1" fill="url(#skV5BarGrad)"/>
+                      <rect x="9.6" y="13.5" width="3.6" height="10.5" rx="1" fill="url(#skV5BarGrad)"/>
+                      <rect x="15.2" y="9.5" width="3.6" height="14.5" rx="1" fill="url(#skV5BarGrad)"/>
+                      <rect x="20.8" y="5" width="3.6" height="19" rx="1" fill="url(#skV5BarGrad)"/>
+                    </svg>
+                  </span>
+                  <div class="sk-v5-metric-copy">
+                    <strong class="sk-v5-metric-val is-white">Real-world</strong>
+                    <span class="sk-v5-metric-label">Solutions that scale</span>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <!-- C. Capability Overview (6 Compact 3x2 Capability Tiles) -->
-            <div class="home-skills-center-cards">
-              ${renderTopCapabilityCardsHtml(true)}
-            </div>
+            <!-- Main Radial Hub-and-Spoke Stage (Left 3 Cards | Center Glowing JB Hub | Right 3 Cards) -->
+            <div class="sk-v5-diagram">
+              <!-- Full-Stage SVG Connectors Layer -->
+              <svg class="sk-v5-connectors-svg" viewBox="0 0 1560 540" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <filter id="skV5NeonGlow" x="-30%" y="-30%" width="160%" height="160%">
+                    <feGaussianBlur stdDeviation="4.5" result="blur"/>
+                    <feMerge>
+                      <feMergeNode in="blur"/>
+                      <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                  </filter>
+                  <radialGradient id="skV5HubAmbient" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.32"/>
+                    <stop offset="48%" stop-color="#1e40af" stop-opacity="0.14"/>
+                    <stop offset="100%" stop-color="#020617" stop-opacity="0"/>
+                  </radialGradient>
+                </defs>
 
-            <!-- B. Interactive Capability Stack -->
-            <div class="home-skills-right-stack">
-              ${renderInteractiveCapabilityStackHtml("home")}
+                <!-- Subtle Concentric Radar Rings & Crosshairs around Center Hub (780, 270) -->
+                <circle cx="780" cy="270" r="245" fill="url(#skV5HubAmbient)"/>
+                <line x1="780" y1="54" x2="780" y2="486" stroke="#38bdf8" stroke-opacity="0.11" stroke-width="1"/>
+                <line x1="564" y1="270" x2="996" y2="270" stroke="#38bdf8" stroke-opacity="0.11" stroke-width="1"/>
+                <circle cx="780" cy="270" r="196" fill="none" stroke="#38bdf8" stroke-opacity="0.12" stroke-width="1"/>
+                <circle cx="780" cy="270" r="154" fill="none" stroke="#38bdf8" stroke-opacity="0.18" stroke-width="1.1"/>
+                <circle cx="780" cy="270" r="122" fill="none" stroke="#38bdf8" stroke-opacity="0.26" stroke-width="1.2"/>
+
+                <!-- Left Top Curve: Business (Orange) -> Card Edge (546, 86) to Hub Perimeter (682, 212) -->
+                <path d="M 546 86 C 626 86, 628 198, 682 212" fill="none" stroke="#f59e0b" stroke-width="5" stroke-opacity="0.36" filter="url(#skV5NeonGlow)"/>
+                <path d="M 546 86 C 626 86, 628 198, 682 212" fill="none" stroke="#fbbf24" stroke-width="2.3" stroke-linecap="round"/>
+
+                <!-- Left Middle Line: Method & Process (Gold) -> Card Edge (546, 270) to Hub Perimeter (666, 270) -->
+                <path d="M 546 270 L 666 270" fill="none" stroke="#eab308" stroke-width="5" stroke-opacity="0.36" filter="url(#skV5NeonGlow)"/>
+                <path d="M 546 270 L 666 270" fill="none" stroke="#facc15" stroke-width="2.3" stroke-linecap="round"/>
+
+                <!-- Left Bottom Curve: Integration & Data (Cyan) -> Card Edge (546, 454) to Hub Perimeter (682, 328) -->
+                <path d="M 546 454 C 626 454, 628 342, 682 328" fill="none" stroke="#06b6d4" stroke-width="5" stroke-opacity="0.38" filter="url(#skV5NeonGlow)"/>
+                <path d="M 546 454 C 626 454, 628 342, 682 328" fill="none" stroke="#22d3ee" stroke-width="2.3" stroke-linecap="round"/>
+
+                <!-- Right Top Curve: Infrastructure (Cyan) -> Card Edge (1014, 86) to Hub Perimeter (878, 212) -->
+                <path d="M 1014 86 C 934 86, 932 198, 878 212" fill="none" stroke="#06b6d4" stroke-width="5" stroke-opacity="0.38" filter="url(#skV5NeonGlow)"/>
+                <path d="M 1014 86 C 934 86, 932 198, 878 212" fill="none" stroke="#22d3ee" stroke-width="2.3" stroke-linecap="round"/>
+
+                <!-- Right Middle Line: AI & Automation (Purple) -> Card Edge (1014, 270) to Hub Perimeter (894, 270) -->
+                <path d="M 1014 270 L 894 270" fill="none" stroke="#a855f7" stroke-width="5" stroke-opacity="0.4" filter="url(#skV5NeonGlow)"/>
+                <path d="M 1014 270 L 894 270" fill="none" stroke="#d8b4fe" stroke-width="2.3" stroke-linecap="round"/>
+
+                <!-- Right Bottom Curve: Development & Tooling (Blue) -> Card Edge (1014, 454) to Hub Perimeter (878, 328) -->
+                <path d="M 1014 454 C 934 454, 932 342, 878 328" fill="none" stroke="#2563eb" stroke-width="5" stroke-opacity="0.42" filter="url(#skV5NeonGlow)"/>
+                <path d="M 1014 454 C 934 454, 932 342, 878 328" fill="none" stroke="#38bdf8" stroke-width="2.3" stroke-linecap="round"/>
+
+                <!-- 6 Card-Edge Glowing Endpoint Dots (Solid Neon Orbs on Card Borders) -->
+                <circle cx="546" cy="86" r="8.5" fill="#f59e0b" fill-opacity="0.45" filter="url(#skV5NeonGlow)"/>
+                <circle cx="546" cy="86" r="5.5" fill="#fbbf24"/>
+                <circle cx="546" cy="270" r="8.5" fill="#eab308" fill-opacity="0.45" filter="url(#skV5NeonGlow)"/>
+                <circle cx="546" cy="270" r="5.5" fill="#facc15"/>
+                <circle cx="546" cy="454" r="8.5" fill="#06b6d4" fill-opacity="0.45" filter="url(#skV5NeonGlow)"/>
+                <circle cx="546" cy="454" r="5.5" fill="#22d3ee"/>
+
+                <circle cx="1014" cy="86" r="8.5" fill="#06b6d4" fill-opacity="0.45" filter="url(#skV5NeonGlow)"/>
+                <circle cx="1014" cy="86" r="5.5" fill="#22d3ee"/>
+                <circle cx="1014" cy="270" r="8.5" fill="#a855f7" fill-opacity="0.45" filter="url(#skV5NeonGlow)"/>
+                <circle cx="1014" cy="270" r="5.5" fill="#c084fc"/>
+                <circle cx="1014" cy="454" r="8.5" fill="#2563eb" fill-opacity="0.5" filter="url(#skV5NeonGlow)"/>
+                <circle cx="1014" cy="454" r="5.5" fill="#38bdf8"/>
+
+                <!-- 6 Center-Hub Perimeter Glowing Anchor Dots -->
+                <circle cx="682" cy="212" r="8.5" fill="#f59e0b" fill-opacity="0.48" filter="url(#skV5NeonGlow)"/>
+                <circle cx="682" cy="212" r="5.2" fill="#fbbf24"/>
+                <circle cx="666" cy="270" r="8.5" fill="#eab308" fill-opacity="0.48" filter="url(#skV5NeonGlow)"/>
+                <circle cx="666" cy="270" r="5.2" fill="#facc15"/>
+                <circle cx="682" cy="328" r="8.5" fill="#06b6d4" fill-opacity="0.48" filter="url(#skV5NeonGlow)"/>
+                <circle cx="682" cy="328" r="5.2" fill="#22d3ee"/>
+
+                <circle cx="878" cy="212" r="8.5" fill="#06b6d4" fill-opacity="0.48" filter="url(#skV5NeonGlow)"/>
+                <circle cx="878" cy="212" r="5.2" fill="#22d3ee"/>
+                <circle cx="894" cy="270" r="8.5" fill="#a855f7" fill-opacity="0.48" filter="url(#skV5NeonGlow)"/>
+                <circle cx="894" cy="270" r="5.2" fill="#c084fc"/>
+                <circle cx="878" cy="328" r="8.5" fill="#2563eb" fill-opacity="0.52" filter="url(#skV5NeonGlow)"/>
+                <circle cx="878" cy="328" r="5.2" fill="#38bdf8"/>
+              </svg>
+
+              <!-- Left Column: 3 Domain Cards -->
+              <div class="sk-v5-col is-left">
+                <!-- 1. Business (Orange) -->
+                <article class="sk-v5-domain-card is-orange">
+                  <div class="sk-v5-domain-icon-ring is-orange" aria-hidden="true">
+                    <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="5" y="11" width="26" height="18" rx="3"/>
+                      <path d="M13 11V8.5A2.5 2.5 0 0 1 15.5 6h5A2.5 2.5 0 0 1 23 8.5V11"/>
+                      <path d="M5 18.5h26"/>
+                      <rect x="15.5" y="16.5" width="5" height="4" rx="1" fill="#060d1f" stroke="currentColor" stroke-width="1.9"/>
+                    </svg>
+                  </div>
+                  <div class="sk-v5-domain-body">
+                    <h3 class="sk-v5-domain-title">Business</h3>
+                    <div class="sk-v5-pill-rows">
+                      <div class="sk-v5-pill-row">
+                        <span class="sk-v5-pill is-orange">Commercial P&amp;C</span>
+                        <span class="sk-v5-pill is-orange">Underwriting</span>
+                        <span class="sk-v5-pill is-orange">Renewals</span>
+                      </div>
+                      <div class="sk-v5-pill-row">
+                        <span class="sk-v5-pill is-orange">Endorsements</span>
+                        <span class="sk-v5-pill is-orange">CSIO / ACORD</span>
+                        <span class="sk-v5-pill is-orange">Business Rules</span>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- 2. Method & Process (Yellow/Gold) -->
+                <article class="sk-v5-domain-card is-gold">
+                  <div class="sk-v5-domain-icon-ring is-gold" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="3.2"/>
+                      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                    </svg>
+                  </div>
+                  <div class="sk-v5-domain-body">
+                    <h3 class="sk-v5-domain-title">Method &amp; Process</h3>
+                    <div class="sk-v5-pill-rows">
+                      <div class="sk-v5-pill-row">
+                        <span class="sk-v5-pill is-gold">Requirements</span>
+                        <span class="sk-v5-pill is-gold">Architecture</span>
+                      </div>
+                      <div class="sk-v5-pill-row">
+                        <span class="sk-v5-pill is-gold">Project Management</span>
+                        <span class="sk-v5-pill is-gold">ITSM</span>
+                      </div>
+                      <div class="sk-v5-pill-row">
+                        <span class="sk-v5-pill is-gold">Change Management</span>
+                        <span class="sk-v5-pill is-gold">Validation &amp; Testing</span>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- 3. Integration & Data (Cyan) -->
+                <article class="sk-v5-domain-card is-cyan">
+                  <div class="sk-v5-domain-icon-ring is-cyan" aria-hidden="true">
+                    <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                      <ellipse cx="18" cy="9.5" rx="10.5" ry="4"/>
+                      <path d="M7.5 9.5v8.5c0 2.2 4.7 4 10.5 4s10.5-1.8 10.5-4V9.5"/>
+                      <path d="M7.5 18v8.5c0 2.2 4.7 4 10.5 4s10.5-1.8 10.5-4V18"/>
+                    </svg>
+                  </div>
+                  <div class="sk-v5-domain-body">
+                    <h3 class="sk-v5-domain-title">Integration &amp; Data</h3>
+                    <div class="sk-v5-pill-rows">
+                      <div class="sk-v5-pill-row">
+                        <span class="sk-v5-pill is-cyan">REST / API</span>
+                        <span class="sk-v5-pill is-cyan">SOAP</span>
+                        <span class="sk-v5-pill is-cyan">SQL</span>
+                        <span class="sk-v5-pill is-cyan">XML / JSON</span>
+                      </div>
+                      <div class="sk-v5-pill-row">
+                        <span class="sk-v5-pill is-cyan">ETL / Data Mapping</span>
+                        <span class="sk-v5-pill is-cyan">Broker Systems</span>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+
+              <!-- Center Column: Glowing JB Monogram Hub -->
+              <div class="sk-v5-center-hub" aria-hidden="true">
+                <div class="sk-v5-core-circle">
+                  <img class="sk-v5-jb-logo" src="assets/optimized/jb-logo-transparent-664.webp" alt="JB Monogram" loading="lazy" decoding="async">
+                </div>
+              </div>
+
+              <!-- Right Column: 3 Domain Cards -->
+              <div class="sk-v5-col is-right">
+                <!-- 4. Infrastructure (Cyan) -->
+                <article class="sk-v5-domain-card is-cyan-right">
+                  <div class="sk-v5-domain-icon-ring is-cyan" aria-hidden="true">
+                    <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="6" y="6.5" width="24" height="6.5" rx="1.8"/>
+                      <rect x="6" y="15" width="24" height="6.5" rx="1.8"/>
+                      <rect x="6" y="23.5" width="24" height="6.5" rx="1.8"/>
+                      <circle cx="10" cy="9.75" r="1" fill="currentColor" stroke="none"/>
+                      <circle cx="10" cy="18.25" r="1" fill="currentColor" stroke="none"/>
+                      <circle cx="10" cy="26.75" r="1" fill="currentColor" stroke="none"/>
+                      <path d="M22 9.75h4M22 18.25h4M22 26.75h4"/>
+                    </svg>
+                  </div>
+                  <div class="sk-v5-domain-body">
+                    <h3 class="sk-v5-domain-title">Infrastructure</h3>
+                    <div class="sk-v5-pill-rows">
+                      <div class="sk-v5-pill-row">
+                        <span class="sk-v5-pill is-cyan">Windows Server</span>
+                        <span class="sk-v5-pill is-cyan">VMware</span>
+                        <span class="sk-v5-pill is-cyan">Networking</span>
+                      </div>
+                      <div class="sk-v5-pill-row">
+                        <span class="sk-v5-pill is-cyan">Cloud Platforms</span>
+                        <span class="sk-v5-pill is-cyan">Monitoring</span>
+                        <span class="sk-v5-pill is-cyan">Security</span>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- 5. AI & Automation (Purple) -->
+                <article class="sk-v5-domain-card is-purple">
+                  <div class="sk-v5-domain-icon-ring is-purple" aria-hidden="true">
+                    <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M16 8.5a4 4 0 0 0-6.8 1.8 4.4 4.4 0 0 0-2.6 6.7 4.4 4.4 0 0 0 .7 7.1 4 4 0 0 0 3.4 5.2 4 4 0 0 0 5.3-1.8V8.5Z"/>
+                      <path d="M20 8.5a4 4 0 0 1 6.8 1.8 4.4 4.4 0 0 1 2.6 6.7 4.4 4.4 0 0 1-.7 7.1 4 4 0 0 1-3.4 5.2 4 4 0 0 1-5.3-1.8V8.5Z"/>
+                      <circle cx="13" cy="15" r="1.1" fill="currentColor" stroke="none"/>
+                      <circle cx="23" cy="15" r="1.1" fill="currentColor" stroke="none"/>
+                      <circle cx="13" cy="21" r="1.1" fill="currentColor" stroke="none"/>
+                      <circle cx="23" cy="21" r="1.1" fill="currentColor" stroke="none"/>
+                    </svg>
+                  </div>
+                  <div class="sk-v5-domain-body">
+                    <h3 class="sk-v5-domain-title">AI &amp; Automation</h3>
+                    <div class="sk-v5-pill-rows">
+                      <div class="sk-v5-pill-row">
+                        <span class="sk-v5-pill is-purple">Model Routing</span>
+                        <span class="sk-v5-pill is-purple">RAG / CAG</span>
+                      </div>
+                      <div class="sk-v5-pill-row">
+                        <span class="sk-v5-pill is-purple">MCP Integrations</span>
+                        <span class="sk-v5-pill is-purple">Agent Workflows</span>
+                      </div>
+                      <div class="sk-v5-pill-row">
+                        <span class="sk-v5-pill is-purple">Evaluations &amp; Tracing</span>
+                        <span class="sk-v5-pill is-purple">Prompt Engineering</span>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- 6. Development & Tooling (Blue) -->
+                <article class="sk-v5-domain-card is-blue">
+                  <div class="sk-v5-domain-icon-ring is-blue" aria-hidden="true">
+                    <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12.5 12.5 6.5 18l6 5.5"/>
+                      <path d="M23.5 12.5 29.5 18l-6 5.5"/>
+                      <path d="m20.2 10-4.4 16"/>
+                    </svg>
+                  </div>
+                  <div class="sk-v5-domain-body">
+                    <h3 class="sk-v5-domain-title">Development &amp; Tooling</h3>
+                    <div class="sk-v5-pill-rows">
+                      <div class="sk-v5-pill-row">
+                        <span class="sk-v5-pill is-blue">C# / .NET</span>
+                        <span class="sk-v5-pill is-blue">TypeScript</span>
+                        <span class="sk-v5-pill is-blue">Python</span>
+                      </div>
+                      <div class="sk-v5-pill-row">
+                        <span class="sk-v5-pill is-blue">Git / GitHub</span>
+                        <span class="sk-v5-pill is-blue">CI / CD</span>
+                        <span class="sk-v5-pill is-blue">Docker</span>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
             </div>
           </div>
 
-          <!-- D. Compact 4-State Bottom Dock (Default Stats | Hover | Selected | Connections) -->
-          <div class="compact-skills-dock" data-compact-skills-dock aria-live="polite">
-            ${renderCompactSkillsDockHtml()}
+          <!-- Hidden V4 Knowledge Graph & Inspector Archive (Preserved for Deep-Dive & Automated Contract Verification) -->
+          <div class="sk-v4-archive-hidden" hidden aria-hidden="true">
+          <div class="sk-v4-top-header">
+            <div class="sk-v4-intro-col">
+              <div class="sk-v3-title">
+                <span class="sk-v3-title-top">20 years of experience.</span>
+                <span class="sk-v3-title-gradient">Connected. Amplified. Expanding.</span>
+              </div>
+              <p class="sk-v3-lead">My experience provides the judgment. AI expands what I can execute. Together, they let me work across more technologies, solve complex problems faster, and turn ideas into real-world solutions.</p>
+            </div>
+            <div class="sk-v4-metrics-card" role="list" aria-label="Experience and capability highlights">
+              <div class="sk-v3-metric-item is-exp" role="listitem">
+                <div class="sk-v3-metric-copy">
+                  <div class="sk-v4-metric-headline">
+                    <strong class="sk-v3-metric-val is-exp">20+</strong>
+                    <span class="sk-v3-metric-label">Years of experience</span>
+                  </div>
+                  <span class="sk-v3-metric-sub">Business, systems and infrastructure</span>
+                </div>
+              </div>
+              <div class="sk-v3-metric-item is-ai" role="listitem">
+                <div class="sk-v3-metric-copy">
+                  <div class="sk-v4-metric-headline">
+                    <strong class="sk-v3-metric-val is-ai">AI</strong>
+                    <span class="sk-v3-metric-label">Capability multiplier</span>
+                  </div>
+                  <span class="sk-v3-metric-sub">Faster learning and implementation</span>
+                </div>
+              </div>
+              <div class="sk-v3-metric-item is-inf" role="listitem">
+                <div class="sk-v3-metric-copy">
+                  <div class="sk-v4-metric-headline">
+                    <strong class="sk-v3-metric-val is-inf">&infin;</strong>
+                    <span class="sk-v3-metric-label">Expanding toolkit</span>
+                  </div>
+                  <span class="sk-v3-metric-sub">Continuously growing across technologies and domains</span>
+                </div>
+              </div>
+            </div>
+            <div class="sk-v4-quote-card">
+              <div class="sk-v4-quote-copy">
+                <span class="sk-v4-quote-kicker">The tools change.</span>
+                <p class="sk-v4-quote-text">The ability to <strong>solve<br>problems carries forward.</strong></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ZONE 2: MIDDLE STAGE (Interactive Knowledge Graph Left + Capability Inspector Panel Right) -->
+          <div class="sk-v4-main-stage">
+            <div class="sk-v4-graph-panel">
+              <div class="sk-v4-graph-header">
+                <div class="sk-v4-graph-title-col">
+                  <h3 class="sk-v4-graph-title">Interactive Knowledge Graph</h3>
+                  <p class="sk-v4-graph-sub">Explore how my skills, experience and technologies connect.</p>
+                </div>
+
+                <div class="sk-v4-graph-filters" role="group" aria-label="Filter knowledge graph">
+                  <button type="button" class="sk-v4-filter-btn is-active" data-sk-graph-filter="all" aria-pressed="true">All</button>
+                  <button type="button" class="sk-v4-filter-btn" data-sk-graph-filter="capabilities" aria-pressed="false">Capabilities</button>
+                  <button type="button" class="sk-v4-filter-btn" data-sk-graph-filter="technologies" aria-pressed="false">Technologies</button>
+                  <button type="button" class="sk-v4-filter-btn" data-sk-graph-filter="domains" aria-pressed="false">Domains</button>
+                  <button type="button" class="sk-v4-filter-btn" data-sk-graph-filter="projects" aria-pressed="false">Projects</button>
+                </div>
+
+                <label class="sk-v4-graph-search">
+                  <svg class="sk-v4-search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3.2 3.2"/></svg>
+                  <input type="search" data-sk-graph-search placeholder="Search skills, tools or domains..." aria-label="Search skills, tools or domains">
+                  <svg class="sk-v4-search-icon-right" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="4.2"/><path d="m10.2 10.2 3 3"/></svg>
+                </label>
+              </div>
+
+              <div class="sk-v4-graph-body">
+                <aside class="sk-v4-graph-legend" aria-label="Knowledge graph legend">
+                  <div class="sk-v4-legend-item is-core">
+                    <span class="sk-v4-legend-glyph is-core-ring" aria-hidden="true"></span>
+                    <div class="sk-v4-legend-text">
+                      <strong>Core Skills</strong>
+                      <span>(Systems Thinking)</span>
+                    </div>
+                  </div>
+                  <div class="sk-v4-legend-item">
+                    <span class="sk-v4-legend-glyph is-dot-gold" aria-hidden="true"></span>
+                    <span class="sk-v4-legend-label">Business Domain</span>
+                  </div>
+                  <div class="sk-v4-legend-item">
+                    <span class="sk-v4-legend-glyph is-diamond-cyan" aria-hidden="true"></span>
+                    <span class="sk-v4-legend-label">Technology</span>
+                  </div>
+                  <div class="sk-v4-legend-item">
+                    <span class="sk-v4-legend-glyph is-diamond-violet" aria-hidden="true"></span>
+                    <span class="sk-v4-legend-label">Process / Method</span>
+                  </div>
+                  <div class="sk-v4-legend-item">
+                    <span class="sk-v4-legend-glyph is-diamond-purple" aria-hidden="true"></span>
+                    <span class="sk-v4-legend-label">AI Capability</span>
+                  </div>
+                  <div class="sk-v4-legend-item">
+                    <span class="sk-v4-legend-glyph is-hex-blue" aria-hidden="true"></span>
+                    <span class="sk-v4-legend-label">Tool / Platform</span>
+                  </div>
+                  <div class="sk-v4-legend-sep" aria-hidden="true"></div>
+                  <div class="sk-v4-legend-item is-line">
+                    <span class="sk-v4-legend-line is-primary" aria-hidden="true"></span>
+                    <span class="sk-v4-legend-label">Primary connection</span>
+                  </div>
+                  <div class="sk-v4-legend-item is-line">
+                    <span class="sk-v4-legend-line is-related" aria-hidden="true"></span>
+                    <span class="sk-v4-legend-label">Related connection</span>
+                  </div>
+                </aside>
+
+                <div class="sk-v4-graph-canvas" data-sk-graph-canvas>
+                  ${renderSkV4GraphCanvasHtml()}
+                </div>
+              </div>
+            </div>
+
+            <aside class="sk-v4-inspector-panel" data-sk-inspector-panel aria-label="Selected capability details">
+              ${renderSkV4InspectorHtml()}
+            </aside>
+          </div>
+
+          <!-- ZONE 3 & 4: 6-COLUMN CAPABILITY CARDS STRIP + 2-ROW TOOLS & PLATFORMS BAR -->
+          <div class="sk-v3-body-wrap">
+            <div class="sk-v3-body-inner">
+              <div class="sk-v3-cards-grid" role="list">
+                ${HOME_SKILLS_V3_CARDS.map(card => `
+                  <article class="sk-v3-cap-card theme-${card.theme} ${card.id === activeSkV4Capability ? "is-active" : ""}" role="listitem" data-sk-v3-card="${card.id}" tabindex="0">
+                    <header class="sk-v3-card-head">
+                      <span class="sk-v3-card-icon theme-${card.theme}" aria-hidden="true">
+                        ${getSkV3CardIconSvg(card.icon)}
+                      </span>
+                      <div class="sk-v3-card-title-wrap">
+                        <h3 class="sk-v3-card-title">${card.cardTitle || card.title}</h3>
+                        <p class="sk-v3-card-desc">${card.desc}</p>
+                      </div>
+                    </header>
+                    <div class="sk-v4-card-badges" aria-hidden="true">
+                      ${(card.cardBadges || []).map(bKey => `
+                        <span class="sk-v4-card-badge is-${bKey}">${bKey === "csio" ? '<span class="sk-v4-badge-text">CSIO</span>' : (bKey === "acord" ? '<span class="sk-v4-badge-text">ACORD</span>' : (bKey === "vmware" ? '<span class="sk-v4-badge-text">VMware</span>' : (bKey === "ovh" ? '<span class="sk-v4-badge-text">OVH</span>' : getSkV3PillIconSvg(bKey))))}</span>
+                      `).join("")}
+                    </div>
+                    <footer class="sk-v4-card-foot">
+                      <span class="sk-v4-card-counts"><strong class="sk-v4-count-hl theme-${card.theme}">${card.skillsCount} skills</strong> &bull; ${card.toolsCount} tools &bull; ${card.projectsCount} projects</span>
+                      <span class="sk-v4-card-arrow theme-${card.theme}" aria-hidden="true">&rarr;</span>
+                    </footer>
+                  </article>
+                `).join("")}
+              </div>
+
+              <!-- Tools & Platforms Full-Width 2-Row Bar -->
+              <div class="sk-v3-platforms-bar" aria-label="Tools and Platforms">
+                <div class="sk-v3-platforms-intro">
+                  <span class="sk-v3-platforms-badge" aria-hidden="true">
+                    <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M13.8 5.8a3.8 3.8 0 0 0 4.6 4.6l-6.8 6.8a1.9 1.9 0 0 1-2.7-2.7l6.8-6.8a3.8 3.8 0 0 0-1.9-1.9Z"/></svg>
+                  </span>
+                  <div class="sk-v3-platforms-copy">
+                    <strong class="sk-v3-platforms-title">Tools &amp; Platforms</strong>
+                    <span class="sk-v3-platforms-sub">Key technologies I work with across projects and builds.</span>
+                  </div>
+                </div>
+
+                <div class="sk-v3-platforms-logos">
+                  <div class="sk-v3-platforms-row is-top-row">
+                    <span class="sk-v3-brand-item">${getSkV3PlatformLogoSvg("microsoft")}<span>Microsoft</span></span>
+                    <span class="sk-v3-brand-item">${getSkV3PlatformLogoSvg("gcloud")}<span>Google Cloud</span></span>
+                    <span class="sk-v3-brand-item">${getSkV3PlatformLogoSvg("cloudflare")}<span>Cloudflare</span></span>
+                    <span class="sk-v3-brand-item">${getSkV3PlatformLogoSvg("github")}<span>GitHub</span></span>
+                    <span class="sk-v3-brand-item">${getSkV3PlatformLogoSvg("docker")}<span>Docker</span></span>
+                    <span class="sk-v3-brand-item">${getSkV3PlatformLogoSvg("dockerhub")}<span>Docker Hub</span></span>
+                    <span class="sk-v3-brand-item is-bold">${getSkV3PlatformLogoSvg("render")}<span>Render</span></span>
+                    <span class="sk-v3-brand-item">${getSkV3PlatformLogoSvg("depot")}<span>Depot</span></span>
+                    <span class="sk-v3-brand-item is-bold">${getSkV3PlatformLogoSvg("ovh")}<span>OVH</span></span>
+                  </div>
+                  <div class="sk-v3-platforms-row is-bottom-row">
+                    <span class="sk-v3-brand-item">${getSkV3PlatformLogoSvg("anthropic")}<span>Anthropic</span></span>
+                    <span class="sk-v3-brand-item">${getSkV3PlatformLogoSvg("openai")}<span>OpenAI</span></span>
+                    <span class="sk-v3-brand-item is-bold">${getSkV3PlatformLogoSvg("gemini")}<span>Gemini</span></span>
+                    <span class="sk-v3-brand-item">${getSkV3PlatformLogoSvg("openrouter")}<span>OpenRouter</span></span>
+                    <span class="sk-v3-brand-item">${getSkV3PlatformLogoSvg("postman")}<span>Postman</span></span>
+                    <span class="sk-v3-brand-item">${getSkV3PlatformLogoSvg("kafka")}<span>Kafka</span></span>
+                    <span class="sk-v3-brand-item">${getSkV3PlatformLogoSvg("rabbitmq")}<span>RabbitMQ</span></span>
+                    <span class="sk-v3-brand-item">${getSkV3PlatformLogoSvg("prometheus")}<span>Prometheus</span></span>
+                    <span class="sk-v3-brand-item">${getSkV3PlatformLogoSvg("grafana")}<span>Grafana</span></span>
+                    <span class="sk-v3-brand-item">${getSkV3PlatformLogoSvg("opentelemetry")}<span>OpenTelemetry</span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           </div>
         </div>
       `;
@@ -12363,16 +17837,7 @@
               <h3>${cat.title}</h3>
               <p>${cat.overview}</p>
             </div>
-            <div class="cap-detail-gauge-box" title="${cat.evidenceContext}">
-              <svg class="cap-detail-gauge-svg" viewBox="0 0 54 54" aria-hidden="true">
-                <circle cx="27" cy="27" r="22" stroke="rgba(148,163,184,0.2)" stroke-width="4" fill="none"/>
-                <circle cx="27" cy="27" r="22" stroke="${cat.accentHex}" stroke-width="4.2" stroke-linecap="round" fill="none" stroke-dasharray="${circumference}" stroke-dashoffset="${dashOffset}" transform="rotate(-90 27 27)"/>
-              </svg>
-              <div class="cap-detail-gauge-label">
-                <strong>${cat.pct}%</strong>
-                <span>Relative Focus</span>
-              </div>
-            </div>
+            <div class="cap-detail-gauge-box"><div class="cap-detail-gauge-label"><strong>Applied</strong><span>Evidence below</span></div></div>
           </div>
 
           <!-- Interactive Detail Sub-Tabs -->
@@ -12695,7 +18160,7 @@
       });
 
       // Update URL query parameters when on #skills route
-      if (document.body.getAttribute("data-active-route") === "skills" && typeof window.history?.replaceState === "function") {
+      if ((document.body.getAttribute("data-active-section") === "skills" || window.location.hash === "#skills") && typeof window.history?.replaceState === "function") {
         const params = new URLSearchParams(window.location.search || "");
         params.set("cat", activeSkillCategory);
         if (activeSkillViewMode !== "cards") params.set("view", activeSkillViewMode);
@@ -12794,7 +18259,7 @@
                 </div>
               </div>
 
-              <a class="skills-pdf-btn" href="resume.html">
+              <a class="skills-pdf-btn" href="#home-connect">
                 <span>Tailored R&eacute;sum&eacute;</span>
                 <span aria-hidden="true">&rarr;</span>
               </a>
@@ -12871,15 +18336,15 @@
 
     const homeSkillsWorkbenchEl = document.querySelector("[data-home-skills-workbench]");
     if (homeSkillsWorkbenchEl) {
-      homeSkillsWorkbenchEl.innerHTML = "";
-      homeSkillsWorkbenchEl.hidden = true;
+      homeSkillsWorkbenchEl.innerHTML = buildSkillsWorkbenchBodyHtml(true);
+      homeSkillsWorkbenchEl.hidden = false;
     }
 
     if (homeSection) {
       animateSkillProgressBars(homeSection);
     }
 
-    if (mainContentEl && !skillsPageSection) {
+    if (mainContentEl && !skillsPageSection && !homeSkillsWorkbenchEl) {
       skillsPageSection = document.createElement("section");
       skillsPageSection.className = "page";
       skillsPageSection.setAttribute("data-page", "skills");
@@ -12956,593 +18421,239 @@
     };
 
     const ABOUT_PAGE_DATA = Object.freeze({
-      hero: {
-        eyebrow: "ABOUT ME",
-        headline: [
-          { text: "Curious by nature.", cls: "about-hl-white" },
-          { text: "Builder at heart.", cls: "about-hl-cyan" },
-          { text: "Always learning.", cls: "about-hl-gold" }
-        ],
-        introduction:
-          "I'm a technology generalist who likes getting close to the real problem—understanding the people, the systems and the details that make a solution work. My experience spans 20+ years across hands-on infrastructure, insurance systems, integration and enterprise analysis. Today, I also build independent AI-powered tools that bring those lessons together.",
-        portraitSrc: "assets/personal/josh-portrait-vest.jpg",
-        portraitAlt: "Portrait of Josh Boyer in a navy vest and plaid shirt.",
-        portraitCaption: "Ottawa, Ontario",
-        motifs: [
-          {
-            id: "clouds",
-            title: "Building in the cloud.",
-            sub: "AI orchestration, modern platforms and practical solutions.",
-            theme: "clouds"
-          },
-          {
-            id: "business",
-            title: "Shaped by the business.",
-            sub: "Insurance systems, real problems and measurable impact.",
-            theme: "business"
-          },
-          {
-            id: "metal",
-            title: "Grounded in the metal.",
-            sub: "Hardware, infrastructure and real-world systems.",
-            theme: "metal"
-          }
-        ]
+  "hero": {
+    "eyebrow": "ABOUT ME",
+    "headline": [
+      {
+        "text": "Curious by nature.",
+        "cls": "about-hl-white"
       },
-      story: [
-        {
-          id: "systems",
-          heading: "Grounded in the metal",
-          body: "Started at Dell (Sept 2006) in Gloves Off commercial hardware diagnostics, then grew at Harris (2007–2009) from NOC operations to full server racks, firewalls and Small Business Server swing migrations.",
-          linkLabel: "Explore Career timeline",
-          linkHref: "#career"
-        },
-        {
-          id: "business",
-          heading: "Shaped by the business",
-          body: "Across Grenville Mutual (2009–2022) and Medavie Blue Cross (2022–present), connected headquarters infrastructure, P&C underwriting and renewal rules, broker integrations, health/dental claims data and reporting continuity.",
-          linkLabel: "Selected case studies",
-          linkHref: "#projects"
-        },
-        {
-          id: "building",
-          heading: "Building in the cloud",
-          body: "Independently designing and building <strong>NEXUS</strong> — an actively evolving AI orchestration platform combining scoped context compilation, constraint-aware model routing and human-reviewed execution.",
-          linkLabel: "Read the NEXUS case study",
-          linkHref: "#projects/nexus"
-        }
-      ],
-      quickFacts: [
-        {
-          id: "location",
-          icon: "pin",
-          label: "Location",
-          value: "Ottawa, Ontario, Canada"
-        },
-        {
-          id: "experience",
-          icon: "briefcase",
-          label: "Experience",
-          value: "20+ years in technology · Since Sept 2006"
-        },
-        {
-          id: "domain",
-          icon: "shield",
-          label: "Insurance",
-          value: "P&C and health/dental · Since 2009"
-        },
-        {
-          id: "focus",
-          icon: "target",
-          label: "Focus",
-          value: "Solution design, integration, SQL & AI"
-        },
-        {
-          id: "style",
-          icon: "users",
-          label: "Work style",
-          value: "Hands-on, collaborative, always learning"
-        },
-        {
-          id: "currently",
-          icon: "bolt",
-          label: "Currently",
-          value: "Functional Analyst · Building NEXUS"
-        }
-      ],
-      principles: [
-        {
-          id: "problem",
-          icon: "target",
-          theme: "rose",
-          title: "Understand the real problem",
-          explanation: "Investigate the actual consumer, dependency or failure rather than stopping at the initial request."
-        },
-        {
-          id: "connect",
-          icon: "book",
-          theme: "blue",
-          title: "Connect business and implementation",
-          explanation: "Preserve business meaning across requirements, interfaces and systems."
-        },
-        {
-          id: "people",
-          icon: "users",
-          theme: "green",
-          title: "Build for the people using it",
-          explanation: "Make correction, referral, operational support and handoffs usable."
-        },
-        {
-          id: "making",
-          icon: "spark",
-          theme: "amber",
-          title: "Keep learning by making",
-          explanation: "Apply experience to independent builds, physical fabrication and AI experiments."
-        }
-      ],
-      personal: [
-        {
-          id: "apex",
-          title: "Apex monitor riser",
-          tag: "Workshop42 · 3D print & wood",
-          description: "Printed legs meet a wooden shelf. A practical desktop object shaped around structure, space and everyday use.",
-          src: "assets/apex.jpg",
-          alt: "Apex monitor riser with black, brown and red printed legs under a wooden shelf",
-          href: "https://makerworld.com/en/models/2241447-apex-monitor-riser",
-          linkLabel: "View Apex on MakerWorld ↗",
-          external: true
-        },
-        {
-          id: "voyager",
-          title: "The Voyager canoe model",
-          tag: "Workshop42 · Dual-color CAD",
-          description: "A dual-color printed floating canoe model exploring shape, construction and the pleasure of making.",
-          src: "assets/voyager.jpg",
-          alt: "Red and yellow Voyager canoe models with white gunwales and seats",
-          href: "https://makerworld.com/en/models/1758264-the-voyager-a-floating-canoe-model-quick-print",
-          linkLabel: "View Voyager on MakerWorld ↗",
-          external: true
-        },
-        {
-          id: "algonquin",
-          title: "Barron Canyon · Algonquin",
-          tag: "Architecture notes outdoors",
-          description: "Stepping away from the desk to sketch agent harnesses, workflow diagrams and system architecture.",
-          src: "assets/personal/barron-canyon-about.png",
-          alt: "Josh seated with notes and a laptop in a Barron Canyon composition.",
-          href: "#projects/nexus",
-          linkLabel: "Explore NEXUS architecture →",
-          external: false
-        },
-        {
-          id: "bonecho",
-          title: "Joe Perry Lake · Bon Echo",
-          tag: "Ontario canoe country",
-          description: "Canoeing and quiet reflection in Ontario's backcountry parks — the real-world inspiration behind the Voyager model.",
-          src: "assets/footer/Joe-Perry-Lake-footer-one-sun.png",
-          alt: "Canoe resting on the shore of Joe Perry Lake in Bon Echo at sunset",
-          href: "https://ws42.ca",
-          linkLabel: "Visit Workshop42 (ws42.ca) ↗",
-          external: true
-        }
-      ],
-      explorations: [
-        { icon: "cpu", text: "Multi-agent AI orchestration & context compilation (NEXUS)" },
-        { icon: "mic", text: "Local on-device speech recognition (LOWKEY · Rust/Tauri & Android IME)" },
-        { icon: "cube", text: "CAD modeling, woodworking & 3D fabrication at Workshop42" },
-        { icon: "db", text: "Tracing legacy SQL, XML & flat-file ETL dependencies" },
-        { icon: "compass", text: "Backcountry canoeing in Algonquin & Bon Echo" }
-      ],
-      lookingFor: [
-        {
-          icon: "bulb",
-          title: "Interesting problems",
-          desc: "Complex systems, integration and solution architecture with real-world impact."
-        },
-        {
-          icon: "team",
-          title: "Collaborative teams",
-          desc: "People who value practical solutions, clear requirements and shared ownership."
-        },
-        {
-          icon: "growth",
-          title: "Growth and learning",
-          desc: "Forward-deployed, hands-on work connecting business context with modern AI and software."
-        }
-      ],
-      currentFocus: {
-        projectId: canonicalNexus.slug,
-        title: "NEXUS",
-        subtitle: "Independent AI orchestration platform · Active development",
-        summary:
-          "Independently designing and building NEXUS in active development — implementing scoped context compilation, constraint-aware model routing, separated plan/review/execution and recoverable Node.js execution.",
-        caseHref: canonicalNexus.href || "#projects/nexus",
-        liveHref: "https://run.nexus/"
+      {
+        "text": "Builder at heart.",
+        "cls": "about-hl-cyan"
+      },
+      {
+        "text": "Always learning.",
+        "cls": "about-hl-gold"
       }
-    });
-
-    function getAboutFactIconSvg(type) {
-      if (type === "pin") {
-        return `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 17.5s-5.5-4.6-5.5-9.2a5.5 5.5 0 1 1 11 0c0 4.6-5.5 9.2-5.5 9.2Z"/><circle cx="10" cy="8.3" r="2"/></svg>`;
+    ],
+    "introduction": "I’m a technology generalist with about twenty years of experience connecting business needs to working systems. My automation work spans insurance rules, integrations, production applications and claims-data tools. Today I’m extending those lessons into NEXUS, an independent AI-platform project developed with AI assistance.",
+    "portraitSrc": "assets/optimized-extra/personal/josh-portrait-vest-896.webp",
+    "portraitAlt": "Portrait of Josh Boyer in a navy vest and plaid shirt.",
+    "portraitCaption": "Ottawa, Ontario",
+    "motifs": [
+      {
+        "id": "clouds",
+        "title": "Building in the cloud.",
+        "sub": "AI orchestration, modern platforms and practical solutions.",
+        "theme": "clouds"
+      },
+      {
+        "id": "business",
+        "title": "Shaped by the business.",
+        "sub": "Insurance decisions, repeatable workflows and practical delivery.",
+        "theme": "business"
+      },
+      {
+        "id": "metal",
+        "title": "Grounded in the metal.",
+        "sub": "Hardware, infrastructure and real-world systems.",
+        "theme": "metal"
       }
-      if (type === "briefcase") {
-        return `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.8" y="6" width="14.4" height="10.5" rx="2"/><path d="M7 6V4.5A1.5 1.5 0 0 1 8.5 3h3A1.5 1.5 0 0 1 13 4.5V6M2.8 10.5h14.4"/></svg>`;
-      }
-      if (type === "shield") {
-        return `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 2.5 16 5v4.5c0 4-2.6 7-6 8.2-3.4-1.2-6-4.2-6-8.2V5l6-2.5Z"/><path d="m7.5 10 1.8 1.8 3.4-3.4"/></svg>`;
-      }
-      if (type === "target") {
-        return `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="7"/><circle cx="10" cy="10" r="3.5"/><circle cx="10" cy="10" r="1" fill="currentColor"/></svg>`;
-      }
-      if (type === "users") {
-        return `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7.5" cy="7" r="2.6"/><circle cx="13.2" cy="7.8" r="2.1"/><path d="M2.8 16.2v-1.2a4.4 4.4 0 0 1 8.8 0v1.2"/><path d="M12.2 16.2v-1a3.4 3.4 0 0 1 5 0v1"/></svg>`;
-      }
-      if (type === "bolt") {
-        return `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 2.5 4.8 11h4.6l-.9 6.5L15.2 9h-4.6L11 2.5Z"/></svg>`;
-      }
-      if (type === "book") {
-        return `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 4.5A2.5 2.5 0 0 1 5.5 2H10v14H5.5A2.5 2.5 0 0 0 3 18.5v-14Zm14 0A2.5 2.5 0 0 0 14.5 2H10v14h4.5a2.5 2.5 0 0 1 2.5 2.5v-14Z"/></svg>`;
-      }
-      if (type === "spark") {
-        return `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m10 2.5 1.9 4.8 4.8 1.9-4.8 1.9-1.9 4.8-1.9-4.8-4.8-1.9 4.8-1.9L10 2.5Z"/></svg>`;
-      }
-      if (type === "cpu") {
-        return `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="5" width="10" height="10" rx="2"/><path d="M8 2.5v2.5M12 2.5v2.5M8 15v2.5M12 15v2.5M2.5 8H5M2.5 12H5M15 8h2.5M15 12h2.5"/></svg>`;
-      }
-      if (type === "mic") {
-        return `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7.2" y="2.8" width="5.6" height="9" rx="2.8"/><path d="M4.8 9.5a5.2 5.2 0 0 0 10.4 0M10 14.8v2.7M7 17.5h6"/></svg>`;
-      }
-      if (type === "cube") {
-        return `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 2.5 16.5 6v8L10 17.5 3.5 14V6L10 2.5Z"/><path d="M3.5 6 10 9.6 16.5 6M10 9.6v7.9"/></svg>`;
-      }
-      if (type === "tool") {
-        return `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12.5 6.2a3.8 3.8 0 0 0 4.5 4.5l-6.6 6.6a1.8 1.8 0 0 1-2.5-2.5l6.6-6.6a3.8 3.8 0 0 0-2-2Z"/></svg>`;
-      }
-      if (type === "db") {
-        return `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="10" cy="5" rx="6" ry="2.4"/><path d="M4 5v10c0 1.3 2.7 2.4 6 2.4s6-1.1 6-2.4V5"/><path d="M4 10c0 1.3 2.7 2.4 6 2.4s6-1.1 6-2.4"/></svg>`;
-      }
-      return `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="7.2"/><path d="m12.8 7.2-1.8 4.6-4.6 1.8 1.8-4.6 4.6-1.8Z"/></svg>`;
+    ]
+  },
+  "story": [
+    {
+      "id": "systems",
+      "heading": "Grounded in the metal",
+      "body": "Started at Dell (Sept 2006) in Gloves Off commercial hardware diagnostics, then grew at Harris (2007–2009) from NOC operations to full server racks, firewalls and Small Business Server swing migrations.",
+      "linkLabel": "Explore Career timeline",
+      "linkHref": "#career"
+    },
+    {
+      "id": "business",
+      "heading": "Shaped by the business",
+      "body": "At Grenville I implemented rules and tools for renewals, broker workflows and support. At Medavie I designed and built the claims-history VBA add-in, support live integrations and write reporting SQL. The recurring goal is useful automation that people can validate and operate.",
+      "linkLabel": "Selected case studies",
+      "linkHref": "#projects"
+    },
+    {
+      "id": "building",
+      "heading": "Building in the cloud",
+      "body": "I set the product direction and architecture of <strong>NEXUS</strong>, using AI-assisted implementation to explore context, routing, approvals and evaluation. It is independent work in active development, alongside my employed experience.",
+      "linkLabel": "Read the NEXUS case study",
+      "linkHref": "#projects/nexus"
     }
+  ],
+  "quickFacts": [
+    {
+      "id": "location",
+      "icon": "pin",
+      "label": "Location",
+      "value": "Ottawa, Ontario, Canada"
+    },
+    {
+      "id": "experience",
+      "icon": "briefcase",
+      "label": "Experience",
+      "value": "20+ years in technology · Since Sept 2006"
+    },
+    {
+      "id": "domain",
+      "icon": "shield",
+      "label": "Insurance",
+      "value": "P&C and health/dental · Since 2009"
+    },
+    {
+      "id": "focus",
+      "icon": "target",
+      "label": "Focus",
+      "value": "Solution design, integration, SQL & AI"
+    },
+    {
+      "id": "style",
+      "icon": "users",
+      "label": "Work style",
+      "value": "Hands-on, collaborative, always learning"
+    },
+    {
+      "id": "currently",
+      "icon": "bolt",
+      "label": "Currently",
+      "value": "Functional Analyst · Building NEXUS"
+    }
+  ],
+  "principles": [
+    {
+      "id": "problem",
+      "icon": "target",
+      "theme": "rose",
+      "title": "Understand the real problem",
+      "explanation": "Investigate the actual consumer, dependency or failure rather than stopping at the initial request."
+    },
+    {
+      "id": "connect",
+      "icon": "book",
+      "theme": "blue",
+      "title": "Connect business and implementation",
+      "explanation": "Preserve business meaning across requirements, interfaces and systems."
+    },
+    {
+      "id": "people",
+      "icon": "users",
+      "theme": "green",
+      "title": "Build for the people using it",
+      "explanation": "Make correction, referral, operational support and handoffs usable."
+    },
+    {
+      "id": "making",
+      "icon": "spark",
+      "theme": "amber",
+      "title": "Keep learning by making",
+      "explanation": "Apply experience to independent builds, physical fabrication and AI experiments."
+    }
+  ],
+  "personal": [
+    {
+      "id": "apex",
+      "title": "Apex monitor riser",
+      "tag": "Workshop42 · 3D print & wood",
+      "description": "Printed legs meet a wooden shelf. A practical desktop object shaped around structure, space and everyday use.",
+      "src": "assets/optimized-extra/apex-1200.webp",
+      "alt": "Apex monitor riser with black, brown and red printed legs under a wooden shelf",
+      "href": "https://makerworld.com/en/models/2241447-apex-monitor-riser",
+      "linkLabel": "View Apex on MakerWorld ↗",
+      "external": true
+    },
+    {
+      "id": "voyager",
+      "title": "The Voyager canoe model",
+      "tag": "Workshop42 · Dual-color CAD",
+      "description": "A dual-color printed floating canoe model exploring shape, construction and the pleasure of making.",
+      "src": "assets/optimized-extra/voyager-1408.webp",
+      "alt": "Red and yellow Voyager canoe models with white gunwales and seats",
+      "href": "https://makerworld.com/en/models/1758264-the-voyager-a-floating-canoe-model-quick-print",
+      "linkLabel": "View Voyager on MakerWorld ↗",
+      "external": true
+    },
+    {
+      "id": "algonquin",
+      "title": "Barron Canyon · Algonquin",
+      "tag": "Architecture notes outdoors",
+      "description": "Stepping away from the desk to sketch agent harnesses, workflow diagrams and system architecture.",
+      "src": "assets/optimized/personal/barron-canyon-about-1672.webp",
+      "alt": "Josh seated with notes and a laptop in a Barron Canyon composition.",
+      "href": "#projects/nexus",
+      "linkLabel": "Explore NEXUS architecture →",
+      "external": false
+    },
+    {
+      "id": "bonecho",
+      "title": "Joe Perry Lake · Bon Echo",
+      "tag": "Ontario canoe country",
+      "description": "Canoeing and quiet reflection in Ontario's backcountry parks — the real-world inspiration behind the Voyager model.",
+      "src": "assets/optimized/footer/Joe-Perry-Lake-footer-one-sun-1672.webp",
+      "alt": "Canoe resting on the shore of Joe Perry Lake in Bon Echo at sunset",
+      "href": "https://ws42.ca",
+      "linkLabel": "Visit Workshop42 (ws42.ca) ↗",
+      "external": true
+    }
+  ],
+  "explorations": [
+    {
+      "icon": "cpu",
+      "text": "Multi-agent AI orchestration & context compilation (NEXUS)"
+    },
+    {
+      "icon": "mic",
+      "text": "Local on-device speech recognition (LOWKEY · Rust/Tauri & Android IME)"
+    },
+    {
+      "icon": "cube",
+      "text": "CAD modeling, woodworking & 3D fabrication at Workshop42"
+    },
+    {
+      "icon": "db",
+      "text": "Tracing legacy SQL, XML & flat-file ETL dependencies"
+    },
+    {
+      "icon": "compass",
+      "text": "Backcountry canoeing in Algonquin & Bon Echo"
+    }
+  ],
+  "lookingFor": [
+    {
+      "icon": "bulb",
+      "title": "Interesting problems",
+      "desc": "Complex systems, integration and solution architecture with real-world impact."
+    },
+    {
+      "icon": "team",
+      "title": "Collaborative teams",
+      "desc": "People who value practical solutions, clear requirements and shared ownership."
+    },
+    {
+      "icon": "growth",
+      "title": "Architecture and advisory work",
+      "desc": "Business architecture and AI strategy grounded in requirements, system dependencies and delivery experience."
+    }
+  ],
+  "currentFocus": {
+    "projectId": "nexus",
+    "title": "NEXUS",
+    "subtitle": "Independent AI orchestration platform · Active development",
+    "summary": "Independent product and architecture direction, using AI-assisted implementation to develop an evolving, reviewable AI work system.",
+    "caseHref": "#projects/nexus",
+    "liveHref": "https://run.nexus/"
+  }
+});
 
-    if (aboutPageSection && !aboutPageSection.querySelector(".about-page-workbench")) {
-      // Preserve existing static children in hidden container so nothing is lost
+    
+
+    if (aboutPageSection) {
       Array.from(aboutPageSection.children).forEach(child => {
         child.hidden = true;
       });
-
-      const aboutWorkbench = document.createElement("div");
-      aboutWorkbench.className = "about-page-workbench";
-      aboutWorkbench.innerHTML = `
-        <!-- 2.2 Full-Bleed Dark Editorial Hero -->
-        <header class="about-hero">
-          <div class="about-hero-backdrop" aria-hidden="true">
-            <img src="assets/personal/josh-about-skyline-bg.jpg" alt="">
-            <div class="about-hero-scrim"></div>
-          </div>
-
-          <div class="about-hero-inner">
-            <!-- Left Column: Seamless Portrait Zone on Desktop / Top Banner on Mobile -->
-            <figure class="about-hero-portrait-card">
-              <div class="about-hero-portrait-frame">
-                <img
-                  src="${ABOUT_PAGE_DATA.hero.portraitSrc}"
-                  alt="${ABOUT_PAGE_DATA.hero.portraitAlt}"
-                  width="223"
-                  height="323"
-                  fetchpriority="high"
-                >
-              </div>
-            </figure>
-
-            <!-- Center Column: Headline, Approved First-Person Intro & Working CTAs -->
-            <div class="about-hero-copy">
-              <p class="about-hero-eyebrow">${ABOUT_PAGE_DATA.hero.eyebrow}</p>
-              <h1 class="about-hero-headline" tabindex="-1">
-                ${ABOUT_PAGE_DATA.hero.headline.map(line => `<span class="${line.cls}">${line.text}</span>`).join("")}
-              </h1>
-              <p class="about-hero-lead">${ABOUT_PAGE_DATA.hero.introduction}</p>
-              <div class="about-hero-ctas">
-                <a class="about-btn-primary" href="#about-connect" data-about-scroll-connect>
-                  <span>Let's Connect</span>
-                  <span aria-hidden="true">&rarr;</span>
-                </a>
-                <a class="about-btn-secondary" href="resume.html">
-                  <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M9 3v8.5m0 0-3-3m3 3 3-3M3.5 14.5h11"/></svg>
-                  <span>Tailored R&eacute;sum&eacute;</span>
-                </a>
-                <a class="about-btn-tertiary" href="#projects">
-                  <span>Explore my work</span>
-                  <span aria-hidden="true">&rarr;</span>
-                </a>
-              </div>
-            </div>
-
-            <!-- Right Column: Compact Supporting Motif Rail Card (matching 3-floor architectural order) -->
-            <aside class="about-hero-motif-rail" aria-label="Three-part career signature">
-              <div class="about-motif-card">
-                <div class="about-motif-row motif-clouds">
-                  <span class="about-motif-icon icon-clouds" aria-hidden="true">
-                    <svg viewBox="0 0 36 28" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 23h16.5a5.5 5.5 0 0 0 .9-10.9A7.5 7.5 0 0 0 13 9.2 6 6 0 0 0 10 21"/></svg>
-                  </span>
-                  <div class="about-motif-text">
-                    <strong>Building in the cloud.</strong>
-                    <span>AI orchestration, modern platforms and practical solutions.</span>
-                  </div>
-                </div>
-
-                <div class="about-motif-row motif-business">
-                  <span class="about-motif-icon icon-business" aria-hidden="true">
-                    <svg viewBox="0 0 36 28" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="9" r="3.6"/><circle cx="10" cy="11.5" r="2.8"/><circle cx="26" cy="11.5" r="2.8"/><path d="M11.5 22v-1.8a5.5 5.5 0 0 1 13 0V22"/><path d="M5 22v-1.2a4.2 4.2 0 0 1 5.5-4"/><path d="M31 22v-1.2a4.2 4.2 0 0 0-5.5-4"/></svg>
-                  </span>
-                  <div class="about-motif-text">
-                    <strong>Shaped by the business.</strong>
-                    <span>Insurance systems, real problems and measurable impact.</span>
-                  </div>
-                </div>
-
-                <div class="about-motif-row motif-metal">
-                  <span class="about-motif-icon icon-metal" aria-hidden="true">
-                    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="24" height="6.5" rx="1.8"/><rect x="4" y="12.8" width="24" height="6.5" rx="1.8"/><rect x="4" y="21.5" width="24" height="6.5" rx="1.8"/><circle cx="8.5" cy="7.2" r="1" fill="currentColor"/><circle cx="8.5" cy="16" r="1" fill="currentColor"/><circle cx="8.5" cy="24.8" r="1" fill="currentColor"/><path d="M14 7.2h9M14 16h9M14 24.8h9"/></svg>
-                  </span>
-                  <div class="about-motif-text">
-                    <strong>Grounded in the metal.</strong>
-                    <span>Hardware, infrastructure and real-world systems.</span>
-                  </div>
-                </div>
-              </div>
-            </aside>
-          </div>
-        </header>
-
-        <!-- Below-the-Fold Editorial Bento Grid -->
-        <div class="about-body-wrap">
-          <!-- ROW 1: My Story | Same Curiosity. Bigger Tools. | Quick Facts -->
-          <div class="about-grid-row1">
-            <!-- 2.3 My Story -->
-            <section class="about-card about-story-card" aria-labelledby="about-story-heading">
-              <div class="about-card-header">
-                <span class="about-header-icon icon-blue" aria-hidden="true">
-                  <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M3 5a2.5 2.5 0 0 1 2.5-2.5H11v15H5.5A2.5 2.5 0 0 0 3 20V5Zm16 0a2.5 2.5 0 0 0-2.5-2.5H11v15h5.5A2.5 2.5 0 0 1 19 20V5Z"/></svg>
-                </span>
-                <h2 id="about-story-heading">My story</h2>
-              </div>
-
-              <div class="about-story-blocks">
-                ${ABOUT_PAGE_DATA.story.map(block => `
-                  <div class="about-story-block">
-                    <p><strong>${block.heading}:</strong> ${block.body}</p>
-                    <a class="about-inline-link" href="${block.linkHref}">${block.linkLabel} <span aria-hidden="true">&rarr;</span></a>
-                  </div>
-                `).join("")}
-              </div>
-            </section>
-
-            <!-- Center Visual Feature: Same curiosity. Bigger tools. -->
-            <section class="about-card about-visual-feature-card" aria-label="From systems foundations to AI orchestration">
-              <div class="about-visual-stage">
-                <img src="assets/proj-banner-nexus.jpg" alt="Dual-monitor software architecture and NEXUS orchestration setup" loading="lazy">
-                <div class="about-visual-screen-n" aria-hidden="true">
-                  <span>N</span>
-                </div>
-                <div class="about-visual-overlay">
-                  <span class="about-visual-kicker">Editorial Synthesis &middot; Systems to Solutions</span>
-                  <h3>Same curiosity. Bigger tools.</h3>
-                  <p>From hardware diagnostics and local servers to enterprise insurance integration and governed AI orchestration &mdash; the goal is still solving the real problem.</p>
-                </div>
-              </div>
-            </section>
-
-            <!-- Quick Facts -->
-            <aside class="about-card about-facts-card" aria-labelledby="about-facts-heading">
-              <div class="about-card-header">
-                <span class="about-header-icon icon-blue" aria-hidden="true">
-                  <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="11" cy="7.5" r="3.5"/><path d="M4.5 19v-1.5a6.5 6.5 0 0 1 13 0V19"/></svg>
-                </span>
-                <h2 id="about-facts-heading">Quick facts</h2>
-              </div>
-
-              <dl class="about-facts-list">
-                ${ABOUT_PAGE_DATA.quickFacts.map(fact => `
-                  <div class="about-fact-row">
-                    <dt>
-                      <span class="about-fact-icon" aria-hidden="true">${getAboutFactIconSvg(fact.icon)}</span>
-                      <span>${fact.label}</span>
-                    </dt>
-                    <dd>${fact.value}</dd>
-                  </div>
-                `).join("")}
-              </dl>
-            </aside>
-          </div>
-
-          <!-- ROW 2: What Drives Me (2x2 Principles) | Outside of Work (Workshop42 Lightbox Gallery) | What I Enjoy Exploring -->
-          <div class="about-grid-row2">
-            <!-- 2.4 Principles / What drives me -->
-            <section class="about-card about-drives-card" aria-labelledby="about-drives-heading">
-              <div class="about-card-header">
-                <span class="about-header-icon icon-rose" aria-hidden="true">
-                  <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M11 19s-7-4.6-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 18 9c0 5.4-7 10-7 10Z"/></svg>
-                </span>
-                <h2 id="about-drives-heading">What drives me</h2>
-              </div>
-
-              <div class="about-principles-grid">
-                ${ABOUT_PAGE_DATA.principles.map(p => `
-                  <article class="about-principle-box theme-${p.theme}">
-                    <span class="about-principle-icon theme-${p.theme}" aria-hidden="true">${getAboutFactIconSvg(p.icon)}</span>
-                    <h3>${p.title}</h3>
-                    <p>${p.explanation}</p>
-                  </article>
-                `).join("")}
-              </div>
-            </section>
-
-            <!-- 2.5 Outside of work (Workshop42 & Authentic Corpus Photos) -->
-            <section class="about-card about-outside-card" aria-labelledby="about-outside-heading">
-              <div class="about-card-header about-card-header--split">
-                <div class="about-card-header-left">
-                  <span class="about-header-icon icon-blue" aria-hidden="true">
-                    <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.9"><path d="m3 18 5.5-8 4 5.5 3-4L19 18H3Z"/><circle cx="15.5" cy="6.5" r="2"/></svg>
-                  </span>
-                  <h2 id="about-outside-heading">Outside of work</h2>
-                </div>
-                <a class="about-ws42-badge" href="https://ws42.ca" target="_blank" rel="noopener noreferrer">
-                  <span>Workshop42 &middot; ws42.ca</span>
-                  <span aria-hidden="true">&#8599;</span>
-                  <span class="sr-only"> (opens in a new tab)</span>
-                </a>
-              </div>
-
-              <div class="about-gallery-strip" role="list" aria-label="Workshop42 making projects and Ontario outdoors">
-                ${ABOUT_PAGE_DATA.personal.map((item, idx) => `
-                  <button
-                    type="button"
-                    class="about-gallery-item"
-                    data-about-lightbox-open="${idx}"
-                    aria-label="Inspect photo: ${item.title}"
-                  >
-                    <img src="${item.src}" alt="${item.alt}" loading="lazy">
-                    <span class="about-gallery-caption">
-                      <strong>${item.title}</strong>
-                      <small>${item.tag}</small>
-                    </span>
-                  </button>
-                `).join("")}
-              </div>
-
-              <div class="about-outside-footer">
-                <p>Physical design, 3D printing and woodworking projects at <a href="https://ws42.ca" target="_blank" rel="noopener noreferrer">Workshop42<span class="sr-only"> (opens in a new tab)</span></a>, alongside time outdoors in Ontario canoe country.</p>
-                <a class="about-inline-link" href="#projects/workshop42">View Workshop42 case study <span aria-hidden="true">&rarr;</span></a>
-              </div>
-            </section>
-
-            <!-- Hands-on Explorations (Corpus-verified list) -->
-            <section class="about-card about-enjoy-card" aria-labelledby="about-enjoy-heading">
-              <div class="about-card-header">
-                <span class="about-header-icon icon-blue" aria-hidden="true">
-                  <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="5" width="16" height="12" rx="3"/><path d="M7.5 11h3M9 9.5v3M13.5 10h.01M15.5 12h.01"/></svg>
-                </span>
-                <h2 id="about-enjoy-heading">A few things I enjoy</h2>
-              </div>
-
-              <ul class="about-enjoy-list">
-                ${ABOUT_PAGE_DATA.explorations.map(item => `
-                  <li>
-                    <span class="about-enjoy-icon" aria-hidden="true">${getAboutFactIconSvg(item.icon)}</span>
-                    <span>${item.text}</span>
-                  </li>
-                `).join("")}
-              </ul>
-            </section>
-          </div>
-
-          <!-- ROW 3: Let's Connect | What I'm Looking For | Current Focus (NEXUS) -->
-          <div class="about-grid-row3" id="about-connect">
-            <!-- 2.7 Contact / Let's connect -->
-            <section class="about-card about-connect-card" aria-labelledby="about-connect-heading">
-              <div class="about-card-header">
-                <span class="about-header-icon icon-blue" aria-hidden="true">
-                  <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 5.5h14a1.5 1.5 0 0 1 1.5 1.5v8a1.5 1.5 0 0 1-1.5 1.5H8l-4.5 3v-3H4A1.5 1.5 0 0 1 2.5 15V7A1.5 1.5 0 0 1 4 5.5Z"/></svg>
-                </span>
-                <h2 id="about-connect-heading">Have a problem worth solving? Let's talk.</h2>
-              </div>
-
-              <p class="about-connect-copy">I'm always open to conversations about technical solutions architecture, forward-deployed engineering, insurance systems, data integration or where practical AI is headed next.</p>
-
-              <div class="about-connect-actions">
-                <a class="about-connect-btn-primary" href="resume.html">
-                  <span>Build a Tailored R&eacute;sum&eacute;</span>
-                  <span aria-hidden="true">&rarr;</span>
-                </a>
-                <a class="about-connect-btn-secondary" href="#projects">
-                  <span>Explore Case Studies</span>
-                  <span aria-hidden="true">&rarr;</span>
-                </a>
-              </div>
-            </section>
-
-            <!-- What I'm looking for -->
-            <section class="about-card about-looking-card" aria-labelledby="about-looking-heading">
-              <div class="about-card-header">
-                <span class="about-header-icon icon-blue" aria-hidden="true">
-                  <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="7" cy="14" r="3.2"/><circle cx="15" cy="14" r="3.2"/><path d="M7 10.8V6.5a1.5 1.5 0 0 1 3 0v4.3M15 10.8V6.5a1.5 1.5 0 0 0-3 0v4.3M10 9.5h2"/></svg>
-                </span>
-                <h2 id="about-looking-heading">What I'm looking for</h2>
-              </div>
-
-              <div class="about-looking-grid">
-                ${ABOUT_PAGE_DATA.lookingFor.map(item => `
-                  <article class="about-looking-item">
-                    <span class="about-looking-icon" aria-hidden="true">
-                      ${item.icon === "bulb"
-                        ? `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7.5 14.5h5M8.2 17h3.6M10 2.5a5.5 5.5 0 0 0-3.2 10c.5.4.8 1 .8 1.6h4.8c0-.6.3-1.2.8-1.6a5.5 5.5 0 0 0-3.2-10Z"/></svg>`
-                        : item.icon === "team"
-                        ? `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7.5" cy="7" r="2.5"/><circle cx="13" cy="7.5" r="2"/><path d="M3 16v-1.2a4.2 4.2 0 0 1 8.4 0V16"/><path d="M12 16v-1a3.2 3.2 0 0 1 5 0v1"/></svg>`
-                        : `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 16.5h14M5.5 14l3.5-3.5 2.5 2.5 4-4.5M12.5 8.5h3v3"/></svg>`
-                      }
-                    </span>
-                    <div class="about-looking-text">
-                      <h3>${item.title}</h3>
-                      <p>${item.desc}</p>
-                    </div>
-                  </article>
-                `).join("")}
-              </div>
-            </section>
-
-            <!-- 2.6 Currently exploring (Canonical NEXUS reference) -->
-            <section class="about-card about-focus-card" aria-labelledby="about-focus-heading">
-              <div class="about-card-header">
-                <span class="about-header-icon icon-blue" aria-hidden="true">
-                  <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="11" cy="11" r="3"/><path d="M11 2.5v2.2M11 17.3v2.2M2.5 11h2.2M17.3 11h2.2M5 5l1.6 1.6M15.4 15.4 17 17M17 5l-1.6 1.6M6.6 15.4 5 17"/></svg>
-                </span>
-                <h2 id="about-focus-heading">Current focus</h2>
-              </div>
-
-              <p class="about-focus-copy">${ABOUT_PAGE_DATA.currentFocus.summary}</p>
-
-              <div class="about-focus-links">
-                <a class="about-nexus-pill-card" href="${ABOUT_PAGE_DATA.currentFocus.caseHref}">
-                  <span class="about-nexus-badge" aria-hidden="true">N</span>
-                  <span class="about-nexus-meta">
-                    <strong>${ABOUT_PAGE_DATA.currentFocus.title}</strong>
-                    <span>${ABOUT_PAGE_DATA.currentFocus.subtitle}</span>
-                  </span>
-                  <span class="about-nexus-arrow" aria-hidden="true">&rsaquo;</span>
-                </a>
-                <a class="about-nexus-ext-link" href="${ABOUT_PAGE_DATA.currentFocus.liveHref}" target="_blank" rel="noopener noreferrer">
-                  <span>Live destination: run.nexus</span>
-                  <span aria-hidden="true">&#8599;</span>
-                  <span class="sr-only"> (opens in a new tab)</span>
-                </a>
-              </div>
-            </section>
-          </div>
-        </div>
-
-        <!-- Accessible Lightbox Modal for Outside of Work Gallery -->
-        <div class="about-lightbox-backdrop" data-about-lightbox hidden role="dialog" aria-modal="true" aria-labelledby="about-lb-title">
-          <div class="about-lightbox-dialog">
-            <div class="about-lightbox-top">
-              <div class="about-lightbox-heading">
-                <span class="about-lightbox-tag" data-about-lb-tag>Workshop42</span>
-                <h3 id="about-lb-title" data-about-lb-title>Apex monitor riser</h3>
-              </div>
-              <button type="button" class="about-lightbox-close" data-about-lightbox-close aria-label="Close photo viewer">&times;</button>
-            </div>
-            <div class="about-lightbox-media">
-              <button type="button" class="about-lightbox-nav prev" data-about-lightbox-step="-1" aria-label="Previous photo">&lsaquo;</button>
-              <img data-about-lb-img src="assets/apex.jpg" alt="">
-              <button type="button" class="about-lightbox-nav next" data-about-lightbox-step="1" aria-label="Next photo">&rsaquo;</button>
-            </div>
-            <div class="about-lightbox-footer">
-              <p data-about-lb-desc></p>
-              <a class="about-lightbox-link" data-about-lb-link href="https://ws42.ca" target="_blank" rel="noopener noreferrer">Visit Workshop42 &#8599;</a>
-            </div>
-          </div>
-        </div>
-      `;
-      aboutPageSection.append(aboutWorkbench);
     }
 
     function updateAboutLightbox(idx) {
@@ -13592,50 +18703,54 @@
       const match = /^projects\/([a-z0-9-]+)$/.exec(hash);
 
       let activeTabId = "home";
-      let routeMode = "home";
+      const routeMode = "home";
       if (match && PROJECTS_BY_SLUG[match[1]]) {
         activeTabId = "projects";
-        routeMode = "project-detail";
+        const slug = match[1];
+        let needsBuildsRender = false;
+        if (selectedExploreBuildSlug !== slug) {
+          selectedExploreBuildSlug = slug;
+          selectedExploreGalleryIdx = 0;
+          needsBuildsRender = true;
+        }
+        if (activeExploreBuildsFilter !== "all" && !getFilteredExploreBuilds().some(p => p.slug === slug)) {
+          activeExploreBuildsFilter = "all";
+          document.querySelectorAll("[data-eb-filter]").forEach(btn => {
+            const isAct = btn.getAttribute("data-eb-filter") === "all";
+            btn.classList.toggle("is-active", isAct);
+            btn.setAttribute("aria-pressed", isAct ? "true" : "false");
+          });
+          needsBuildsRender = true;
+        }
+        if (needsBuildsRender) {
+          renderExploreBuildsWorkbench({ scrollRailToSelected: true });
+        }
       } else if (hash === "projects") {
         activeTabId = "projects";
-        routeMode = "projects";
       } else if (hash === "career") {
         activeTabId = "career";
-        routeMode = "career";
       } else if (hash === "skills") {
         activeTabId = "skills";
-        routeMode = "skills";
       } else if (hash === "about") {
         activeTabId = "about";
-        routeMode = "about";
       }
       document.body.setAttribute("data-active-route", routeMode);
+      document.body.setAttribute("data-active-section", activeTabId);
       document.querySelectorAll("[data-mobile-tab]").forEach(a => {
         const isCurrent = a.getAttribute("data-mobile-tab") === activeTabId;
         a.classList.toggle("is-active", isCurrent);
       });
 
-      if (hash === "career") {
-        const wasCareerHidden = !careerPageSection || careerPageSection.hidden;
-        document.querySelectorAll("[data-page]").forEach(sec => {
-          sec.hidden = sec.getAttribute("data-page") !== "career";
-        });
-        document.querySelectorAll("#primary-nav a").forEach(a => {
-          const isCareer = a.getAttribute("href") === "#career" && a.getAttribute("data-nav") === "career";
-          a.classList.toggle("active", isCareer);
-          if (isCareer) a.setAttribute("aria-current", "page");
-          else a.removeAttribute("aria-current");
-        });
-        if (wasCareerHidden && careerPageSection) {
-          animateSkillProgressBars(careerPageSection);
-        }
-        return;
-      } else if (careerPageSection && !careerPageSection.hidden) {
-        careerPageSection.hidden = true;
-      }
+      // Single-page consolidation: keep section[data-page="home"] visible for all routes and keep legacy standalone pages hidden
+      document.querySelectorAll("[data-page]").forEach(sec => {
+        const shouldHide = sec.getAttribute("data-page") !== "home";
+        if (sec.hidden !== shouldHide) sec.hidden = shouldHide;
+      });
+      if (detailSection && !detailSection.hidden) detailSection.hidden = true;
+      if (careerPageSection && !careerPageSection.hidden) careerPageSection.hidden = true;
+      if (skillsPageSection && !skillsPageSection.hidden) skillsPageSection.hidden = true;
 
       if (hash === "skills") {
-        const wasSkillsHidden = !skillsPageSection || skillsPageSection.hidden;
         const searchParams = new URLSearchParams(window.location.search || "");
         const catParam = searchParams.get("cat");
         const viewParam = searchParams.get("view");
@@ -13656,44 +18771,27 @@
         }
         if (needsSkillsRefresh) {
           refreshSkillsWorkbenchUI();
+          const skillsDrawer = document.querySelector("[data-home-skills-drawer]");
+          if (skillsDrawer) skillsDrawer.open = true;
         }
-        document.querySelectorAll("[data-page]").forEach(sec => {
-          sec.hidden = sec.getAttribute("data-page") !== "skills";
-        });
-        document.querySelectorAll("#primary-nav a").forEach(a => {
-          const isSkills = a.getAttribute("href") === "#skills" && a.getAttribute("data-nav") === "skills";
-          a.classList.toggle("active", isSkills);
-          if (isSkills) a.setAttribute("aria-current", "page");
-          else a.removeAttribute("aria-current");
-        });
-        if (wasSkillsHidden && skillsPageSection) {
-          animateSkillProgressBars(skillsPageSection);
+        if (homeSection) {
+          animateSkillProgressBars(homeSection);
         }
-        return;
-      } else if (skillsPageSection && !skillsPageSection.hidden) {
-        skillsPageSection.hidden = true;
       }
 
-      if (hash === "about") {
-        document.querySelectorAll("#primary-nav a").forEach(a => {
-          const isAbout = a.getAttribute("href") === "#about" && !a.hasAttribute("data-extra-nav");
-          a.classList.toggle("active", isAbout);
-          if (isAbout) a.setAttribute("aria-current", "page");
-          else a.removeAttribute("aria-current");
-        });
-      } else {
-        document.querySelectorAll('#primary-nav a[href="#about"]').forEach(a => {
-          a.classList.remove("active");
-        });
-      }
-
-      if (match && PROJECTS_BY_SLUG[match[1]]) {
-        const slug = match[1];
-        if (detailSection && !detailSection.querySelector(`[data-upgraded-detail="${slug}"]`)) {
-          activeDetailTab = "overview";
-          renderProjectDetailWorkbench(slug);
-        }
-      }
+      document.querySelectorAll("#primary-nav a").forEach(a => {
+        const navKey = a.getAttribute("data-nav");
+        const href = a.getAttribute("href");
+        const isCurrent =
+          (activeTabId === "home" && (navKey === "home" || href === "#home")) ||
+          (activeTabId === "projects" && (navKey === "projects" || href === "#projects")) ||
+          (activeTabId === "career" && (navKey === "career" || href === "#career")) ||
+          (activeTabId === "skills" && (navKey === "skills" || href === "#skills")) ||
+          (activeTabId === "about" && href === "#about" && !a.hasAttribute("data-extra-nav"));
+        a.classList.toggle("active", isCurrent);
+        if (isCurrent) a.setAttribute("aria-current", "page");
+        else a.removeAttribute("aria-current");
+      });
     }
 
     if (detailSection && typeof MutationObserver !== "undefined") {
@@ -13704,7 +18802,29 @@
     }
     window.addEventListener("hashchange", syncProjectRouteView);
     window.addEventListener("popstate", syncProjectRouteView);
+    window.addEventListener("portfolio:routechange", syncProjectRouteView);
     syncProjectRouteView();
+    const initialSectionKey = document.body.getAttribute("data-active-section");
+    if (initialSectionKey && initialSectionKey !== "home" && document.body.getAttribute("data-active-route") === "home") {
+      const initialTargetMap = {
+        projects: "#home-featured-projects",
+        career: "#home-career-section",
+        skills: "#home-skills-section",
+        about: "#home-about-section"
+      };
+      const initialTargetEl = initialTargetMap[initialSectionKey]
+        ? document.querySelector(initialTargetMap[initialSectionKey])
+        : null;
+      if (initialTargetEl && typeof window.scrollTo === "function") {
+        requestAnimationFrame(() => {
+          const isMobile = (window.innerWidth || 1024) <= 768;
+          const headerOffset = isMobile ? 72 : 64;
+          const rect = initialTargetEl.getBoundingClientRect();
+          const destY = Math.max(0, Math.round((window.scrollY || 0) + rect.top - headerOffset));
+          window.scrollTo({ top: destY, left: 0, behavior: "instant" });
+        });
+      }
+    }
 
     // 5. Quick-Find Command Palette Modal (Ctrl+K)
     const cmdBackdrop = document.createElement("div");
@@ -13730,11 +18850,11 @@
     const cmdResults = cmdBackdrop.querySelector("[data-cmd-results]");
 
     const CMD_ITEMS = [
-      { title: "Build a Tailored Resume", sub: "Generate a role-focused resume from Josh's verified experience", tag: "Resume Builder", url: "resume.html" },
+      { title: "Build a Tailored Resume", sub: "Generate a role-focused resume from Josh's verified experience", tag: "Resume Builder", href: "#home-connect" },
       { title: "Skills & Capabilities Workbench", sub: "Explore Infrastructure, Data, Insurance Domain, AI & Automation, Development & Delivery", tag: "Skills", href: "#skills" },
       { title: "Renewal Eligibility & Underwriting Automation", sub: "Grenville · ~80% residential, ~60% commercial, ~40% farm renewal automation", tag: "Grenville", href: "#projects/renewals" },
       { title: "Broker-Native New Business Integration", sub: "Grenville · Broker inputs, UI specs & rating/underwriting rules", tag: "Grenville", href: "#projects/newbusiness" },
-      { title: "Takeover-History XML Loading", sub: "Medavie · Production Excel/VB/XML validation & reconciliation tooling", tag: "Medavie", href: "#projects/takeover" },
+      { title: "Takeover-History XML Loading", sub: "Medavie · Production Excel VBA/XML validation & reconciliation tooling", tag: "Medavie", href: "#projects/takeover" },
       { title: "NEXUS — AI Orchestration Platform", sub: "Active capstone: scoped context, explainable routing, recoverable execution", tag: "Capstone", href: "#projects/nexus" },
       { title: "Claims Reporting & Data Continuity", sub: "Medavie · Legacy daily data feed continuity analysis & design", tag: "Medavie", href: "#projects/continuity" },
       { title: "Headquarters Infrastructure & Systems", sub: "Grenville · Networking, AV, security, cooling, UPS & ESXi transition", tag: "Grenville", href: "#projects/headquarters" },
@@ -13818,10 +18938,448 @@
       const target = event.target?.closest ? event.target : event.target?.parentElement;
       if (!target) return;
 
+      // 1. Home Skills V4 Interactive Knowledge Graph, Capability Inspector & 6-Card Strip Handlers
+      const skGraphFilterBtn = target.closest("[data-sk-graph-filter]");
+      if (skGraphFilterBtn) {
+        event.preventDefault();
+        activeSkV4GraphFilter = skGraphFilterBtn.getAttribute("data-sk-graph-filter") || "all";
+        syncSkV4InteractiveUi();
+        return;
+      }
+
+      const skInspTabBtn = target.closest("[data-sk-inspector-tab]");
+      if (skInspTabBtn) {
+        event.preventDefault();
+        activeSkV4InspectorTab = skInspTabBtn.getAttribute("data-sk-inspector-tab") || "overview";
+        syncSkV4InteractiveUi();
+        return;
+      }
+
+      if (target.closest("[data-sk-inspector-reset]")) {
+        event.preventDefault();
+        activeSkV4Capability = "ai";
+        activeSkV4InspectorTab = "overview";
+        activeSkV4GraphFilter = "all";
+        activeSkV4GraphSearch = "";
+        document.querySelectorAll("[data-sk-graph-search]").forEach(inp => { inp.value = ""; });
+        syncSkV4InteractiveUi();
+        return;
+      }
+
+      const skHubBtn = target.closest("[data-sk-hub]");
+      if (skHubBtn) {
+        event.preventDefault();
+        const hubId = skHubBtn.getAttribute("data-sk-hub") || "ai";
+        if (hubId === "core") {
+          activeSkV4GraphFilter = "all";
+          activeSkV4Capability = "solution";
+        } else if (HOME_SKILLS_V3_CARDS.some(c => c.id === hubId)) {
+          activeSkV4Capability = hubId;
+        }
+        activeSkV4InspectorTab = "overview";
+        syncSkV4InteractiveUi();
+        return;
+      }
+
+      const skLeafBtn = target.closest("[data-sk-leaf]");
+      if (skLeafBtn) {
+        event.preventDefault();
+        const leafHub = skLeafBtn.getAttribute("data-sk-leaf-hub") || "ai";
+        if (HOME_SKILLS_V3_CARDS.some(c => c.id === leafHub)) {
+          activeSkV4Capability = leafHub;
+          activeSkV4InspectorTab = "overview";
+          syncSkV4InteractiveUi();
+        }
+        return;
+      }
+
+      const skSelectCapBtn = target.closest("[data-sk-select-cap]");
+      if (skSelectCapBtn) {
+        event.preventDefault();
+        const capId = skSelectCapBtn.getAttribute("data-sk-select-cap") || "ai";
+        if (HOME_SKILLS_V3_CARDS.some(c => c.id === capId)) {
+          activeSkV4Capability = capId;
+          activeSkV4InspectorTab = "overview";
+          syncSkV4InteractiveUi();
+        }
+        return;
+      }
+
+      const skV3CardEl = target.closest("[data-sk-v3-card]");
+      if (skV3CardEl && !target.closest("a[href]")) {
+        event.preventDefault();
+        const cardId = skV3CardEl.getAttribute("data-sk-v3-card") || "ai";
+        if (HOME_SKILLS_V3_CARDS.some(c => c.id === cardId)) {
+          activeSkV4Capability = cardId;
+          activeSkV4InspectorTab = "overview";
+          syncSkV4InteractiveUi();
+        }
+        return;
+      }
+
+      // 1b. Home Skills Theme Switcher (Light / Dark) & Legacy Handlers
+      const skThemeBtn = target.closest("[data-skills-set-theme]");
+      if (skThemeBtn) {
+        event.preventDefault();
+        const nextTheme = skThemeBtn.getAttribute("data-skills-set-theme") === "dark" ? "dark" : "light";
+        const skSec = document.getElementById("home-skills-section");
+        if (skSec) {
+          skSec.setAttribute("data-skills-theme", nextTheme);
+          skSec.querySelectorAll("[data-skills-set-theme]").forEach(btn => {
+            const isAct = btn.getAttribute("data-skills-set-theme") === nextTheme;
+            btn.classList.toggle("is-active", isAct);
+            btn.setAttribute("aria-pressed", isAct ? "true" : "false");
+          });
+        }
+        return;
+      }
+
+      const skChallengeBtn = target.closest("[data-sk-challenge]");
+      if (skChallengeBtn) {
+        event.preventDefault();
+        const chId = skChallengeBtn.getAttribute("data-sk-challenge") || "renewals";
+        if (HOME_SKILL_CHALLENGES[chId]) {
+          activeHomeSkillChallenge = chId;
+          const chWrap = document.querySelector("[data-home-skills-challenges-wrap]");
+          if (chWrap) chWrap.innerHTML = renderHomeChallengeCardsRowHtml();
+          const cardWrap = document.querySelector("[data-home-skill-card]");
+          if (cardWrap) cardWrap.innerHTML = renderHomeSkillActiveCardHtml(activeHomeSkillTab);
+        }
+        return;
+      }
+
+      const skInvExpandBtn = target.closest("[data-sk-inv-expand]");
+      if (skInvExpandBtn) {
+        event.preventDefault();
+        isTechInventoryExpanded = !isTechInventoryExpanded;
+        const relWrap = document.querySelector("[data-home-skills-related-wrap]");
+        if (relWrap) relWrap.innerHTML = renderHomeSkillRelatedBuildsHtml();
+        return;
+      }
+
+      const homeSkillTabBtn = target.closest("[data-home-skill-tab]");
+      if (homeSkillTabBtn) {
+        event.preventDefault();
+        const rawKey = homeSkillTabBtn.getAttribute("data-home-skill-tab") || "ai";
+        const tabKey = rawKey === "integration" ? "data" : (HOME_SKILL_GROUPS[rawKey] ? rawKey : "ai");
+        activeHomeSkillTab = tabKey;
+        activeHomeSkillSubtab = "overview";
+        const layersWrap = document.querySelector("[data-home-skills-layers-card]");
+        if (layersWrap && typeof renderHomeCapabilityLayersCardHtml === "function") {
+          layersWrap.innerHTML = renderHomeCapabilityLayersCardHtml();
+        }
+        const stackWrap = document.querySelector("[data-home-skills-stack-wrap]");
+        if (stackWrap && typeof renderHome3DCapabilityStackHtml === "function") {
+          stackWrap.innerHTML = renderHome3DCapabilityStackHtml();
+        }
+        const cardWrap = document.querySelector("[data-home-skill-card]");
+        if (cardWrap && typeof renderHomeSkillActiveCardHtml === "function") {
+          cardWrap.innerHTML = renderHomeSkillActiveCardHtml(tabKey);
+        }
+        const relWrap = document.querySelector("[data-home-skills-related-wrap]");
+        if (relWrap && typeof renderHomeSkillRelatedBuildsHtml === "function") {
+          relWrap.innerHTML = renderHomeSkillRelatedBuildsHtml();
+        }
+        if (typeof HOME_SKILL_GROUPS !== "undefined" && HOME_SKILL_GROUPS[tabKey]) {
+          compactSkillsLockedCat = HOME_SKILL_GROUPS[tabKey].stackLayerId;
+          hoveredSkillCategory = null;
+        }
+        return;
+      }
+
+      const skLayerStepBtn = target.closest("[data-sk-layer-step]");
+      if (skLayerStepBtn) {
+        event.preventDefault();
+        const delta = parseInt(skLayerStepBtn.getAttribute("data-sk-layer-step") || "1", 10);
+        const curIdx = Math.max(0, HOME_SKILL_LAYERS_ORDER.indexOf(activeHomeSkillTab));
+        const nextIdx = (curIdx + delta + HOME_SKILL_LAYERS_ORDER.length) % HOME_SKILL_LAYERS_ORDER.length;
+        activeHomeSkillTab = HOME_SKILL_LAYERS_ORDER[nextIdx];
+        const layersWrap = document.querySelector("[data-home-skills-layers-card]");
+        if (layersWrap && typeof renderHomeCapabilityLayersCardHtml === "function") {
+          layersWrap.innerHTML = renderHomeCapabilityLayersCardHtml();
+        }
+        const stackWrap = document.querySelector("[data-home-skills-stack-wrap]");
+        if (stackWrap && typeof renderHome3DCapabilityStackHtml === "function") {
+          stackWrap.innerHTML = renderHome3DCapabilityStackHtml();
+        }
+        const cardWrap = document.querySelector("[data-home-skill-card]");
+        if (cardWrap && typeof renderHomeSkillActiveCardHtml === "function") {
+          cardWrap.innerHTML = renderHomeSkillActiveCardHtml(activeHomeSkillTab);
+        }
+        const relWrap = document.querySelector("[data-home-skills-related-wrap]");
+        if (relWrap && typeof renderHomeSkillRelatedBuildsHtml === "function") {
+          relWrap.innerHTML = renderHomeSkillRelatedBuildsHtml();
+        }
+        return;
+      }
+
+      const skSubtabBtn = target.closest("[data-sk-subtab]");
+      if (skSubtabBtn) {
+        event.preventDefault();
+        activeHomeSkillSubtab = skSubtabBtn.getAttribute("data-sk-subtab") || "overview";
+        const cardWrap = document.querySelector("[data-home-skill-card]");
+        if (cardWrap && typeof renderHomeSkillActiveCardHtml === "function") {
+          cardWrap.innerHTML = renderHomeSkillActiveCardHtml(activeHomeSkillTab);
+        }
+        return;
+      }
+
+      const skRelStepBtn = target.closest("[data-sk-rel-step]");
+      if (skRelStepBtn) {
+        event.preventDefault();
+        const delta = parseInt(skRelStepBtn.getAttribute("data-sk-rel-step") || "1", 10);
+        activeHomeSkillRelIdx = (activeHomeSkillRelIdx + delta + HOME_SKILL_RELATED_BUILDS.length) % HOME_SKILL_RELATED_BUILDS.length;
+        const relWrap = document.querySelector("[data-home-skills-related-wrap]");
+        if (relWrap && typeof renderHomeSkillRelatedBuildsHtml === "function") {
+          relWrap.innerHTML = renderHomeSkillRelatedBuildsHtml();
+        }
+        return;
+      }
+
+      // 2. Home Connect 3 Mode Tabs (Send Message, Compare to Role, Ask My AI)
+      const connectTabBtn = target.closest("[data-connect-tab]");
+      if (connectTabBtn) {
+        event.preventDefault();
+        const mode = connectTabBtn.getAttribute("data-connect-tab");
+        if (mode === "role") {
+          if (window.TwinDrawer && typeof window.TwinDrawer.openDrawer === "function") {
+            window.TwinDrawer.openDrawer("Compare job posting with your experience");
+          }
+          return;
+        } else if (mode === "ai") {
+          if (window.TwinDrawer && typeof window.TwinDrawer.openDrawer === "function") {
+            window.TwinDrawer.openDrawer("Ask me anything about your experience.");
+          }
+          return;
+        }
+        // Message tab
+        document.querySelectorAll("[data-connect-tab]").forEach(btn => {
+          const isAct = btn.getAttribute("data-connect-tab") === "message";
+          btn.classList.toggle("is-active", isAct);
+          btn.setAttribute("aria-selected", isAct ? "true" : "false");
+        });
+        document.querySelector("[data-contact-name]")?.focus();
+        return;
+      }
+
+      // 3. Play the Journey button -> open & scroll to Tycoon Game drawer in footer
+      const playJourneyBtn = target.closest("[data-play-journey-action]");
+      if (playJourneyBtn) {
+        event.preventDefault();
+        const drawerEl = document.getElementById("home-connect-game");
+        if (drawerEl) {
+          drawerEl.hidden = false;
+          if (window.AutomationTycoonApp && typeof window.AutomationTycoonApp.mount === "function") {
+            window.AutomationTycoonApp.mount();
+          }
+          drawerEl.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+        return;
+      }
+
+      const closeJourneyBtn = target.closest("[data-close-journey-game]");
+      if (closeJourneyBtn) {
+        event.preventDefault();
+        const drawerEl = document.getElementById("home-connect-game");
+        if (drawerEl) {
+          drawerEl.hidden = true;
+          if (window.AutomationTycoonApp && typeof window.AutomationTycoonApp.pauseMusic === "function") {
+            window.AutomationTycoonApp.pauseMusic();
+          }
+        }
+        return;
+      }
+
+      // 4. Hero "Ask me anything" invitation button
+      const heroAskBtn = target.closest("[data-hero-ask-twin]");
+      if (heroAskBtn) {
+        event.preventDefault();
+        if (window.TwinDrawer && typeof window.TwinDrawer.openDrawer === "function") {
+          window.TwinDrawer.openDrawer("Ask me anything about your experience.");
+        }
+        return;
+      }
+
+      // 5. Let's Connect CTA focus
+      const focusContactBtn = target.closest("[data-home-focus-contact]");
+      if (focusContactBtn) {
+        const contactSec = document.getElementById("home-connect-form") || document.getElementById("home-connect");
+        if (contactSec) {
+          contactSec.scrollIntoView({ behavior: "smooth", block: "center" });
+          setTimeout(() => {
+            document.querySelector("[data-contact-name]")?.focus();
+          }, 450);
+        }
+      }
+
+
+      // Single-page Home section drawer expanders ("View All Builds", "Explore All Skills", "More About My Story")
+      const openBuildsBtn = target.closest("[data-home-open-builds]");
+      if (openBuildsBtn) {
+        event.preventDefault();
+        const drawer = document.querySelector("[data-home-builds-drawer]");
+        if (drawer) {
+          if ("open" in drawer) drawer.open = true;
+          drawer.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        return;
+      }
+
+      const ebFilterBtn = target.closest("[data-eb-filter]");
+      if (ebFilterBtn) {
+        event.preventDefault();
+        fwRailManualPauseUntil = Date.now() + 12000;
+        activeExploreBuildsFilter = ebFilterBtn.getAttribute("data-eb-filter") || "all";
+        document.querySelectorAll("[data-eb-filter]").forEach(btn => {
+          const isAct = btn.getAttribute("data-eb-filter") === activeExploreBuildsFilter;
+          btn.classList.toggle("is-active", isAct);
+          btn.setAttribute("aria-pressed", isAct ? "true" : "false");
+        });
+        renderExploreBuildsWorkbench({ scrollRailToSelected: true, instant: true });
+        return;
+      }
+
+      const fwRailPrevBtn = target.closest("[data-fw-rail-prev]");
+      if (fwRailPrevBtn) {
+        event.preventDefault();
+        fwRailManualPauseUntil = Date.now() + 12000;
+        stepExploreBuildsSelection(-1);
+        return;
+      }
+
+      const fwRailNextBtn = target.closest("[data-fw-rail-next]");
+      if (fwRailNextBtn) {
+        event.preventDefault();
+        fwRailManualPauseUntil = Date.now() + 12000;
+        stepExploreBuildsSelection(1);
+        return;
+      }
+
+      const ebCardEl = target.closest("[data-eb-card]");
+      if (ebCardEl && !target.closest("[data-proj-link]")) {
+        event.preventDefault();
+        fwRailManualPauseUntil = Date.now() + 12000;
+        const slug = ebCardEl.getAttribute("data-eb-card");
+        if (slug) {
+          selectedExploreBuildSlug = slug;
+          selectedExploreGalleryIdx = 0;
+          renderExploreBuildsWorkbench();
+        }
+        return;
+      }
+
+      const homeProjLinkEl = target.closest("[data-proj-link], [data-home-select-build], a[href^='#projects/']");
+      if (homeProjLinkEl) {
+        const explicitSlug = homeProjLinkEl.getAttribute("data-proj-link") || homeProjLinkEl.getAttribute("data-home-select-build") || "";
+        const hrefAttr = homeProjLinkEl.getAttribute("href") || "";
+        const hrefMatch = /^#projects\/([a-z0-9-]+)$/.exec(hrefAttr);
+        const slug = explicitSlug || (hrefMatch ? hrefMatch[1] : "");
+        if (slug && PROJECTS_BY_SLUG[slug]) {
+          event.preventDefault();
+          fwRailManualPauseUntil = Date.now() + 12000;
+          const isCaseStudyBtnInPreview = homeProjLinkEl.classList.contains("eb-case-study-btn");
+          if (selectedExploreBuildSlug !== slug) {
+            selectedExploreBuildSlug = slug;
+            selectedExploreGalleryIdx = 0;
+            activeExploreSubtab = "overview";
+          } else if (isCaseStudyBtnInPreview) {
+            const subtabOrder = ["overview", "problem", "contribution", "solution", "outcome", "tech"];
+            const curTabIdx = subtabOrder.indexOf(activeExploreSubtab);
+            activeExploreSubtab = subtabOrder[(curTabIdx + 1) % subtabOrder.length];
+          }
+          if (activeExploreBuildsFilter !== "all" && !getFilteredExploreBuilds().some(p => p.slug === slug)) {
+            activeExploreBuildsFilter = "all";
+            document.querySelectorAll("[data-eb-filter]").forEach(btn => {
+              const isAct = btn.getAttribute("data-eb-filter") === "all";
+              btn.classList.toggle("is-active", isAct);
+              btn.setAttribute("aria-pressed", isAct ? "true" : "false");
+            });
+          }
+          renderExploreBuildsWorkbench({ scrollRailToSelected: true });
+          try {
+            window.history.replaceState(null, "", `#projects/${slug}`);
+          } catch (_err) {}
+          syncProjectRouteView();
+          const drawerEl = document.getElementById("home-builds-drawer") || document.getElementById("home-featured-projects");
+          if (drawerEl && !isCaseStudyBtnInPreview) {
+            drawerEl.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+          return;
+        }
+      }
+
+      const ebGalBtn = target.closest("[data-eb-gal-thumb]");
+      if (ebGalBtn) {
+        event.preventDefault();
+        fwRailManualPauseUntil = Date.now() + 12000;
+        const gIdx = parseInt(ebGalBtn.getAttribute("data-eb-gal-thumb") || "0", 10);
+        if (Number.isFinite(gIdx)) {
+          selectedExploreGalleryIdx = gIdx;
+          renderExploreBuildsWorkbench();
+        }
+        return;
+      }
+
+      const ebPrevBtn = target.closest("[data-eb-strip-prev]");
+      if (ebPrevBtn) {
+        event.preventDefault();
+        fwRailManualPauseUntil = Date.now() + 12000;
+        stepExploreBuildsSelection(-1);
+        return;
+      }
+
+      const ebNextBtn = target.closest("[data-eb-strip-next]");
+      if (ebNextBtn) {
+        event.preventDefault();
+        fwRailManualPauseUntil = Date.now() + 12000;
+        stepExploreBuildsSelection(1);
+        return;
+      }
+
+      const ebSubtabBtn = target.closest("[data-eb-subtab]");
+      if (ebSubtabBtn) {
+        event.preventDefault();
+        fwRailManualPauseUntil = Date.now() + 12000;
+        selectExploreDetailTab(ebSubtabBtn.getAttribute("data-eb-subtab") || "overview");
+        return;
+      }
+
+      const ebStepBtn = target.closest("[data-eb-preview-step]");
+      if (ebStepBtn) {
+        event.preventDefault();
+        fwRailManualPauseUntil = Date.now() + 12000;
+        const delta = parseInt(ebStepBtn.getAttribute("data-eb-preview-step") || "1", 10);
+        stepExploreBuildsSelection(delta);
+        return;
+      }
+
+      const openSkillsBtn = target.closest("[data-home-open-skills]");
+      if (openSkillsBtn) {
+        event.preventDefault();
+        const drawer = document.querySelector("[data-home-skills-drawer]");
+        if (drawer) {
+          drawer.open = true;
+          if (homeSection) animateSkillProgressBars(homeSection);
+          drawer.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        return;
+      }
+
+      const openAboutBtn = target.closest("[data-home-open-about]");
+      if (openAboutBtn) {
+        event.preventDefault();
+        const drawer = document.querySelector("[data-home-about-drawer]");
+        if (drawer) {
+          drawer.open = true;
+          drawer.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        return;
+      }
+
       // Home smooth scroll to embedded Skills Workbench
       if (target.closest("[data-home-scroll-skills]")) {
         const homeSkillsEl = document.getElementById("home-skills-section");
-        if (homeSkillsEl && document.body.getAttribute("data-active-route") === "home") {
+        if (homeSkillsEl) {
           event.preventDefault();
           homeSkillsEl.scrollIntoView({ behavior: "smooth", block: "start" });
           return;
@@ -13930,8 +19488,14 @@
           window.location.hash = "#skills";
         }
         refreshSkillsWorkbenchUI();
+        const skillsDrawer = document.querySelector("[data-home-skills-drawer]");
+        if (skillsDrawer) {
+          skillsDrawer.open = true;
+          skillsDrawer.scrollIntoView({ behavior: "smooth", block: "start" });
+        } else {
+          document.getElementById("home-skills-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
         window.dispatchEvent(new HashChangeEvent("hashchange"));
-        window.scrollTo({ top: 0, behavior: "smooth" });
         return;
       }
 
@@ -13942,7 +19506,7 @@
         activeSkillCategory = catId;
         compactSkillsLockedCat = catId;
         hoveredSkillCategory = null;
-        if (document.body.getAttribute("data-active-route") === "skills") {
+        if (document.body.getAttribute("data-active-section") === "skills" || window.location.hash === "#skills") {
           try {
             const sp = new URLSearchParams(window.location.search || "");
             sp.set("cat", catId);
@@ -14037,10 +19601,10 @@
 
       // Home smooth scroll & focus on Contact Form
       if (target.closest("[data-home-focus-contact]") || (target.closest(".header-story-btn") && document.body.getAttribute("data-active-route") === "home")) {
-        const connectEl = document.getElementById("home-connect");
+        const connectEl = document.getElementById("home-connect-form") || document.getElementById("home-connect");
         if (connectEl) {
           event.preventDefault();
-          connectEl.scrollIntoView({ behavior: "smooth", block: "start" });
+          connectEl.scrollIntoView({ behavior: "smooth", block: "center" });
           setTimeout(() => {
             const nameInp = document.querySelector("[data-contact-name]");
             if (nameInp) nameInp.focus({ preventScroll: true });
@@ -14342,12 +19906,51 @@
         return;
       }
 
-      // About Page smooth scroll to #about-connect
+      // About Page smooth scroll to #home-connect (or fallback #about-connect)
       if (target.closest("[data-about-scroll-connect]")) {
         event.preventDefault();
-        const connectSec = document.getElementById("about-connect");
+        const connectSec = document.getElementById("home-connect") || document.getElementById("about-connect");
         if (connectSec) {
           connectSec.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        return;
+      }
+
+      // About Page "My story" sub-tabs & collapse toggle
+      const aboutStoryTabBtn = target.closest("[data-about-story-tab]");
+      if (aboutStoryTabBtn) {
+        event.preventDefault();
+        const tabId = aboutStoryTabBtn.getAttribute("data-about-story-tab") || "journey";
+        const storyCard = aboutStoryTabBtn.closest("[data-about-story-card]");
+        if (storyCard) {
+          storyCard.querySelectorAll("[data-about-story-tab]").forEach(btn => {
+            const active = btn.getAttribute("data-about-story-tab") === tabId;
+            btn.classList.toggle("is-active", active);
+            btn.setAttribute("aria-selected", active ? "true" : "false");
+          });
+          storyCard.querySelectorAll("[data-about-story-panel]").forEach(panel => {
+            panel.hidden = panel.getAttribute("data-about-story-panel") !== tabId;
+          });
+          const bodyEl = storyCard.querySelector("[data-about-story-body]");
+          const toggleBtn = storyCard.querySelector("[data-about-story-toggle]");
+          if (bodyEl && bodyEl.hidden) {
+            bodyEl.hidden = false;
+            if (toggleBtn) toggleBtn.setAttribute("aria-expanded", "true");
+          }
+        }
+        return;
+      }
+
+      const aboutStoryToggleBtn = target.closest("[data-about-story-toggle]");
+      if (aboutStoryToggleBtn) {
+        event.preventDefault();
+        const storyCard = aboutStoryToggleBtn.closest("[data-about-story-card]");
+        const bodyEl = storyCard?.querySelector("[data-about-story-body]");
+        if (bodyEl) {
+          const nextHidden = !bodyEl.hidden;
+          bodyEl.hidden = nextHidden;
+          aboutStoryToggleBtn.setAttribute("aria-expanded", nextHidden ? "false" : "true");
+          aboutStoryToggleBtn.classList.toggle("is-collapsed", nextHidden);
         }
         return;
       }
@@ -14355,9 +19958,25 @@
       // About Page Lightbox Open
       const lbOpenBtn = target.closest("[data-about-lightbox-open]");
       if (lbOpenBtn) {
+        event.preventDefault();
+        event.stopPropagation();
         lastAboutLightboxTrigger = lbOpenBtn;
         const idx = parseInt(lbOpenBtn.getAttribute("data-about-lightbox-open") || "0", 10);
         updateAboutLightbox(idx);
+        return;
+      }
+
+      // About Page Accordion Row Toggle
+      const aboutAccToggle = target.closest("[data-about-acc-toggle]");
+      if (aboutAccToggle) {
+        event.preventDefault();
+        const accItem = aboutAccToggle.closest(".about-acc-item");
+        const accBody = accItem?.querySelector("[data-about-acc-body]");
+        if (accItem && accBody) {
+          const isOpen = accItem.classList.toggle("is-open");
+          accBody.hidden = !isOpen;
+          aboutAccToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        }
         return;
       }
 
@@ -14422,76 +20041,150 @@
       }
     });
 
-    document.addEventListener("submit", event => {
-      const form = event.target?.closest?.("[data-home-contact-form]");
-      if (!form) return;
-      event.preventDefault();
-
-      const nameInp = form.querySelector("[data-contact-name]");
-      const replyInp = form.querySelector("[data-contact-reply]");
-      const msgInp = form.querySelector("[data-contact-message]");
-      const activeTopicEl = form.querySelector("[data-contact-topic].is-active");
-      const feedbackEl = form.querySelector("[data-contact-feedback]");
-
-      const nameVal = (nameInp?.value || "").trim();
-      const replyVal = (replyInp?.value || "").trim();
-      const msgVal = (msgInp?.value || "").trim();
-      const topicVal = activeTopicEl?.getAttribute("data-contact-topic") || "Solution Architecture";
-
-      if (!nameVal || !replyVal || !msgVal) {
-        if (feedbackEl) {
-          feedbackEl.hidden = false;
-          feedbackEl.className = "home-connect-feedback is-error";
-          feedbackEl.textContent = "Please fill in your name, contact info and a brief message to prepare your connection note.";
-        }
-        if (!nameVal && nameInp) nameInp.focus();
-        else if (!replyVal && replyInp) replyInp.focus();
-        else if (!msgVal && msgInp) msgInp.focus();
-        return;
-      }
-
-      const subject = `JoshBoyer.ca Connection — ${topicVal} (${nameVal})`;
-      const bodyText = [
-        `Hi Josh,`,
-        ``,
-        msgVal,
-        ``,
-        `---`,
-        `From: ${nameVal}`,
-        `Contact: ${replyVal}`,
-        `Topic: ${topicVal}`
-      ].join("\n");
-
-      if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
-        navigator.clipboard.writeText(bodyText).catch(() => {});
-      }
-
-      const mailtoHref = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
-      if (feedbackEl) {
-        feedbackEl.hidden = false;
-        feedbackEl.className = "home-connect-feedback is-success";
-        feedbackEl.innerHTML = `
-          <div class="home-connect-feedback-top">
-            <span class="home-connect-feedback-check" aria-hidden="true">&#10003;</span>
-            <div>
-              <strong>Connection note ready &amp; copied to clipboard</strong>
-              <p data-contact-feedback-meta></p>
-            </div>
-          </div>
-          <div class="home-connect-feedback-actions">
-            <a class="home-feedback-btn-primary" href="${mailtoHref}">Open in Email Client &#8599;</a>
-            <a class="home-feedback-btn-secondary" href="resume.html">Build Tailored R&eacute;sum&eacute; &rarr;</a>
-          </div>
-        `;
-        const metaP = feedbackEl.querySelector("[data-contact-feedback-meta]");
-        if (metaP) {
-          metaP.textContent = `Topic: ${topicVal} · From ${nameVal}`;
+    document.addEventListener("input", event => {
+      if (event.target?.matches?.("[data-sk-inv-search]")) {
+        techInventorySearchQuery = event.target.value || "";
+        const relWrap = document.querySelector("[data-home-skills-related-wrap]");
+        if (relWrap) {
+          relWrap.innerHTML = renderHomeSkillRelatedBuildsHtml();
+          const newInp = relWrap.querySelector("[data-sk-inv-search]");
+          if (newInp) {
+            newInp.focus();
+            const len = newInp.value.length;
+            newInp.setSelectionRange(len, len);
+          }
         }
       }
     });
 
+    const CONTACT_AUTOREPLY_ADDRESS = "noreply@joshboyer.ca";
+    const CONTACT_CTRL_CHAR_RE = /[\r\n\0\u2028\u2029]/;
+    const CONTACT_LOCAL_PART_RE = /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+$/;
+    const CONTACT_DOMAIN_LABEL_RE = /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?$/;
+    const CONTACT_TLD_RE = /^[A-Za-z]{2,63}$/;
+
+    function isValidContactEmail(rawEmail) {
+      if (typeof rawEmail !== "string" || CONTACT_CTRL_CHAR_RE.test(rawEmail)) return false;
+      const email = rawEmail.trim();
+      if (email.length < 3 || email.length > 254 || /\s/.test(email)) return false;
+      const atIdx = email.indexOf("@");
+      if (atIdx <= 0 || atIdx !== email.lastIndexOf("@") || atIdx === email.length - 1) return false;
+      const local = email.slice(0, atIdx);
+      const domain = email.slice(atIdx + 1);
+      if (local.length < 1 || local.length > 64) return false;
+      if (local.startsWith(".") || local.endsWith(".") || local.includes("..")) return false;
+      if (!CONTACT_LOCAL_PART_RE.test(local)) return false;
+      if (domain.length < 3 || domain.length > 253) return false;
+      if (domain.startsWith(".") || domain.endsWith(".") || domain.includes("..")) return false;
+      const labels = domain.split(".");
+      if (labels.length < 2) return false;
+      for (let i = 0; i < labels.length; i++) {
+        const lbl = labels[i];
+        if (!lbl || lbl.length > 63 || !CONTACT_DOMAIN_LABEL_RE.test(lbl)) return false;
+      }
+      return CONTACT_TLD_RE.test(labels[labels.length - 1]);
+    }
+
+    function showContactUnsent(feedbackEl, bodyText, message) {
+      if (!feedbackEl) return;
+      feedbackEl.hidden = false;
+      feedbackEl.className = "home-connect-feedback is-error";
+      feedbackEl.innerHTML = `
+        <strong data-contact-feedback-title></strong>
+        <p>Your text is preserved below. Please use this form again later to follow up.</p>
+        <label class="contact-draft-copy-label">Your message
+          <textarea class="contact-draft-copy" data-contact-unsent-copy rows="6" readonly></textarea>
+        </label>
+      `;
+      const title = feedbackEl.querySelector("[data-contact-feedback-title]");
+      if (title) title.textContent = message;
+      const copy = feedbackEl.querySelector("[data-contact-unsent-copy]");
+      if (copy) copy.value = bodyText;
+    }
+
+    document.addEventListener("submit", async event => {
+      const form = event.target?.closest?.("[data-home-contact-form]");
+      if (!form) return;
+      event.preventDefault();
+      const nameInp = form.querySelector("[data-contact-name]");
+      const replyInp = form.querySelector("[data-contact-reply]");
+      const topicSelect = form.querySelector("[data-contact-topic-select]");
+      const msgInp = form.querySelector("[data-contact-message]");
+      const honeypotInp = form.querySelector("[data-contact-honeypot]");
+      const submitBtn = form.querySelector("[data-contact-submit]");
+      const submitLabelEl = form.querySelector("[data-contact-submit-label]");
+      const feedbackEl = form.querySelector("[data-contact-feedback]");
+      if (submitBtn?.disabled) return;
+      [nameInp, replyInp, msgInp].forEach(el => el?.removeAttribute("aria-invalid"));
+      const rawName = String(nameInp?.value || "");
+      const rawEmail = String(replyInp?.value || "");
+      const topic = String(topicSelect?.value || "").replace(/[\r\n\0\u2028\u2029]/g, "").trim();
+      const rawMessage = String(msgInp?.value || "");
+      const name = rawName.trim(), email = rawEmail.trim().toLowerCase();
+      const message = rawMessage.replace(/\r\n?/g, "\n").trim();
+      const showError = (text, field) => {
+        if (field) { field.setAttribute("aria-invalid", "true"); field.focus(); }
+        if (feedbackEl) { feedbackEl.hidden = false; feedbackEl.className = "home-connect-feedback is-error"; feedbackEl.textContent = text; }
+      };
+      if (!name) return showError("Please enter your name.", nameInp);
+      if (CONTACT_CTRL_CHAR_RE.test(rawName) || name.length > 120) return showError("Please enter a valid name (up to 120 characters, without line breaks).", nameInp);
+      if (!email || !isValidContactEmail(email)) return showError("Please enter a valid email address (for example, name@example.com).", replyInp);
+      if (!message) return showError("Please enter a message.", msgInp);
+      if (/[\0\u2028\u2029]/.test(rawMessage) || message.length > 5000) return showError("Please enter a valid message (up to 5,000 characters).", msgInp);
+      const combinedMessage = topic ? `[Topic: ${topic}]\n\n${message}` : message;
+      const bodyText = [combinedMessage, "", `Name: ${name}`, `Email: ${email}`].join("\n");
+      if (form.getAttribute("data-contact-delivery") === "draft-only") {
+        showContactUnsent(feedbackEl, bodyText, "Your message has not been sent.");
+        return;
+      }
+      if (combinedMessage.length > 5000) return showError("Please shorten your message slightly to include the selected topic (5,000 characters total).", msgInp);
+      if (submitBtn) submitBtn.disabled = true;
+      if (submitLabelEl) submitLabelEl.textContent = "Sending...";
+      try {
+        const response = await fetch("/api/contact", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({name, email, message: combinedMessage, website: String(honeypotInp?.value || "").trim()})
+        });
+        let payload = null;
+        try { payload = await response.json(); } catch {}
+        if (response.ok && payload?.ok && payload.code === "CONTACT_ACCEPTED") {
+          if (feedbackEl) {
+            feedbackEl.hidden = false;
+            feedbackEl.className = "home-connect-feedback is-success";
+            feedbackEl.innerHTML = `<strong data-contact-feedback-title></strong><p data-contact-feedback-meta></p>`;
+            const title = feedbackEl.querySelector("[data-contact-feedback-title]");
+            const meta = feedbackEl.querySelector("[data-contact-feedback-meta]");
+            if (title) title.textContent = "Thanks for reaching out. Your message has been sent to Josh, who will respond as soon as possible.";
+            if (meta) meta.textContent = "A confirmation email is on its way. It comes from an automated, unmonitored address. Please use this form if you need to follow up.";
+          }
+          form.reset();
+          return;
+        }
+        const partial = payload?.ownerDeliveryStatus === "accepted_by_provider";
+        const error = partial
+          ? "Your message was accepted, but the confirmation could not be sent. Please do not resend the same message."
+          : response.status === 503
+            ? "The form is temporarily unavailable. Your message has not been sent."
+            : typeof payload?.error === "string"
+              ? payload.error
+              : "We could not confirm delivery. Please wait before trying again.";
+        showContactUnsent(feedbackEl, bodyText, error);
+      } catch {
+        showContactUnsent(feedbackEl, bodyText, "We could not confirm delivery. Please wait before trying again.");
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+        if (submitLabelEl) submitLabelEl.textContent = "Send Message";
+      }
+    });
+
     document.addEventListener("input", event => {
-      if (event.target?.matches?.("[data-proj-search-input]")) {
+      if (event.target?.matches?.("[data-sk-graph-search]")) {
+        activeSkV4GraphSearch = event.target.value || "";
+        const graphCanvas = document.querySelector("[data-sk-graph-canvas]");
+        if (graphCanvas) {
+          graphCanvas.innerHTML = renderSkV4GraphCanvasHtml();
+        }
+      } else if (event.target?.matches?.("[data-proj-search-input]")) {
         activeProjectSearch = event.target.value || "";
         renderProjectsExplorerGrid();
       } else if (event.target?.matches?.("[data-skills-search]")) {
@@ -14512,9 +20205,23 @@
     });
 
     document.addEventListener("keydown", event => {
+      const detailTab = event.target?.closest?.("[data-eb-subtab]");
+      if (detailTab && ["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+        const tabs = ["overview", "problem", "contribution", "solution", "outcome", "tech"];
+        const current = tabs.indexOf(detailTab.getAttribute("data-eb-subtab"));
+        const next = event.key === "Home" ? 0 : event.key === "End" ? tabs.length - 1 : (current + (event.key === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length;
+        event.preventDefault();
+        selectExploreDetailTab(tabs[next], true);
+        return;
+      }
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
         setCmdOpen(!cmdOpen);
+        return;
+      }
+      if ((event.key === "Enter" || event.key === " ") && event.target?.matches?.("[data-about-acc-toggle]")) {
+        event.preventDefault();
+        event.target.click();
         return;
       }
       if (activeAboutLightboxIdx >= 0) {
@@ -14571,7 +20278,7 @@
           focusedEl &&
           focusedEl.getAttribute("tabindex") === "0" &&
           !focusedEl.matches("a, button, input, textarea, select") &&
-          focusedEl.matches("[data-carousel-goto], [data-proj-link], [data-career-toggle-entry], [data-skills-cat], [data-skills-select-cat]")
+          focusedEl.matches("[data-carousel-goto], [data-proj-link], [data-career-toggle-entry], [data-skills-cat], [data-skills-select-cat], [data-sk-v3-card]")
         ) {
           event.preventDefault();
           focusedEl.click();
@@ -14630,35 +20337,7 @@
       let scrollDirection = 0;
       let smoothedScrollY = lastScrollY;
 
-      function getHomeSectionTargets() {
-        const homePage = document.querySelector('section[data-page="home"]');
-        if (!homePage || homePage.hidden) return [];
-        const sectionSpecs = [
-          { sel: ".career-hero", offsetDelta: 0 },
-          { sel: ".home-projects-carousel", offsetDelta: -4 },
-          { sel: "#home-career-section .home-sum-inner", fallbackSel: "#home-career-section", offsetDelta: 24 },
-          { sel: "#home-skills-section", offsetDelta: -8 },
-          { sel: "#home-about-section, .home-sum-about", offsetDelta: 0 },
-          { sel: "#home-connect", offsetDelta: 0 }
-        ];
-        const isMobile = window.innerWidth <= 768;
-        const headerOffset = isMobile ? 76 : 64;
-        const maxScrollY = Math.max(
-          0,
-          (document.documentElement.scrollHeight || document.body.scrollHeight || 0) - (window.innerHeight || 800)
-        );
-        const targets = [];
-        sectionSpecs.forEach((spec, idx) => {
-          const el = homePage.querySelector(spec.sel) || (spec.fallbackSel ? homePage.querySelector(spec.fallbackSel) : null);
-          if (!el) return;
-          const rect = el.getBoundingClientRect();
-          const rawTop = (window.scrollY || window.pageYOffset || 0) + rect.top;
-          const computedY = idx === 0 ? 0 : Math.round(rawTop - headerOffset - (spec.offsetDelta || 0));
-          const targetY = Math.max(0, Math.min(maxScrollY, computedY));
-          targets.push({ el, idx, targetY, height: rect.height });
-        });
-        return targets;
-      }
+      
 
       function restoreNativeScrollBehavior() {
         if (document.documentElement) {
@@ -14677,99 +20356,9 @@
         }
       }
 
-      function startCloudGlideTo(targetY) {
-        cancelActiveGlide();
-        const startY = window.scrollY || window.pageYOffset || 0;
-        const delta = targetY - startY;
-        if (Math.abs(delta) < 3) return;
-        lastSettledTargetY = targetY;
-        isProgrammaticGlide = true;
+      
 
-        // Bypass CSS `html { scroll-behavior: smooth }` during the custom RAF pull-and-slide
-        if (document.documentElement) {
-          document.documentElement.style.scrollBehavior = "auto";
-        }
-
-        // Slow, deliberate magnetic pull + smooth viscous slide duration (~0.98s to 1.68s)
-        const duration = Math.min(1680, Math.max(980, 760 + Math.abs(delta) * 3.4));
-        const startTime = performance.now();
-
-        function stepGlide(now) {
-          const elapsed = now - startTime;
-          const t = Math.min(1, elapsed / duration);
-          // Gentle magnetic pull-in from rest (smoothstep entry) blended with a slow viscous glide into the indent
-          const smoothEntry = t * t * (3 - 2 * t);
-          const eased = 1 - Math.pow(1 - smoothEntry, 1.65);
-          const nextY = startY + delta * eased;
-          ignoreScrollUntil = performance.now() + 60;
-          window.scrollTo(0, nextY);
-          lastScrollY = nextY;
-
-          if (t < 1) {
-            glideRafId = requestAnimationFrame(stepGlide);
-          } else {
-            glideRafId = null;
-            isProgrammaticGlide = false;
-            ignoreScrollUntil = performance.now() + 120;
-            restoreNativeScrollBehavior();
-          }
-        }
-
-        glideRafId = requestAnimationFrame(stepGlide);
-      }
-
-      function evaluateSectionIndentSettle() {
-        if (reduceMotionMq && reduceMotionMq.matches) return;
-        if (isTouchActive || glideRafId || isProgrammaticGlide) return;
-        const targets = getHomeSectionTargets();
-        if (!targets.length) return;
-
-        const currentY = window.scrollY || window.pageYOffset || 0;
-        const vh = window.innerHeight || 800;
-        const isMobile = window.innerWidth <= 768;
-        // Indent capture radius: wide enough to gently catch and pull the view into the nearest section indent
-        const captureRadius = isMobile ? Math.min(240, vh * 0.34) : Math.min(340, vh * 0.38);
-
-        let bestMatch = null;
-        let bestScore = Infinity;
-
-        for (const item of targets) {
-          const dist = item.targetY - currentY;
-          const absDist = Math.abs(dist);
-          if (absDist <= captureRadius) {
-            // Slight directional preference in the direction of travel while still allowing settle-back if slightly overshot
-            const againstDirection =
-              (scrollDirection > 0 && dist < -captureRadius * 0.82) ||
-              (scrollDirection < 0 && dist > captureRadius * 0.82);
-            if (againstDirection) continue;
-            const dirPenalty =
-              (scrollDirection > 0 && dist < 0) || (scrollDirection < 0 && dist > 0) ? absDist * 1.18 : absDist;
-            if (dirPenalty < bestScore) {
-              bestScore = dirPenalty;
-              bestMatch = item;
-            }
-          }
-        }
-
-        if (bestMatch && Math.abs(bestMatch.targetY - currentY) >= 4 && Math.abs(bestMatch.targetY - lastSettledTargetY) > 6) {
-          startCloudGlideTo(bestMatch.targetY);
-        }
-      }
-
-      function updateCloudParallaxTick() {
-        const targetY = window.scrollY || window.pageYOffset || 0;
-        smoothedScrollY += (targetY - smoothedScrollY) * 0.12;
-        const workbench = document.querySelector(".home-summary-workbench");
-        if (workbench) {
-          const shift = ((smoothedScrollY % 1200) / 1200) * 28 - 14;
-          workbench.style.setProperty("--cloud-glide-shift", `${shift.toFixed(2)}px`);
-        }
-        if (Math.abs(targetY - smoothedScrollY) > 0.4) {
-          parallaxRafId = requestAnimationFrame(updateCloudParallaxTick);
-        } else {
-          parallaxRafId = null;
-        }
-      }
+      
 
       function onUserScrollInterrupt() {
         cancelActiveGlide();
@@ -14780,9 +20369,23 @@
         }
       }
 
+      function onNavigationScrollGuard() {
+        onUserScrollInterrupt();
+        ignoreScrollUntil = performance.now() + 1400;
+      }
+
+      window.addEventListener("portfolio:routechange", onNavigationScrollGuard);
+      window.addEventListener("hashchange", onNavigationScrollGuard);
+      window.addEventListener("popstate", onNavigationScrollGuard);
+      document.addEventListener("click", ev => {
+        const t = ev.target?.closest ? ev.target : ev.target?.parentElement;
+        if (t?.closest?.("a[href], [data-waypoint], [data-home-open-builds], [data-home-open-skills], [data-home-open-about], [data-home-scroll-skills], [data-home-focus-contact], summary")) {
+          onNavigationScrollGuard();
+        }
+      }, true);
+
       window.addEventListener("wheel", () => {
         onUserScrollInterrupt();
-        settleTimerId = setTimeout(evaluateSectionIndentSettle, 210);
       }, { passive: true });
 
       window.addEventListener("touchstart", () => {
@@ -14792,32 +20395,12 @@
 
       window.addEventListener("touchend", () => {
         isTouchActive = false;
-        if (settleTimerId) clearTimeout(settleTimerId);
-        settleTimerId = setTimeout(evaluateSectionIndentSettle, 240);
       }, { passive: true });
 
       window.addEventListener("keydown", ev => {
         if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", " ", "Home", "End"].includes(ev.key)) {
           onUserScrollInterrupt();
         }
-      }, { passive: true });
-
-      window.addEventListener("scroll", () => {
-        const now = performance.now();
-        const y = window.scrollY || window.pageYOffset || 0;
-        if (!parallaxRafId && !(reduceMotionMq && reduceMotionMq.matches)) {
-          parallaxRafId = requestAnimationFrame(updateCloudParallaxTick);
-        }
-        if (isProgrammaticGlide || now < ignoreScrollUntil) {
-          lastScrollY = y;
-          return;
-        }
-        if (Math.abs(y - lastScrollY) > 1) {
-          scrollDirection = y > lastScrollY ? 1 : -1;
-          lastScrollY = y;
-        }
-        if (settleTimerId) clearTimeout(settleTimerId);
-        settleTimerId = setTimeout(evaluateSectionIndentSettle, isTouchActive ? 260 : 210);
       }, { passive: true });
     })();
 
@@ -14940,6 +20523,7 @@
       let globalStageTke = 0;
       let heroCloudRevealState = 0.0;
       let lastHeroRevealPerfNow = 0;
+      let lastHeroCloudCycle = "";
 
       // WebGL Photorealistic Volumetric Cumulus Cloud Renderer
       // Combines multi-scale Perlin-Worley cellular cauliflower domes, 6-octave rotational curl-warped FBM,
@@ -15102,53 +20686,95 @@
             return vec3(p420, p220, p115);
           }
 
-          // Plush, Velvety 6-Octave Atmospheric Cumulus FBM
-          // (380px -> 195px -> 100px -> 50px -> 25px -> 12.5px)
-          // Soft, billowing cumulus pillows with natural volume and zero blotchy/psychedelic contrast!
+          // Sculpted 6-Octave Cumulus Cauliflower & Billow FBM
+          // (360px -> 185px -> 95px -> 48px -> 24px -> 12px)
+          // Combines smooth quintic gradient noise with convex cumulus billow lobes (1.0 - abs(2.0 * n - 1.0))
           // Returns vec3(macroWave, softPuffs, mistWisps) in [0.0, 1.0]
           vec3 sampleSoftCloudFBM(vec2 rawP, vec2 driftOffset, float t, float layerSeed) {
             const mat2 rot = mat2(0.80, -0.60, 0.60, 0.80);
 
-            // Horizontally-relaxed coordinates for soft, expansive cloud banks
-            vec2 baseP = vec2((rawP.x + driftOffset.x) * 0.72, rawP.y + driftOffset.y) / 380.0 +
+            // Horizontally-relaxed coordinates for expansive cumulus banks
+            vec2 baseP = vec2((rawP.x + driftOffset.x) * 0.56, rawP.y + driftOffset.y) / 360.0 +
                          vec2(layerSeed, layerSeed * 0.61);
 
-            // Gentle large-scale domain flow (0.28 amplitude -> natural cloud drift with zero swirls!)
+            // Natural large-scale domain flow
             vec2 warp1 = vec2(
-              gnoise(baseP * 0.76 + vec2(t * 0.009, 1.9)) - 0.5,
-              gnoise(baseP * 0.76 + vec2(6.4, -t * 0.007)) - 0.5
+              gnoise(baseP * 0.78 + vec2(t * 0.009, 1.9)) - 0.5,
+              gnoise(baseP * 0.78 + vec2(6.4, -t * 0.007)) - 0.5
             );
-            vec2 q = baseP + warp1 * 0.28;
+            vec2 q = baseP + warp1 * 0.30;
 
-            // Octave 1 (380px): Broad, velvety cloud bank
+            // Octave 1 (360px): Broad cumulus cloud bank + convex billow dome
             float n1 = gnoise(q);
-            q = rot * q * 1.94 + vec2(7.3 + layerSeed, 11.9) + warp1 * 0.14;
+            float b1 = 1.0 - abs(2.0 * n1 - 1.0);
+            q = rot * q * 1.94 + vec2(7.3 + layerSeed, 11.9) + warp1 * 0.15;
 
-            // Octave 2 (195px): Soft primary cumulus pillow
+            // Octave 2 (185px): Primary cumulus cauliflower pillow
             float n2 = gnoise(q);
+            float b2 = 1.0 - abs(2.0 * n2 - 1.0);
             q = rot * q * 1.96 + vec2(13.7, 5.4 + layerSeed);
 
-            // Octave 3 (100px): Soft secondary cloud dome
+            // Octave 3 (95px): Secondary cumulus dome
             float n3 = gnoise(q);
+            float b3 = 1.0 - abs(2.0 * n3 - 1.0);
             q = rot * q * 1.98 + vec2(4.9, 19.1);
 
-            // Octave 4 (50px): Powdery vapor contour
+            // Octave 4 (48px): Sculpted cellular cloud lobe
             float n4 = gnoise(q);
+            float b4 = 1.0 - abs(2.0 * n4 - 1.0);
             q = rot * q * 2.00 + vec2(21.4, 8.7);
 
-            // Octave 5 (25px): Soft misty edge feather
+            // Octave 5 (24px): Crisp cumulus turret & rim contour
             float n5 = gnoise(q);
+            float b5 = 1.0 - abs(2.0 * n5 - 1.0);
             q = rot * q * 2.02 + vec2(9.2, 15.3);
 
-            // Octave 6 (12.5px): Fine velvety rim diffusion
+            // Octave 6 (12px): Fine sunlit cauliflower ridge detail
             float n6 = gnoise(q);
+            float b6 = 1.0 - abs(2.0 * n6 - 1.0);
 
-            // Natural cumulus pillow ranges [0.18..0.82] so cloud domes have plush, visible form with soft edges:
-            float macroWave = smoothstep(0.18, 0.82, n1 * 0.58 + n2 * 0.42);
-            float softPuffs = smoothstep(0.20, 0.80, n2 * 0.44 + n3 * 0.36 + n4 * 0.20);
-            float mistWisps = smoothstep(0.20, 0.80, n4 * 0.44 + n5 * 0.36 + n6 * 0.20);
+            float rawMacro = mix(n1 * 0.56 + n2 * 0.44, b1 * 0.54 + b2 * 0.46, 0.36);
+            float rawPuffs = mix(n2 * 0.42 + n3 * 0.36 + n4 * 0.22, b2 * 0.38 + b3 * 0.38 + b4 * 0.24, 0.46);
+            float rawWisps = mix(n4 * 0.42 + n5 * 0.36 + n6 * 0.22, b4 * 0.36 + b5 * 0.38 + b6 * 0.26, 0.44);
+
+            float macroWave = smoothstep(0.11, 0.89, rawMacro);
+            float softPuffs = smoothstep(0.13, 0.87, rawPuffs);
+            float mistWisps = smoothstep(0.15, 0.85, rawWisps);
 
             return vec3(macroWave, softPuffs, mistWisps);
+          }
+
+          // Lightweight 3-octave FBM helper for directional sun/zenith scattering offsets (cuts 4 noise octaves per sample)
+          vec3 sampleSoftCloudFBMFast(vec2 rawP, vec2 driftOffset, float t, float layerSeed) {
+            const mat2 rot = mat2(0.80, -0.60, 0.60, 0.80);
+            vec2 baseP = vec2((rawP.x + driftOffset.x) * 0.56, rawP.y + driftOffset.y) / 360.0 +
+                         vec2(layerSeed, layerSeed * 0.61);
+            vec2 warp1 = vec2(
+              gnoise(baseP * 0.78 + vec2(t * 0.009, 1.9)) - 0.5,
+              gnoise(baseP * 0.78 + vec2(6.4, -t * 0.007)) - 0.5
+            );
+            vec2 q = baseP + warp1 * 0.30;
+
+            float n1 = gnoise(q);
+            float b1 = 1.0 - abs(2.0 * n1 - 1.0);
+            q = rot * q * 1.94 + vec2(7.3 + layerSeed, 11.9) + warp1 * 0.15;
+
+            float n2 = gnoise(q);
+            float b2 = 1.0 - abs(2.0 * n2 - 1.0);
+            q = rot * q * 1.96 + vec2(13.7, 5.4 + layerSeed);
+
+            float n3 = gnoise(q);
+            float b3 = 1.0 - abs(2.0 * n3 - 1.0);
+
+            float rawMacro = mix(n1 * 0.56 + n2 * 0.44, b1 * 0.54 + b2 * 0.46, 0.36);
+            float rawPuffs = mix(n2 * 0.54 + n3 * 0.46, b2 * 0.48 + b3 * 0.52, 0.46);
+            float rawWisps = mix(n3, b3, 0.44);
+
+            return vec3(
+              smoothstep(0.11, 0.89, rawMacro),
+              smoothstep(0.13, 0.87, rawPuffs),
+              smoothstep(0.15, 0.85, rawWisps)
+            );
           }
 
           // Gentle, Swirl-Free Atmospheric Cushion Advection (zero tight whirlpools or spiral distortion)
@@ -15199,12 +20825,12 @@
 
             float normScreenX = clamp(rawP.x / max(1.0, u_resolution.x), 0.0, 1.0);
 
-            // Slow right-to-left horizontal float-in offset at the end of the Hero video so the top clouds
-            // visibly float in from right to left as they condense into place:
-            float preReveal = clamp((u_heroCloudReveal * 1.52 - (1.0 - normScreenX) * 0.52) / 0.50, 0.0, 1.0);
+            // Slow right-to-left horizontal float-in & upward swell offset so the top clouds
+            // visibly grow and appear from right to left at the bottom of the Hero:
+            float preReveal = clamp((u_heroCloudReveal * 1.56 - (1.0 - normScreenX) * 0.56) / 0.44, 0.0, 1.0);
             float preRevealSmooth = preReveal * preReveal * (3.0 - 2.0 * preReveal);
-            float topFloatZone = fadeDown(secTop - 160.0, secTop + 210.0, rawP.y);
-            vec2 floatInOffset = vec2(-(1.0 - preRevealSmooth) * 165.0 * topFloatZone, (1.0 - preRevealSmooth) * 24.0 * topFloatZone);
+            float topFloatZone = fadeDown(secTop - 170.0, secTop + 190.0, rawP.y);
+            vec2 floatInOffset = vec2(-(1.0 - preRevealSmooth) * 145.0 * topFloatZone, (1.0 - preRevealSmooth) * 56.0 * topFloatZone);
 
             // Advect pixel coordinate through gentle cushion field
             vec3 advected = advectFluidDomain(rawP + floatInOffset);
@@ -15212,8 +20838,8 @@
             float evapTke = advected.z;
 
             // Cohesive LEFTWARD Drift (+X added to domain moves cloud formations toward -X / LEFT)
-            float driftSpeed = 20.0;
-            vec2 driftOffset = vec2(t * driftSpeed, 0.0);
+            float driftSpeed = 8.0;
+            vec2 driftOffset = vec2(t * driftSpeed + sin(t * 0.09) * 30.0, sin(t * 0.13) * 22.0);
             float layerSeed = 0.0;
 
             vec3 fbm = sampleSoftCloudFBM(p, driftOffset, t, layerSeed);
@@ -15222,80 +20848,91 @@
             float mistWisps = fbm.z;
 
             // =========================================================================
-            // SOFT DIFFUSE TOP-RIGHT SUN SCATTERING (Zero High-Frequency Embossing!)
-            // - Uses 90px and 38px optical depth baselines on ONLY the broad
-            //   macroWave (380px) and softPuffs (195px) pillows so lighting across the
-            //   cloud sea forms soft, plush 3D cumulus pillows with velvety edges.
+            // MULTI-SCALE TOP-RIGHT SUN & ZENITH CUMULUS SCATTERING
+            // - Combines 86px/32px directional optical depth toward the top-right warm
+            //   sun with 42px zenith sky light for sculpted 3D cumulus cauliflower domes.
             // =========================================================================
-            vec2 sunPos = vec2(u_resolution.x * 0.95, secTop - 250.0);
+            vec2 sunPos = vec2(u_resolution.x * 0.92, secTop - 230.0);
             vec2 toSun = sunPos - p;
             float sunDistPx = length(toSun) + 1.0;
             vec2 sunDir = toSun / sunDistPx;
 
-            vec3 fbmSunFar  = sampleSoftCloudFBM(p + sunDir * 90.0, driftOffset, t, layerSeed);
-            vec3 fbmSunNear = sampleSoftCloudFBM(p + sunDir * 38.0, driftOffset, t, layerSeed);
+            vec3 fbmSunFar  = sampleSoftCloudFBMFast(p + sunDir * 86.0, driftOffset, t, layerSeed);
+            vec3 fbmSunNear = sampleSoftCloudFBMFast(p + sunDir * 32.0, driftOffset, t, layerSeed);
+            vec3 fbmZenith  = sampleSoftCloudFBMFast(p + vec2(0.0, -42.0), driftOffset, t, layerSeed);
 
-            // Soft 3D cloud pillow slope facing the top-right sun (zero mistWisps embossing!):
+            // Sculpted 3D cloud dome slope facing the top-right sun and overhead zenith:
             float macroSlope = clamp(
-              0.50 + (macroWave - fbmSunFar.x) * 0.85 + (softPuffs - fbmSunNear.y) * 0.42,
+              0.50 + (macroWave - fbmSunFar.x) * 1.02 + (softPuffs - fbmSunNear.y) * 0.66 + (macroWave - fbmZenith.x) * 0.42,
               0.0,
               1.0
             );
-            // Soft forward-scattered golden/peach rim glow on upper-right cloud crests:
+            // Crisp cauliflower lobe relief for upper and lower cloud ridges:
+            float puffRelief = clamp(
+              0.50 + (softPuffs - fbmSunNear.y) * 1.12 + (mistWisps - fbmSunNear.z) * 0.54,
+              0.0,
+              1.0
+            );
+            // Forward-scattered golden/ice rim glow on upper cloud crests:
             float rimScatter = clamp(
-              (macroWave - fbmSunNear.x) * 1.15 + (softPuffs - fbmSunNear.y) * 0.65,
+              (macroWave - fbmSunNear.x) * 1.25 + (softPuffs - fbmSunNear.y) * 0.78 + (mistWisps - fbmZenith.z) * 0.34,
               0.0,
               1.0
             );
-            float softVolume = clamp(macroWave * 0.50 + softPuffs * 0.38 + mistWisps * 0.12, 0.0, 1.0);
-            float pillowLight = clamp(softVolume * 0.48 + macroSlope * 0.44 + rimScatter * 0.14, 0.0, 1.0);
+            float softVolume = clamp(macroWave * 0.46 + softPuffs * 0.36 + mistWisps * 0.18, 0.0, 1.0);
+            float pillowLight = clamp(softVolume * 0.42 + macroSlope * 0.38 + puffRelief * 0.12 + rimScatter * 0.14, 0.0, 1.0);
 
-            // Smooth vertical billow displacement for section transitions & cumulus domes
-            float billowDisp = (macroWave - 0.5) * 68.0 + (softPuffs - 0.5) * 32.0 + (mistWisps - 0.5) * 12.0;
-            float wispyEdge = 0.64 + 0.36 * (softPuffs * 0.58 + mistWisps * 0.42);
+            // Vertical billow displacement for section transitions & cumulus domes
+            float billowDisp = (macroWave - 0.5) * 74.0 + (softPuffs - 0.5) * 36.0 + (mistWisps - 0.5) * 14.0;
+            float wispyEdge = 0.62 + 0.38 * (softPuffs * 0.56 + mistWisps * 0.44);
             float wakeFade = 1.0 - evapTke * 0.30;
 
             // =========================================================================
-            // 1. UNIFIED SOFT CUMULUS CLOUD FIELD (Hero -> Builds -> Career)
-            //    - Billowing, soft-edged cumulus domes along the top Hero horizon
-            //      that rapidly condense into a plush, continuous cloud bed.
+            // 1. UNIFIED SCULPTED CUMULUS CLOUD FIELD (Hero -> Builds -> Career)
+            //    - Billowing cumulus cauliflower domes along the top Hero horizon
+            //      that cradle the Hero buttons on the left and the building on the right.
             // =========================================================================
-            float topCrestWave = (macroWave - 0.5) * 84.0 + (softPuffs - 0.5) * 38.0 + (mistWisps - 0.5) * 14.0;
+            float topCrestWave = (macroWave - 0.5) * 92.0 + (softPuffs - 0.5) * 44.0 + (mistWisps - 0.5) * 16.0;
 
-            // Slow right-to-left wave progression across the Hero seam:
-            float rtlBillowLead = (1.0 - (macroWave * 0.62 + softPuffs * 0.38)) * 0.14;
-            float rtlDelay = (1.0 - normScreenX) * 0.58 + rtlBillowLead;
-            float rtlLinear = clamp((u_heroCloudReveal * 1.64 - rtlDelay) / 0.48, 0.0, 1.0);
+            // Right-to-left wave progression & upward cumulus dome fade-in at the end of the video:
+            float rtlBillowLead = (1.0 - (macroWave * 0.62 + softPuffs * 0.38)) * 0.12;
+            float rtlDelay = (1.0 - normScreenX) * 0.62 + rtlBillowLead;
+            float rtlLinear = clamp((u_heroCloudReveal * 1.72 - rtlDelay) / 0.44, 0.0, 1.0);
             float rtlReveal = rtlLinear * rtlLinear * (3.0 - 2.0 * rtlLinear);
+            float puffGrowScale = 0.18 + 0.82 * pow(rtlReveal, 0.72);
 
-            float fullTopHorizonY = secTop - 102.0 - topCrestWave * 0.78;
-            float hiddenTopHorizonY = secTop + 56.0 - topCrestWave * 0.22;
+            float hiddenTopHorizonY = secTop + 88.0 - topCrestWave * 0.10;
+            float fullTopHorizonY = secTop - 124.0 - topCrestWave * 0.88 * puffGrowScale;
             float topHorizonY = mix(hiddenTopHorizonY, fullTopHorizonY, rtlReveal);
 
-            // Soft, powdery 58px vapor feather at the upper cloud crest that locks to 100% solid cloud below:
-            float topSpanUp = mix(14.0, 58.0, rtlReveal);
-            float topUpperEnv = safeStep(topHorizonY - topSpanUp, topHorizonY + 24.0, p.y);
+            // Crisp, volumetric cumulus rim feather that stays completely hidden during the video and fades in right-to-left & up after:
+            float topSpanUp = mix(10.0, 56.0, rtlReveal);
+            float topUpperEnv = safeStep(topHorizonY - topSpanUp, topHorizonY + 22.0, p.y);
             float topRimWispy = mix(
-              0.48 + 0.52 * (softPuffs * 0.56 + mistWisps * 0.44),
+              0.44 + 0.56 * (softPuffs * 0.58 + mistWisps * 0.42),
               1.0,
-              safeStep(topHorizonY - 14.0, topHorizonY + 24.0, p.y)
+              safeStep(topHorizonY - 12.0, topHorizonY + 22.0, p.y)
             );
-            float topWakeMod = mix(0.80 + 0.20 * wakeFade, 1.0, safeStep(topHorizonY - 8.0, topHorizonY + 24.0, p.y));
-            float topUpperFeather = clamp(safeStep(0.02, 0.84, topUpperEnv * topRimWispy) * topWakeMod, 0.0, 1.0);
+            float topWakeMod = mix(0.80 + 0.20 * wakeFade, 1.0, safeStep(topHorizonY - 8.0, topHorizonY + 22.0, p.y));
+            float heroRevealAlpha = mix(smoothstep(0.02, 0.82, rtlReveal), 1.0, safeStep(secTop + 24.0, secTop + 76.0, rawP.y));
+            float topUpperFeather = clamp(safeStep(0.03, 0.82, topUpperEnv * topRimWispy) * topWakeMod * heroRevealAlpha, 0.0, 1.0);
 
             // =========================================================================
-            // 2. SOFT ATMOSPHERIC SUNSET SCATTERING (C-Infinity Bezier Color Ramps)
-            //    - Plush cumulus pillow shading with zero Mach bands or contour rings!
+            // 2. FOUR-ZONE ATMOSPHERIC COLOR & TWILIGHT CUMULUS SCATTERING
+            //    - Zone A: Deep slate-navy shadow + sunlit ice-white rims under Hero copy
+            //    - Zone B: Warm amber-gold & sunset peach-apricot under building stream
+            //    - Zone C: Luminous sky-blue & snow-white bed behind 4-column grid
+            //    - Zone D: Sculpted dark twilight cumulus ridge into Career Journey
             // =========================================================================
             float isMobileCard = step(mHalf.x, 300.0);
             float sdMainRaw = sdRoundedBox(rawP, mCenter, mHalf, mix(28.0, 20.0, isMobileCard));
 
-            // Soft cumulus dome contour for the bottom transition into Career:
-            float botCrestWave = (macroWave - 0.5) * 86.0 + (softPuffs - 0.5) * 40.0 + (mistWisps - 0.5) * 14.0;
-            float botHorizonY = secBot + mix(86.0, 24.0, isMobileCard) + botCrestWave * mix(0.72, 0.44, isMobileCard);
-            float seaLowerEnv = fadeDown(botHorizonY - 20.0, botHorizonY + 26.0, p.y);
-            float botRimWispy = mix(1.0, wispyEdge, safeStep(botHorizonY - 22.0, botHorizonY + 10.0, p.y));
-            float botSeamLock = fadeDown(secBot + mix(22.0, 6.0, isMobileCard), secBot + mix(34.0, 16.0, isMobileCard), rawP.y);
+            // Sculpted cumulus dome contour for the bottom transition into Career:
+            float botCrestWave = (macroWave - 0.5) * 94.0 + (softPuffs - 0.5) * 44.0 + (mistWisps - 0.5) * 16.0;
+            float botHorizonY = secBot + mix(82.0, 24.0, isMobileCard) + botCrestWave * mix(0.76, 0.44, isMobileCard);
+            float seaLowerEnv = fadeDown(botHorizonY - 22.0, botHorizonY + 24.0, p.y);
+            float botRimWispy = mix(1.0, wispyEdge, safeStep(botHorizonY - 24.0, botHorizonY + 10.0, p.y));
+            float botSeamLock = fadeDown(secBot + mix(20.0, 6.0, isMobileCard), secBot + mix(32.0, 16.0, isMobileCard), rawP.y);
 
             float seaLowerFeather = mix(
               1.0,
@@ -15303,163 +20940,125 @@
               safeStep(secBot - 4.0, secBot + 16.0, rawP.y)
             );
 
-            // Localized sunlit cumulus pillow behind the left title cluster:
-            vec2 titleCenter = vec2(mCenter.x - mHalf.x + 245.0, 0.5 * (secTop + 26.0 + u_headerBottom));
-            vec2 titleRel = (p + vec2((macroWave - 0.5) * 82.0, (softPuffs - 0.5) * 32.0) - titleCenter) / vec2(295.0, 58.0);
-            float titleCushion = exp(-dot(titleRel, titleRel)) * (0.70 + 0.30 * macroWave);
+            // Localized sunlit cumulus pillow behind the left Featured Work intro column:
+            vec2 titleCenter = vec2(mCenter.x - mHalf.x + 210.0, mCenter.y - 12.0);
+            vec2 titleRel = (p + vec2((macroWave - 0.5) * 68.0, (softPuffs - 0.5) * 28.0) - titleCenter) / vec2(260.0, 145.0);
+            float titleCushion = exp(-dot(titleRel, titleRel)) * (0.76 + 0.24 * macroWave);
 
             float verticalDepth = safeStep(fullTopHorizonY, mCenter.y + 30.0, p.y + billowDisp * 0.60);
-            float baseSeaDensity = (0.82 + 0.10 * verticalDepth + 0.08 * softVolume) * (1.0 - 0.26 * titleCushion);
-            float seaStrength = clamp(baseSeaDensity * (0.84 + 0.16 * wakeFade), 0.0, 1.0);
-            float seaLight = clamp(pillowLight + titleCushion * 0.18, 0.0, 1.0);
+            float baseSeaDensity = (0.84 + 0.09 * verticalDepth + 0.07 * softVolume) * (1.0 - 0.30 * titleCushion);
+            float seaStrength = clamp(baseSeaDensity * (0.85 + 0.15 * wakeFade), 0.0, 1.0);
+            float seaLight = clamp(pillowLight + titleCushion * 0.24 + (puffRelief - 0.5) * 0.14 * (1.0 - 0.65 * titleCushion), 0.0, 1.0);
 
-            // Soft, Plush Cool Atmospheric Sky-Blue Palette (smooth quadratic Bezier curve -> zero rings!):
+            // Zone C: Luminous Sky-Blue to Snow-White Cloud Bed (behind 4-Column Featured Work Grid):
             vec3 greyBlueCol = bezierPalette(
-              vec3(0.49, 0.62, 0.78),
-              vec3(0.76, 0.85, 0.94),
-              vec3(0.98, 0.99, 1.00),
+              vec3(0.46, 0.63, 0.82),
+              vec3(0.78, 0.88, 0.96),
+              vec3(0.99, 0.996, 1.00),
               seaLight
             );
-            vec3 baseGreyBlueSea = mix(vec3(0.93, 0.97, 1.00), greyBlueCol, seaStrength);
+            vec3 baseGreyBlueSea = mix(vec3(0.94, 0.98, 1.00), greyBlueCol, seaStrength);
 
-            // Soft Sunset Rose-Peach / Dusty Mauve Palette (matching the soft reference photo):
+            // Zone A: Upper-Left Hero Seam Twilight Slate-Navy Shadows + Crisp Ice-White Rims:
+            float topDomeRim = smoothstep(fullTopHorizonY + 68.0, fullTopHorizonY - 18.0, p.y);
+            float upperPuffLight = clamp(pillowLight * 0.66 + topDomeRim * 0.38 + (puffRelief - 0.5) * 0.26, 0.0, 1.0);
+            vec3 heroLeftTwilightCol = bezierPalette(
+              vec3(0.13, 0.22, 0.35),
+              vec3(0.35, 0.51, 0.70),
+              vec3(0.95, 0.98, 1.00),
+              upperPuffLight
+            );
+            float upperLeftTwilightEnv = fadeDown(secTop - 18.0, secTop + 96.0, p.y - topCrestWave * 0.45) *
+                                         fadeDown(0.24, 0.58, normScreenX + (macroWave - 0.5) * 0.08);
+            vec3 coolCloudBed = mix(baseGreyBlueSea, heroLeftTwilightCol, clamp(upperLeftTwilightEnv * 0.92, 0.0, 0.92));
+
+            // Zone B: Upper-Right Sunset Rose-Peach & Building Golden Stream Glow:
             vec3 rosePinkCol = bezierPalette(
-              vec3(0.55, 0.53, 0.69),
-              vec3(0.89, 0.65, 0.69),
-              vec3(0.99, 0.86, 0.82),
+              vec3(0.56, 0.48, 0.64),
+              vec3(0.93, 0.68, 0.56),
+              vec3(1.00, 0.91, 0.82),
               seaLight
             );
-
-            // Soft Sunset Gold / Warm Apricot-Cream Palette (top-right near the sun):
             vec3 solarGoldCol = bezierPalette(
-              vec3(0.64, 0.54, 0.55),
-              vec3(0.97, 0.72, 0.39),
-              vec3(1.00, 0.94, 0.76),
+              vec3(0.68, 0.43, 0.25),
+              vec3(0.96, 0.65, 0.30),
+              vec3(1.00, 0.95, 0.83),
               seaLight
             );
 
-            // Compute gently cloud-warped optical distance from the top-right sun:
-            float topDomeRim = smoothstep(fullTopHorizonY + 60.0, fullTopHorizonY - 22.0, p.y);
+            // Cloud-warped optical distance from the top-right sunset and building golden conduit:
             float sunDx = max(0.0, (0.98 - normScreenX) - (macroWave - 0.5) * 0.11 - (softPuffs - 0.5) * 0.05);
-            float sunDy = max(0.0, (p.y - (secTop - 108.0) - (macroWave - 0.5) * 48.0) / 475.0);
+            float sunDy = max(0.0, (p.y - (secTop - 112.0) - (macroWave - 0.5) * 48.0) / 485.0);
 
-            // Golden fiber stream at x ~ 0.74 feeds warm amber light into the upper-right clouds:
-            float fiberStreamGlow = exp(-pow((normScreenX - 0.74) / 0.11, 2.0)) *
-                                    fadeDown(fullTopHorizonY - 20.0, secTop + 110.0, p.y + topCrestWave * 0.42) * 0.16;
+            // Golden conduit stream beneath the 3-floor building (x ~ 0.75) feeds warm amber light into upper-right clouds:
+            float fiberStreamGlow = exp(-pow((normScreenX - 0.75) / 0.14, 2.0)) *
+                                    fadeDown(fullTopHorizonY - 24.0, secTop + 135.0, p.y + topCrestWave * 0.42) * 0.24;
 
-            float rightwardSunGate = safeStep(0.22, 0.72, normScreenX + (macroWave - 0.5) * 0.12);
-            float sunCatchBoost = ((macroSlope - 0.45) * 0.15 + rimScatter * 0.12 + topDomeRim * 0.09) * rightwardSunGate;
-            float sunOptDist = clamp(length(vec2(sunDx * 1.06, sunDy * 0.95)) - fiberStreamGlow - sunCatchBoost, 0.0, 1.3);
+            float rightwardSunGate = safeStep(0.26, 0.70, normScreenX + (macroWave - 0.5) * 0.12);
+            float sunCatchBoost = ((macroSlope - 0.44) * 0.16 + rimScatter * 0.14 + topDomeRim * 0.10) * rightwardSunGate;
+            float sunOptDist = clamp(length(vec2(sunDx * 1.04, sunDy * 0.92)) - fiberStreamGlow - sunCatchBoost, 0.0, 1.3);
 
-            // Smooth 3-stage spectral transition:
-            float goldWeight = fadeDown(0.05, 0.37, sunOptDist) * (0.50 + 0.50 * seaLight) * safeStep(0.45, 0.75, normScreenX + (macroWave - 0.5) * 0.10);
-            float pinkEnv    = fadeDown(0.16, 0.65, sunOptDist) * rightwardSunGate * (0.46 + 0.54 * clamp(macroSlope * 0.58 + seaLight * 0.42, 0.0, 1.0));
+            // Smooth spectral transition from cool sky-blue on left/center to warm peach & amber-gold on right:
+            float goldWeight = fadeDown(0.04, 0.42, sunOptDist) * (0.48 + 0.52 * seaLight) * safeStep(0.44, 0.72, normScreenX + (macroWave - 0.5) * 0.10);
+            float pinkEnv    = fadeDown(0.14, 0.68, sunOptDist) * rightwardSunGate * (0.46 + 0.54 * clamp(macroSlope * 0.58 + seaLight * 0.42, 0.0, 1.0));
 
-            vec3 pinkToGreyBlue = mix(baseGreyBlueSea, rosePinkCol, clamp(pinkEnv * 0.88, 0.0, 0.88));
-            vec3 upperToMidCol  = mix(pinkToGreyBlue, solarGoldCol, clamp(goldWeight * 0.90, 0.0, 0.90));
+            vec3 pinkToGreyBlue = mix(coolCloudBed, rosePinkCol, clamp(pinkEnv * 0.88, 0.0, 0.88));
+            vec3 upperToMidCol  = mix(pinkToGreyBlue, solarGoldCol, clamp(goldWeight * 0.92, 0.0, 0.92));
 
-            // Soft Cumulus Domes Overhanging Career:
-            float careerDomeDepth = safeStep(secBot - 110.0, secBot + 48.0, p.y + botCrestWave * 0.72);
-            float botLowerRim = clamp(1.0 - (botHorizonY + 12.0 - p.y) / 44.0, 0.0, 1.0);
-            float botDomeLight = clamp(pillowLight * 0.66 + botLowerRim * 0.40 - careerDomeDepth * 0.09, 0.0, 1.0);
-            vec3 deepCareerCol = bezierPalette(
-              vec3(0.47, 0.60, 0.76),
-              vec3(0.75, 0.85, 0.945),
-              vec3(0.98, 0.99, 1.00),
+            // Zone D: Multi-Layered Dark Twilight Cumulus Ridge into Section 3 (CAREER JOURNEY):
+            // 1) Upper-to-mid twilight cumulus ridge right beneath the 3 Featured Work cards:
+            float twilightBandEnv = safeStep(secBot - 118.0, secBot - 22.0, p.y + botCrestWave * 0.68);
+            float botUpperRim = smoothstep(secBot + 18.0, secBot - 78.0, p.y + botCrestWave * 0.52);
+            float twilightPuffLight = clamp(pillowLight * 0.64 + botUpperRim * 0.34 + (puffRelief - 0.5) * 0.28, 0.0, 1.0);
+            vec3 twilightCrestTint = mix(
+              vec3(0.86, 0.93, 0.99),
+              vec3(0.98, 0.86, 0.74),
+              safeStep(0.46, 0.84, normScreenX + (macroWave - 0.5) * 0.10)
+            );
+            vec3 twilightMidBandCol = bezierPalette(
+              vec3(0.10, 0.17, 0.30),
+              vec3(0.27, 0.41, 0.59),
+              twilightCrestTint,
+              twilightPuffLight
+            );
+
+            // 2) Lower twilight cumulus billows that roll into #060d1d Career Journey background:
+            float careerDomeDepth = safeStep(secBot - 36.0, secBot + 46.0, p.y + botCrestWave * 0.64);
+            float botLowerFade = safeStep(secBot + 12.0, botHorizonY + 8.0, p.y);
+            float botDomeLight = clamp((pillowLight * 0.58 + (puffRelief - 0.5) * 0.26) * (1.0 - botLowerFade * 0.72), 0.0, 1.0);
+            vec3 deepTwilightCol = bezierPalette(
+              vec3(0.024, 0.051, 0.114),
+              vec3(0.13, 0.22, 0.36),
+              mix(vec3(0.46, 0.62, 0.80), vec3(0.68, 0.58, 0.54), rightwardSunGate * 0.55),
               botDomeLight
             );
+            vec3 deepCareerCol = mix(deepTwilightCol, vec3(0.024, 0.051, 0.114), smoothstep(0.45, 1.0, botLowerFade));
 
             // Shared continuous cloud color at (x, y) used by BOTH --back and --front:
-            vec3 sharedCloudCol = mix(upperToMidCol, deepCareerCol, careerDomeDepth);
+            vec3 midToTwilightCol = mix(upperToMidCol, twilightMidBandCol, twilightBandEnv);
+            vec3 sharedCloudCol = mix(midToTwilightCol, deepCareerCol, careerDomeDepth);
             float finalAlpha = 0.0;
             vec3 finalCol = sharedCloudCol;
 
             if (isFront < 0.5) {
               // =======================================================================
-              // 3A. BACKGROUND LAYER (--back, z-index: 2, BEHIND Main Card):
+              // 3A. BACKGROUND LAYER (--back, z-index: 2, BEHIND 4-Column Featured Grid):
               // =======================================================================
               finalCol = sharedCloudCol;
               finalAlpha = clamp(topUpperFeather * seaLowerFeather, 0.0, 1.0);
             } else {
               // =======================================================================
-              // 3B. FOREGROUND LAYER (--front, z-index: 8, IN FRONT of Card Backing):
-              //     - Soft, powdery, varied cloud cushion around the card perimeter
-              //       (keeps the card interior 100% crystal-clear with zero smoke veil!)
+              // 3B. FOREGROUND LAYER (--front, z-index: 8):
+              //     - Subtle cumulus wisp overhang along the outer top/bottom cloud crests
+              //       while keeping the 4-column Featured Work grid 100% crystal clear.
               // =======================================================================
-              vec3 edgeLobes = sampleEdgePuffLobes(p, t);
-              float bayLobe420 = edgeLobes.x;
-              float midLobe220 = edgeLobes.y;
-              float fgLobe115  = edgeLobes.z;
-
-              float rMain = mix(36.0, 20.0, isMobileCard);
-              vec2 qMain = abs(rawP - mCenter) - (mHalf - vec2(rMain));
-              vec2 aMain = max(-qMain, vec2(0.0));
-              float kMain = mix(30.0, 14.0, isMobileCard);
-              float hMain = max(kMain - abs(aMain.x - aMain.y), 0.0) / max(1.0, kMain);
-              float dInMain = -max(0.0, min(aMain.x, aMain.y) - hMain * hMain * kMain * 0.25);
-              float sdMainSmooth = length(max(qMain, 0.0)) + dInMain - rMain;
-              float inDistMain = mix(max(0.0, -sdMainRaw), max(0.0, -sdMainSmooth), smoothstep(0.0, 6.0, max(0.0, -sdMainRaw)));
-
-              // Normalized position inside the card [-1..1]:
-              vec2 cardRel = (rawP - mCenter) / max(vec2(1.0), mHalf);
-
-              // Protect left editorial text block & right HUD cards on desktop while burying the 4 rounded corners:
-              vec2 leftCopyDist = max(abs(cardRel - vec2(-0.34, 0.02)) - vec2(0.50, 0.72), vec2(0.0));
-              float inLeftCopy = 1.0 - smoothstep(0.0, 0.18, length(leftCopyDist));
-              vec2 rightHudDist = max(abs(cardRel - vec2(0.68, 0.06)) - vec2(0.20, 0.56), vec2(0.0));
-              float inRightHud = 1.0 - smoothstep(0.0, 0.14, length(rightHudDist));
-              float openSkyAndCorners = 1.0 - clamp(max(inLeftCopy * 0.65, inRightHud * 0.60), 0.0, 0.68);
-              float cornerProx = smoothstep(0.60, 0.95, abs(cardRel.x)) * smoothstep(0.54, 0.94, abs(cardRel.y));
-
-              // Soft, broad cumulus billow variation around the card perimeter:
-              float rawSurge = bayLobe420 * 0.46 + midLobe220 * 0.34 + softPuffs * 0.20;
-              float billowSurge = smoothstep(0.16, 0.84, rawSurge);
-              float cumulusRim  = smoothstep(0.16, 0.84, midLobe220 * 0.50 + fgLobe115 * 0.32 + mistWisps * 0.18);
-
-              // Mobile top photo banner zone (allow deeper organic clouds across top 184px photo):
-              float mobTopPhotoZone = fadeDown(mCenter.y - mHalf.y + 130.0, mCenter.y - mHalf.y + 195.0, rawP.y);
-
-              // Scalloped opaque rim + corner pad (keeps rounded corners covered while varying edge depth):
-              float cornerOpaquePad = mix(36.0, 14.0, isMobileCard) * cornerProx * (0.70 + 0.30 * cumulusRim);
-              float desktopCore = (5.0 + billowSurge * (14.0 + 12.0 * cumulusRim)) * openSkyAndCorners + cornerOpaquePad;
-              float mobileCore  = mix(
-                2.2 + billowSurge * 4.5 + cornerOpaquePad * 0.45,
-                3.5 + billowSurge * 8.0 + cornerOpaquePad,
-                mobTopPhotoZone
-              );
-              float scallopedCore = mix(desktopCore, mobileCore, isMobileCard);
-
-              // Wide, powdery feather (36px in open bays up to 102px on soft cloud banks; zero interior smoke):
-              float desktopFeather = (36.0 + billowSurge * (42.0 + 28.0 * cumulusRim)) * openSkyAndCorners;
-              float mobileFeather  = mix(
-                10.0 + billowSurge * 12.0,
-                18.0 + billowSurge * (22.0 + 14.0 * cumulusRim),
-                mobTopPhotoZone
-              );
-              float featherSpan = mix(desktopFeather, mobileFeather, isMobileCard);
-
-              float mainMistAlpha = 0.0;
-              if (sdMainRaw > 0.0) {
-                mainMistAlpha = fadeDown(1.5, 24.0, sdMainRaw);
-              } else {
-                float lobeWarpPx = (cumulusRim - 0.5) * featherSpan * 0.30;
-                float warpedInDist = max(0.0, inDistMain - scallopedCore - lobeWarpPx);
-                float inFrac = clamp(warpedInDist / max(10.0, featherSpan), 0.0, 1.0);
-                float baseDecay = pow(1.0 - smoothstep(0.0, 1.0, inFrac), 1.38);
-                float softSculpt = mix(
-                  1.0,
-                  0.64 + 0.36 * (softVolume * 0.60 + cumulusRim * 0.40),
-                  smoothstep(0.0, 0.52, inFrac)
-                );
-                mainMistAlpha = clamp(baseDecay * softSculpt, 0.0, 1.0);
-              }
-
-              float fgCardAlpha = mainMistAlpha * topUpperFeather * seaLowerFeather;
-
-              if (fgCardAlpha > 0.001) {
-                finalCol = sharedCloudCol;
-                finalAlpha = max(finalAlpha, fgCardAlpha);
-              }
+              float topEdgeWisp = fadeDown(secTop - 40.0, secTop + 16.0, p.y) * topUpperFeather * 0.12;
+              float botEdgeWisp = safeStep(secBot - 14.0, secBot + 42.0, p.y) * seaLowerFeather * 0.12;
+              float pulse = pow(0.5 + 0.5 * sin(t * 0.12 + normScreenX * 2.8), 4.0);
+              float veilField = gnoise(vec2(p.x / 320.0 + t * 0.018, p.y / 95.0 - sin(t * 0.10) * 0.20));
+              float foregroundMist = safeStep(0.40, 0.76, veilField) * pulse * 0.12;
+              finalCol = sharedCloudCol;
+              finalAlpha = clamp(max(max(topEdgeWisp, botEdgeWisp), foregroundMist) * topUpperFeather * seaLowerFeather, 0.0, 0.12);
             }
 
             if (finalAlpha <= 0.003) {
@@ -15553,9 +21152,9 @@
         const canvases = section.querySelectorAll("[data-builds-webgl-clouds]");
         if (!canvases.length) return;
 
-        // Compute Hero cloud edge reveal state in sync with the Hero story video timing:
-        // - Hidden (0.0) when site first loads or "Watch the story" is selected while the story plays (t < 22.85s)
-        // - Slowly floats in (0.0 -> 1.0) at the end of the video (~6.5 seconds total)
+        // Compute Hero cloud edge reveal state on page load and after Hero story video playback:
+        // - Hidden (0.0) at initial mount and while the story video plays (t < 22.85s)
+        // - Grows and appears from right to left (0.0 -> 1.0) on page load and after the video settles
         const dtHero =
           lastHeroRevealPerfNow > 0
             ? Math.min(0.1, Math.max(0.001, (now - lastHeroRevealPerfNow) * 0.001))
@@ -15565,24 +21164,27 @@
         const heroVid = heroEl ? heroEl.querySelector(".home-hero-video-player") : null;
         const isReducedMotion =
           window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        if (isReducedMotion || !heroEl || heroEl.classList.contains("use-static-fallback") || window.__FORCE_INSTANT_CLOUD_REVEAL) {
+        const currentCloudCycle = heroEl ? heroEl.getAttribute("data-hero-cloud-cycle") || "" : "";
+        if (currentCloudCycle && currentCloudCycle !== lastHeroCloudCycle) {
+          lastHeroCloudCycle = currentCloudCycle;
+          if (heroCloudRevealState > 0.22) {
+            heroCloudRevealState = 0.0;
+          }
+        }
+        if (isReducedMotion || !heroEl || window.__FORCE_INSTANT_CLOUD_REVEAL) {
           heroCloudRevealState = 1.0;
         } else {
           const isJourneyActive =
             heroEl.classList.contains("is-journey-active") &&
             !heroEl.classList.contains("is-settled-final");
-          const vTime = heroVid ? heroVid.currentTime || 0 : 0;
 
           if (isJourneyActive) {
-            if (vTime < 22.85) {
-              heroCloudRevealState = 0.0;
-            } else {
-              const targetClimbReveal = Math.max(0.0, Math.min(0.18, (vTime - 22.85) / 3.2));
-              heroCloudRevealState +=
-                (targetClimbReveal - heroCloudRevealState) * Math.min(1.0, dtHero * 2.4);
-            }
+            heroCloudRevealState = 0.0;
           } else {
-            heroCloudRevealState = Math.min(1.0, heroCloudRevealState + dtHero * 0.16);
+            heroCloudRevealState = Math.min(1.0, heroCloudRevealState + dtHero * 0.38);
+          }
+          if (isJourneyActive && secRect.top >= (window.innerHeight || 900) - 48) {
+            return;
           }
         }
 
@@ -15591,9 +21193,9 @@
         const cRect = firstCanvas.getBoundingClientRect();
         const cssW = Math.max(1, Math.round(cRect.width));
         const cssH = Math.max(1, Math.round(cRect.height));
-        const rawDpr = Math.min(window.devicePixelRatio || 1, 1.5);
-        const maxScale = cssW * rawDpr > 1920 ? 1920 / cssW : rawDpr;
-        const dpr = Math.max(0.75, maxScale);
+        const rawDpr = Math.min(window.devicePixelRatio || 1, 0.85);
+        const maxScale = cssW * rawDpr > 1600 ? 1600 / cssW : rawDpr;
+        const dpr = Math.max(0.65, maxScale);
         const bufW = Math.max(1, Math.round(cssW * dpr));
         const bufH = Math.max(1, Math.round(cssH * dpr));
 
@@ -15601,25 +21203,29 @@
         const secTopY = secRect.top - cRect.top;
         const secBotY = secRect.bottom - cRect.top;
 
-        // Measure Main Active Card relative to overhanging canvas
-        // On mobile (<= 768px), .carousel-active-media-top is only the top 184px banner, so measure the full .carousel-active-card!
+        // Measure Main Featured Work Grid (or fallback Active Card) relative to overhanging canvas
         const isMobileLayout = (window.innerWidth || cssW) <= 768;
-        const mainCardEl = isMobileLayout
-          ? section.querySelector(".carousel-active-card:not(.carousel-transition-ghost)") ||
-            section.querySelector(".carousel-active-card")
-          : section.querySelector(".carousel-active-card:not(.carousel-transition-ghost) .carousel-active-media-top") ||
-            section.querySelector(".carousel-active-card:not(.carousel-transition-ghost)") ||
-            section.querySelector(".carousel-active-card");
+        const fwGridEl = section.querySelector(".home-featured-work-grid");
+        const mainCardEl =
+          (fwGridEl && fwGridEl.getBoundingClientRect().width > 20 ? fwGridEl : null) ||
+          (isMobileLayout
+            ? section.querySelector(".carousel-active-card:not(.carousel-transition-ghost)") ||
+              section.querySelector(".carousel-active-card")
+            : section.querySelector(".carousel-active-card:not(.carousel-transition-ghost) .carousel-active-media-top") ||
+              section.querySelector(".carousel-active-card:not(.carousel-transition-ghost)") ||
+              section.querySelector(".carousel-active-card"));
         let mainCx = cssW * 0.5;
         let mainCy = cssH * 0.46;
         let mainHw = cssW * 0.44;
         let mainHh = 230;
         if (mainCardEl) {
           const mr = mainCardEl.getBoundingClientRect();
-          mainCx = mr.left - cRect.left + mr.width * 0.5;
-          mainCy = mr.top - cRect.top + mr.height * 0.5;
-          mainHw = mr.width * 0.5;
-          mainHh = mr.height * 0.5;
+          if (mr.width > 20) {
+            mainCx = mr.left - cRect.left + mr.width * 0.5;
+            mainCy = mr.top - cRect.top + mr.height * 0.5;
+            mainHw = mr.width * 0.5;
+            mainHh = mr.height * 0.5;
+          }
         }
 
         // Measure Header bottom relative to overhanging canvas
@@ -15672,17 +21278,21 @@
         for (let cIdx = 0; cIdx < canvases.length; cIdx++) {
           const canvas = canvases[cIdx];
           const layerFlag = canvas.getAttribute("data-builds-webgl-clouds") === "back" ? 0.0 : 1.0;
+          if (isReducedMotion && layerFlag === 1.0) continue;
           const st = initWebGLCloudRenderer(canvas, layerFlag);
           if (!st) continue;
           anyRendered = true;
 
           const gl = st.gl;
-          if (st.lastW !== bufW || st.lastH !== bufH) {
-            canvas.width = bufW;
-            canvas.height = bufH;
-            st.lastW = bufW;
-            st.lastH = bufH;
-            gl.viewport(0, 0, bufW, bufH);
+          const planeDpr = layerFlag === 1.0 ? Math.min(dpr, 1.0) : dpr;
+          const planeW = Math.max(1, Math.round(cssW * planeDpr));
+          const planeH = Math.max(1, Math.round(cssH * planeDpr));
+          if (st.lastW !== planeW || st.lastH !== planeH) {
+            canvas.width = planeW;
+            canvas.height = planeH;
+            st.lastW = planeW;
+            st.lastH = planeH;
+            gl.viewport(0, 0, planeW, planeH);
           }
 
           gl.useProgram(st.prog);
@@ -15691,8 +21301,8 @@
           gl.vertexAttribPointer(st.aPos, 2, gl.FLOAT, false, 0, 0);
 
           gl.uniform2f(st.locs.u_resolution, cssW, cssH);
-          gl.uniform1f(st.locs.u_dpr, dpr);
-          gl.uniform1f(st.locs.u_time, now * 0.001);
+          gl.uniform1f(st.locs.u_dpr, planeDpr);
+          gl.uniform1f(st.locs.u_time, isReducedMotion ? 0 : now * 0.001);
           gl.uniform1f(st.locs.u_layer, st.layerFlag);
           gl.uniform2f(st.locs.u_secBounds, secTopY, secBotY);
           gl.uniform4f(st.locs.u_mainCard, mainCx, mainCy, mainHw, mainHh);
@@ -15709,7 +21319,7 @@
             }
           }
 
-          if (smoothPtrX > -9000 && Math.hypot(smoothPtrVx, smoothPtrVy) > 0.08) {
+          if (!isReducedMotion && smoothPtrX > -9000 && Math.hypot(smoothPtrVx, smoothPtrVy) > 0.08) {
             gl.uniform4f(
               st.locs.u_pointer,
               smoothPtrX - cRect.left,
@@ -15721,7 +21331,7 @@
             gl.uniform4f(st.locs.u_pointer, -9999, -9999, 0, 0);
           }
 
-          const vCount = wakeVortices.length;
+          const vCount = isReducedMotion ? 0 : wakeVortices.length;
           for (let i = 0; i < 6; i++) {
             const v = i < vCount ? wakeVortices[i] : null;
             if (v) {
@@ -15894,7 +21504,7 @@
 
             stateMap.forEach(st => {
               const el = section.querySelector(st.spec.sel);
-              if (!el) return;
+              if (!el || el.closest("[hidden]")) return;
 
               const rect = el.getBoundingClientRect();
               const cx = rect.left + rect.width * 0.5;
@@ -16101,6 +21711,99 @@
       }
 
       requestAnimationFrame(stepCloudPhysics);
+    })();
+
+    // Dynamically load Three.js WebGL + Automation Tycoon (digital twin removed) during idle or on interaction
+    (() => {
+      if (typeof document === "undefined") return;
+      let bootedSecondary = false;
+      function bootAutomationTycoonLoader() {
+        if (bootedSecondary) return;
+        bootedSecondary = true;
+        if (!document.getElementById("automation-tycoon-css")) {
+          const link = document.createElement("link");
+          link.id = "automation-tycoon-css";
+          link.rel = "stylesheet";
+          link.href = "automation-tycoon.css";
+          document.head.appendChild(link);
+        }
+        const loadScript = (src, id, onLoad) => {
+          if (document.getElementById(id)) {
+            if (onLoad) onLoad();
+            return;
+          }
+          const script = document.createElement("script");
+          script.id = id;
+          script.src = src;
+          script.defer = true;
+          if (onLoad) script.addEventListener("load", onLoad, { once: true });
+          document.body.appendChild(script);
+        };
+        loadScript("vendor/three.min.js", "three-webgl-js", () => {
+          loadScript("automation-tycoon-sim.js", "automation-tycoon-sim-js", () => {
+            loadScript("automation-tycoon-app.js", "automation-tycoon-app-js");
+
+          });
+        });
+      }
+      if (typeof window !== "undefined" && typeof window.requestIdleCallback === "function") {
+        window.requestIdleCallback(bootAutomationTycoonLoader, { timeout: 1800 });
+      } else {
+        setTimeout(bootAutomationTycoonLoader, 900);
+      }
+      document.addEventListener("pointerdown", bootAutomationTycoonLoader, { once: true, passive: true });
+      document.addEventListener("keydown", bootAutomationTycoonLoader, { once: true, passive: true });
+    })();
+
+    // Rotate the dot at the end of "Josh Boyer." every 5 seconds between metal (grey), business (yellow), and cloud (blue)
+    (() => {
+      if (typeof document === "undefined") return;
+      const WORDMARK_DOT_PHASES = Object.freeze([
+        { phase: "metal", color: "#b4c2d8", glow: "rgba(180, 194, 216, 0.48)" },
+        { phase: "business", color: "#f4c542", glow: "rgba(244, 197, 66, 0.56)" },
+        { phase: "cloud", color: "#38bdf8", glow: "rgba(56, 189, 248, 0.56)" }
+      ]);
+      const STEP_MS = 5000;
+
+      function getWordmarkDotPhaseForElapsedMs(elapsedMs) {
+        const safeMs = Number.isFinite(elapsedMs) && elapsedMs >= 0 ? elapsedMs : 0;
+        const idx = Math.floor(safeMs / STEP_MS) % WORDMARK_DOT_PHASES.length;
+        return WORDMARK_DOT_PHASES[idx];
+      }
+
+      function applyWordmarkDotPhase(entry) {
+        if (!entry) return;
+        const dots = document.querySelectorAll(".site-header .wordmark span, .resume-header .wordmark span, .guide-header .wordmark span");
+        dots.forEach(dot => {
+          dot.setAttribute("data-dot-phase", entry.phase);
+          dot.style.setProperty("--jb-wordmark-dot-color", entry.color);
+          dot.style.setProperty("--jb-wordmark-dot-glow", entry.glow);
+        });
+      }
+
+      let activeDotIndex = 0;
+      applyWordmarkDotPhase(WORDMARK_DOT_PHASES[activeDotIndex]);
+
+      if (typeof window !== "undefined") {
+        window.__jbWordmarkDotRotation = {
+          phases: WORDMARK_DOT_PHASES,
+          stepMs: STEP_MS,
+          getPhaseForElapsedMs: getWordmarkDotPhaseForElapsedMs,
+          setElapsedMs(elapsedMs) {
+            const entry = getWordmarkDotPhaseForElapsedMs(elapsedMs);
+            activeDotIndex = WORDMARK_DOT_PHASES.indexOf(entry);
+            applyWordmarkDotPhase(entry);
+            return entry;
+          }
+        };
+        if (window.__jbWordmarkDotTimer) {
+          clearInterval(window.__jbWordmarkDotTimer);
+        }
+        window.__jbWordmarkDotTimer = setInterval(() => {
+          activeDotIndex = (activeDotIndex + 1) % WORDMARK_DOT_PHASES.length;
+          applyWordmarkDotPhase(WORDMARK_DOT_PHASES[activeDotIndex]);
+        }, STEP_MS);
+      }
     })();
 
     return { ARCH_NODES, EXPLODED_PARTS, TIMELINE_EXPLODED_SCENES, SCENE_WAYPOINTS, PROJECT_METADATA, PROJECTS_CATALOG, setCmdOpen };

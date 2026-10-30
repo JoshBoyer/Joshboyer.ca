@@ -1,0 +1,722 @@
+[
+  {
+    "source": "assets/home-hero-final-frame.jpg",
+    "output": "assets/optimized/home-hero-final-frame-2206.webp",
+    "bytes": 139060,
+    "width": 2206,
+    "height": 946,
+    "sourceSha256": "5161d49495e2afcb46b751d2316355c05b438a123469f632dc42233591ffd7ad",
+    "sha256": "b77dcb40da415c28ffbcc0ab3226ae6179b4cc31a761ce1d6b37e16bbe001468"
+  },
+  {
+    "source": "assets/home-hero-final-frame-mobile.jpg",
+    "output": "assets/optimized/home-hero-final-frame-mobile-1080.webp",
+    "bytes": 197994,
+    "width": 1080,
+    "height": 1920,
+    "sourceSha256": "8e0e555370d600ca0150bd88bd1a6650c8983c574bd05d656c97ba34088488b4",
+    "sha256": "f3a36b8345554e6da9e5b1417115930c55e2d3275411c48b44763d681d65d3a1"
+  },
+  {
+    "source": "assets/personal/josh-avatar-3d-smile.jpg",
+    "output": "assets/optimized/personal/josh-avatar-3d-smile-144.webp",
+    "bytes": 4300,
+    "width": 144,
+    "height": 144,
+    "sourceSha256": "6e1b570bbe2329d6046ca2a7ed0ad54d201a8318010404c181de087dfd5b5418",
+    "sha256": "926319cde8c8f5aa9efa6544785593078f773062365650c714fa63e6804ecd59"
+  },
+  {
+    "source": "assets/nexus-mark.png",
+    "output": "assets/optimized/nexus-mark-128.webp",
+    "bytes": 4064,
+    "width": 128,
+    "height": 128,
+    "sourceSha256": "a9915c866e9ca965b60a2878eeb3c1d02788779d9c532870a008ffc3710709ef",
+    "sha256": "11d773929beb2218ba067a98d244ff3f8fff12e4d72ac63c8b41aa19c1ea0409"
+  },
+  {
+    "source": "assets/personal/josh-curiosity-child-tinkering.png",
+    "output": "assets/optimized/personal/josh-curiosity-child-tinkering-1024.webp",
+    "bytes": 112970,
+    "width": 1024,
+    "height": 1024,
+    "sourceSha256": "8ec7982098de6dd6e71c1e1fbf2b124739f2507430c5392ed9ed2949d3e98ea3",
+    "sha256": "7299b6ba0e58cf85b3631c3282590f4e827d3f1041a88f576fba07c9a50e9cee"
+  },
+  {
+    "source": "assets/personal/josh-curiosity-ai-orchestration.png",
+    "output": "assets/optimized/personal/josh-curiosity-ai-orchestration-1024.webp",
+    "bytes": 127706,
+    "width": 1024,
+    "height": 1024,
+    "sourceSha256": "c6b5432b21ad42d4fa915e1018db2945648b7aa8c7e7fe76533affe6e7095bdb",
+    "sha256": "f1246c33f24d0e566fae3c8fe82a530baf9886448ce5407f771e9bf5dde0de78"
+  },
+  {
+    "source": "assets/personal/barron-canyon-about.png",
+    "output": "assets/optimized/personal/barron-canyon-about-1672.webp",
+    "bytes": 208900,
+    "width": 1672,
+    "height": 941,
+    "sourceSha256": "4daa9c4ff9357c19aa4a395e93c4627a2fcfc940fd87072a76e4b20e822d107a",
+    "sha256": "88977c05da92354f497ac5919f40e3dbefd745d9d049df888676c9d60a43bfc2"
+  },
+  {
+    "source": "assets/footer/Joe-Perry-Lake-footer-one-sun.png",
+    "output": "assets/optimized/footer/Joe-Perry-Lake-footer-one-sun-1672.webp",
+    "bytes": 358988,
+    "width": 1672,
+    "height": 941,
+    "sourceSha256": "e457ac55cea4de57c2c998c398d58783a8b1a94a2764450de2f6855c78de8153",
+    "sha256": "9843871d77d81f5528783c11edd35fc19f25dae2463f66c321c1d39b360b232a"
+  },
+  {
+    "source": "assets/proj-banner-renewals.jpg",
+    "output": "assets/optimized/proj-banner-renewals-1376.webp",
+    "bytes": 303168,
+    "width": 1376,
+    "height": 768,
+    "sourceSha256": "66ccf77a8281062ee3e3a7b74a747c81f0bb3026045e638d2bd011db1315fa4e",
+    "sha256": "fa024a3831badaf8d8718060635d585e02317758ee92edc9f3f2736c035f9775"
+  },
+  {
+    "source": "assets/footer-panorama-bg.jpg",
+    "output": "assets/optimized/footer-panorama-bg-1376.webp",
+    "bytes": 61700,
+    "width": 1376,
+    "height": 768,
+    "sourceSha256": "5b57e7b157f6d6f62280087ea8fa40e26c2b7b1f200b76b7e4edbaa103bf6028",
+    "sha256": "7ff2ec6e292bca598d67d2afa0926ee13c0aa0fdeb3fd2cecf5db90556d316f5"
+  },
+  {
+    "source": "assets/builds/skills-3d-stack-v2.png",
+    "output": "assets/optimized/builds/skills-3d-stack-v2-574.webp",
+    "bytes": 27252,
+    "width": 574,
+    "height": 736,
+    "sourceSha256": "a261f30b55d8a7a571c5ecaa4fbc73f5d37a1ad8b2727771018df6518f0fa6c2",
+    "sha256": "d1e08a69f570ba4a5132677fe4ecd22e1a1afa83fe2e9f64fdfb3cff06f9fdaf"
+  },
+  {
+    "source": "assets/jb-logo-transparent.png",
+    "output": "assets/optimized/jb-logo-transparent-664.webp",
+    "bytes": 52784,
+    "width": 664,
+    "height": 552,
+    "sourceSha256": "e22f3f6a517244590f89b6860dccbc06d648a8319608a782ece43ceb0b71bf2a",
+    "sha256": "c8203f16b845bd8f4e975d4360e8da3f26ac13f1401a6b575a9b3630623edd38"
+  },
+  {
+    "source": "assets/career-milestones-context.png",
+    "output": "assets/optimized/career-milestones-context-1024.webp",
+    "bytes": 251856,
+    "width": 1024,
+    "height": 1536,
+    "sourceSha256": "b89864032768087d573daccb6fa2cee800ecce1aa0d60c3196a87ffc611595fd",
+    "sha256": "bc85cb157a9939a30d7a89807ada4aaffa70256c8c218c7a307e17ae2c03fb69"
+  },
+  {
+    "source": "assets/solution-design-hero-v1.png",
+    "output": "assets/optimized/solution-design-hero-v1-848.webp",
+    "bytes": 142354,
+    "width": 848,
+    "height": 1264,
+    "sourceSha256": "df54f8fd8d0d717a95e629e92990b09ffc78bf81af714a0f0ae6e8657fdde191",
+    "sha256": "f54af140ab2b0de39efec4bc81f16f6b38c633394dbcac9b4e3fac65e4110beb"
+  },
+  {
+    "source": "assets/home-hero-final-frame.jpg",
+    "output": "assets/optimized/home-hero-final-frame-1103.webp",
+    "bytes": 59442,
+    "width": 1103,
+    "height": 473,
+    "sourceSha256": "5161d49495e2afcb46b751d2316355c05b438a123469f632dc42233591ffd7ad",
+    "sha256": "01eaab20b81f5acd6951960869dab962b7d7a7ca425a483e403802053ee3c121"
+  },
+  {
+    "source": "assets/home-hero-final-frame.jpg",
+    "output": "assets/optimized/home-hero-final-frame-1600.webp",
+    "bytes": 94634,
+    "width": 1600,
+    "height": 686,
+    "sourceSha256": "5161d49495e2afcb46b751d2316355c05b438a123469f632dc42233591ffd7ad",
+    "sha256": "cfc1f7553f0873377a791a66d2a209d1a0af2831f56a37af24a82f602136bd18"
+  },
+  {
+    "source": "assets/home-hero-final-frame-mobile.jpg",
+    "output": "assets/optimized/home-hero-final-frame-mobile-540.webp",
+    "bytes": 87670,
+    "width": 540,
+    "height": 960,
+    "sourceSha256": "8e0e555370d600ca0150bd88bd1a6650c8983c574bd05d656c97ba34088488b4",
+    "sha256": "0994aaf3e3d713335c47fc5ea31fbb526ba6e2601d8327ebabeeed8ea3c9525a"
+  },
+  {
+    "source": "assets/home-hero-final-frame-mobile.jpg",
+    "output": "assets/optimized/home-hero-final-frame-mobile-720.webp",
+    "bytes": 125116,
+    "width": 720,
+    "height": 1280,
+    "sourceSha256": "8e0e555370d600ca0150bd88bd1a6650c8983c574bd05d656c97ba34088488b4",
+    "sha256": "e895f5acefba42ab3f5f2881a2cda1483c71a5332152e403eacb7b7b9b9dda17"
+  },
+  {
+    "source": "assets/personal/josh-curiosity-child-tinkering.png",
+    "output": "assets/optimized/personal/josh-curiosity-child-tinkering-480.webp",
+    "bytes": 40784,
+    "width": 480,
+    "height": 480,
+    "sourceSha256": "8ec7982098de6dd6e71c1e1fbf2b124739f2507430c5392ed9ed2949d3e98ea3",
+    "sha256": "dfac221d6466f746be5147f3434df0b11521d2ced324e3e9ece2a27d01ea72c9"
+  },
+  {
+    "source": "assets/personal/josh-curiosity-child-tinkering.png",
+    "output": "assets/optimized/personal/josh-curiosity-child-tinkering-768.webp",
+    "bytes": 76360,
+    "width": 768,
+    "height": 768,
+    "sourceSha256": "8ec7982098de6dd6e71c1e1fbf2b124739f2507430c5392ed9ed2949d3e98ea3",
+    "sha256": "77eb4dad89759a72c67a16d5b443001d1f96bc8382b43775d46ab37080f9d67d"
+  },
+  {
+    "source": "assets/personal/josh-curiosity-ai-orchestration.png",
+    "output": "assets/optimized/personal/josh-curiosity-ai-orchestration-480.webp",
+    "bytes": 37858,
+    "width": 480,
+    "height": 480,
+    "sourceSha256": "c6b5432b21ad42d4fa915e1018db2945648b7aa8c7e7fe76533affe6e7095bdb",
+    "sha256": "7807607d2054c6189a651cf0fb417ac73166ec21b1756a158646dd0e4d5b9b5d"
+  },
+  {
+    "source": "assets/personal/josh-curiosity-ai-orchestration.png",
+    "output": "assets/optimized/personal/josh-curiosity-ai-orchestration-768.webp",
+    "bytes": 77660,
+    "width": 768,
+    "height": 768,
+    "sourceSha256": "c6b5432b21ad42d4fa915e1018db2945648b7aa8c7e7fe76533affe6e7095bdb",
+    "sha256": "22d227acd70d3f3f3ff97d5139f82723cc95ffd7adb626c2d86f95b7e002c1ae"
+  },
+  {
+    "source": "assets/skills-mountain-horizon-bg.jpg",
+    "output": "assets/optimized-extra/skills-mountain-horizon-bg-1376.webp",
+    "bytes": 44464,
+    "width": 1376,
+    "height": 768,
+    "sourceSha256": "74f6cd3cb46a567ef89394d2edfa9d0c6f484cb6c6227382e9b23e2fa1b096d7",
+    "sha256": "fd40cabca4f45de7b48aa3d15653375b9a1e8340673c96149d2370f64e0bfcee"
+  },
+  {
+    "source": "assets/skills-mountain-horizon-bg.jpg",
+    "output": "assets/optimized-extra/skills-mountain-horizon-bg-640.webp",
+    "bytes": 14870,
+    "width": 640,
+    "height": 357,
+    "sourceSha256": "74f6cd3cb46a567ef89394d2edfa9d0c6f484cb6c6227382e9b23e2fa1b096d7",
+    "sha256": "b7759b75284ca1568a0c11d8921c7065cd6d69328ba99842400315a9db3ae955"
+  },
+  {
+    "source": "assets/timeline-support.png",
+    "output": "assets/optimized-extra/timeline-support-1264.webp",
+    "bytes": 118088,
+    "width": 1264,
+    "height": 848,
+    "sourceSha256": "b64d67fa4f520af62d3ccc24a3a84c52bf98d5399e63c5c2ed45a5b864a23d5d",
+    "sha256": "1e9aeb0354517f198fcbf12b02362b7b80c5181c139164bad6d9b810e78c17b9"
+  },
+  {
+    "source": "assets/timeline-support.png",
+    "output": "assets/optimized-extra/timeline-support-640.webp",
+    "bytes": 40204,
+    "width": 640,
+    "height": 429,
+    "sourceSha256": "b64d67fa4f520af62d3ccc24a3a84c52bf98d5399e63c5c2ed45a5b864a23d5d",
+    "sha256": "cb169f4b2c7192872b2ddeef569849878c05ec587c945ec1d821d0735403030d"
+  },
+  {
+    "source": "assets/timeline-systems.png",
+    "output": "assets/optimized-extra/timeline-systems-1264.webp",
+    "bytes": 137204,
+    "width": 1264,
+    "height": 848,
+    "sourceSha256": "c1ec348968a29b5028bf7669d2dc2166544064acf91a01a3ffba0c29df80b9f4",
+    "sha256": "6c98a5c0486de891c0b0d51b84b3495a8868569023d44c49440687a3a9ad4b3e"
+  },
+  {
+    "source": "assets/timeline-systems.png",
+    "output": "assets/optimized-extra/timeline-systems-640.webp",
+    "bytes": 46656,
+    "width": 640,
+    "height": 429,
+    "sourceSha256": "c1ec348968a29b5028bf7669d2dc2166544064acf91a01a3ffba0c29df80b9f4",
+    "sha256": "4b98468e9dad4ae765f7aa683a655d8f0f146686061ca01dbf05a2902f30ffb1"
+  },
+  {
+    "source": "assets/timeline-infrastructure.png",
+    "output": "assets/optimized-extra/timeline-infrastructure-1264.webp",
+    "bytes": 119098,
+    "width": 1264,
+    "height": 848,
+    "sourceSha256": "7c671410f22528607c18c1ed7aa5d84e9deca4e5059505bd7f045d29b44b603c",
+    "sha256": "1ef16c9ea6c09fb7c6eb7e32fa5103699465cab4d14c55f52c0aca7aa7d79b5e"
+  },
+  {
+    "source": "assets/timeline-infrastructure.png",
+    "output": "assets/optimized-extra/timeline-infrastructure-640.webp",
+    "bytes": 40908,
+    "width": 640,
+    "height": 429,
+    "sourceSha256": "7c671410f22528607c18c1ed7aa5d84e9deca4e5059505bd7f045d29b44b603c",
+    "sha256": "e7388a2f524b9820a1b5efcb1e3996e900d6c941e6c38a2954bcacc9fa07cd04"
+  },
+  {
+    "source": "assets/timeline-analysis.png",
+    "output": "assets/optimized-extra/timeline-analysis-1264.webp",
+    "bytes": 81816,
+    "width": 1264,
+    "height": 848,
+    "sourceSha256": "e07c4e04da762843043196f4e9be514ff700e2eda857a8edbd480b87d8fbb024",
+    "sha256": "3cedf05a5cb9ff8c0ea8ec445f602f4dbf555fce731af95bf9790ea441fcfa32"
+  },
+  {
+    "source": "assets/timeline-analysis.png",
+    "output": "assets/optimized-extra/timeline-analysis-640.webp",
+    "bytes": 33928,
+    "width": 640,
+    "height": 429,
+    "sourceSha256": "e07c4e04da762843043196f4e9be514ff700e2eda857a8edbd480b87d8fbb024",
+    "sha256": "491f455965a17e90b8ee2ef48269c20f36ae1ec03aa1506e7ced4c5d5643b8f9"
+  },
+  {
+    "source": "assets/timeline-solutions.png",
+    "output": "assets/optimized-extra/timeline-solutions-1264.webp",
+    "bytes": 113496,
+    "width": 1264,
+    "height": 848,
+    "sourceSha256": "97c954a81abee690f515e7bff19f937bc53b8bf3789c4037d45eeb207ddda2a2",
+    "sha256": "7096d452a263ec7e0812cdb60ee9d15e0336d5a17847836722e7dc7987b08d62"
+  },
+  {
+    "source": "assets/timeline-solutions.png",
+    "output": "assets/optimized-extra/timeline-solutions-640.webp",
+    "bytes": 42210,
+    "width": 640,
+    "height": 429,
+    "sourceSha256": "97c954a81abee690f515e7bff19f937bc53b8bf3789c4037d45eeb207ddda2a2",
+    "sha256": "89a37bd51593d54ac26bccc98f9471d081b13417879873153ddf5aa2bca07a99"
+  },
+  {
+    "source": "assets/timeline-outcomes.png",
+    "output": "assets/optimized-extra/timeline-outcomes-1264.webp",
+    "bytes": 97724,
+    "width": 1264,
+    "height": 848,
+    "sourceSha256": "6005bae4ee4bd127d7533622e2ab106ddd7f1082b3b554eccf1abfc25c487aff",
+    "sha256": "700a87c272da091935cd440713a3ea9d9af72e53f8f4281c39588f5a0f9a132f"
+  },
+  {
+    "source": "assets/timeline-outcomes.png",
+    "output": "assets/optimized-extra/timeline-outcomes-640.webp",
+    "bytes": 35822,
+    "width": 640,
+    "height": 429,
+    "sourceSha256": "6005bae4ee4bd127d7533622e2ab106ddd7f1082b3b554eccf1abfc25c487aff",
+    "sha256": "b041d171d56196914fb38d8b8753449132da5e616e80004dbf939af38f8675c2"
+  },
+  {
+    "source": "assets/nexus-governed-work-v1.png",
+    "output": "assets/optimized-extra/nexus-governed-work-v1-1536.webp",
+    "bytes": 73996,
+    "width": 1536,
+    "height": 1024,
+    "sourceSha256": "69358b873edb3ba0849e58f965ddaa173d0d70cf9ba3055ca1d3f4c70fcf5934",
+    "sha256": "a38704eed8ab26a48dbb513ca874d227e8b4ee7c6ce2fb6b35cbe44c2c2c6dd3"
+  },
+  {
+    "source": "assets/nexus-governed-work-v1.png",
+    "output": "assets/optimized-extra/nexus-governed-work-v1-640.webp",
+    "bytes": 19632,
+    "width": 640,
+    "height": 427,
+    "sourceSha256": "69358b873edb3ba0849e58f965ddaa173d0d70cf9ba3055ca1d3f4c70fcf5934",
+    "sha256": "65cc88a7bc9515142f2b5a2e8bac4d1923cf11b864aaaf652f871ec48b1e429d"
+  },
+  {
+    "source": "assets/proj-banner-newbusiness.jpg",
+    "output": "assets/optimized-extra/proj-banner-newbusiness-1376.webp",
+    "bytes": 78310,
+    "width": 1376,
+    "height": 768,
+    "sourceSha256": "631fb7f45367eeb53ce691e6501cbef914bf0859f5b135b1d8b9952f826ce6f4",
+    "sha256": "ed4afd5de51410fb3eaca7bfe93fb5bf2922de529297d0c9b87af010ae8768f5"
+  },
+  {
+    "source": "assets/proj-banner-newbusiness.jpg",
+    "output": "assets/optimized-extra/proj-banner-newbusiness-640.webp",
+    "bytes": 29820,
+    "width": 640,
+    "height": 357,
+    "sourceSha256": "631fb7f45367eeb53ce691e6501cbef914bf0859f5b135b1d8b9952f826ce6f4",
+    "sha256": "eeaa73e103e743d3132e32828bd0580b1fb83014e7d4f84998366d231f3c18d9"
+  },
+  {
+    "source": "assets/proj-banner-takeover.jpg",
+    "output": "assets/optimized-extra/proj-banner-takeover-1376.webp",
+    "bytes": 128418,
+    "width": 1376,
+    "height": 768,
+    "sourceSha256": "44faf2178292c4f811194a2bad1bffd7380ce84507a93953d3417b7fc9d50a52",
+    "sha256": "e128471b8f4029b255c335e8bec390748f6310e315fabcfc45fa2d80810b6e6f"
+  },
+  {
+    "source": "assets/proj-banner-takeover.jpg",
+    "output": "assets/optimized-extra/proj-banner-takeover-640.webp",
+    "bytes": 45260,
+    "width": 640,
+    "height": 357,
+    "sourceSha256": "44faf2178292c4f811194a2bad1bffd7380ce84507a93953d3417b7fc9d50a52",
+    "sha256": "10edec0ae4836d5599b6b45d1d9e531b1d8e6c5be106441eeeaed59a398b6024"
+  },
+  {
+    "source": "assets/proj-banner-nexus.jpg",
+    "output": "assets/optimized-extra/proj-banner-nexus-1376.webp",
+    "bytes": 42426,
+    "width": 1376,
+    "height": 768,
+    "sourceSha256": "ff4424045348274ba6d5041a1d081677c2e7b4798a7dbe6d6f568bad15a21ac0",
+    "sha256": "af04b493bf84eb1014ea4d9e8cda19e3ce29d8524edd4721dd9f7cf702065bfa"
+  },
+  {
+    "source": "assets/proj-banner-nexus.jpg",
+    "output": "assets/optimized-extra/proj-banner-nexus-640.webp",
+    "bytes": 18106,
+    "width": 640,
+    "height": 357,
+    "sourceSha256": "ff4424045348274ba6d5041a1d081677c2e7b4798a7dbe6d6f568bad15a21ac0",
+    "sha256": "46a2f5a1cebcb99471d9f3cb123b3be5e2b43f7e10e4e1b84fe8181e012d3aee"
+  },
+  {
+    "source": "assets/proj-banner-continuity.jpg",
+    "output": "assets/optimized-extra/proj-banner-continuity-1376.webp",
+    "bytes": 87928,
+    "width": 1376,
+    "height": 768,
+    "sourceSha256": "6ee4e2f344a6a2b0d4a7284e84f96152b1c739c6c5824af2bfc24e675e32a75e",
+    "sha256": "ab8e3dd7ee618da706a8c52a8bbf19824c89b5bed01d0c497d7f3c10dafeea9e"
+  },
+  {
+    "source": "assets/proj-banner-continuity.jpg",
+    "output": "assets/optimized-extra/proj-banner-continuity-640.webp",
+    "bytes": 33790,
+    "width": 640,
+    "height": 357,
+    "sourceSha256": "6ee4e2f344a6a2b0d4a7284e84f96152b1c739c6c5824af2bfc24e675e32a75e",
+    "sha256": "1f8134bda767956c01d5bb9df4cae6f201819933c11518e866717c9923fef2cd"
+  },
+  {
+    "source": "assets/proj-banner-headquarters.jpg",
+    "output": "assets/optimized-extra/proj-banner-headquarters-1376.webp",
+    "bytes": 197466,
+    "width": 1376,
+    "height": 768,
+    "sourceSha256": "6fcc6d5d27b64bd81eebb5b790c1eb6c35a3c7a1caff826928d102b5d947b0d9",
+    "sha256": "65c6dc767f0835a09d3bf9df10c8f461f16aabb9af4973e2ad5d7390515f25df"
+  },
+  {
+    "source": "assets/proj-banner-headquarters.jpg",
+    "output": "assets/optimized-extra/proj-banner-headquarters-640.webp",
+    "bytes": 43150,
+    "width": 640,
+    "height": 357,
+    "sourceSha256": "6fcc6d5d27b64bd81eebb5b790c1eb6c35a3c7a1caff826928d102b5d947b0d9",
+    "sha256": "1b0be7eab2b1a5d72c3dacba193c5ba4328da327a2b94f7c0486c7d1800dc27d"
+  },
+  {
+    "source": "assets/proj-banner-workflows.jpg",
+    "output": "assets/optimized-extra/proj-banner-workflows-1376.webp",
+    "bytes": 100902,
+    "width": 1376,
+    "height": 768,
+    "sourceSha256": "a9303c0a2611efd650a5866ee529a1578297a3aab0d045b284e97c65ac4f8222",
+    "sha256": "a2d29e5fd8183b32e91cec11f07647ec3f22cbbeba526cf1ae814498bc9a1dd7"
+  },
+  {
+    "source": "assets/proj-banner-workflows.jpg",
+    "output": "assets/optimized-extra/proj-banner-workflows-640.webp",
+    "bytes": 30864,
+    "width": 640,
+    "height": 357,
+    "sourceSha256": "a9303c0a2611efd650a5866ee529a1578297a3aab0d045b284e97c65ac4f8222",
+    "sha256": "fdcd29deafa4347ee3e2139aa75354f927c68ecfb147a8b30ce26abaf8fe1a1f"
+  },
+  {
+    "source": "assets/proj-banner-changes.jpg",
+    "output": "assets/optimized-extra/proj-banner-changes-1376.webp",
+    "bytes": 68640,
+    "width": 1376,
+    "height": 768,
+    "sourceSha256": "50e38fc0837302ddb1bf2a7c129df44c5670430855ec36b619b430a985fb2ea7",
+    "sha256": "1b33dc55254c57af930873b35029eea12f0046cca6a0d58bfd5c29310924165d"
+  },
+  {
+    "source": "assets/proj-banner-changes.jpg",
+    "output": "assets/optimized-extra/proj-banner-changes-640.webp",
+    "bytes": 25486,
+    "width": 640,
+    "height": 357,
+    "sourceSha256": "50e38fc0837302ddb1bf2a7c129df44c5670430855ec36b619b430a985fb2ea7",
+    "sha256": "da5f6a4f267fdfc4d3ade2aba46dd4755dc8af3dd78ee2d0f88da14ff8f20b45"
+  },
+  {
+    "source": "assets/proj-banner-inquiry.jpg",
+    "output": "assets/optimized-extra/proj-banner-inquiry-1376.webp",
+    "bytes": 58486,
+    "width": 1376,
+    "height": 768,
+    "sourceSha256": "c44fbcae35dd1fe25d0adaa7391cb093dc2b058598350e36dc03c62dfb1db47b",
+    "sha256": "23a5ee272362ef8a3e148b4953ff0043ec39876eef5a5158fcecd6163b69ab06"
+  },
+  {
+    "source": "assets/proj-banner-inquiry.jpg",
+    "output": "assets/optimized-extra/proj-banner-inquiry-640.webp",
+    "bytes": 20400,
+    "width": 640,
+    "height": 357,
+    "sourceSha256": "c44fbcae35dd1fe25d0adaa7391cb093dc2b058598350e36dc03c62dfb1db47b",
+    "sha256": "4ad66a4922555675394e10adb3059bc92f3d6dc54073f7fa9fcfb815699185a9"
+  },
+  {
+    "source": "assets/proj-banner-upload.jpg",
+    "output": "assets/optimized-extra/proj-banner-upload-1376.webp",
+    "bytes": 113338,
+    "width": 1376,
+    "height": 768,
+    "sourceSha256": "1ec3c121ec02d8eb27d02de56e4bd2a9b7e4e1714c5c75b01ea4bd28af90e431",
+    "sha256": "173460ee81aa9820ef72627f819d0c806bbb40813561e727d89b66abdece5145"
+  },
+  {
+    "source": "assets/proj-banner-upload.jpg",
+    "output": "assets/optimized-extra/proj-banner-upload-640.webp",
+    "bytes": 39352,
+    "width": 640,
+    "height": 357,
+    "sourceSha256": "1ec3c121ec02d8eb27d02de56e4bd2a9b7e4e1714c5c75b01ea4bd28af90e431",
+    "sha256": "3e22b4e20166e464f85d39756a8fb0a238b74258f1739d0ae194589584a7bfad"
+  },
+  {
+    "source": "assets/proj-banner-claims.jpg",
+    "output": "assets/optimized-extra/proj-banner-claims-1376.webp",
+    "bytes": 107486,
+    "width": 1376,
+    "height": 768,
+    "sourceSha256": "829f4d622e1430531bdc9618a28fd0869c251495a71daf8b5ae70b20a9824efb",
+    "sha256": "61b7d63bbe6a1f3e691e10ec9dd194404fbc52f6c3f5539dbb8b68bced99f4b1"
+  },
+  {
+    "source": "assets/proj-banner-claims.jpg",
+    "output": "assets/optimized-extra/proj-banner-claims-640.webp",
+    "bytes": 32644,
+    "width": 640,
+    "height": 357,
+    "sourceSha256": "829f4d622e1430531bdc9618a28fd0869c251495a71daf8b5ae70b20a9824efb",
+    "sha256": "77ba8d9e2ee77125d6caed2c7aa7158757509e2ed38bce026082957413056f2e"
+  },
+  {
+    "source": "assets/proj-banner-sql.jpg",
+    "output": "assets/optimized-extra/proj-banner-sql-1376.webp",
+    "bytes": 61374,
+    "width": 1376,
+    "height": 768,
+    "sourceSha256": "224ac8aaf7cf41ab5badc8d94b94a2608a21f3f7be65d0107580098435182c08",
+    "sha256": "f530b5b2d70fd074b91d4a3c826f97a3bf090d8756f44acda3414bb1e186ce9c"
+  },
+  {
+    "source": "assets/proj-banner-sql.jpg",
+    "output": "assets/optimized-extra/proj-banner-sql-640.webp",
+    "bytes": 22428,
+    "width": 640,
+    "height": 357,
+    "sourceSha256": "224ac8aaf7cf41ab5badc8d94b94a2608a21f3f7be65d0107580098435182c08",
+    "sha256": "a48d777462ef0603da634e25b373c0b3a75d6db8eb9f12c14706c7adcb95d2a9"
+  },
+  {
+    "source": "assets/proj-banner-foundations.jpg",
+    "output": "assets/optimized-extra/proj-banner-foundations-1376.webp",
+    "bytes": 145476,
+    "width": 1376,
+    "height": 768,
+    "sourceSha256": "08bbc4f3d715ba2e2ddf012b9b412f6147983ef62e46dd8bfb7bc74a126002b8",
+    "sha256": "e0fd79d866e838dd85acd95fa7d0c7b291c9d4708cd456e1296e1a170a08ed9c"
+  },
+  {
+    "source": "assets/proj-banner-foundations.jpg",
+    "output": "assets/optimized-extra/proj-banner-foundations-640.webp",
+    "bytes": 41122,
+    "width": 640,
+    "height": 357,
+    "sourceSha256": "08bbc4f3d715ba2e2ddf012b9b412f6147983ef62e46dd8bfb7bc74a126002b8",
+    "sha256": "d9785623b0b447047a6923ebe8f8315207132e5658329be2a9ca4a6bc42a5e24"
+  },
+  {
+    "source": "assets/proj-banner-dell.jpg",
+    "output": "assets/optimized-extra/proj-banner-dell-1376.webp",
+    "bytes": 133276,
+    "width": 1376,
+    "height": 768,
+    "sourceSha256": "4cad5fb81d6251a0391f837d8bf742a6156be96aad9b27a76a96bc06dec90a53",
+    "sha256": "8405e8b4aa91aa160150b385fd2009129a4c7a67048c02e38d6a00857e4ad4ae"
+  },
+  {
+    "source": "assets/proj-banner-dell.jpg",
+    "output": "assets/optimized-extra/proj-banner-dell-640.webp",
+    "bytes": 44818,
+    "width": 640,
+    "height": 357,
+    "sourceSha256": "4cad5fb81d6251a0391f837d8bf742a6156be96aad9b27a76a96bc06dec90a53",
+    "sha256": "35e83fe467ec92264a8eb478b980e8d0766f072b2b7e530519c9884d23c51a62"
+  },
+  {
+    "source": "assets/lowkey-local-speech-v1.png",
+    "output": "assets/optimized-extra/lowkey-local-speech-v1-1536.webp",
+    "bytes": 89676,
+    "width": 1536,
+    "height": 1024,
+    "sourceSha256": "4807e1761474a0bc3dd00af5a175bb20563897fb678f77088efdb7c72ca182fe",
+    "sha256": "b0d33a17ea9df003b3be7ec89f1cbab8d41f7d7d45ddab6e3bbf96505c403dbd"
+  },
+  {
+    "source": "assets/lowkey-local-speech-v1.png",
+    "output": "assets/optimized-extra/lowkey-local-speech-v1-640.webp",
+    "bytes": 22356,
+    "width": 640,
+    "height": 427,
+    "sourceSha256": "4807e1761474a0bc3dd00af5a175bb20563897fb678f77088efdb7c72ca182fe",
+    "sha256": "5162107f9cdddabc5c5206a509d4487f7fdd21e775dc397211ede233d825b707"
+  },
+  {
+    "source": "assets/apex.jpg",
+    "output": "assets/optimized-extra/apex-1200.webp",
+    "bytes": 109010,
+    "width": 1200,
+    "height": 896,
+    "sourceSha256": "bb128e36b0e43e8e707516cb0b09599c2f095028503893678af839ca39641ee1",
+    "sha256": "a1dc1c07400f147be440a35fbc08eb1bdd59e3c708ce04628a46a6c54c5c275e"
+  },
+  {
+    "source": "assets/apex.jpg",
+    "output": "assets/optimized-extra/apex-640.webp",
+    "bytes": 47572,
+    "width": 640,
+    "height": 478,
+    "sourceSha256": "bb128e36b0e43e8e707516cb0b09599c2f095028503893678af839ca39641ee1",
+    "sha256": "a22e5cee06cc82fe0dd389a2659251ec8d9bd47e93bd91cec70dc2121833bcce"
+  },
+  {
+    "source": "assets/home-level-clouds.jpg",
+    "output": "assets/optimized-extra/home-level-clouds-1600.webp",
+    "bytes": 129912,
+    "width": 1600,
+    "height": 686,
+    "sourceSha256": "91b92ba2730dda3b501e1d04a1c1fa09ccb2f8b4b0d858f1d7b0e258c3b491e0",
+    "sha256": "b599ed0e66f0ede6adaafe85296a81ae84f5c6f23a5a642bf83dfd67729ca1ba"
+  },
+  {
+    "source": "assets/home-level-clouds.jpg",
+    "output": "assets/optimized-extra/home-level-clouds-640.webp",
+    "bytes": 43668,
+    "width": 640,
+    "height": 274,
+    "sourceSha256": "91b92ba2730dda3b501e1d04a1c1fa09ccb2f8b4b0d858f1d7b0e258c3b491e0",
+    "sha256": "9aefadd8845c8c046875a3b48bb064122469c31acd183a3e8abf2320431307e0"
+  },
+  {
+    "source": "assets/home-level-business.jpg",
+    "output": "assets/optimized-extra/home-level-business-1600.webp",
+    "bytes": 119730,
+    "width": 1600,
+    "height": 686,
+    "sourceSha256": "d71c00115ce92f17b1e76c0f612da9a602c057db34c8bc9c9d46a3419e95a153",
+    "sha256": "a2b61c5d3ce67603ed9fa5f72c090880bda0ac1224ad91535737890b3f89d349"
+  },
+  {
+    "source": "assets/home-level-business.jpg",
+    "output": "assets/optimized-extra/home-level-business-640.webp",
+    "bytes": 43946,
+    "width": 640,
+    "height": 274,
+    "sourceSha256": "d71c00115ce92f17b1e76c0f612da9a602c057db34c8bc9c9d46a3419e95a153",
+    "sha256": "9aa914601b2691fa8a704520f16c91f9d870eef30e80aada79353fb606e51035"
+  },
+  {
+    "source": "assets/home-level-metal.jpg",
+    "output": "assets/optimized-extra/home-level-metal-1600.webp",
+    "bytes": 114652,
+    "width": 1600,
+    "height": 686,
+    "sourceSha256": "6ed60ce0400f55a452d7e3e800fa6efaf0bac1de2757255220bdb9d3f38c69e1",
+    "sha256": "7d8c89c85b0278e1e7b3cf61722890dba9159afbc7e009f4450b17d4af379c2c"
+  },
+  {
+    "source": "assets/home-level-metal.jpg",
+    "output": "assets/optimized-extra/home-level-metal-640.webp",
+    "bytes": 39324,
+    "width": 640,
+    "height": 274,
+    "sourceSha256": "6ed60ce0400f55a452d7e3e800fa6efaf0bac1de2757255220bdb9d3f38c69e1",
+    "sha256": "83a321def4725683038bdafa677f0b0c89fa5316cf1ba20dc84f1acafc9d2ed1"
+  },
+  {
+    "source": "assets/tycoon/easter-egg-retro-thumb.jpg",
+    "output": "assets/optimized-extra/tycoon/easter-egg-retro-thumb-1024.webp",
+    "bytes": 105160,
+    "width": 1024,
+    "height": 1024,
+    "sourceSha256": "b544d09b925f28ba672a6dfad10fb3b6c04e1d2f79c289af1f57e6adc9cbe13e",
+    "sha256": "5804766bab608c04aea74834308fbfe4057f83ed19b7e3d55536ed2efb04766b"
+  },
+  {
+    "source": "assets/tycoon/easter-egg-retro-thumb.jpg",
+    "output": "assets/optimized-extra/tycoon/easter-egg-retro-thumb-640.webp",
+    "bytes": 85532,
+    "width": 640,
+    "height": 640,
+    "sourceSha256": "b544d09b925f28ba672a6dfad10fb3b6c04e1d2f79c289af1f57e6adc9cbe13e",
+    "sha256": "35809f757f2c82cb303ccc6843e3d18f2d9f0f528552ce0f34ad90b16d4dfe91"
+  },
+  {
+    "source": "assets/personal/josh-portrait-vest.jpg",
+    "output": "assets/optimized-extra/personal/josh-portrait-vest-896.webp",
+    "bytes": 106356,
+    "width": 896,
+    "height": 1200,
+    "sourceSha256": "52435892bedb4df5282f620abf4152202417c86e8dd29e8e6808cf4fbfe2b725",
+    "sha256": "351d405289eeb8deb10f53182cf3d45417eced4e317ebe5f6785a46c4c4127aa"
+  },
+  {
+    "source": "assets/personal/josh-portrait-vest.jpg",
+    "output": "assets/optimized-extra/personal/josh-portrait-vest-640.webp",
+    "bytes": 62718,
+    "width": 640,
+    "height": 857,
+    "sourceSha256": "52435892bedb4df5282f620abf4152202417c86e8dd29e8e6808cf4fbfe2b725",
+    "sha256": "e22e7c1ebaa77319e1877575b42d125e2291798ccce866cb057efaf974a1e891"
+  },
+  {
+    "source": "assets/voyager.jpg",
+    "output": "assets/optimized-extra/voyager-1408.webp",
+    "bytes": 40974,
+    "width": 1408,
+    "height": 736,
+    "sourceSha256": "15dd78c2e5ae7c029dd2e972bde6a118d8acee29d500e0267508864c4436e27f",
+    "sha256": "023e4ddd8d32789598ebfd7bfa9faa711e99bade9be63a13291d0e6f97c1b15b"
+  },
+  {
+    "source": "assets/voyager.jpg",
+    "output": "assets/optimized-extra/voyager-640.webp",
+    "bytes": 15502,
+    "width": 640,
+    "height": 335,
+    "sourceSha256": "15dd78c2e5ae7c029dd2e972bde6a118d8acee29d500e0267508864c4436e27f",
+    "sha256": "8bedada77c4b36cab80f187fe1e0430f1092be4ed490b2ec7f62e6b02165b38b"
+  }
+]

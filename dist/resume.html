@@ -5,49 +5,312 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
   <meta name="referrer" content="no-referrer">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'">
-  <meta name="description" content="Select a resume from Josh Boyer's approved career evidence, with repeatable matching and visible sources.">
-  <title>Build a tailored resume — Josh Boyer</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' blob:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'">
+  <meta name="description" content="Build a tailored canonical resume from Josh Boyer's approved career evidence using deterministic matching.">
+  <title>Resume Builder — Josh Boyer</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="preload" href="assets/fonts/plus-jakarta-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="twin-drawer.css">
   <link rel="stylesheet" href="resume.css">
   <script src="resume-engine.js" defer></script>
-  <script src="resume-ui.js" defer></script>
-</head>
+  <script src="career-guide-engine.js" defer></script>
+  
+  <script src="resume-ui.js?v=20261030-no-twin1" defer></script>
+<style>#twin-copilot,.twin-auto-toggle,[data-preset="twin"],#ask-twin-gaps-btn{display:none!important}.posting-layout{grid-template-columns:minmax(0,1fr)}</style></head>
 <body class="resume-tool">
   <a class="skip-link" href="#resume-main">Skip to resume builder</a>
   <header class="resume-header">
-    <a class="wordmark" href="index.html#home">Josh Boyer<span>.</span></a>
-    <nav aria-label="Portfolio"><a href="index.html#home">Home</a><a href="index.html#projects">Projects</a><a href="index.html#about">About</a></nav>
+    <a class="wordmark" href="index.html#home"><img class="wordmark-logo" src="assets/jb-mark-header.png" width="38" height="32" alt="" aria-hidden="true" decoding="async">Josh Boyer<span>.</span></a>
+    <nav aria-label="Portfolio">
+      <a href="index.html#home">Home</a>
+      <a href="index.html#career">Career</a>
+      <a href="index.html#projects">Projects</a>
+      <a href="index.html#about">About</a>
+      
+    </nav>
   </header>
+
   <main id="resume-main" class="resume-wrap" tabindex="-1">
-    <div class="tool-intro"><h1>Build a resume<br>around the work.</h1><p>Paste a posting to select from my approved experience. Deterministic matching runs in your browser. Review, then export a resume.</p></div>
-    <div class="posting-layout">
-      <form id="posting-form" novalidate>
-        <label for="job-posting">Job posting</label>
-        <p class="field-help" id="posting-help">Text only, 20–12,000 characters. Paste public requirements; leave out personal or confidential information.</p>
-        <textarea id="job-posting" name="posting" rows="9" maxlength="12000" aria-describedby="posting-help posting-count posting-error" spellcheck="false" placeholder="Paste the role’s responsibilities and requirements here…"></textarea>
-        <div class="field-meta"><span id="posting-count">0 / 12,000 characters</span><button type="button" id="example-button" class="plain-button">Use an example posting</button></div>
-        <label for="role-focus">Emphasis</label>
-        <select id="role-focus"><option value="auto">Choose from the posting</option><option value="insurance">Insurance technology</option><option value="integrations">Integration and data</option><option value="solutions">Technical solutions</option></select>
-        <p id="posting-error" class="field-error" role="alert" hidden></p>
-        <div class="form-actions"><button class="button" id="match-button" type="submit" disabled>Match evidence</button><button type="button" class="secondary-button" id="clear-button">Clear</button></div>
-      </form>
-      <aside class="matching-note" aria-labelledby="method-title"><h2 id="method-title">Selected, not invented.</h2><p>This prototype uses deterministic matching and prewritten text. The same posting, emphasis and evidence version produce the same selection.</p><p>It runs in your browser. Your posting is not sent to a model, stored or included in the resume.</p><details><summary>What the match can tell you</summary><p>Keywords connect a requirement to related career evidence. They do not confirm seniority, minimum years, credentials or every part of a requirement. Review the source and any qualification notes.</p><p>SOAP/XML, REST and scheduled table-backed publish/subscribe solution review are supported. JSON standards and broker-based or real-time implementation are not established. Independent NEXUS work stays separate from employer experience.</p></details><p><a href="career-guide.html">Ask the rule-based career guide</a></p><a class="dataset-link" href="career-evidence.v3.json" download>Download the reusable evidence JSON</a><p id="data-version" class="version-note">Loading approved evidence…</p></aside>
+    <div class="tool-intro">
+      <div>
+        <p class="resume-kicker"><span class="resume-kicker-dot" aria-hidden="true"></span>DETERMINISTIC EVIDENCE ENGINE</p>
+        <h1>Build a resume<br>around the work.</h1>
+      </div>
+      <p>Paste a job posting or choose a role archetype. Browser-deterministic matching selects prewritten, source-verified career evidence without contacting an AI provider.</p>
     </div>
+
+    <!-- 4-Step Interactive Process Tracker -->
+    <nav id="resume-stepper" class="resume-stepper" aria-label="Resume builder workflow steps">
+      <a href="#posting-form" class="resume-step is-active" data-step-nav="1">
+        <span class="step-num">01</span>
+        <span class="step-body">
+          <strong>Role &amp; Posting</strong>
+          <small id="step-1-meta">Paste requirements or pick a template</small>
+        </span>
+      </a>
+      <a href="#match-results" class="resume-step" data-step-nav="2">
+        <span class="step-num">02</span>
+        <span class="step-body">
+          <strong>Evidence &amp; Line Review</strong>
+          <small id="step-2-meta">Awaiting posting match</small>
+        </span>
+      </a>
+      <a href="#evidence-picker-section" class="resume-step" data-step-nav="3">
+        <span class="step-num">03</span>
+        <span class="step-body">
+          <strong>Co-Curate Evidence</strong>
+          <small id="step-3-meta">Select 1–8 verified chunks</small>
+        </span>
+      </a>
+      <a href="#preview-toolbar-section" class="resume-step" data-step-nav="4">
+        <span class="step-num">04</span>
+        <span class="step-body">
+          <strong>Canonical Resume &amp; Export</strong>
+          <small id="step-4-meta">Preview, print PDF, or copy</small>
+        </span>
+      </a>
+    </nav>
+
+    <div class="posting-layout">
+      <!-- Left Column: Step 1 Posting Form & Methodology Note -->
+      <div class="posting-primary-col">
+        <form id="posting-form" class="posting-card" novalidate>
+          <div class="posting-card-head">
+            <div>
+              <span class="section-step-pill">STEP 01</span>
+              <label for="job-posting" class="posting-main-label">Job posting or role requirements</label>
+            </div>
+            <button type="button" id="example-button" class="plain-button">Use an example posting</button>
+          </div>
+          <p class="field-help" id="posting-help">Text only, 20–12,000 characters. Paste public requirements or load a role archetype below; leave out personal or confidential information.</p>
+
+          <div class="archetype-bar" role="group" aria-label="Quick role archetype templates">
+            <span class="archetype-label">Quick templates:</span>
+            <button type="button" class="archetype-chip" data-archetype="insurance-integration">Insurance Integration &amp; Rules</button>
+            <button type="button" class="archetype-chip" data-archetype="claims-sql">Enterprise Claims, ETL &amp; SQL</button>
+            <button type="button" class="archetype-chip" data-archetype="solutions-ai">Solutions Design &amp; Governed AI</button>
+          </div>
+
+          <textarea id="job-posting" name="posting" rows="9" maxlength="12000" aria-describedby="posting-help posting-count posting-error" spellcheck="false" placeholder="Paste the role’s responsibilities and requirements here…"></textarea>
+          <div class="field-meta">
+            <span id="posting-count">0 / 12,000 characters</span>
+            <span id="posting-line-estimate" class="line-estimate">0 requirement lines detected</span>
+          </div>
+
+          <div class="focus-row">
+            <div class="focus-field">
+              <label for="role-focus">Emphasis</label>
+              <select id="role-focus">
+                <option value="auto">Choose from the posting (Auto-detect)</option>
+                <option value="insurance">Insurance technology</option>
+                <option value="integrations">Integration and data</option>
+                <option value="solutions">Technical solutions</option>
+              </select>
+            </div>
+            <label class="twin-auto-toggle" for="twin-auto-brief">
+              <input type="checkbox" id="twin-auto-brief" disabled>
+              <span>Auto-generate Josh’s Twin Fit Brief on match</span>
+            </label>
+          </div>
+
+          <p id="posting-error" class="field-error" role="alert" hidden></p>
+          <div class="form-actions">
+            <button class="button" id="match-button" type="submit" disabled>Match evidence</button>
+            <button type="button" class="secondary-button" id="clear-button">Clear</button>
+          </div>
+        </form>
+
+        <aside class="matching-note" aria-labelledby="method-title">
+          <div class="matching-note-header">
+            <h2 id="method-title">Selected, not invented.</h2>
+            <p id="data-version" class="version-note">Loading approved evidence…</p>
+          </div>
+          <p>The resume preview and exports use <strong>100% deterministic matching and prewritten canonical text</strong>. The same posting, emphasis, and evidence version always produce the same baseline selection—never unverified model-invented resume bullets.</p>
+          
+          <details>
+            <summary>What the match can tell you</summary>
+            <p>Keywords connect a requirement to related career evidence. They do not confirm seniority, minimum years, credentials, or every part of a requirement. Review the source and any qualification notes.</p>
+            <p>SOAP/XML, REST, and scheduled table-backed publish/subscribe solution review are supported. JSON insurance standards and broker-based or real-time streaming implementation (such as Kafka) are not established. Independent NEXUS work stays separate from employer experience.</p>
+          </details>
+          <div class="matching-note-links">
+            <a class="dataset-link" href="career-evidence.v3.json" download>Download reusable evidence JSON ↓</a>
+            
+          </div>
+        </aside>
+      </div>
+
+      <!-- Right Column: Josh's Digital Twin — Interactive Resume Co-Pilot -->
+      <aside id="twin-copilot" class="twin-copilot" aria-labelledby="copilot-title">
+        <header class="copilot-header">
+          <div class="copilot-identity">
+            <div class="copilot-avatar" aria-hidden="true">JB</div>
+            <div>
+              <h2 id="copilot-title">Josh’s Digital Twin</h2>
+              <p class="copilot-subtitle">
+                <span id="copilot-mode-pill" class="copilot-mode-pill">Governed Evidence Twin</span>
+                <span id="copilot-turn-count" class="copilot-turns">0 / 8 turns</span>
+              </p>
+            </div>
+          </div>
+          <div class="copilot-voice-bar" aria-label="Twin voice controls">
+            <button type="button" id="copilot-autospeak-btn" class="twin-voice-btn" aria-pressed="false" title="Automatically speak Twin responses aloud via ElevenLabs TTS">🔈 Voice Off</button>
+            <button type="button" id="copilot-live-call-btn" class="twin-voice-btn is-live-call" aria-pressed="false" title="Start a live two-way voice conversation with Josh's Digital Twin while building the resume">🎙️ Live Call</button>
+          </div>
+        </header>
+
+        <!-- Active Live Voice Call Stage (Visible when Live Call is active) -->
+        <section id="copilot-live-stage" class="twin-live-stage copilot-live-stage" hidden>
+          <div id="copilot-live-orb" class="twin-live-orb" aria-hidden="true">🎙️</div>
+          <div class="twin-live-stage-meta">
+            <strong id="copilot-live-title">Live Voice Call · Resume Co-Pilot</strong>
+            <span id="copilot-live-status">Connecting to ElevenLabs Conversational AI…</span>
+          </div>
+          <button type="button" id="copilot-live-end-btn" class="twin-live-end-btn">⏹ End Call</button>
+        </section>
+
+        <!-- Twin Executive Fit & Tailoring Brief Card -->
+        <section id="copilot-fit-card" class="copilot-fit-card" aria-labelledby="copilot-fit-heading">
+          <div class="copilot-fit-top">
+            <span class="copilot-fit-badge" id="copilot-fit-badge">CO-PILOT READY</span>
+            <button type="button" id="copilot-speak-brief-btn" class="copilot-mini-btn" hidden>🔊 Listen</button>
+          </div>
+          <h3 id="copilot-fit-heading">How I can help you tailor this resume</h3>
+          <div id="copilot-fit-prose" class="copilot-fit-prose">
+            <p>Paste a job posting on the left and click <strong>Match evidence &amp; consult Twin</strong>. I’ll analyze how my 20 years across Dell, Harris, Grenville, Medavie, and NEXUS map to your requirements, flag any qualification boundaries up front, and help you select the strongest evidence chunks.</p>
+          </div>
+          <div id="copilot-fit-actions" class="copilot-fit-actions" hidden>
+            <button type="button" id="copilot-apply-picks-btn" class="copilot-action-primary">✦ Apply Twin’s Recommended Chunks</button>
+            <button type="button" id="copilot-intro-guide-btn" class="copilot-action-secondary">📋 Generate Role Intro &amp; Interview Guide</button>
+          </div>
+        </section>
+
+        <!-- Contextual Starter Prompts -->
+        <div class="copilot-starters-wrap">
+          <span class="copilot-starters-label" id="copilot-starters-label">Ask me while you build:</span>
+          <div id="copilot-starters" class="copilot-starters"></div>
+        </div>
+
+        <!-- Conversation Log -->
+        <div id="copilot-log" class="copilot-log" role="log" aria-live="polite" aria-label="Digital Twin co-pilot conversation"></div>
+
+        <!-- Co-Pilot Question Composer -->
+        <form id="copilot-form" class="copilot-composer" novalidate>
+          <div class="copilot-composer-row">
+            <textarea id="copilot-input" class="copilot-input" rows="2" maxlength="1000" placeholder="Ask how my experience fits a requirement, or ask which chunks to include…" aria-label="Ask Josh's Digital Twin a question about the resume or posting"></textarea>
+            <button type="button" id="copilot-mic-btn" class="twin-mic-btn" title="Speak your question (ElevenLabs Scribe STT or browser speech recognition)" aria-label="Speak question">🎤</button>
+            <button type="submit" id="copilot-send-btn" class="copilot-send-btn">Ask</button>
+          </div>
+          <div class="copilot-meta-bar">
+            <span id="copilot-status" role="status" aria-live="polite">Ready · Grounded in dataset 2026-10-28.1</span>
+            <button type="button" id="copilot-clear-btn" class="copilot-clear-btn">Reset chat</button>
+          </div>
+        </form>
+      </aside>
+    </div>
+
     <p id="tool-status" class="tool-status" role="status" aria-live="polite"></p>
+
     <section id="match-results" class="match-results" aria-labelledby="match-title" hidden>
-      <div class="results-heading"><div><h2 id="match-title" tabindex="-1">Requirements and evidence</h2><p id="match-summary"></p></div><a href="#resume-preview" id="preview-link">Go to resume preview</a></div>
-      <div id="qualification-notes" class="qualification-notes" hidden><h3>Qualifications to confirm</h3><p>These appear in the posting but are not established by the approved evidence. They are not added to the resume.</p><ul id="qualification-list"></ul></div>
-      <details class="mapping-disclosure"><summary>Review the posting line by line</summary><ol id="requirement-mapping" class="requirement-mapping"></ol></details>
-      <fieldset class="evidence-picker"><legend>Choose the evidence</legend><p id="selection-help">Choose one to eight chunks. The suggested selection favors related topics, then the chosen role emphasis, priority and stable ID.</p><div id="evidence-options"></div></fieldset>
-      <p id="selection-error" class="field-error" role="alert" hidden></p>
-      <div class="preview-toolbar"><div><h2 id="preview-title">Resume preview</h2><p id="selection-count"></p></div><div class="export-actions"><button class="button" type="button" id="text-export" disabled>Download .txt</button><button class="secondary-button" type="button" id="print-resume" disabled>Print / save PDF</button><button class="plain-button" type="button" id="selection-export" disabled>Export selection JSON</button></div></div>
+      <!-- Match Telemetry Summary Banner -->
+      <div class="results-heading">
+        <div>
+          <span class="section-step-pill">STEP 02 · LINE-BY-LINE FIT &amp; BOUNDARIES</span>
+          <h2 id="match-title" tabindex="-1">Requirements and evidence</h2>
+          <p id="match-summary"></p>
+        </div>
+        <div class="results-heading-actions">
+          <button type="button" id="ask-twin-gaps-btn" class="secondary-button">Ask Twin to explain fit &amp; boundaries</button>
+          <a href="#resume-preview" id="preview-link" class="button">Go to resume preview ↓</a>
+        </div>
+      </div>
+
+      <!-- Visual Match Telemetry Strip -->
+      <div id="match-telemetry" class="match-telemetry" aria-label="Posting match telemetry"></div>
+
+      <div id="qualification-notes" class="qualification-notes" hidden>
+        <div class="qualification-notes-head">
+          <div>
+            <h3>Qualifications to confirm</h3>
+            <p>These appear in the posting but are not established by the approved evidence. They are stated transparently and are never silently added to the resume.</p>
+          </div>
+          <button type="button" id="ask-twin-qualifications-btn" class="ask-twin-inline-btn">Ask Twin how I address these boundaries →</button>
+        </div>
+        <ul id="qualification-list"></ul>
+      </div>
+
+      <details class="mapping-disclosure" open>
+        <summary>Review the posting line by line <span class="mapping-summary-hint">(click “Ask Twin” on any line to interrogate how my work applies)</span></summary>
+        <ol id="requirement-mapping" class="requirement-mapping"></ol>
+      </details>
+
+      <!-- Step 3: Co-Curate Evidence -->
+      <div id="evidence-picker-section" class="evidence-picker-section">
+        <fieldset class="evidence-picker">
+          <span class="section-step-pill">STEP 03 · CO-CURATE CANONICAL EVIDENCE</span>
+          <legend>Choose the evidence</legend>
+          <p id="selection-help">Choose one to eight chunks. The suggested selection favors related topics, then the chosen role emphasis, priority and stable ID. Use the quick presets below or ask Josh’s Twin to recommend a selection.</p>
+
+          <div id="curation-toolbar" class="curation-toolbar" role="toolbar" aria-label="Evidence selection presets">
+            <span class="curation-toolbar-label">Selection presets:</span>
+            <button type="button" class="curation-preset-btn is-active" data-preset="default">Top Deterministic Match</button>
+            <button type="button" class="curation-preset-btn" data-preset="twin" id="preset-twin-btn">✦ Twin’s Recommended Picks</button>
+            <button type="button" class="curation-preset-btn" data-preset="medavie">Emphasize Medavie &amp; Claims</button>
+            <button type="button" class="curation-preset-btn" data-preset="grenville">Emphasize Grenville &amp; P&amp;C Rules</button>
+            <button type="button" class="curation-preset-btn" data-preset="nexus">+ Ensure NEXUS Capstone</button>
+          </div>
+
+          <div id="evidence-options"></div>
+        </fieldset>
+        <p id="selection-error" class="field-error" role="alert" hidden></p>
+      </div>
+
+      <!-- Step 4: Live Canonical Resume Preview & Export -->
+      <div id="preview-toolbar-section" class="preview-toolbar">
+        <div>
+          <span class="section-step-pill">STEP 04 · VERIFIED OUTPUT</span>
+          <h2 id="preview-title">Resume preview</h2>
+          <p id="selection-count"></p>
+        </div>
+        <div class="export-actions">
+          <button class="button" type="button" id="text-export" disabled>Download .txt</button>
+          <button class="secondary-button" type="button" id="print-resume" disabled>Print / save PDF</button>
+          <button class="secondary-button" type="button" id="copy-resume-btn" disabled>Copy resume text</button>
+          <button class="secondary-button" type="button" id="generate-intro-btn" disabled>✦ Generate Twin Role Intro</button>
+          <button class="plain-button" type="button" id="selection-export" disabled>Export selection JSON</button>
+        </div>
+      </div>
+
+      <!-- Optional Twin Companion Role Intro & Interview Brief (Rendered above Resume Paper when requested) -->
+      <aside id="twin-companion-brief" class="twin-companion-brief" aria-labelledby="companion-brief-title" hidden>
+        <div class="companion-brief-header">
+          <div>
+            <span class="copilot-fit-badge">TWIN COMPANION BRIEF · FIRST-PERSON CONTEXT</span>
+            <h3 id="companion-brief-title">Role Introduction &amp; Interview Discussion Guide</h3>
+          </div>
+          <div class="companion-brief-actions">
+            <button type="button" id="companion-speak-btn" class="copilot-mini-btn">🔊 Listen</button>
+            <button type="button" id="companion-copy-btn" class="copilot-mini-btn">Copy brief</button>
+            <button type="button" id="companion-close-btn" class="copilot-mini-btn" aria-label="Hide companion brief">✕</button>
+          </div>
+        </div>
+        <div id="companion-brief-body" class="companion-brief-body"></div>
+      </aside>
+
       <p class="print-help">Print opens your browser’s print dialog; choose “Save as PDF” where available. The preview and exports use approved text only and retain evidence IDs. No application is submitted.</p>
       <article id="resume-preview" class="resume-paper" aria-labelledby="resume-name" tabindex="-1" hidden></article>
     </section>
+
     <noscript><p>JavaScript is required for browser-local matching. You can still <a href="career-evidence.v3.json" download>download the evidence JSON</a> or <a href="index.html#projects">read the portfolio</a>.</p></noscript>
   </main>
-  <footer class="resume-footer resume-wrap"><p>Private prototype · Public-safe career evidence · No model backend</p><a href="index.html#home">Back to the portfolio</a></footer>
+
+  <footer class="resume-footer resume-wrap">
+    <p>Deterministic canonical resume engine · Public-safe career evidence 2026-10-28.1</p>
+    <a href="index.html#home">Back to the portfolio</a>
+  </footer>
 </body>
 </html>

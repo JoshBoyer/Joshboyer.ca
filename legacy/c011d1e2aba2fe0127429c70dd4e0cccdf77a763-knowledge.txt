@@ -1,0 +1,768 @@
+{
+  "version": "curated-v1-public-correction-1",
+  "identity": {
+    "name": "Josh Boyer",
+    "wordmarkSuffix": "blue-square",
+    "domain": "joshboyer.ca",
+    "email": "hello@joshboyer.ca",
+    "location": "Ottawa, Ontario, Canada",
+    "linkedin": "https://www.linkedin.com/in/josh-boyer-1b770618/",
+    "tagline": "Grounded in the Metal, Shaped by the Business, Building in the Cloud",
+    "positioning": "Business architecture, insurance technology and practical AI",
+    "experience": {
+      "technology": "20 years",
+      "propertyAndCasualty": "13 years",
+      "healthAndDental": "Since 2022"
+    }
+  },
+  "pages": {
+    "home": {
+      "title": "Grounded in the Metal, Shaped by the Business, Building in the Cloud",
+      "intro": "I connect business problems to the technology underneath. My work spans infrastructure, insurance systems and practical AI, with a focus on making the result useful for the people who rely on it.",
+      "primaryCta": {
+        "label": "Explore my experience",
+        "href": "/explore"
+      },
+      "secondaryCta": {
+        "label": "Read the stories",
+        "href": "/stories"
+      },
+      "layers": [
+        {
+          "id": "metal",
+          "label": "Grounded in the Metal",
+          "description": "The systems underneath. The details that matter when things have to work.",
+          "stories": [
+            "headquarters",
+            "lightning",
+            "virtualization"
+          ]
+        },
+        {
+          "id": "business",
+          "label": "Shaped by the Business",
+          "description": "Business rules and core platform work across new business, renewals and endorsements.",
+          "stories": [
+            "auto-upload",
+            "commercial-quoting",
+            "renewal-rules"
+          ]
+        },
+        {
+          "id": "cloud",
+          "label": "Building in the Cloud",
+          "description": "Exploring how applications, AI and the tools around them fit together.",
+          "stories": [
+            "nexus-architecture",
+            "nexus-context",
+            "nexus-routing"
+          ]
+        }
+      ]
+    },
+    "stories": {
+      "title": "The work behind the work.",
+      "intro": "Projects, decisions and the things I learned along the way. Some went to production. Some changed direction. Others are still on the bench.",
+      "filters": [
+        "All",
+        "Metal",
+        "Business",
+        "Cloud"
+      ]
+    },
+    "projects": {
+      "title": "Things I have helped make work.",
+      "intro": "Insurance implementations, infrastructure and independent builds. Each project has a different scale, but the same starting point: understand the problem before choosing the solution."
+    },
+    "about": {
+      "title": "I like understanding how things fit together.",
+      "paragraphs": [
+        "I started with networks, servers and hands-on support. Over time, that grew into understanding the businesses using those systems and helping them make changes that worked.",
+        "Across 20 years in technology, I have worked with clients, brokers, business teams, developers and architects. That includes 13 years in property and casualty insurance at Grenville Mutual and health and dental work at Medavie since 2022.",
+        "At Grenville, that included core insurance platform configuration and business rules supporting new business, renewals and endorsements, alongside broker connectivity and underwriting automation.",
+        "I usually start by building a map of the problem. Diagrams help me understand the big picture, work through the details and explain the approach to the people who will build, test and use it.",
+        "I stay involved beyond the solution document. Requirements, testing, training and production support all help close the gap between what was intended and what people actually need.",
+        "Outside work, I explore AI through Nexus and build physical projects with 3D printing. I like a useful constraint, a problem worth figuring out and a bit of room to make something my own."
+      ],
+      "timeline": [
+        {
+          "organization": "Dell Canada",
+          "role": "Support Technician",
+          "dates": "2006–2007"
+        },
+        {
+          "organization": "Harris Computer Services",
+          "role": "NOC & Project Technician",
+          "dates": "2007–2009"
+        },
+        {
+          "organization": "Grenville Mutual",
+          "role": "Systems/Network Administrator, then Systems Analyst",
+          "dates": "2009–2022"
+        },
+        {
+          "organization": "Medavie",
+          "role": "Functional Analyst",
+          "dates": "2022–present"
+        }
+      ]
+    },
+    "explore": {
+      "title": "What would you like to know?",
+      "intro": "Explore my experience by asking about the kind of work you need help with. The examples on the right connect back to project stories.",
+      "demoLabel": "Guided experience search",
+      "demoDisclosure": "This preview matches your question to curated portfolio content. It does not use a live AI model.",
+      "suggestions": [
+        "How do you turn requirements into a solution?",
+        "Tell me about broker integrations.",
+        "How are you using AI?",
+        "What is your infrastructure background?"
+      ],
+      "emptyMessage": "Try insurance, requirements, integrations, AI, training or infrastructure.",
+      "privacyText": "Please do not enter confidential information."
+    },
+    "contact": {
+      "title": "Have a problem worth figuring out?",
+      "intro": "I am interested in work that connects business needs, technology decisions and delivery. If that sounds like what your team needs, let’s talk.",
+      "email": "hello@joshboyer.ca",
+      "location": "Ottawa, Ontario",
+      "workPreference": "Remote preferred. Open to Ottawa hybrid roles and some travel."
+    }
+  },
+  "stories": [
+    {
+      "slug": "headquarters",
+      "title": "Making a new headquarters ready for work",
+      "layer": "metal",
+      "summary": "Planning the power, network, server room and move for Grenville’s new headquarters.",
+      "kind": "case-study",
+      "status": "delivered",
+      "reviewStatus": "draft_for_local_preview",
+      "bodyPath": "stories/headquarters.md",
+      "href": "/stories/headquarters",
+      "sourceBasis": "Josh’s first-person account; linked public records support company context, not personal attribution.",
+      "sources": [
+        "https://www.ljbinc.com/project/grenville-mutual-insurance/",
+        "https://tilt-up.org/projects/profile/?id=4903",
+        "https://canada.constructconnect.com/dcn/certificates-and-notices/24D536A1-8AD7-49E6-BC62-898500780D0B",
+        "https://www.szarch.com/other-projects/grenville-insurance",
+        "https://www.grenvillemutual.com/who-we-are/"
+      ],
+      "statusLabel": "Delivered work",
+      "bodyMarkdown": "# Making Grenville headquarters ready for Monday\n\n\nThe new building needed more than a server room. I worked through the infrastructure requirements, the construction details and a move that included a real storage failure.\n\nWhen Grenville Mutual built its headquarters in Kemptville, I got involved early enough to have opinions about where the outlets went. That was useful. Once the walls and ceilings are finished, a missing cable route becomes a much more annoying problem.\n\nThe building itself was a substantial project. LJB, the structural engineer, puts the overall cost at $5.3 million. That was the building project cost, not my IT budget. The Tilt-Up Concrete Association records 18,000 square feet of floor area, a 22,000-square-foot footprint and a 2013 Tilt-Up Achievement Award. The forest-patterned concrete and open-air courtyard were the visible parts of the design. My work was mostly the part people would notice if it stopped working. [LJB project profile](https://www.ljbinc.com/project/grenville-mutual-insurance/) · [TCA project profile](https://tilt-up.org/projects/profile/?id=4903)\n\n## Planning for the finished building\n\nI had seen server rooms running too hot, with doors left open to compensate. I had also seen what happens when there are too few cable runs. Those experiences shaped what I wanted in the new office.\n\nWe planned cooling, rack placement, power and cable management together. I worked through conduit routes and access above ceilings with the trades. At each desk, we allowed three network drops: data, voice and a spare. I set up the network and servers, with separate network segments and powered switching for the phones. I also coordinated with the audiovisual and security providers. These systems all needed space, wiring and decisions before someone closed up a ceiling.\n\nThe power design separated ordinary outlets from UPS-backed outlets for essential equipment. Keeping a PC and a monitor alive through a transfer to generator power made sense. Putting every printer and desk accessory on the batteries would have consumed capacity without providing the same business value.\n\nI gathered quotes, checked requirements with suppliers and brought recommendations to my manager or the CEO. Purchases were shared decisions. I kept a binder of contracts, quotes, drawings and status information, and used diagrams checked with vendors as a common reference. Sometimes I visited the site before and after work. There were plenty of questions that were easier to answer standing where the equipment was going to go.\n\nSiteCast was the construction contractor, and Shoalts and Zaback was the architect. The architect lists Colonnade as its client; Grenville also used Colonnade for property management afterward. My contribution was the technology requirements, coordination and implementation within that larger effort. [Construction notice](https://canada.constructconnect.com/dcn/certificates-and-notices/24D536A1-8AD7-49E6-BC62-898500780D0B) · [Architect project page](https://www.szarch.com/other-projects/grenville-insurance)\n\n## Moving the business as well as the equipment\n\nThe building reached substantial performance in December 2012, and Grenville records operating there from January 2013. The IT cutover took place over a weekend. [Construction notice](https://canada.constructconnect.com/dcn/certificates-and-notices/24D536A1-8AD7-49E6-BC62-898500780D0B) · [Grenville history](https://www.grenvillemutual.com/who-we-are/)\n\nBeforehand, we warned brokers about the interruption to normal phone and email service and possible claims delays. Alternative arrangements were made for claims communications. Moving a server is a physical task; moving an insurer also means thinking about the people who might need to reach it while that server is unplugged.\n\nMovers handled the furniture and much of the desktop equipment. We handled the servers ourselves. We took backups and snapshots, shut systems down in dependency order, packed them carefully and transported them to the new rack. Then came power checks, recabling, storage and bringing services back in the right order.\n\nThat was where the tidy version of the story ended. We had disk failures around the move and trouble restoring the main insurance application. I worked with the storage hardware vendor and the insurance-software vendor to recover the environment.\n\nWe were back up and running by Monday. Individual problems, including phones, still needed attention during the first days. It was a successful return to business with a difficult recovery inside it, rather than a flawless move.\n\nFor me, that is the useful part of this project to explain. I helped make decisions while the building was still changeable, carried those decisions into the installation, and stayed with the work when the move did not go to plan.\n"
+    },
+    {
+      "slug": "lightning",
+      "title": "When lightning took out the backup generator",
+      "layer": "metal",
+      "summary": "A failed generator changed the recovery plan. Critical systems came first.",
+      "kind": "case-study",
+      "status": "delivered",
+      "reviewStatus": "draft_for_local_preview",
+      "bodyPath": "stories/lightning.md",
+      "href": "/stories/lightning",
+      "sourceBasis": "Josh’s first-person account; linked public records support company context, not personal attribution.",
+      "sources": [],
+      "statusLabel": "Delivered work",
+      "bodyMarkdown": "# When lightning took out the backup generator\n\n\nOur UPS gave us time to reduce the load and shut down properly when the generator failed. Electrical repairs still meant days of downtime.\n\nI saw lightning hit our new generator from my desk.\n\nThat is the part of Grenville's power-backup story I tend to remember first. The building went dark. The generator and transfer switch failed, so the equipment intended to take over during a power outage was unavailable too. The UPS was still running.\n\nAt that point, the practical question was how to use the battery time we had left.\n\n## Deciding what deserved battery power\n\nDuring the headquarters build, I had worked through the distinction between normal power and UPS-backed power at the desks. A UPS is an uninterruptible power supply: batteries keep selected equipment running when the incoming supply disappears. In our design, it was meant to bridge the interval before the generator took over.\n\nWe were not trying to run every electrical load in the building on batteries for a long outage. At a desk, the essential load was the PC and a monitor. Printers, extra monitors, lamps and other accessories could use ordinary outlets. That separation mattered to the cost and to how long the available battery capacity could last.\n\nIt is easy to describe backup power as something a building either has or does not have. The actual decision is more specific. Which equipment stays on? What is it staying on for? How long does it need to run before another source of power becomes available? Those questions determine what you are buying.\n\nMy job included making those requirements understandable and bringing recommendations forward. The budget and purchasing decisions were shared. There was no unlimited pot of money, and the intended role of the UPS was clear: keep essential equipment going through the changeover.\n\n## Changing the plan when the generator did not start\n\nAfter the strike, there was no working generator to bridge to. We had to change priorities.\n\nWe turned off PCs, monitors and other noncritical loads to preserve more runtime for the servers. The same computer that mattered during a brief power interruption became a load we could remove during a longer failure. The business need had changed because the source expected to restore power was itself out of service.\n\nThat bought us time, but batteries still run down. We waited as long as was feasible, then shut the remaining systems down methodically.\n\n\nElectricians repaired the equipment over the following days. We had managed the shutdown, but the business still had an outage to recover from.\n\n## What the incident actually demonstrates\n\nThe outcome came down to managing the battery time we had and protecting the remaining systems.\n\nThe battery system gave us a useful, limited resource. We could decide which loads to remove, preserve time for the servers and shut them down in an orderly way. It could not replace the failed generator indefinitely. Both facts belong in an honest account of the design.\n\nThis is why I like discussing the incident when explaining my infrastructure work. It gets past the equipment list quickly. There was a cost and capacity decision before the outage, followed by a different operating decision during it. I had to understand what the equipment supported well enough to decide what could be turned off.\n\nThe generator was there because we expected power failures. Having it fail as part of the same event forced us to work within the protection that remained. We still had an outage to recover from, but we had more control over how we got there.\n"
+    },
+    {
+      "slug": "report-to-integration",
+      "title": "The report request that became an integration",
+      "layer": "business",
+      "summary": "Tracing what a client actually needed from a file, then designing a practical path forward.",
+      "kind": "case-study",
+      "status": "interim-delivered-permanent-extract-in-progress",
+      "reviewStatus": "draft_for_local_preview",
+      "bodyPath": "stories/report-to-integration.md",
+      "href": "/stories/report-to-integration",
+      "sourceBasis": "Josh’s first-person account; linked public records support company context, not personal attribution.",
+      "sources": [],
+      "statusLabel": "Interim reporting delivered; extract in progress",
+      "bodyMarkdown": "# The report request that turned into an integration\n\n\nA client needed more than readable claims data. I traced the downstream dependencies, recommended a compatibility path and kept interim reporting moving while the permanent extract was still being completed.\n\nAt Medavie, I was asked for something that initially sounded like a Power BI report. The existing output was a flat file, and its formatting reminded me of the insurance broker downloads I had worked with earlier in my career.\n\nThat made me wonder what was consuming it. A spreadsheet might give a person everything they needed to read. It would not necessarily give another system the input it expected.\n\nThe answer took more than one conversation. Early documentation and shadowing suggested reporting was the main purpose, so I questioned whether the exact existing format really needed to survive. As we worked through examples, interviews and interim reports, more dependencies became visible. Several client systems consumed the data. Preserving the file format was a real requirement, and it was also part of the client's contract.\n\n## Looking beyond the file layout\n\nThe new claims environment held the information differently from the legacy system. Recreating the appearance of a report would not resolve that difference. We had to understand which records belonged in the feed, what the fields meant and how the client processed them afterward.\n\nI considered simpler options, including a spreadsheet or CSV-style extract from Power BI. I also looked at reusing an existing delivery process and separating the new claims output from older flows. We discussed alternatives with the client over several meetings.\n\nThe constraints were practical. The client needed people and time to change its own systems. Year-end reporting was approaching. A cleaner exchange format for us could still mean a substantial change for them, and their existing contract required continuity.\n\nI recommended mapping the new adjudication data back into the legacy structure and reusing the existing COBOL transformation pipeline to produce the required file. The design included a REST-based export from the new environment. Leadership approved that recommendation.\n\nThere is an obvious awkwardness in feeding a new system's data through an old structure. I raised the supportability and concentrated-knowledge risks, especially because the legacy path was eventually expected to be retired. In this case, retaining it was a transitional compatibility decision. It gave the client a path that respected its current dependencies while leaving the longer-term change to be addressed explicitly.\n\n## Keeping reporting useful during the transition\n\nOnce the work crossed several systems, I raised the ownership question and sought help from the teams that might take it on. The available delivery cadence and capacity did not line up with what was needed, so the work came back to me alongside my existing responsibilities.\n\nIn the meantime, the client supplied examples of what it normally extracted. I wrote SQL directly against the source data to provide interim reports. Those reports were useful operationally for several months, and they also exposed records that were missing or included incorrectly. They helped us refine the population the permanent process needed to deliver.\n\nRelated reconciliation work went deeper than comparing totals. When the claims reporting did not balance with financial reporting, I compared the SQL and the underlying transaction logic. A current claim state can hide movements that matter to a reporting period. An approval followed by a reversal needs to be understood as transactions, rather than reduced to whichever state is visible now.\n\nFinance confirmed the business treatment. I reworked and validated the SQL, and the financial and payment team incorporated the reconciled logic into its production processes. That was a delivered contribution, even while the permanent client extract remained unfinished.\n\n## Knowing what a successful test proved\n\nThe client successfully tested the file format and wanted to know why it could not simply be switched on. That was a reasonable question, but we still had a completeness problem.\n\nA file can be accepted by a receiving system and still contain the wrong records. Our interim work had already shown that parsing the file was only one part of readiness. Incorrect or incomplete data loaded into several downstream databases would be harder to unwind than a corrected interim report.\n\nI explained why validation needed to continue. At the time of this account, the compatibility design was approved and interim reporting was operational; the permanent extract was still being completed.\n\nThat is the useful outcome to describe accurately. We uncovered the integration requirement, made a supported design decision and delivered reporting and reconciliation work along the way. The original word “report” had made the task sound much smaller than the client's actual dependency on the data.\n"
+    },
+    {
+      "slug": "auto-upload",
+      "title": "Connecting brokers to new-business underwriting",
+      "layer": "business",
+      "summary": "Use the data brokers already have, ask for what is missing and make the next step clear.",
+      "kind": "case-study",
+      "status": "delivered",
+      "reviewStatus": "draft_for_local_preview",
+      "bodyPath": "stories/auto-upload.md",
+      "href": "/stories/auto-upload",
+      "sourceBasis": "Josh’s first-person account; linked public records support company context, not personal attribution.",
+      "sources": [
+        "https://canadianunderwriter.ca/2011/08/23/grenville-mutual-insurance-company-delivers-new-business-upload-with-brovadas-nexexchange/",
+        "https://insurance-canada.ca/2015/03/02/grenville-mutual-expands-connectivity-offering-tam-epic/"
+      ],
+      "statusLabel": "Delivered work",
+      "bodyMarkdown": "# Bringing automobile applications from the broker system into Grenville\n\n*How I helped turn existing broker data into a usable new-business submission, with underwriting rules that controlled what could happen next.*\n\n## Start with the information already entered\n\nA broker submitting new business had already done a fair amount of work. Asking them to open another carrier portal and type the same information again added effort without improving the application. At Grenville Mutual, our new-business upload work started with that practical problem.\n\nThe existing process involved paper or email applications, manual entry into the insurance system, and follow-up when information was missing. An electronic submission needed to do more than deliver the same incomplete application faster. It needed to carry useful data into our system and make the next decision clear.\n\nAutomobile and residential work progressed alongside one another. I preferred starting with residential because we already had useful rules and renewal automation to build on. There was pressure to start with regulated auto, and automobile generally came first in the rollout. The public company announcement identifies July 8, 2011 as the automobile-upload pilot launch.\n\n## Connect the workflow as well as the fields\n\nThe broker selected Grenville through the broker management system and Brovada workflow. A local client extracted the information already held in the broker system. The process then asked for missing or insurer-specific details rather than presenting a blank application.\n\nThat was the user-facing part. Behind it, the data had to move from the broker's representation, through the insurance exchange representation, into the fields and structures used by IBS, Grenville's core insurance system.\n\nMy work covered requirements, field and value mappings, validation, underwriting logic, interface specifications, testing and diagnosis. Getting a field across was only part of the job. Its meaning had to survive the trip. A value that looked reasonable in one system could still be wrong for the destination if the mapping or context was wrong.\n\nThis was shared delivery with the vendors. Brovada supplied the connectivity platform, and MCCG supplied IBS and its gateway capabilities. I worked on Grenville's requirements and business behavior; I did not independently build those vendor systems.\n\n## Make each rule produce an appropriate action\n\nOne important part of the design was giving rule results a meaning the interface could act on.\n\nAn informational message should not behave like an error. A referral should not leave binding available. Missing information should give the broker a way to correct the submission. We used tagged outcomes to distinguish those situations, including cautions, errors, referrals, transaction stops and permission to bind.\n\nThose distinctions connected the underwriting rules to the available actions. They also required transaction context. A rule needed to know whether it was dealing with new business, a renewal or an endorsement rather than treating every request identically.\n\nThis was explicit, deterministic automation. The behavior came from requirements and rules that we could inspect and test. The useful question in a test was whether the system allowed the right next step for that application, including when the right next step was human review.\n\n## Leave the underwriter with usable work\n\nA referral still needed to arrive as a populated record. Through the backend integration, an underwriter could open the application in IBS, see that it came from a broker upload, and review the reason for referral without entering the application again.\n\nThat made the referral path an important part of the project, not an exception to ignore while demonstrating the straightforward cases. Even when a submission could not proceed automatically, we could remove repeated entry and preserve the information needed for a decision.\n\nI stayed involved in testing, diagnosing requests and maintaining the behavior as requirements changed. The project brought together the parts of insurance technology I find useful: understanding the business decision, tracing how data reaches it, and making the result workable for the people on both sides of the integration.\n\n## Public project context\n\nThese links document company initiatives, not my individual contribution.\n\n- [Canadian Underwriter automobile upload announcement, August 2011](https://canadianunderwriter.ca/2011/08/23/grenville-mutual-insurance-company-delivers-new-business-upload-with-brovadas-nexexchange/)\n- [Insurance Canada connectivity expansion announcement, March 2015](https://insurance-canada.ca/2015/03/02/grenville-mutual-expands-connectivity-offering-tam-epic/)\n"
+    },
+    {
+      "slug": "property-upload",
+      "title": "From property application to underwriting decision",
+      "layer": "business",
+      "summary": "Connecting submission, validation, rating and referral without repeated data entry.",
+      "kind": "case-study",
+      "status": "delivered",
+      "reviewStatus": "draft_for_local_preview",
+      "bodyPath": "stories/property-upload.md",
+      "href": "/stories/property-upload",
+      "sourceBasis": "Josh’s first-person account; linked public records support company context, not personal attribution.",
+      "sources": [
+        "https://insurance-canada.ca/2012/05/14/grenville-launches-property-new-business-upload-brovada-nexexchange/",
+        "https://canadianunderwriter.ca/2011/08/23/grenville-mutual-insurance-company-delivers-new-business-upload-with-brovadas-nexexchange/"
+      ],
+      "statusLabel": "Delivered work",
+      "bodyMarkdown": "# Making property applications useful from submission to underwriting\n\n*My work on residential new-business upload connected broker data, underwriting rules and the policy record, including the applications that still needed a person to review them.*\n\n## Build on the insurance knowledge already in the system\n\nBy the time we worked on residential new-business upload at Grenville Mutual, I had already been working with residential underwriting and rating rules. That gave me a practical reason to want to start there. We had useful business logic and experience with renewal automation, and I could see how that knowledge would help with new applications.\n\nNew business still had its own requirements. A renewal starts with an existing insurer record. A new application arrives with information from a broker's system, and the insurer needs to establish whether that information is complete enough to accept, quote or refer the risk.\n\nThe project connected those steps. Instead of receiving an application and starting the data entry again, we wanted to bring the broker's existing information into a workflow that could ask the remaining questions and create a usable record in IBS.\n\nGrenville's property new-business upload was publicly announced in May 2012, adding to the earlier inquiry and automobile-upload work. My residential implementation work sat within that wider collaboration with Brovada and MCCG.\n\n## Ask for what is missing\n\nThe broker-side workflow reused existing policy information and presented clarification questions where Grenville needed more detail. This reduced the need to re-enter an entire application in a separate portal, while still letting the insurer collect information it needed to assess the risk.\n\nI worked on the requirements, mappings, missing-input checks and underwriting behavior. I also personally implemented residential rating and underwriting rules in the backend. Vendor teams supplied the surrounding platforms and integration capabilities, so making the whole process work depended on keeping those pieces aligned.\n\nField names alone were not enough. The broker's data, the exchange representation and IBS could express information differently. We needed to map values and structures as well as fields, then test the resulting application against the rules that would actually use it.\n\nThe clarification flow and the rules had to agree. If a rule required information that the interface never collected, the application would reach a dead end. If the interface asked questions that did not apply to the risk, we added work for the broker without helping the decision.\n\n## Treat referral as a designed outcome\n\nI put particular importance on what happened when a submission needed underwriting review.\n\nA tagged referral result blocked binding and exposed the referral path. The backend integration created the policy record in IBS, and the referral notice identified the broker upload. An underwriter could open the populated record, see the reason for referral and continue the work without rekeying the application.\n\nThat was a meaningful improvement even when the system could not complete the transaction on its own. Automation could prepare the work and make the exception clear, leaving the judgment with an underwriter.\n\nOther rule outcomes served different purposes. Errors could require correction, transaction-stop conditions could prevent further progress, and eligible submissions could proceed. Keeping those outcomes distinct made the interface reflect the actual underwriting decision rather than presenting every problem as a generic failure.\n\n## Build confidence before binding in real time\n\nWe built confidence in the workflow before moving to true real-time binding. Suitable standard residential risks eventually could receive a policy number in real time. The subsequent data download and eDocs carried that policy number back to the broker system the next day.\n\nThat final synchronization mattered. A successful transaction needed to leave the insurer and broker with records that belonged to the same policy. Issuing a number was one step in the process, not the end of the integration work.\n\nMy contribution crossed requirements, business rules, data mapping and testing because the quality of the result depended on all of them. A correct rule could still produce the wrong result if its input was mapped incorrectly. A well-designed screen could still leave an underwriter doing repeated entry if the backend record was incomplete.\n\nThe part I value most in this project is that we improved both the straightforward path and the review path. Some applications could proceed further automatically. Others reached an underwriter with more of the preparation already done. Both were useful outcomes for the people handling the business.\n\n## Public project context\n\nThese links document company initiatives, not my individual contribution.\n\n- [Insurance Canada property upload announcement, May 2012](https://insurance-canada.ca/2012/05/14/grenville-launches-property-new-business-upload-brovada-nexexchange/)\n- [Canadian Underwriter earlier automobile and inquiry context, August 2011](https://canadianunderwriter.ca/2011/08/23/grenville-mutual-insurance-company-delivers-new-business-upload-with-brovadas-nexexchange/)\n"
+    },
+    {
+      "slug": "commercial-quoting",
+      "title": "Commercial quoting built around the risk",
+      "layer": "business",
+      "summary": "Working with underwriters and vendors to gather the right information for different businesses.",
+      "kind": "case-study",
+      "status": "delivered",
+      "reviewStatus": "draft_for_local_preview",
+      "bodyPath": "stories/commercial-quoting.md",
+      "href": "/stories/commercial-quoting",
+      "sourceBasis": "Josh’s first-person account; linked public records support company context, not personal attribution.",
+      "sources": [
+        "https://insurance-canada.ca/newsletter/2016/issue2016-19.php",
+        "https://insurance-canada.ca/2015/03/02/grenville-mutual-expands-connectivity-offering-tam-epic/"
+      ],
+      "statusLabel": "Delivered work",
+      "bodyMarkdown": "# Designing commercial quoting around the information each risk needs\n\n*As Grenville's lead technical resource, I connected commercial underwriting requirements to a vendor-built quoting and upload application.*\n\n## Recognize where the existing approach needs to change\n\nOur personal-lines upload work started with information already in a broker management system. That gave us a useful starting point for an application. Commercial business was different in the implementation we were working with.\n\nSome of the information we needed was not in the broker system. It might be in a spreadsheet or a related accounting system, and the detail varied with the type of business being insured. An apartment building, a contractor, a daycare and a restaurant could not all go through one undifferentiated set of questions.\n\nThat changed the design problem. Reusing broker data still made sense where it was available, but a thin clarification step would not collect everything we needed. We needed a fuller portal with staged questions that followed the risk being submitted.\n\nMy role was to connect that user workflow to the commercial underwriting and rating behavior behind it. I was Grenville's lead technical resource, working with our commercial underwriters and the analysts and developers at Brovada and Willis Towers Watson.\n\n## Turn underwriting requirements into a usable workflow\n\nThe underwriters understood what they needed to know about each risk. I helped turn that knowledge into requirements the vendor team could implement: which fields to collect, which values were valid, how the questions should be staged, and what should happen when information was missing or a submission needed review.\n\nThose decisions affected both the screen and the backend. A field had to be understandable to the broker and map to the right place in IBS. A selection had to carry a meaning the underwriting rules could use. A stage in the interface needed to collect enough information for the next step without treating every business as though it had the same exposures.\n\nI defined mappings, validation and workflow behavior, tested the requirements, and personally wrote the related backend underwriting and rating rules. The vendor teams developed the commercial application and its user interface. Keeping that division clear is important: my contribution was technical direction and implementation of the insurer-side rules, within a shared delivery effort.\n\nIt also meant that a requirement could not stop at a screen description. We had to follow the information through to the decision it supported and make sure the resulting behavior matched what the underwriters needed.\n\n## Reuse the parts that still fit\n\nCommercial quoting did not require us to discard everything we had learned from new-business upload. Once we had enough information about the risk, the broad pattern remained useful: validate the submission, apply underwriting and rating, then allow an eligible next step or refer the application for review.\n\nThe additional work was largely in getting to that point. The portal needed to gather information that the existing broker data could not reliably supply. That collection process had to fit the particular business rather than forcing the broker to work around a generic form.\n\nThe backend integration also remained important. A quote and submission workflow needed to connect to the insurance system where the policy work continued. Otherwise, we would improve the front end while leaving the manual handoff behind it largely unchanged.\n\n## Test the business behavior\n\nMy testing responsibility covered whether the implemented workflow matched the requirements, including the field choices, mappings, validation and rules. A screen could look complete and still deliver information the backend could not use correctly. The useful test followed the submission far enough to see what decision the system made and what work remained.\n\nThe delivered workflow provided live quotes and faster access than waiting for manual underwriter quoting. The practical change was giving brokers a more direct quoting path while retaining underwriting review where needed.\n\nCommercial quoting reinforced a lesson from the earlier integrations: reuse is valuable when the underlying information and workflow really fit. In this case, the new-business processing pattern carried forward, while the information-gathering experience needed more substantial work. Understanding that boundary was a large part of my contribution.\n\n## Public project context\n\nThese links provide company context, not evidence of my individual contribution.\n\n- [Insurance Canada Chronicle commercial expansion summary, May 10, 2016](https://insurance-canada.ca/newsletter/2016/issue2016-19.php)\n- [Insurance Canada earlier connectivity expansion, March 2015](https://insurance-canada.ca/2015/03/02/grenville-mutual-expands-connectivity-offering-tam-epic/)\n"
+    },
+    {
+      "slug": "policy-change",
+      "title": "Knowing when to stop a policy-change approach",
+      "layer": "business",
+      "summary": "Why comparing two policy records was not enough to understand a broker’s intended change.",
+      "kind": "case-study",
+      "status": "discontinued-pilot",
+      "reviewStatus": "draft_for_local_preview",
+      "bodyPath": "stories/policy-change.md",
+      "href": "/stories/policy-change",
+      "sourceBasis": "Josh’s first-person account; linked public records support company context, not personal attribution.",
+      "sources": [
+        "https://insurance-canada.ca/seminars/outlines20130318/",
+        "https://insurance-canada.ca/2015/03/02/grenville-mutual-expands-connectivity-offering-tam-epic/",
+        "https://www.appliedsystems.com/carrier/CNInterfaceStatusReport.htm"
+      ],
+      "statusLabel": "Discontinued pilot",
+      "bodyMarkdown": "# Why I recommended stopping the policy change approach we were testing\n\n*The pilot exposed a basic problem with comparing complete policy records: a difference between systems does not reliably tell you what a broker wants to change.*\n\n## The intended workflow\n\nAfter working on inquiry and new-business integrations at Grenville Mutual, policy changes were a natural next area to explore. A broker already maintained a policy in their management system. The intended workflow let them change that record and submit it electronically, instead of sending instructions for someone else to enter again.\n\nThe proposal used the complete changed policy image from the broker system. Inquiry retrieved Grenville's version of the policy, and a field-by-field comparison identified possible changes. The workflow would then gather any additional information and apply validation, underwriting and rating in the context of a policy change.\n\nI contributed to the comparison behavior, mappings, rules, testing and interface specifications. On paper, that approach gave us a way to connect a familiar broker action to an insurer transaction. In testing, the comparison produced a more difficult problem.\n\n## The differences included things nobody had asked to change\n\nTwo systems can hold records for the same policy without representing everything identically. Fields can be mapped imperfectly. Values can be expressed differently. Existing data can also be wrong or incomplete.\n\nWhen we compared complete policy images, those discrepancies appeared alongside the actual changes the broker wanted to make. The output could contain a large amount of noise. A difference might represent a requested change, but it could also come from the way data had moved between systems.\n\nThat distinction mattered because a policy change is an instruction to alter an existing contract. We needed a dependable way to understand the requested action before treating a difference as something to process.\n\nFixing individual mappings was part of integration work, and I was familiar with doing it. My concern was the continuing maintenance burden and the underlying ambiguity. More mapping work could reduce discrepancies, but the comparison still did not reliably establish which changes the broker intended.\n\n## Ask the broker to identify the intended changes\n\nI advocated a different interaction: show the possible differences and ask the broker which changes they actually wanted to perform. The workflow could then focus on those selections and collect the information needed for them.\n\nThat would put an explicit statement of intent into the transaction. The comparison could help the broker find relevant changes without deciding on their behalf that every discrepancy was an instruction.\n\nIt also gave us a clearer way to think about the interface. The user needed to be able to identify the work they were requesting. After that, validation, underwriting and rating could assess the selected change in the appropriate context.\n\nI tried to move the vendor toward that approach. Progress and test results remained unsatisfactory. I did not see a viable long-term path in the approach we were continuing to test, and I repeatedly recommended that we stop.\n\n## A discontinued initiative belongs in the portfolio too\n\nThe initiative was eventually discontinued. It did not become the broad, successful policy-change rollout we had been working toward. My role in that decision was to provide the technical assessment and recommendation, not to decide on cancellation myself.\n\nI include this work because the test outcome and recommendation are meaningful parts of technical delivery. Continuing to implement a design is not automatically the best use of effort when the central business instruction remains ambiguous.\n\nThe useful contribution here was recognizing what the comparison could and could not tell us, proposing a way for the broker to state the intended change, and being clear that the results we were getting did not justify proceeding with the existing approach.\n\nThat judgment grew directly out of working with mappings and rules. I could trace how a discrepancy became a proposed transaction and see where we were asking the data to supply meaning it did not contain. The project did not end with a launch success, but it remains one of my clearest examples of using implementation experience to advise on whether an approach should continue.\n\n## Public project context\n\nThese sources show public policy-change work and capability discussions. They do not establish a successful broad rollout.\n\n- [Insurance Canada 2013 conference program and policy-change discussion](https://insurance-canada.ca/seminars/outlines20130318/)\n- [Insurance Canada connectivity development announcement, March 2015](https://insurance-canada.ca/2015/03/02/grenville-mutual-expands-connectivity-offering-tam-epic/)\n- [Applied Systems Canadian Interface Status Report, dated January 2018](https://www.appliedsystems.com/carrier/CNInterfaceStatusReport.htm)\n"
+    },
+    {
+      "slug": "sabervac",
+      "title": "SaberVac: a smaller shell with some personality",
+      "layer": "metal",
+      "summary": "A custom printed housing around a purchased vacuum kit, refined into a compact desk vacuum.",
+      "kind": "case-study",
+      "status": "prototype",
+      "reviewStatus": "draft_for_local_preview",
+      "bodyPath": "stories/sabervac.md",
+      "href": "/stories/sabervac",
+      "sourceBasis": "Josh’s first-person account; linked public records support company context, not personal attribution.",
+      "sources": [
+        "https://ws42.ca/blog/sabervac.html"
+      ],
+      "statusLabel": "Personal prototype",
+      "bodyMarkdown": "# The SaberVac Build\n\nI started with a fairly ordinary goal: make a smaller desk vacuum. The lightsaber part came later.\n\nBambu Lab sells a vacuum kit with the components needed to build a handheld vacuum. You can put it in an existing printed shell or design your own. I started by printing a popular MakerWorld design so I could see how the kit went together. It worked, but it was bulkier than I wanted.\n\nThat gave me a useful starting point. Before changing the outside, I had a working arrangement to look at and a better understanding of what had to fit inside. The next question was how much of the shell I actually needed.\n\n## Making room for the components\n\nI began designing a new shell around the kit, concentrating on the space around the motor and battery. I wanted a more compact package without losing access to the parts inside.\n\nAs I worked through the layout, the shape became more cylindrical. It started to look like a lightsaber, so I went with it. That part of the design grew out of the packaging rather than being the original brief. A vacuum still has to be a vacuum, but there was room to have some fun with the shape.\n\nThe prototype was printed on my Bambu Lab A1 Mini. By the February 2026 update, I had a working assembly with the battery, motor and filter fitting inside the custom shell. The top shroud comes off to reach the internals and empty the dust cup. Keeping that access mattered: making the body smaller would not be much of an improvement if it became awkward to open and clean.\n\n## Where the build stands\n\nThe February prototype was more compact than the existing design I had started with. It was also still a prototype. I was refining the shell fit and trying different nozzle attachments, with a MakerWorld release planned once the final version felt right.\n\nThis is a good example of the kind of project I keep on the bench. There is a practical problem to work on, a kit that provides a starting point, and enough freedom to make the result my own. In this case, that freedom produced a small vacuum that happened to look like a lightsaber.\n\n\n## Original project notes\n\n[Read the original build notes](https://ws42.ca/blog/sabervac.html).\n"
+    },
+    {
+      "slug": "utility-knife",
+      "title": "Working through a printed utility-knife mechanism",
+      "layer": "metal",
+      "summary": "An independent design exercise in fit, movement and iteration.",
+      "kind": "case-study",
+      "status": "prototype",
+      "reviewStatus": "draft_for_local_preview",
+      "bodyPath": "stories/utility-knife.md",
+      "href": "/stories/utility-knife",
+      "sourceBasis": "Josh’s first-person account; linked public records support company context, not personal attribution.",
+      "sources": [
+        "https://ws42.ca/blog/piachi-g9.html"
+      ],
+      "statusLabel": "Personal prototype",
+      "bodyMarkdown": "# Working through a printed utility-knife mechanism\n\nThe Piachi G9 caught my attention because of its mechanism. It is a compact utility knife with interesting geometry, and I wanted to see how much of that design I could reproduce with a 3D printer and a small amount of hardware.\n\nI treated it as a design challenge. The aim was a printed version of an existing tool, with the body and mechanism made on my Bambu Lab A1 Mini. It still uses a standard utility blade, M3 screws and magnets. Calling it a printed knife describes the body and mechanical parts, rather than every component.\n\n## Working through the mechanism\n\nThe central design problem was getting the gear-driven mechanism to behave consistently across its three positions. Those positions control whether the cover stays closed, opens for a blade change, or opens fully for deployment. The moving parts need to line up, and the action needs to feel solid rather than loose.\n\nI started the CAD work in early February 2026. The pivot geometry and spacing between the gear positions took several iterations. Once I began printing the internal components, the tolerances needed more attention. A shape that fits in the model still has to work as a set of printed parts.\n\nThat became a large part of the project: moving between the geometry and the feel of the prototype. The mechanism could not be judged just by looking at the outside of the knife. The relationship between the parts mattered, especially at each position of the gear.\n\n## A working prototype with more refinement ahead\n\nBy the February update, I had assembled a working prototype. The blade extended, locked and retracted across the three gear positions. The magnets were seated, and the alignment was good.\n\nI was still refining the fit and feel. The remaining work was another pass on the gear tolerances and a final round of test prints before a planned MakerWorld release. The published update describes that stage, not a finished release.\n\nWhat interested me about this build was the chance to work through a compact mechanical design in physical parts. It was a small object, but there was plenty to resolve inside it. Getting the prototype to move was one milestone. Getting the action to feel right was the next part of the work.\n\n\n## Original project notes\n\n[Read the original build notes](https://ws42.ca/blog/piachi-g9.html).\n"
+    },
+    {
+      "slug": "mechanical-pencil",
+      "title": "A pencil mechanism built into the print",
+      "layer": "metal",
+      "summary": "Printed geometry handles the grip and twist advance around purchased pencil lead.",
+      "kind": "case-study",
+      "status": "prototype",
+      "reviewStatus": "draft_for_local_preview",
+      "bodyPath": "stories/mechanical-pencil.md",
+      "href": "/stories/mechanical-pencil",
+      "sourceBasis": "Josh’s first-person account; linked public records support company context, not personal attribution.",
+      "sources": [
+        "https://ws42.ca/blog/carpenter-pencil.html"
+      ],
+      "statusLabel": "Personal prototype",
+      "bodyMarkdown": "# A Mechanical Pencil Without Extra Hardware\n\nI wanted to see whether I could make a useful mechanical pencil from printed parts and purchased pencil lead. No springs, no screws and no extra hardware.\n\nThe starting point was the NicPro style of pencil that takes round 2.8 mm HB lead. I liked the idea of a printable version, but the interesting part was the constraint. If I removed the usual extra components, the print geometry would have to do the work.\n\nThat meant starting with the mechanism rather than the appearance. The pencil needed to hold the lead and advance it when the barrel was turned. Both functions had to come from the printed design.\n\n## Letting the geometry do the work\n\nI began working on the twist mechanism in early February 2026. The thread pitch and wall thickness went through a few iterations. Without hardware to take over those jobs, the threading and lead grip had to be built into the parts themselves.\n\nThe design uses a textured grip and a tapered front end. The mechanism is print-in-place, so there is no assembly beyond adding the lead. I printed the prototype on my Bambu Lab A1 Mini.\n\nThe simple parts list was the point of the exercise, but it did not make the design work disappear. It moved that work into the geometry and tolerances. The pencil still needed to hold the lead properly, and turning the barrel still needed to feel controlled.\n\n## What works and what still needs work\n\nBy the February update, I had a working prototype. The lead held well, and the twist advance worked. There was still some play in the mechanism that I wanted to remove.\n\nThat is where I left the published build: refining the internal tolerances and trying to improve the feel. Matching the smoothness of the original pencils was a goal, not a result I had already established.\n\nThe original post called this “The $0 Mechanical Pencil.” There is still filament and lead involved, of course. The useful idea behind the title was making the mechanism without buying a collection of additional parts.\n\nIt is a small project with a fairly clear test. Can the printed geometry handle the jobs normally given to separate hardware, and can it do them well enough to make a pencil worth using? The prototype answered the first part. The feel of the mechanism was still getting attention.\n\n\n## Original project notes\n\n[Read the original build notes](https://ws42.ca/blog/carpenter-pencil.html).\n"
+    },
+    {
+      "slug": "virtualization",
+      "title": "Moving from physical servers to virtual infrastructure",
+      "layer": "metal",
+      "summary": "Using a hardware refresh to improve how infrastructure could be managed and recovered.",
+      "kind": "case-study",
+      "status": "delivered",
+      "reviewStatus": "draft_for_local_preview",
+      "bodyPath": "stories/virtualization.md",
+      "href": "/stories/virtualization",
+      "sourceBasis": "Josh’s first-person account; linked public records support company context, not personal attribution.",
+      "sources": [],
+      "statusLabel": "Delivered work",
+      "bodyMarkdown": "# Moving from physical servers to virtual infrastructure\n\nMy infrastructure work started with physical machines, networks and the problems that come with keeping them running. At Grenville, a hardware refresh gave us an opportunity to change how we approached the server environment.\n\nI recommended moving toward VMware ESXi and worked through that transition incrementally. The work included virtual machines, shared storage, backup and recovery arrangements, and the dependencies between services.\n\nThe point was to make the environment easier to support and recover as the business grew. That meant thinking beyond the hypervisor. Storage, networking, backup and the order in which services returned all mattered.\n\nThat experience still shapes how I look at newer platforms. I want to understand what is underneath an application, what it depends on and what happens when a piece of it fails.\n"
+    },
+    {
+      "slug": "renewal-rules",
+      "title": "Giving underwriters more time for the exceptions",
+      "layer": "business",
+      "summary": "Turning underwriting guidelines into renewal rules that explain what needs attention.",
+      "kind": "case-study",
+      "status": "delivered",
+      "reviewStatus": "draft_for_local_preview",
+      "bodyPath": "stories/renewal-rules.md",
+      "href": "/stories/renewal-rules",
+      "sourceBasis": "Josh’s first-person account; linked public records support company context, not personal attribution.",
+      "sources": [
+        "https://insurance-canada.ca/2013/02/26/mccg-congratulates-icta-finalist-farm-mutual/"
+      ],
+      "statusLabel": "Delivered work",
+      "bodyMarkdown": "# Giving underwriters more time for the exceptions\n\nI started with straightforward residential policies that did not need the same full review every year. Working with underwriters, I turned the eligibility criteria into rules.\n\nA policy only renewed automatically when it passed every required check. Anything else went to an underwriter with the failed checks identified. Even when we could not automate the renewal, we could reduce the time spent finding the reason it needed attention.\n\nBefore enabling the process, we compared the proposed results with the team’s manual renewals over a validation period. We expanded into farm and commercial business with rules suited to each book, rather than assuming the residential criteria would carry over.\n\nThe result was more time for exceptions, endorsements and new business, and a way to get ahead of the renewal backlog. The business knowledge was as important as the code. We needed to understand what underwriters were comfortable letting through and make the rest visible.\n"
+    },
+    {
+      "slug": "nexus-architecture",
+      "title": "Nexus: one place to organize AI work",
+      "layer": "cloud",
+      "summary": "An independent applied-learning platform for connecting intent, planning, execution and review.",
+      "kind": "architecture-note",
+      "status": "in-development",
+      "reviewStatus": "draft_for_local_preview",
+      "bodyPath": "stories/nexus-architecture.md",
+      "href": "/stories/nexus-architecture",
+      "sourceBasis": "Josh’s account of his independent project and architecture decisions.",
+      "sources": [],
+      "statusLabel": "In development",
+      "bodyMarkdown": "# Nexus: one place to organize AI work\n\nI started Nexus because my AI work was spread across different tools, models and conversations. Keeping track of the work, its context and its cost became a problem of its own.\n\nNexus is my independent applied-learning platform for exploring a more connected approach. I direct the product and application architecture and use AI-assisted development to implement and test it.\n\nThe intended flow connects a request to a plan, approval, execution, review and a receipt showing how the result was reached. The application design also covers the user interface, backend services, data and worker deployment, rather than just the model call.\n\nIt is still in development. I am using an end-to-end MVP to test the approach before refining the individual parts. That gives me a practical place to reason through deployment, testing, recovery and the trade-offs around AI work.\n\n## Cloud-related experience and scope\n\nJosh’s cloud experience comes from hands-on work on Nexus, his independent AI platform. He directs its application architecture and uses AI-assisted development to build and test an end-to-end MVP spanning the UI, backend services, data, deployment and recovery. Nexus aims to connect a request with a plan, execution and review so the work and its context stay together. Its development setup documents a Docker backend on Render and a static web client on Cloudflare Workers Static Assets. Nexus is still in development. The exact duration of this cloud work is not documented; it does not establish corporate AWS/Azure operations tenure.\n\n## What the development services do\n\nIn the Nexus development setup, Render is the documented host for the Docker-based backend, while Cloudflare Workers Static Assets is used for the static browser application. The backend provides application services and the web client provides the interface. The repositories document frontend/backend integration limits, so this is development work rather than a claim of a fully integrated production launch.\n\n## Service evidence limits\n\nThe Google Cloud configuration identified in the reviewed Nexus repository concerns OAuth sign-in and redirect URLs. That supports account-integration work, not a demonstrated GCP hosting or infrastructure deployment. A role for Depot has not been verified in the reviewed material.\n"
+    },
+    {
+      "slug": "nexus-context",
+      "title": "Giving an agent the context it needs",
+      "layer": "cloud",
+      "summary": "An architecture note on context, instructions, tools and a traceable record of the work.",
+      "kind": "architecture-note",
+      "status": "in-development",
+      "reviewStatus": "draft_for_local_preview",
+      "bodyPath": "stories/nexus-context.md",
+      "href": "/stories/nexus-context",
+      "sourceBasis": "Josh’s account of his independent project and architecture decisions.",
+      "sources": [],
+      "statusLabel": "In development",
+      "bodyMarkdown": "# Giving an agent the context it needs\n\nAn agent needs more than a prompt. It needs the relevant information, a clear task and access to the tools that task requires.\n\nIn Nexus, I am exploring how the approved plan can carry that information through the work. Context engineering, task instructions and available capabilities need to fit together. Passing every piece of information to every agent creates its own cost and confusion.\n\nThe design goal is a receipt connecting the original request, the plan, the work performed and the review. I want to see how a result was reached, not just receive an answer.\n\nThis is an in-development architecture note, not a claim that every part of that workflow is finished or proven at production scale.\n"
+    },
+    {
+      "slug": "nexus-routing",
+      "title": "Choosing a model for the work",
+      "layer": "cloud",
+      "summary": "An architecture note on task-aware routing, available capabilities and cost.",
+      "kind": "architecture-note",
+      "status": "in-development",
+      "reviewStatus": "draft_for_local_preview",
+      "bodyPath": "stories/nexus-routing.md",
+      "href": "/stories/nexus-routing",
+      "sourceBasis": "Josh’s account of his independent project and architecture decisions.",
+      "sources": [],
+      "statusLabel": "In development",
+      "bodyMarkdown": "# Choosing a model for the work\n\nDifferent tasks need different levels of reasoning and different tools. Reading a file should not automatically call for the same model as working through an architectural decision.\n\nNexus started around the Claude SDK. I wanted more flexibility, so model routing became part of the architecture. The router considers the task and the capabilities available through a connected node, as well as cloud model options.\n\nThe early routing work functions at a high level and still needs refinement. I am exploring how evaluation results, retries, escalation and ticket budgets should work together. A task that succeeds can still cost more than it needed to.\n\nThe wider goal is a clearer view of work and cost across tools. This remains development work, with proposed refinements kept separate from implemented behavior.\n"
+    }
+  ],
+  "projects": [
+    {
+      "slug": "insurance-connectivity",
+      "title": "Broker connectivity and new-business implementations",
+      "organization": "Grenville Mutual",
+      "status": "delivered",
+      "stories": [
+        "auto-upload",
+        "property-upload",
+        "commercial-quoting"
+      ]
+    },
+    {
+      "slug": "renewal-automation",
+      "title": "Underwriting and renewal automation",
+      "organization": "Grenville Mutual",
+      "status": "delivered",
+      "stories": [
+        "renewal-rules"
+      ]
+    },
+    {
+      "slug": "core-policy-lifecycle",
+      "title": "Core insurance platform configuration",
+      "organization": "Grenville Mutual",
+      "status": "delivered",
+      "summary": "IBS configuration and business rules for policy administration, underwriting, rating, billing and claims inquiry, supporting new business, endorsements and renewals.",
+      "scopeNote": "Core policy lifecycle work is separate from the broker policy-change pilot, which was discontinued.",
+      "stories": [
+        "auto-upload",
+        "renewal-rules"
+      ]
+    },
+    {
+      "slug": "headquarters",
+      "title": "Headquarters technology and cutover",
+      "organization": "Grenville Mutual",
+      "status": "delivered",
+      "stories": [
+        "headquarters",
+        "lightning",
+        "virtualization"
+      ]
+    },
+    {
+      "slug": "claims-reporting",
+      "title": "Reporting, reconciliation and integration design",
+      "organization": "Medavie",
+      "status": "interim-delivered-permanent-extract-in-progress",
+      "stories": [
+        "report-to-integration"
+      ]
+    },
+    {
+      "slug": "nexus",
+      "title": "Nexus",
+      "organization": "Independent project",
+      "status": "in-development",
+      "stories": [
+        "nexus-architecture",
+        "nexus-context",
+        "nexus-routing"
+      ]
+    },
+    {
+      "slug": "physical-prototypes",
+      "title": "On the workbench",
+      "organization": "Independent projects",
+      "status": "prototype",
+      "stories": [
+        "sabervac",
+        "utility-knife",
+        "mechanical-pencil"
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "id": "solution-delivery",
+      "title": "From requirements to implementation",
+      "summary": "I work with business and technical teams to define the problem, compare options and prepare clear requirements, diagrams and solution walkthroughs. I support development, testing and production questions.",
+      "tags": [
+        "requirements",
+        "architecture",
+        "delivery",
+        "training",
+        "analysis"
+      ],
+      "stories": [
+        "report-to-integration",
+        "commercial-quoting"
+      ]
+    },
+    {
+      "id": "broker",
+      "title": "Working with brokers and their systems",
+      "summary": "At Grenville, I worked with brokerages to understand their workflows, implement connectivity, explain the products and troubleshoot problems.",
+      "tags": [
+        "client",
+        "broker",
+        "insurance",
+        "integration",
+        "CSIO",
+        "ACORD"
+      ],
+      "stories": [
+        "auto-upload",
+        "property-upload",
+        "commercial-quoting"
+      ]
+    },
+    {
+      "id": "core-policy-lifecycle",
+      "title": "Supporting the policy lifecycle",
+      "summary": "I administered and configured IBS at Grenville, including products, coverages, rating tables, business rules, access and broker exchange. My core insurance work spans policy administration, underwriting, rating, billing and claims inquiry, supporting new business, endorsements and renewals.",
+      "scopeNote": "This core platform experience is separate from the discontinued broker policy-change pilot.",
+      "tags": [
+        "insurance",
+        "IBS",
+        "configuration",
+        "policy lifecycle",
+        "policy administration",
+        "billing",
+        "claims inquiry",
+        "new business",
+        "renewals",
+        "endorsements",
+        "underwriting",
+        "rating"
+      ],
+      "stories": [
+        "auto-upload",
+        "renewal-rules"
+      ]
+    },
+    {
+      "id": "claim-history",
+      "title": "Making claim history usable in a new system",
+      "summary": "I designed the claim-history mapping and validation approach and built an Excel-based tool that generates the XML needed for batch loading. Business teams use it to prepare and load history themselves.",
+      "tags": [
+        "claims",
+        "migration",
+        "data",
+        "Excel",
+        "VBA",
+        "XML",
+        "testing"
+      ],
+      "stories": []
+    },
+    {
+      "id": "providers",
+      "title": "Connecting provider data to claims processing",
+      "summary": "I identified gaps between the provider registry and claims system, defined the changes with architects and supported developers and testers through implementation and production issues.",
+      "tags": [
+        "providers",
+        "integration",
+        "data",
+        "requirements"
+      ],
+      "stories": []
+    },
+    {
+      "id": "ai",
+      "title": "Practical AI use and independent architecture work",
+      "summary": "I use AI to help write and validate SQL, build support tools and improve training materials. Nexus gives me a place to explore context, model routing and the full application around AI.",
+      "tags": [
+        "AI",
+        "SQL",
+        "tooling",
+        "training",
+        "Nexus",
+        "context",
+        "models"
+      ],
+      "stories": [
+        "nexus-architecture",
+        "nexus-context",
+        "nexus-routing"
+      ]
+    },
+    {
+      "id": "infrastructure",
+      "title": "Understanding the technology underneath",
+      "summary": "My background includes physical infrastructure, virtualization, network and server administration, backup and recovery, and technology planning for a new headquarters.",
+      "tags": [
+        "infrastructure",
+        "VMware",
+        "network",
+        "server",
+        "recovery"
+      ],
+      "stories": [
+        "headquarters",
+        "lightning",
+        "virtualization"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "story": "headquarters",
+      "basis": "Josh’s first-person account; linked public records support company context, not personal attribution.",
+      "urls": [
+        "https://www.ljbinc.com/project/grenville-mutual-insurance/",
+        "https://tilt-up.org/projects/profile/?id=4903",
+        "https://canada.constructconnect.com/dcn/certificates-and-notices/24D536A1-8AD7-49E6-BC62-898500780D0B",
+        "https://www.szarch.com/other-projects/grenville-insurance",
+        "https://www.grenvillemutual.com/who-we-are/"
+      ]
+    },
+    {
+      "story": "lightning",
+      "basis": "Josh’s first-person account; linked public records support company context, not personal attribution.",
+      "urls": []
+    },
+    {
+      "story": "report-to-integration",
+      "basis": "Josh’s first-person account; linked public records support company context, not personal attribution.",
+      "urls": []
+    },
+    {
+      "story": "auto-upload",
+      "basis": "Josh’s first-person account; linked public records support company context, not personal attribution.",
+      "urls": [
+        "https://canadianunderwriter.ca/2011/08/23/grenville-mutual-insurance-company-delivers-new-business-upload-with-brovadas-nexexchange/",
+        "https://insurance-canada.ca/2015/03/02/grenville-mutual-expands-connectivity-offering-tam-epic/"
+      ]
+    },
+    {
+      "story": "property-upload",
+      "basis": "Josh’s first-person account; linked public records support company context, not personal attribution.",
+      "urls": [
+        "https://insurance-canada.ca/2012/05/14/grenville-launches-property-new-business-upload-brovada-nexexchange/",
+        "https://canadianunderwriter.ca/2011/08/23/grenville-mutual-insurance-company-delivers-new-business-upload-with-brovadas-nexexchange/"
+      ]
+    },
+    {
+      "story": "commercial-quoting",
+      "basis": "Josh’s first-person account; linked public records support company context, not personal attribution.",
+      "urls": [
+        "https://insurance-canada.ca/newsletter/2016/issue2016-19.php",
+        "https://insurance-canada.ca/2015/03/02/grenville-mutual-expands-connectivity-offering-tam-epic/"
+      ]
+    },
+    {
+      "story": "policy-change",
+      "basis": "Josh’s first-person account; linked public records support company context, not personal attribution.",
+      "urls": [
+        "https://insurance-canada.ca/seminars/outlines20130318/",
+        "https://insurance-canada.ca/2015/03/02/grenville-mutual-expands-connectivity-offering-tam-epic/",
+        "https://www.appliedsystems.com/carrier/CNInterfaceStatusReport.htm"
+      ]
+    },
+    {
+      "story": "sabervac",
+      "basis": "Josh’s first-person account; linked public records support company context, not personal attribution.",
+      "urls": [
+        "https://ws42.ca/blog/sabervac.html"
+      ]
+    },
+    {
+      "story": "utility-knife",
+      "basis": "Josh’s first-person account; linked public records support company context, not personal attribution.",
+      "urls": [
+        "https://ws42.ca/blog/piachi-g9.html"
+      ]
+    },
+    {
+      "story": "mechanical-pencil",
+      "basis": "Josh’s first-person account; linked public records support company context, not personal attribution.",
+      "urls": [
+        "https://ws42.ca/blog/carpenter-pencil.html"
+      ]
+    },
+    {
+      "story": "virtualization",
+      "basis": "Josh’s first-person account; linked public records support company context, not personal attribution.",
+      "urls": []
+    },
+    {
+      "story": "renewal-rules",
+      "basis": "Josh’s first-person account; linked public records support company context, not personal attribution.",
+      "urls": [
+        "https://insurance-canada.ca/2013/02/26/mccg-congratulates-icta-finalist-farm-mutual/"
+      ]
+    },
+    {
+      "story": "nexus-architecture",
+      "basis": "Josh’s account of his independent project and architecture decisions.",
+      "urls": []
+    },
+    {
+      "story": "nexus-context",
+      "basis": "Josh’s account of his independent project and architecture decisions.",
+      "urls": []
+    },
+    {
+      "story": "nexus-routing",
+      "basis": "Josh’s account of his independent project and architecture decisions.",
+      "urls": []
+    }
+  ],
+  "images": [
+    {
+      "path": "images/CarpenterPencil_2.jpg",
+      "origin": "Josh’s WS42 project imagery",
+      "alt": "Printed mechanical-pencil prototype with a twist mechanism and purchased lead",
+      "publicationStatus": "draft_for_local_preview",
+      "story": "mechanical-pencil"
+    },
+    {
+      "path": "images/SaberVac_1.jpg",
+      "origin": "Josh’s WS42 project imagery",
+      "alt": "SaberVac prototype: a custom printed shell around a purchased vacuum kit",
+      "publicationStatus": "draft_for_local_preview",
+      "story": "sabervac"
+    },
+    {
+      "path": "images/PiachiG9_Printing.jpg",
+      "origin": "Josh’s WS42 project imagery",
+      "alt": "Printed utility-knife prototype and mechanism inspired by the Piachi G9",
+      "publicationStatus": "draft_for_local_preview",
+      "story": "utility-knife"
+    },
+    {
+      "path": "images/SaberVac_3.jpg",
+      "origin": "Josh’s WS42 project imagery",
+      "alt": "SaberVac prototype: a custom printed shell around a purchased vacuum kit",
+      "publicationStatus": "draft_for_local_preview",
+      "story": "sabervac"
+    },
+    {
+      "path": "images/PiachiG9_3.jpg",
+      "origin": "Josh’s WS42 project imagery",
+      "alt": "Printed utility-knife prototype and mechanism inspired by the Piachi G9",
+      "publicationStatus": "draft_for_local_preview",
+      "story": "utility-knife"
+    },
+    {
+      "path": "images/PiachiG9_2.jpg",
+      "origin": "Josh’s WS42 project imagery",
+      "alt": "Printed utility-knife prototype and mechanism inspired by the Piachi G9",
+      "publicationStatus": "draft_for_local_preview",
+      "story": "utility-knife"
+    },
+    {
+      "path": "images/SaberVac_2.jpg",
+      "origin": "Josh’s WS42 project imagery",
+      "alt": "SaberVac prototype: a custom printed shell around a purchased vacuum kit",
+      "publicationStatus": "draft_for_local_preview",
+      "story": "sabervac"
+    },
+    {
+      "path": "images/CarpenterPencil_1.jpg",
+      "origin": "Josh’s WS42 project imagery",
+      "alt": "Printed mechanical-pencil prototype with a twist mechanism and purchased lead",
+      "publicationStatus": "draft_for_local_preview",
+      "story": "mechanical-pencil"
+    },
+    {
+      "path": "images/PiachiG9_4.jpg",
+      "origin": "Josh’s WS42 project imagery",
+      "alt": "Printed utility-knife prototype and mechanism inspired by the Piachi G9",
+      "publicationStatus": "draft_for_local_preview",
+      "story": "utility-knife"
+    },
+    {
+      "path": "images/CarpenterPencil_3.jpg",
+      "origin": "Josh’s WS42 project imagery",
+      "alt": "Printed mechanical-pencil prototype with a twist mechanism and purchased lead",
+      "publicationStatus": "draft_for_local_preview",
+      "story": "mechanical-pencil"
+    },
+    {
+      "path": "images/PiachiG9_5.jpg",
+      "origin": "Josh’s WS42 project imagery",
+      "alt": "Printed utility-knife prototype and mechanism inspired by the Piachi G9",
+      "publicationStatus": "draft_for_local_preview",
+      "story": "utility-knife"
+    }
+  ]
+}

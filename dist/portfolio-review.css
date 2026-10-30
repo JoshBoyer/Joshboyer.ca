@@ -1,0 +1,122 @@
+/* Explicit October 28 requests: plain overview action and readable career evidence.
+   Kept separate from the concurrently edited hero artwork/typography stylesheet. */
+body[data-active-route="home"] #main .career-hero [data-home-watch-story],
+body[data-active-route="home"] #main .career-hero [data-home-watch-story]:hover,
+body[data-active-route="home"] #main .career-hero [data-home-watch-story]:active {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  min-height: 44px !important;
+  height: 44px !important;
+  width: auto !important;
+  padding: 0 4px !important;
+  transform: none !important;
+}
+body[data-active-route="home"] #main .career-hero [data-home-watch-story]:focus-visible {
+  outline: 2px solid #38bdf8 !important;
+  outline-offset: 3px !important;
+}
+body[data-active-route="home"] #main .career-hero [data-home-watch-story]:hover .hero-watch-label,
+body[data-active-route="home"] #main .career-hero [data-home-watch-story]:focus-visible .hero-watch-label {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.proj-hero-decision-card .decision-card-row { align-items: flex-start; gap: 10px; }
+.proj-hero-decision-card .decision-row-label { color: #475569 !important; -webkit-text-fill-color: #475569 !important; }
+.proj-hero-decision-card .decision-row-val { color: #0f172a !important; -webkit-text-fill-color: #0f172a !important; text-align: right; }
+
+/* Keep the mobile automation evidence inside its existing section. */
+@media (max-width: 768px) {
+  #home-skills-section .home-skills-hero-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    min-width: 0 !important;
+  }
+  #home-skills-section .home-skills-active-details-col,
+  #home-skills-section .home-skill-active-card-wrap,
+  #home-skills-section .home-skill-card-title-group {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  #home-skills-section .home-skills-group-tabs {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px !important;
+  }
+  #home-skills-section .home-skill-tab-btn {
+    min-width: 0 !important;
+    min-height: 44px !important;
+    width: 100% !important;
+    white-space: normal !important;
+  }
+  #home-skills-section .home-skill-case-links {
+    flex-wrap: wrap !important;
+    gap: 8px 14px !important;
+  }
+  #home-skills-section .skill-case-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    white-space: normal !important;
+  }
+}
+
+/* Viewport-sized home chapters, with natural overflow for short screens and zoom. */
+body[data-active-route="home"] {
+  --portfolio-view-height: 100vh;
+  --portfolio-nav-height: var(--rhythm-header-h-desktop, 64px);
+}
+@supports (height: 100svh) {
+  body[data-active-route="home"] { --portfolio-view-height: 100svh; }
+}
+@supports (height: 100dvh) {
+  body[data-active-route="home"] { --portfolio-view-height: 100dvh; }
+}
+@media (max-width: 900px) {
+  body[data-active-route="home"] {
+    --portfolio-nav-height: var(--rhythm-header-h-mobile, 56px);
+  }
+}
+body[data-active-route="home"] .site-header {
+  height: calc(var(--portfolio-nav-height) + env(safe-area-inset-top, 0px)) !important;
+  min-height: calc(var(--portfolio-nav-height) + env(safe-area-inset-top, 0px)) !important;
+  padding-top: env(safe-area-inset-top, 0px) !important;
+}
+body[data-active-route="home"] #main .career-hero {
+  /* The existing background extends behind the sticky navigation. */
+  margin-top: calc(-1 * (var(--portfolio-nav-height) + env(safe-area-inset-top, 0px))) !important;
+  min-height: var(--portfolio-view-height) !important;
+  height: auto !important;
+  max-height: none !important;
+  padding-top: calc(var(--portfolio-nav-height) + env(safe-area-inset-top, 0px) + clamp(16px, 3vh, 48px)) !important;
+  padding-bottom: max(64px, min(10vh, 128px), env(safe-area-inset-bottom, 0px)) !important;
+}
+body[data-active-route="home"] #main :is(
+  .home-featured-work-section,
+  #home-career-section,
+  #home-skills-section,
+  #home-about-section
+) {
+  min-height: calc(var(--portfolio-view-height) - var(--portfolio-nav-height) - env(safe-area-inset-top, 0px)) !important;
+  height: auto !important;
+  max-height: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  scroll-margin-top: calc(var(--portfolio-nav-height) + env(safe-area-inset-top, 0px));
+}
+@media (min-width: 901px) {
+  body[data-active-route="home"] #main .career-hero { align-items: center !important; }
+}
+@media (min-width: 769px) and (max-width: 900px) {
+  body[data-active-route="home"] #main .career-hero { justify-content: center !important; }
+}
+@media (max-width: 768px) {
+  body[data-active-route="home"] #main .career-hero {
+    padding-bottom: max(72px, min(14vh, 124px), env(safe-area-inset-bottom, 0px)) !important;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)) !important;
+    padding-right: max(16px, env(safe-area-inset-right, 0px)) !important;
+  }
+}

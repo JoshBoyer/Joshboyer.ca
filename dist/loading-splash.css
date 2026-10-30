@@ -1,0 +1,67 @@
+/* A short, optional introduction; the current site loads underneath. */
+#loading-splash {
+  box-sizing: border-box;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: #020713;
+  color: #f4f7fc;
+  overflow: hidden;
+  overscroll-behavior: contain;
+  opacity: 1;
+  transition: opacity 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+#loading-splash[open] { display: grid; place-items: center; }
+#loading-splash::backdrop { background: #020713; opacity: 1; transition: opacity 600ms cubic-bezier(0.4, 0, 0.2, 1); }
+#loading-splash.is-leaving { opacity: 0; }
+#loading-splash.is-leaving::backdrop { opacity: 0; }
+html:has(#loading-splash[open]) { overflow: hidden; }
+#loading-splash video {
+  position: absolute;
+  inset: 0;
+  display: block;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  max-height: 100dvh;
+  object-fit: contain;
+  pointer-events: none;
+}
+#loading-splash .splash-enter {
+  position: absolute;
+  right: max(24px, env(safe-area-inset-right));
+  bottom: max(24px, env(safe-area-inset-bottom));
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 10px 18px;
+  border: 1px solid #87aaca;
+  border-radius: 6px;
+  background: #0a172b;
+  color: #f4f7fc;
+  font: 600 16px/1.3 Manrope, system-ui, sans-serif;
+  cursor: pointer;
+}
+#loading-splash .splash-enter:hover { background: #173456; }
+#loading-splash .splash-enter:focus-visible { outline: 3px solid #60c5fb; outline-offset: 4px; }
+#loading-splash .splash-enter svg { width: 18px; height: 18px; }
+#loading-splash .splash-hint {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+@media (prefers-reduced-motion: reduce) { #loading-splash, #loading-splash::backdrop { transition: none; } }

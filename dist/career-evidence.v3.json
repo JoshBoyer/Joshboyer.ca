@@ -1,14 +1,14 @@
 {
   "schemaVersion": "1.0.0",
-  "datasetVersion": "2026-10-15.3",
+  "datasetVersion": "2026-10-28.1",
   "rankingVersion": "rank-1",
   "templateVersion": "resume-1",
   "reviewedSourceCommit": "61d3b52d4484d4b2b84a1bd3ea5a57e26cbb4f31",
   "scope": "Approved public portfolio text only. No raw career documents, internal artifacts, claim data, contact details or inferred qualifications.",
   "person": {
     "name": "Josh Boyer",
-    "positioning": "Technology generalist | Insurance technology | Integration and solution design",
-    "summary": "Technology generalist with about twenty years of professional technology experience and deep insurance-domain knowledge. Connects business requirements, technical design and practical delivery, with hands-on analysis, implementation and troubleshooting."
+    "positioning": "Business architecture and automation | Insurance systems | Independent AI strategy",
+    "summary": "Technology generalist with about twenty years of experience turning business requirements into repeatable rules, integrations and tools. Production work includes renewal automation, C#/.NET applications, Excel VBA claims-history loading and hands-on SQL; NEXUS is independent AI-assisted development."
   },
   "roles": [
     {
@@ -17,7 +17,7 @@
       "title": "Functional analyst",
       "period": "2022–present",
       "sort": 4,
-      "scope": "Claims integration requirements, data transitions, SQL and reconciliation alongside architects and delivery teams.",
+      "scope": "Functional analysis, production claims-loading tooling, live provider integration support and SQL/reporting reconciliation.",
       "qualificationNotes": [
         "Claims architecture describes work, not a claimed formal Architect title."
       ]
@@ -35,7 +35,7 @@
     },
     {
       "id": "role-harris",
-      "employer": "Harris / Ottawa Computer Services",
+      "employer": "Harris Computer Services",
       "title": "NOC / project technician",
       "period": "2007–2009",
       "sort": 2,
@@ -306,6 +306,18 @@
         "event table",
         "scheduled publisher"
       ]
+    },
+    {
+      "id": "automation",
+      "label": "Workflow automation",
+      "aliases": [
+        "automation",
+        "automated",
+        "workflow automation",
+        "vba",
+        "batch preparation",
+        "scripting"
+      ]
     }
   ],
   "profiles": [
@@ -318,7 +330,8 @@
         "claims": 5,
         "insurance": 4,
         "mapping": 3,
-        "analysis": 2
+        "analysis": 2,
+        "automation": 4
       }
     },
     {
@@ -335,7 +348,8 @@
         "rest": 7,
         "xml": 6,
         "reconciliation": 3,
-        "pubsub": 7
+        "pubsub": 7,
+        "automation": 5
       }
     },
     {
@@ -347,7 +361,8 @@
         "infrastructure": 4,
         "integrations": 3,
         "validation": 2,
-        "application": 2
+        "application": 2,
+        "automation": 4
       }
     }
   ],
@@ -355,7 +370,7 @@
     {
       "id": "summary-insurance",
       "profileId": "insurance",
-      "text": "Technology generalist with deep insurance-domain experience spanning P&C rating and underwriting rules, broker integrations and claims analysis. Connects insurance decisions to the information, interfaces and delivery processes needed to support them.",
+      "text": "Technology generalist connecting insurance decisions to repeatable rules, broker workflows and claims-data tools. Work includes deterministic renewal automation, mappings and production loading support.",
       "sourceRefs": [
         "source-workflows",
         "source-newbusiness",
@@ -365,7 +380,7 @@
     {
       "id": "summary-integrations",
       "profileId": "integrations",
-      "text": "Technology generalist with hands-on experience connecting business workflows, data contracts and system boundaries. Work spans broker SOAP/XML and REST integrations, provider requirements and synchronization solution review, data mapping, validation tooling and claims reconciliation.",
+      "text": "Connects business workflows and data contracts through broker SOAP/XML and REST integration, scheduled provider synchronization, VBA/XML batch preparation and SQL reconciliation.",
       "sourceRefs": [
         "source-inquiry",
         "source-upload",
@@ -378,7 +393,7 @@
     {
       "id": "summary-solutions",
       "profileId": "solutions",
-      "text": "Technology generalist with about twenty years in professional technology and deep insurance knowledge. Brings business analysis, technical design judgment and hands-on delivery together, from infrastructure dependencies to integration requirements and operational troubleshooting.",
+      "text": "Brings requirements discovery, system dependencies and delivery judgment together, with production tools and integrations alongside independent AI-platform architecture.",
       "sourceRefs": [
         "source-foundations",
         "source-headquarters",
@@ -389,7 +404,7 @@
     {
       "id": "summary-general",
       "profileId": "general",
-      "text": "Technology generalist with about twenty years of professional technology experience and deep insurance-domain knowledge. Connects business requirements, technical design and practical delivery, with hands-on analysis, implementation and troubleshooting.",
+      "text": "Technology generalist with about twenty years of experience turning business requirements into repeatable rules, integrations and tools. Production work includes renewal automation, C#/.NET applications, Excel VBA claims-history loading and hands-on SQL; NEXUS is independent AI-assisted development.",
       "sourceRefs": [
         "source-dell",
         "source-foundations",
@@ -486,7 +501,7 @@
         "master's",
         "masters"
       ],
-      "note": "No certifications or education credentials are supplied in the approved dataset."
+      "note": "Corpus v12 records a 2006 Canadore advanced diploma, a combined 2014 McMaster certificate and PSM I in 2019. Do not infer other credentials or current vendor-certification standing."
     },
     {
       "id": "qual-management",
@@ -512,10 +527,9 @@
         "terraform",
         "salesforce",
         "snowflake",
-        "databricks",
-        "vba"
+        "databricks"
       ],
-      "note": "This technology is not established in the approved dataset; no proficiency is inferred."
+      "note": "Additional technologies require evidence of context and personal depth; a project dependency is not a proficiency claim."
     },
     {
       "id": "qual-eligibility",
@@ -550,7 +564,7 @@
       "id": "source-dell",
       "kind": "approved-public-portfolio",
       "path": "index.html#projects/dell",
-      "revision": "61d3b52d4484d4b2b84a1bd3ea5a57e26cbb4f31",
+      "revision": "public-summary-review-2026-10-28",
       "confidence": "approved-public-account",
       "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
     },
@@ -558,7 +572,7 @@
       "id": "source-foundations",
       "kind": "approved-public-portfolio",
       "path": "index.html#projects/foundations",
-      "revision": "61d3b52d4484d4b2b84a1bd3ea5a57e26cbb4f31",
+      "revision": "public-summary-review-2026-10-28",
       "confidence": "approved-public-account",
       "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
     },
@@ -566,7 +580,7 @@
       "id": "source-headquarters",
       "kind": "approved-public-portfolio",
       "path": "index.html#projects/headquarters",
-      "revision": "61d3b52d4484d4b2b84a1bd3ea5a57e26cbb4f31",
+      "revision": "public-summary-review-2026-10-28",
       "confidence": "approved-public-account",
       "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
     },
@@ -574,7 +588,7 @@
       "id": "source-inquiry",
       "kind": "approved-public-portfolio",
       "path": "index.html#projects/inquiry",
-      "revision": "61d3b52d4484d4b2b84a1bd3ea5a57e26cbb4f31",
+      "revision": "public-summary-review-2026-10-28",
       "confidence": "approved-public-account",
       "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
     },
@@ -582,7 +596,7 @@
       "id": "source-workflows",
       "kind": "approved-public-portfolio",
       "path": "index.html#projects/workflows",
-      "revision": "61d3b52d4484d4b2b84a1bd3ea5a57e26cbb4f31",
+      "revision": "public-summary-review-2026-10-28",
       "confidence": "approved-public-account",
       "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
     },
@@ -590,7 +604,7 @@
       "id": "source-newbusiness",
       "kind": "approved-public-portfolio",
       "path": "index.html#projects/newbusiness",
-      "revision": "61d3b52d4484d4b2b84a1bd3ea5a57e26cbb4f31",
+      "revision": "public-summary-review-2026-10-28",
       "confidence": "approved-public-account",
       "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
     },
@@ -598,7 +612,7 @@
       "id": "source-renewals",
       "kind": "approved-public-portfolio",
       "path": "index.html#projects/renewals",
-      "revision": "61d3b52d4484d4b2b84a1bd3ea5a57e26cbb4f31",
+      "revision": "public-summary-review-2026-10-28",
       "confidence": "approved-public-account",
       "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
     },
@@ -606,7 +620,7 @@
       "id": "source-upload",
       "kind": "approved-public-portfolio",
       "path": "index.html#projects/upload",
-      "revision": "61d3b52d4484d4b2b84a1bd3ea5a57e26cbb4f31",
+      "revision": "public-summary-review-2026-10-28",
       "confidence": "approved-public-account",
       "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
     },
@@ -614,7 +628,7 @@
       "id": "source-claims",
       "kind": "approved-public-portfolio",
       "path": "index.html#projects/claims",
-      "revision": "61d3b52d4484d4b2b84a1bd3ea5a57e26cbb4f31",
+      "revision": "public-summary-review-2026-10-28",
       "confidence": "approved-public-account",
       "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
     },
@@ -622,7 +636,7 @@
       "id": "source-takeover",
       "kind": "approved-public-portfolio",
       "path": "index.html#projects/takeover",
-      "revision": "firsthand-2026-10-15-history-load-design",
+      "revision": "public-summary-review-2026-10-28",
       "confidence": "approved-public-account",
       "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
     },
@@ -630,7 +644,7 @@
       "id": "source-continuity",
       "kind": "approved-public-portfolio",
       "path": "index.html#projects/continuity",
-      "revision": "firsthand-2026-10-15-rest-compatibility-design",
+      "revision": "public-summary-review-2026-10-28",
       "confidence": "approved-public-account",
       "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
     },
@@ -638,7 +652,7 @@
       "id": "source-sql",
       "kind": "approved-public-portfolio",
       "path": "index.html#projects/sql",
-      "revision": "61d3b52d4484d4b2b84a1bd3ea5a57e26cbb4f31",
+      "revision": "public-summary-review-2026-10-28",
       "confidence": "approved-public-account",
       "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
     },
@@ -646,7 +660,7 @@
       "id": "source-nexus",
       "kind": "approved-public-portfolio",
       "path": "index.html#projects/nexus",
-      "revision": "61d3b52d4484d4b2b84a1bd3ea5a57e26cbb4f31",
+      "revision": "public-summary-review-2026-10-28",
       "confidence": "approved-public-account",
       "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
     },
@@ -654,7 +668,7 @@
       "id": "source-lowkey",
       "kind": "approved-public-portfolio",
       "path": "index.html#projects/lowkey",
-      "revision": "61d3b52d4484d4b2b84a1bd3ea5a57e26cbb4f31",
+      "revision": "public-summary-review-2026-10-28",
       "confidence": "approved-public-account",
       "note": "Prewritten public case summary. Underlying private documents and internal artifacts are excluded."
     },
@@ -662,7 +676,7 @@
       "id": "source-provider-sync-review",
       "kind": "approved-firsthand-public-summary",
       "path": "index.html#projects/claims",
-      "revision": "firsthand-2026-10-15-provider-review",
+      "revision": "public-summary-review-2026-10-28",
       "confidence": "approved-public-account",
       "note": "Josh directly confirms solution review, nightly publisher writing an event table, separate scheduled consumer with REST retrieval, field mappings and synchronization requirements. Internal platform acronyms remain unconfirmed and are omitted."
     }
@@ -734,7 +748,7 @@
       "projectId": "headquarters",
       "roleId": "role-grenville",
       "title": "Headquarters infrastructure and move",
-      "period": "Approximately 2014",
+      "period": "Building completed 2012; occupancy January 2013; exact IT move date unconfirmed",
       "tags": [
         "infrastructure",
         "analysis",
@@ -748,7 +762,7 @@
         "Carry the technical plan through the move and transition."
       ],
       "technicalGuidance": "Technical design contribution connected the infrastructure plan with the building’s practical operation.",
-      "outcome": "Took the technical design through the build and a smooth move/transition, as reported by Josh.",
+      "outcome": "Technical delivery through a planned move and collaborative recovery; business running by Monday in Josh’s account.",
       "resumeText": "Carried headquarters infrastructure design from planning through build and move-in, accounting for networking, AV, security, cooling and resilient power.",
       "sourceRefs": [
         "source-headquarters"
@@ -846,7 +860,8 @@
         "rules",
         "integrations",
         "validation",
-        "guidance"
+        "guidance",
+        "automation"
       ],
       "priority": 85,
       "decision": "Connected the information collected in the interface to rating, underwriting and the next useful action.",
@@ -878,7 +893,8 @@
         "insurance",
         "rules",
         "validation",
-        "analysis"
+        "analysis",
+        "automation"
       ],
       "priority": 80,
       "decision": "Automated eligible standard renewals while preserving a deliberate human-review path for exceptions.",
@@ -911,7 +927,8 @@
         "application",
         "guidance",
         "validation",
-        "rest"
+        "rest",
+        "automation"
       ],
       "priority": 90,
       "decision": "Replaced ad-hoc email delivery with authenticated submission into the correct backend policy record, with operational visibility.",
@@ -945,25 +962,26 @@
         "integrations",
         "mapping",
         "analysis",
-        "guidance"
+        "guidance",
+        "automation"
       ],
       "priority": 100,
-      "decision": "Compared source information and existing interfaces with the new adjudication system’s actual requirements.",
+      "decision": "Defined provider mappings and synchronization changes, then supported the live integrations in testing and production.",
       "process": [
-        "Establish provider-integration adjudication requirements.",
-        "Analyze source/consumer gaps.",
-        "Contribute integration mappings with architects and delivery teams."
+        "Provider integrations are live by Josh's account",
+        "Scheduled table-backed synchronization with REST retrieval",
+        "Continuing investigation of data mismatches and specified fixes"
       ],
-      "technicalGuidance": "Worked alongside architects and delivery teams on requirements, gaps and mappings.",
-      "outcome": "Confirmed analysis and mapping contribution; separate implementation/go-live results are not established.",
-      "resumeText": "Defined provider-integration adjudication requirements, analyzed source and consumer gaps, and contributed mappings alongside architects and delivery teams.",
+      "technicalGuidance": "I worked with architects and developers to define the changes and supported testing, documentation, training and production troubleshooting. Developers implemented the interfaces; my role was not sole service development.",
+      "outcome": "Implemented integrations with continuing functional support",
+      "resumeText": "Defined provider relationships, mappings and scheduled synchronization changes with architects and developers, then supported testing and the live integrations in production.",
       "sourceRefs": [
         "source-claims"
       ],
       "confidence": "approved-public-account",
       "qualificationNotes": [
-        "ProviderRegistry solution review, field mappings and synchronization requirements are confirmed in the additional Oct15 firsthand account.",
-        "No solo implementation or separate go-live claim; platform acronyms remain unconfirmed."
+        "Integrations are live by Josh’s account, with continuing testing and production support.",
+        "Requirements, mappings and support do not imply sole service development or a Kafka implementation."
       ],
       "active": true
     },
@@ -972,7 +990,7 @@
       "kind": "experience",
       "projectId": "takeover",
       "roleId": "role-medavie",
-      "title": "Takeover-history validation and XML loading",
+      "title": "Claims-history loading and Excel VBA automation",
       "period": "2022–present; project date not established",
       "tags": [
         "insurance",
@@ -980,27 +998,27 @@
         "mapping",
         "validation",
         "xml",
-        "reconciliation"
+        "reconciliation",
+        "application",
+        "automation"
       ],
-      "priority": 95,
-      "decision": "Researched the existing XML-based adjudication history-load solution and documented gaps and necessary schema changes in a solution document.",
+      "priority": 100,
+      "decision": "Designed and built a production Excel VBA add-in for validation, XML generation, batch preparation and returned-error reconciliation.",
       "process": [
-        "Research the existing history-load solution and document gaps and necessary schema changes.",
-        "Guide development through implementation and maintenance, including schema changes.",
-        "Support end users with Excel templates, VB scripts and validation that generate the required XML and make intake repeatable.",
-        "Prepare manageable batch loads and reconcile returned errors."
+        "Production Excel VBA add-in designed and built by Josh",
+        "Repeatable validation, XML batch preparation and error reconciliation",
+        "Teams prepare and load their files independently; backend engine work remained with developers"
       ],
-      "technicalGuidance": "Defined and documented the solution with the developer, guided implementation and maintenance, and supported end users with repeatable templates, VB scripts and validation.",
-      "outcome": "Production tooling adopted by the team.",
-      "resumeText": "Researched the existing adjudication history-load solution, documented gaps and XML schema changes, guided development through implementation and maintenance, and supported end users with Excel templates, VB scripts and validation for repeatable XML-based intake.",
+      "technicalGuidance": "I researched the receiving load, documented schema gaps and guided backend changes with a developer. I separately designed and built the Excel VBA add-in, validated AI-assisted code against known errors and helped teams prepare and load files independently.",
+      "outcome": "Production loading workflow enabling independent team use",
+      "resumeText": "Designed and built a production Excel VBA add-in for data validation, XML batch preparation and returned-error reconciliation, enabling teams to prepare and load claims history independently. Documented receiving-system gaps and guided backend changes with a developer.",
       "sourceRefs": [
         "source-takeover"
       ],
       "confidence": "approved-public-account",
       "qualificationNotes": [
-        "The precise VB runtime and public platform spelling remain unconfirmed.",
-        "Schema changes were defined and guided, not claimed as personally coded; no sole ownership or numeric improvement claim.",
-        "No private schema or claim records are included."
+        "Josh designed and built the production Excel VBA add-in; backend and schema changes were guided with developers.",
+        "No private claim records, exact operating windows or unaudited financial scale are published."
       ],
       "active": true
     },
@@ -1020,16 +1038,15 @@
         "rest"
       ],
       "priority": 95,
-      "decision": "Recognized a missed requirement to deliver underlying client data for downstream processing and reporting, then designed compatibility with the existing Cognos feed.",
+      "decision": "Traced a reporting request to downstream data dependencies, delivered interim SQL and designed a compatibility path.",
       "process": [
-        "Recognize flat-file and ETL conventions and trace the feed to client Cognos.",
-        "Confirm that the client agreement requires underlying data for the client’s own processing and reporting, rather than PDF or Excel reports alone.",
-        "Design a REST-based export from the adjudication system into the existing legacy COBOL pipeline.",
-        "Map the pipeline transformation into the InterBlue flat file consumed by Cognos; keep implementation/go-live unconfirmed."
+        "Client discovery confirmed downstream integration dependencies",
+        "Approved compatibility design plus operational interim SQL",
+        "Permanent extract not confirmed live; simpler replacement remained proposed"
       ],
-      "technicalGuidance": "Designed a new adjudication REST export that preserves the existing COBOL-to-InterBlue-to-Cognos compatibility path; did not claim to replace or modernize the entire downstream system.",
-      "outcome": "Completed compatibility/export and continuity-mapping design; service implementation and bridge go-live remain unconfirmed.",
-      "resumeText": "Identified a missed requirement for underlying client data and completed continuity-mapping design for a REST-based adjudication export feeding an existing COBOL pipeline that transforms it into an InterBlue flat file for client Cognos processing and reporting; implementation/go-live remains unconfirmed.",
+      "technicalGuidance": "I carried out discovery, documented mappings and presented the approved compatibility approach. I also wrote operational interim reports and distinguished a parseable file from a complete, correct population of records.",
+      "outcome": "Approved design and operational interim reports; permanent extract unfinished",
+      "resumeText": "Traced a reporting request to downstream integration needs, completed an approved compatibility design and delivered operational interim SQL reports. The permanent extract remains unconfirmed live.",
       "sourceRefs": [
         "source-continuity"
       ],
@@ -1053,18 +1070,19 @@
         "claims",
         "sql",
         "analysis",
-        "reconciliation"
+        "reconciliation",
+        "automation"
       ],
       "priority": 95,
-      "decision": "Kept report logic and reconciliation central while the broader extract/modernization decision remained open.",
+      "decision": "Reworked claims and financial SQL, reconciled transaction history and supplied corrected logic adopted in production.",
       "process": [
-        "Hand-write claims reporting SQL.",
-        "Understand and write financial report logic.",
-        "Reconcile and balance claims against the financial view."
+        "Hands-on Oracle SQL and transaction-history investigation",
+        "Business treatment checked with finance and client stakeholders",
+        "Corrected SQL adopted in the payment team's existing production process"
       ],
-      "technicalGuidance": "Hands-on query and report analysis rather than requirements-only contribution.",
-      "outcome": "Completed query/reporting and balancing work; broader exchange decision remained open.",
-      "resumeText": "Hand-wrote SQL for claims reporting, developed financial report logic, and reconciled and balanced claims against the financial reporting view.",
+      "technicalGuidance": "I personally wrote and reworked the queries, investigated discrepancies over successive reporting periods and supplied reconciled logic to the payment team. Agreement between claims-derived reports was not presented as an independent financial audit.",
+      "outcome": "Corrected reporting SQL adopted in production",
+      "resumeText": "Reworked claims and financial SQL, reconciled transaction-history treatment with finance and supplied corrected logic adopted in the payment team’s production process.",
       "sourceRefs": [
         "source-sql"
       ],
@@ -1088,16 +1106,15 @@
         "validation"
       ],
       "priority": 65,
-      "decision": "Separated plans from review/execution and made context, model choices and outcomes inspectable.",
+      "decision": "Independent multi-agent platform for planning, execution and evaluation with scoped context and audit receipts.",
       "process": [
-        "Compile scoped retrieval context with project decisions, graph relationships and source receipts.",
-        "Use constraint-aware model routing.",
-        "Recover distributed Node execution through durable commands and permissions.",
-        "Evaluate with deterministic and semantic checks and integration/deployment receipts."
+        "Independent product and architecture direction with AI-assisted implementation",
+        "Source-described context, routing and execution mechanisms",
+        "Active development; no enterprise adoption or universal feature-completeness claim"
       ],
-      "technicalGuidance": "Independent system design and implementation, distinct from employer architecture.",
-      "outcome": "Implemented mechanisms in an actively developing product; broader vision is still evolving.",
-      "resumeText": "Implemented scoped context compilation, explainable model routing, review/execution separation and recoverable distributed Node execution in NEXUS, using a headless TypeScript core, React/Vite, PostgreSQL/Redis, OpenAPI and WebSockets.",
+      "technicalGuidance": "I set the product direction, architecture and module choices, using AI-assisted implementation to develop the platform. Source-described mechanisms are not a claim that every interface is live-qualified or every subsystem was independently hand-written.",
+      "outcome": "Independent architecture and applied-learning capstone",
+      "resumeText": "Set the product direction and architecture of NEXUS, using AI-assisted implementation to explore scoped context, model routing, approvals and evaluation in an independent platform under active development.",
       "sourceRefs": [
         "source-nexus"
       ],
@@ -1115,7 +1132,7 @@
       "projectId": "lowkey",
       "roleId": "role-independent",
       "title": "LOWKEY",
-      "period": "Active development",
+      "period": "Archived independent project",
       "tags": [
         "speech",
         "application"
@@ -1157,27 +1174,27 @@
         "analysis",
         "guidance",
         "rest",
-        "pubsub"
+        "pubsub",
+        "automation"
       ],
       "priority": 100,
       "active": true,
-      "decision": "Review the scheduled event and retrieval flow together with the adjudication data contract, preserving the actual table-backed architecture.",
+      "decision": "Defined provider mappings and synchronization changes, then supported the live integrations in testing and production.",
       "process": [
-        "Review the nightly publisher job that writes events into a table.",
-        "Trace the separate scheduled consumer reading those events and using REST services to retrieve ProviderRegistry data into adjudication.",
-        "Confirm field mappings and synchronization requirements across the source and receiving system."
+        "Provider integrations are live by Josh's account",
+        "Scheduled table-backed synchronization with REST retrieval",
+        "Continuing investigation of data mismatches and specified fixes"
       ],
-      "technicalGuidance": "Performed solution review as the solutions contributor, alongside architects and delivery teams; not merely a generic subject-matter consultation.",
-      "outcome": "Solution review/design contribution, field mappings and synchronization requirements are confirmed. Solo implementation and a separate go-live outcome are not claimed.",
-      "resumeText": "Reviewed the provider-registry integration design, including field mappings, scheduled publish/subscribe processing and REST-based data retrieval.",
+      "technicalGuidance": "I worked with architects and developers to define the changes and supported testing, documentation, training and production troubleshooting. Developers implemented the interfaces; my role was not sole service development.",
+      "outcome": "Implemented integrations with continuing functional support",
+      "resumeText": "Defined provider relationships, mappings and scheduled synchronization changes with architects and developers, then supported testing and the live integrations in production.",
       "sourceRefs": [
         "source-provider-sync-review"
       ],
       "confidence": "approved-public-account",
       "qualificationNotes": [
-        "Scheduled table-backed publish/subscribe; no Kafka, message-broker or real-time implementation claim.",
-        "Review/design contribution, not a claim of solo implementation or separate go-live.",
-        "Source/destination platform acronyms remain unconfirmed; use ProviderRegistry and adjudication system."
+        "Integrations are live by Josh’s account, with continuing testing and production support.",
+        "Requirements, mappings and support do not imply sole service development or a Kafka implementation."
       ]
     }
   ],
@@ -1195,5 +1212,5 @@
     "text": "Only prewritten approved summary, role scope and chunk resumeText; no job-posting text is inserted in resume prose.",
     "citations": "Stable chunk IDs and public source IDs are retained in the preview and exports."
   },
-  "editorialRevision": "NEXUS sole capstone; LOWKEY archived. ProviderRegistry solution review, scheduled table-backed publish/subscribe with REST retrieval, field mappings and synchronization requirements confirmed in Josh’s direct Oct15 account."
+  "editorialRevision": "Selected public-facing summaries reconciled with corpus v12 and October 26 corrections. Employer artifacts, operational volumes and private planning are excluded."
 }

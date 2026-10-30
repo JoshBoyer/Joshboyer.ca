@@ -1,4 +1,5 @@
 node_modules/
+.wrangler/
 .env
 .env.*
 !.env.example
@@ -9,3 +10,7 @@ knowledge/archive/
 knowledge/source-documents/
 
 # Private source material stays local unless explicitly selected for version control.
+
+# Private working research stays local and outside public Git.
+/knowledge/
+/JOSH-BOYER-PORTFOLIO-CORPUS.md

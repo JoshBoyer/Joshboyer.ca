@@ -8,6 +8,7 @@
   const LIMIT = 12000, MAX_REQUIREMENTS = 80, MAX_SELECTION = 8;
   const versions = Object.freeze({ ranking: 'rank-1', template: 'resume-1' });
   const cmp = (a, b) => a < b ? -1 : a > b ? 1 : 0;
+  // eslint-disable-next-line no-control-regex -- Intentional rejection or removal of control characters.
   const normalize = text => text.normalize('NFKC').replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, '').replace(/\r\n?/g, '\n').trim();
   const escapeRegex = value => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const contains = (text, alias) => new RegExp('(^|[^a-z0-9])' + escapeRegex(alias) + '(?=$|[^a-z0-9])', 'i').test(text);

@@ -1,7 +1,7 @@
 /* Subtle living-scene player for JoshBoyer.ca career milestone photographs. */
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else{root.LivingScenes=api;api.mount();}})(typeof globalThis!=='undefined'?globalThis:this,function(){
 'use strict';
-const FPS=20,CYCLE_MS=10000,ACTIVE_MS=9000, IMAGE_SRC='assets/career-milestones-context.png';
+const FPS=20,CYCLE_MS=10000,ACTIVE_MS=9000, IMAGE_SRC='assets/optimized/career-milestones-context-1024.webp';
 const SCENES=Object.freeze([
   {id:'support',y:0,height:300,desktop:{x:126,width:810},mobile:{x:170,width:600},quad:[[214,20],[492,20],[492,214],[214,214]],secondQuad:[[576,10],[725,18],[725,226],[576,205]],phases:[{name:'intake',end:2200,label:'Fault intake'},{name:'narrow',end:5600,label:'Isolate subsystem'},{name:'verify',end:9000,label:'Verify hardware path'}]},
   {id:'systems',y:300,height:268,desktop:{x:300,width:724},mobile:{x:488,width:536},quad:[[205,6],[585,6],[585,238],[205,238]],secondQuad:[[685,16],[968,16],[968,242],[685,242]],phases:[{name:'coupled',end:2200,label:'Shared services'},{name:'stage',end:5600,label:'Staged migration'},{name:'separated',end:9000,label:'Separated roles'}]},
@@ -303,7 +303,7 @@ function recordScene(s){
 }
 function mount(){
   if(typeof document==='undefined')return null;
-  const figures=[...document.querySelectorAll('[data-living-scene]')];if(!figures.length)return null;
+  const figures=[...document.querySelectorAll('[data-living-scene]')].filter(figure=>{const legacy=figure.closest('#hero-journey');return !legacy||window.getComputedStyle(legacy).display!=='none';});if(!figures.length)return null;
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)'),mobile=window.matchMedia('(max-width: 767px)');
   const saveData=Boolean(navigator.connection&&navigator.connection.saveData),master=document.getElementById('motion-master');
   const image=new Image();image.decoding='async';let loaded=false,globalPaused=false,timer=0,active=null,clock=0;
