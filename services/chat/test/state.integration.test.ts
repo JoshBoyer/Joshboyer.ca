@@ -341,3 +341,271 @@ integration('DynamoDB: cancelled and legacy results replay canonical evidence wi
     assert.equal((await store.completeTurn({ turn: legacy.turn, actualCosts: { openai: 10, anthropic: 0 }, result: canonical }, signal)).published, false);
   });
 });
+
+integration('DynamoDB: 3-point time boundaries for session expiry and active turn lease expiry', async () => {
+  await fixture(async (store, identity, { clock, nextSession, rows }) => {
+    const session = await store.requireSession(identity, signal);
+    const expiresAt = session.expiresAt;
+    const req1 = input(identity, 'Boundary test question');
+
+    // Session expiry: expiresAt - 1 succeeds
+    clock.time = expiresAt - 1;
+    const validAtMinusOne = await store.requireSession(identity, signal);
+    assert.equal(validAtMinusOne.id, session.id);
+
+    // Session expiry: exact expiresAt fails closed
+    clock.time = expiresAt;
+    await assert.rejects(store.requireSession(identity, signal), { code: 'SESSION_EXPIRED' });
+    await assert.rejects(store.beginTurn(req1, signal), { code: 'SESSION_EXPIRED' });
+    await assert.rejects(store.findTurn(identity, req1.requestId, req1.digest, signal), { code: 'SESSION_EXPIRED' });
+
+    // Session expiry: expiresAt + 1 fails closed
+    clock.time = expiresAt + 1;
+    await assert.rejects(store.requireSession(identity, signal), { code: 'SESSION_EXPIRED' });
+    await assert.rejects(store.beginTurn(req1, signal), { code: 'SESSION_EXPIRED' });
+
+    // Active turn lease expiry: leaseExpiresAt - 1, leaseExpiresAt, leaseExpiresAt + 1
+    clock.time = now;
+    const freshIdentity = await nextSession('private-visitor-lease-0002');
+    const started1 = await store.beginTurn(input(freshIdentity, 'Turn 1'), signal);
+    const lease1ExpiresAt = now + 120_000;
+
+    // Point 1: leaseExpiresAt - 1 -> still active, second turn blocked with REQUEST_ACTIVE
+    clock.time = lease1ExpiresAt - 1;
+    assert.equal(await store.isCancelled(started1.turn, signal), false);
+    await assert.rejects(store.beginTurn(input(freshIdentity, 'Turn 2 blocked'), signal), { code: 'REQUEST_ACTIVE' });
+
+    // Point 2: exact leaseExpiresAt -> lease expired, isCancelled is true, late completion settles cost but does not publish history
+    clock.time = lease1ExpiresAt;
+    assert.equal(await store.isCancelled(started1.turn, signal), true);
+    const lateResult = { kind: 'answer', reply: { text: 'Late reply at exact lease boundary' }, answer: { blocks: ['approved fact'] } };
+    const lateComplete = await store.completeTurn({
+      turn: started1.turn,
+      actualCosts: { openai: 45, anthropic: 0 },
+      result: lateResult,
+      historyEntry: { text: 'Turn 1', result: lateResult }
+    }, signal);
+    assert.equal(lateComplete.published, false);
+    assert.equal((await store.requireSession(freshIdentity, signal)).history.length, 0);
+
+    // Turn 2 can now start at exact leaseExpiresAt
+    const started2 = await store.beginTurn(input(freshIdentity, 'Turn 2 started at boundary'), signal);
+    assert.equal(started2.kind, 'started');
+    const lease2ExpiresAt = clock.time + 120_000;
+
+    // Point 3: lease2ExpiresAt + 1 -> lease expired, Turn 3 can start
+    clock.time = lease2ExpiresAt + 1;
+    assert.equal(await store.isCancelled(started2.turn, signal), true);
+    const started3 = await store.beginTurn(input(freshIdentity, 'Turn 3 started after boundary'), signal);
+    assert.equal(started3.kind, 'started');
+    assert.equal((await rows()).find(row => row.sk?.S === 'ALL')?.used?.N, String(45 + 1000 + 1000));
+  });
+});
+
+integration('DynamoDB: multi-component spend reservation and settlement breakdown metadata persist and settle atomically', async () => {
+  await fixture(async (store, identity, { rows, secondStore }) => {
+    const req = {
+      ...input(identity, 'Evaluate my cloud architecture job requirements'),
+      reservations: { openai: 11_060, anthropic: 10_804 },
+      reservationComponents: {
+        embeddingMicros: 256,
+        openaiGenerationMicros: 10_804,
+        anthropicGenerationMicros: 10_804
+      }
+    };
+    const started = await store.beginTurn(req, signal);
+    assert.equal(started.kind, 'started');
+    assert.deepEqual(started.turn.reservationComponents, req.reservationComponents);
+
+    const beforeRows = await rows();
+    assert.equal(beforeRows.find(row => row.sk?.S === 'ALL')?.used?.N, '21864');
+    assert.equal(beforeRows.find(row => row.sk?.S === 'openai')?.used?.N, '11060');
+    assert.equal(beforeRows.find(row => row.sk?.S === 'anthropic')?.used?.N, '10804');
+
+    const result = { kind: 'answer', answer: { blocks: ['canonical claim'] } };
+    const chargeComponents = { embeddingMicros: 18, generationMicros: 162, mcpCalls: 2, retrievalMatched: 4 };
+    const settled = await store.completeTurn({
+      turn: started.turn,
+      actualCosts: { openai: 180, anthropic: 0 },
+      chargeComponents,
+      result,
+      historyEntry: { text: req.text, result }
+    }, signal);
+    assert.equal(settled.published, true);
+
+    const afterRows = await rows();
+    assert.equal(afterRows.find(row => row.sk?.S === 'ALL')?.used?.N, '180');
+    assert.equal(afterRows.find(row => row.sk?.S === 'openai')?.used?.N, '180');
+    assert.equal(afterRows.find(row => row.sk?.S === 'anthropic')?.used?.N, '0');
+
+    const lookedUp = await secondStore().getRequest(identity, req.requestId, req.digest, signal);
+    assert.equal(lookedUp?.kind, 'finished');
+    assert.deepEqual(lookedUp?.turn.reservationComponents, req.reservationComponents);
+    assert.deepEqual(lookedUp?.turn.actualCosts, { openai: 180, anthropic: 0 });
+    assert.deepEqual(lookedUp?.turn.chargeComponents, chargeComponents);
+
+    // Verify failTurn and cancelTurn on a second turn
+    const req2 = input(identity, 'Second turn that fails after embedding');
+    const started2 = await store.beginTurn(req2, signal);
+    assert.equal(await store.cancelTurn(identity, req2.requestId, signal), 'requested');
+    const failed = await store.failTurn({
+      turn: started2.turn,
+      actualCosts: { openai: 40, anthropic: 0 },
+      chargeComponents: { embeddingMicros: 40, generationMicros: 0, mcpCalls: 0, retrievalMatched: 0 },
+      code: 'upstream_failure',
+      retryable: true
+    }, signal);
+    assert.equal(failed.published, false);
+    assert.equal((await rows()).find(row => row.sk?.S === 'ALL')?.used?.N, '220');
+  });
+});
+
+integration('DynamoDB: 8-stage trace (routing, retrieval, mcp, context, budget, provider, validation, settlement) persists and replays across 18 frames', async () => {
+  const { createEventValidator } = require('../../../chat/contracts/index.cjs') as {
+    createEventValidator(input: { requestId: string; generation: string; corpus: unknown }): { accept(value: unknown): void }
+  };
+  const corpus = require('../../../chat/knowledge/corpus.json') as { corpusVersion: string };
+
+  await fixture(async (store, identity, { secondStore }) => {
+    const req = input(identity, 'Show me Josh Boyer takeover tooling and Medavie details');
+    const started = await store.beginTurn(req, signal);
+    const trace = [
+      { stage: 'context', state: 'completed', elapsedMs: 2, durationMs: 2, corpusVersion: corpus.corpusVersion, claimCount: 16 },
+      { stage: 'routing', state: 'completed', elapsedMs: 5, durationMs: 3, routingMode: 'portfolio_mcp', needsRetrieval: true, requestedTools: ['search_public_evidence', 'get_case_study'] },
+      { stage: 'budget', state: 'completed', elapsedMs: 8, durationMs: 3, reservedMicros: 1000, priceVersion: 'test-prices-v1' },
+      { stage: 'retrieval', state: 'started', elapsedMs: 10 },
+      { stage: 'retrieval', state: 'completed', elapsedMs: 28, durationMs: 18, retrievalMode: 'hybrid', matchedCount: 5, corpusVersion: corpus.corpusVersion, embeddingModel: 'text-embedding-3-small', indexVersion: 's3vec-v1' },
+      { stage: 'mcp', state: 'started', elapsedMs: 30, mcpMethod: 'initialize' },
+      { stage: 'mcp', state: 'completed', elapsedMs: 34, durationMs: 4, mcpMethod: 'initialize', toolOutcome: 'completed' },
+      { stage: 'mcp', state: 'started', elapsedMs: 35, mcpMethod: 'tools/list' },
+      { stage: 'mcp', state: 'completed', elapsedMs: 39, durationMs: 4, mcpMethod: 'tools/list', toolOutcome: 'completed' },
+      { stage: 'mcp', state: 'started', elapsedMs: 40, mcpMethod: 'tools/call', toolName: 'search_public_evidence', toolCallId: 'tool-takeover-1' },
+      { stage: 'mcp', state: 'completed', elapsedMs: 55, durationMs: 15, mcpMethod: 'tools/call', toolName: 'search_public_evidence', toolCallId: 'tool-takeover-1', toolOutcome: 'completed' },
+      { stage: 'mcp', state: 'started', elapsedMs: 56, mcpMethod: 'tools/call', toolName: 'get_case_study', toolCallId: 'tool-takeover-2' },
+      { stage: 'mcp', state: 'completed', elapsedMs: 70, durationMs: 14, mcpMethod: 'tools/call', toolName: 'get_case_study', toolCallId: 'tool-takeover-2', toolOutcome: 'completed' },
+      { stage: 'provider', state: 'started', elapsedMs: 72, attempt: 1, provider: 'openai', model: 'gpt-6-luna', reservedMicros: 400 },
+      { stage: 'provider', state: 'failed', elapsedMs: 95, durationMs: 23, attempt: 1, provider: 'openai', model: 'gpt-6-luna', usageStatus: 'unknown', chargedMicros: 400, code: 'upstream_failure' },
+      { stage: 'provider', state: 'started', elapsedMs: 96, attempt: 2, provider: 'anthropic', model: 'claude-haiku-5-5', reservedMicros: 600 },
+      { stage: 'provider', state: 'completed', elapsedMs: 140, durationMs: 44, attempt: 2, provider: 'anthropic', model: 'claude-haiku-5-5', usageStatus: 'known', inputTokens: 320, outputTokens: 64, chargedMicros: 96 },
+      { stage: 'validation', state: 'started', elapsedMs: 141, attempt: 2 },
+      { stage: 'validation', state: 'completed', elapsedMs: 146, durationMs: 5, attempt: 2, corpusVersion: corpus.corpusVersion, claimCount: 2 }
+    ];
+    const settlement = { reservedMicros: 1000, chargedMicros: 496, priceVersion: 'test-prices-v1' };
+    const result = {
+      kind: 'answer',
+      reply: { kind: 'portfolio', text: 'Here are the verified takeover tooling and Medavie integration details.', suggestions: ['What about NEXUS?'] },
+      answer: { blocks: ['canonical takeover block'] },
+      trace,
+      settlement
+    };
+
+    const completed = await store.completeTurn({
+      turn: started.turn,
+      actualCosts: { openai: 400, anthropic: 96 },
+      chargeComponents: { embeddingMicros: 12, generationMicros: 484, mcpCalls: 2, retrievalMatched: 5 },
+      result,
+      historyEntry: { text: req.text, result }
+    }, signal);
+    assert.equal(completed.published, true);
+
+    const replayed = await secondStore().getRequest(identity, req.requestId, req.digest, signal);
+    assert.equal(replayed?.kind, 'finished');
+    const savedResult = replayed?.turn.result as typeof result;
+    assert.equal(savedResult.trace.length, 19);
+    assert.deepEqual(savedResult.trace, trace);
+
+    // Validate all 19 stored frames + replayed settlement frame with A01's createEventValidator
+    const validator = createEventValidator({ requestId: req.requestId, generation: started.turn.generation, corpus });
+    let seq = 0;
+    for (const point of savedResult.trace) {
+      validator.accept({ schemaVersion: '1.0.0', requestId: req.requestId, generation: started.turn.generation, seq: ++seq, event: 'trace', data: point });
+    }
+    validator.accept({
+      schemaVersion: '1.0.0',
+      requestId: req.requestId,
+      generation: started.turn.generation,
+      seq: ++seq,
+      event: 'trace',
+      data: { stage: 'settlement', state: 'completed', elapsedMs: null, replayed: true, ...savedResult.settlement }
+    });
+  });
+});
+
+integration('DynamoDB: canary privacy enforcement across REQ#, SESSION#, BUDGET# and VISITOR# before and after clear()', async () => {
+  const corpus = require('../../../chat/knowledge/corpus.json') as { corpusVersion: string };
+  const canaryPrompt = 'CANARY-A12-PROMPT-991';
+  const canaryReply = 'CANARY-A12-REPLY-992';
+  const canaryJobText = 'CANARY-A12-JOBTEXT-993';
+
+  await fixture(async (store, identity, { rows }) => {
+    const visitorMessage = `Please compare this job description: ${canaryPrompt} and ${canaryJobText}`;
+    const req = input(identity, visitorMessage);
+    const started = await store.beginTurn(req, signal);
+
+    // Attempting to store raw jobText or prompt on result must be rejected by runtime privacy guard
+    await assert.rejects(store.completeTurn({
+      turn: started.turn,
+      actualCosts: { openai: 50, anthropic: 0 },
+      result: { kind: 'answer', answer: { blocks: [] }, jobText: canaryJobText }
+    }, signal), { code: 'INVALID_REQUEST' });
+
+    const validResult = {
+      kind: 'answer',
+      reply: {
+        kind: 'portfolio',
+        text: `Conversational synthesis that stays only in active session: ${canaryReply}`,
+        suggestions: ['Tell me about NEXUS']
+      },
+      answer: { blocks: ['canonical claim without untrusted text'] },
+      trace: [
+        { stage: 'context', state: 'completed', elapsedMs: 1, durationMs: 1, corpusVersion: corpus.corpusVersion, claimCount: 16 },
+        { stage: 'routing', state: 'completed', elapsedMs: 3, durationMs: 2, routingMode: 'portfolio_mcp', needsRetrieval: true, requestedTools: ['compare_job_requirements'] },
+        { stage: 'retrieval', state: 'started', elapsedMs: 4 },
+        { stage: 'retrieval', state: 'completed', elapsedMs: 12, durationMs: 8, retrievalMode: 'hybrid', matchedCount: 3, corpusVersion: corpus.corpusVersion },
+        { stage: 'mcp', state: 'started', elapsedMs: 13, mcpMethod: 'tools/call', toolName: 'compare_job_requirements', toolCallId: 'tool-job-1' },
+        { stage: 'mcp', state: 'completed', elapsedMs: 25, durationMs: 12, mcpMethod: 'tools/call', toolName: 'compare_job_requirements', toolCallId: 'tool-job-1', toolOutcome: 'completed' }
+      ],
+      settlement: { reservedMicros: 1000, chargedMicros: 50, priceVersion: 'test-prices-v1' }
+    };
+
+    const settled = await store.completeTurn({
+      turn: started.turn,
+      actualCosts: { openai: 50, anthropic: 0 },
+      chargeComponents: { embeddingMicros: 10, generationMicros: 40, mcpCalls: 1, retrievalMatched: 3 },
+      result: validResult,
+      historyEntry: { text: req.text, result: validResult }
+    }, signal);
+    assert.equal(settled.published, true);
+
+    const beforeClearRows = await rows();
+    const reqRowsBefore = beforeClearRows.filter(row => row.pk?.S?.startsWith('REQUEST#'));
+    const budgetRowsBefore = beforeClearRows.filter(row => row.pk?.S?.startsWith('BUDGET#'));
+    const visitorRowsBefore = beforeClearRows.filter(row => row.pk?.S?.startsWith('VISITOR#'));
+    const sessionRowsBefore = beforeClearRows.filter(row => row.pk?.S?.startsWith('SESSION#'));
+
+    assert.equal(reqRowsBefore.length, 1);
+    assert.ok(budgetRowsBefore.length >= 2);
+    assert.equal(visitorRowsBefore.length, 1);
+    assert.equal(sessionRowsBefore.length, 1);
+
+    // Durable REQ#, BUDGET#, and VISITOR# items must contain 0 occurrences of all 3 canaries even BEFORE clear()
+    const nonSessionJsonBefore = JSON.stringify([...reqRowsBefore, ...budgetRowsBefore, ...visitorRowsBefore]);
+    for (const canary of [canaryPrompt, canaryReply, canaryJobText]) {
+      assert.equal(nonSessionJsonBefore.includes(canary), false, `Forbidden canary ${canary} leaked into durable ledger before clear()`);
+    }
+
+    // SESSION# holds the active conversation prior to clear()
+    const sessionJsonBefore = JSON.stringify(sessionRowsBefore);
+    assert.equal(sessionJsonBefore.includes(canaryReply), true);
+
+    // Clear session and verify 0 occurrences across ALL DynamoDB items (REQ#, SESSION#, BUDGET#, VISITOR#)
+    await store.clear(identity, signal);
+    const afterClearRows = await rows();
+    const allDynamoJsonAfter = JSON.stringify(afterClearRows);
+    for (const canary of [canaryPrompt, canaryReply, canaryJobText]) {
+      assert.equal(allDynamoJsonAfter.includes(canary), false, `Forbidden canary ${canary} remained in DynamoDB after clear()`);
+    }
+  });
+});
+
+test.after(() => client?.destroy());
