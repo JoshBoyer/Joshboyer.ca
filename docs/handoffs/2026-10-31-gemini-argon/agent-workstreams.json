@@ -1,0 +1,622 @@
+{
+  "schemaVersion": "1.0.0",
+  "capturedAt": "2026-10-31T14:14:10Z",
+  "status": "planned",
+  "repository": "https://github.com/JoshBoyer/Joshboyer.ca",
+  "branch": "codex/chat-conversation-panel",
+  "sourceCheckpoint": "ef53778832429cd2f4d2e39e47945c1328b19db5",
+  "coordinator": {
+    "name": "Argon",
+    "role": "Lead integrator in Gemini; excluded from subagent count",
+    "invocation": "Unverified. Discover the installed interface and actual concurrency limits before launch.",
+    "owns": [
+      "package.json",
+      "package-lock.json",
+      "services/chat/package.json",
+      "services/chat/package-lock.json",
+      "services/chat/tsconfig.json",
+      "services/chat/build.cjs",
+      "docs/architecture/chat-implementation-plan.md",
+      "docs/handoffs/2026-10-31-gemini-argon/**",
+      "GEMINI.md"
+    ],
+    "rules": [
+      "Only the coordinator integrates worker branches and performs coordinated deployments.",
+      "Read the original checkout's local instructions before creating isolated worktrees; protected user changes are not transferable commits.",
+      "Consult the applicable source owner for changes outside a worker's listed paths; resolve unlisted ownership before editing."
+    ]
+  },
+  "subagentCount": 24,
+  "concurrency": "Use the actual platform limit in dependency waves; 24 planned roles do not mean 24 simultaneous writers.",
+  "workerBrief": "You are not alone in the codebase. Do not revert other agents’ work. Edit only your owned paths; request integration changes from their owner.",
+  "releaseBoundary": {
+    "privateChat": true,
+    "publicChat": false,
+    "voice": false,
+    "region": "us-east-2",
+    "providerPath": "Cloudflare AI Gateway with owner's existing provider keys",
+    "newPaidServices": "No unbounded provisioning, plan upgrade or budget increase; verify service support and use existing approved architecture."
+  },
+  "existingArchitecture": {
+    "record": "docs/architecture/chat-implementation-plan.md",
+    "retrieval": "Versioned private S3 and S3 Vectors; bounded semantic plus deterministic matching; evaluate/pin OpenAI embeddings through Gateway.",
+    "mcp": "Stateless Streamable HTTP on a separate portfolio MCP Lambda, API Gateway AWS_IAM and exact caller permissions; no public proxy path.",
+    "toolAllowlist": [
+      "search_public_evidence",
+      "get_case_study",
+      "compare_job_requirements"
+    ],
+    "evaluationDirectory": "chat/evaluation",
+    "notes": [
+      "No semantic index or application MCP server is implemented at capture.",
+      "Ordinary conversation may correctly skip retrieval/tools; the qualification scenario must exercise real tools intentionally.",
+      "No task is launched by this manifest."
+    ]
+  },
+  "agents": [
+    {
+      "id": "A01",
+      "role": "Requirements and contracts",
+      "status": "planned",
+      "wave": 1,
+      "mode": "contract_owner",
+      "dependsOn": [],
+      "owns": [
+        "chat/contracts/**",
+        "tests/chat-contracts.test.cjs",
+        "tests/chat-conversation-contracts.test.cjs"
+      ],
+      "excludes": [],
+      "report": "docs/handoffs/2026-10-31-gemini-argon/evidence/A01.md",
+      "acceptance": [
+        "Freeze R01–R12 and retrieval, tool, routing, trace and privacy contracts against current source.",
+        "Approve only versioned interface changes; preserve strict byte limits, evidence qualification and canonical rendering."
+      ]
+    },
+    {
+      "id": "A02",
+      "role": "Baseline and runtime inventory",
+      "status": "planned",
+      "wave": 1,
+      "mode": "read_only_review",
+      "dependsOn": [],
+      "owns": [],
+      "excludes": [],
+      "report": "docs/handoffs/2026-10-31-gemini-argon/evidence/A02.md",
+      "acceptance": [
+        "Record exact source/deployment identities and run a clean-checkout baseline.",
+        "List failures by test name, skipped prerequisites and reproducible commands; distinguish live evidence from fixtures."
+      ]
+    },
+    {
+      "id": "A03",
+      "role": "Threat model and privacy design",
+      "status": "planned",
+      "wave": 1,
+      "mode": "read_only_review",
+      "dependsOn": [],
+      "owns": [],
+      "excludes": [],
+      "report": "docs/handoffs/2026-10-31-gemini-argon/evidence/A03.md",
+      "acceptance": [
+        "Map browser, edge, origin, retrieval, MCP, provider and operator trust boundaries.",
+        "Specify canaries, replay/clear/expiry races, charging failures and log/ledger retention checks before implementation."
+      ]
+    },
+    {
+      "id": "A04",
+      "role": "Visual and interaction specification",
+      "status": "planned",
+      "wave": 1,
+      "mode": "read_only_review",
+      "dependsOn": [],
+      "owns": [],
+      "excludes": [],
+      "report": "docs/handoffs/2026-10-31-gemini-argon/evidence/A04.md",
+      "acceptance": [
+        "Compare both supplied screenshots and produce desktop/mobile interaction acceptance criteria.",
+        "Use the mockup as visual direction only; do not invent career facts, models, JEV semantics or implemented tools."
+      ]
+    },
+    {
+      "id": "A05",
+      "role": "Conversation and backend integration",
+      "status": "planned",
+      "wave": 2,
+      "mode": "implementation",
+      "dependsOn": [
+        "A01",
+        "A06",
+        "A09",
+        "A10",
+        "A11",
+        "A12",
+        "A13",
+        "A15",
+        "A20"
+      ],
+      "owns": [
+        "services/chat/src/chat.ts",
+        "services/chat/src/cag.ts",
+        "services/chat/src/handler.ts",
+        "services/chat/src/aws.ts",
+        "services/chat/test/chat.test.ts",
+        "services/chat/test/handler.test.ts",
+        "services/chat/test/aws.test.ts"
+      ],
+      "excludes": [],
+      "report": "docs/handoffs/2026-10-31-gemini-argon/evidence/A05.md",
+      "acceptance": [
+        "Integrate conditional CAG/RAG/MCP execution with natural multi-turn conversation and strict server-owned authority.",
+        "Prove replay, cancellation, refusal-without-fallback and degraded retrieval on the integrated path; avoid tool calls for turns that do not need them."
+      ]
+    },
+    {
+      "id": "A06",
+      "role": "Provider adapters and bounded routing",
+      "status": "planned",
+      "wave": 2,
+      "mode": "implementation",
+      "dependsOn": [
+        "A01",
+        "A02",
+        "A03"
+      ],
+      "owns": [
+        "services/chat/src/chat-provider.ts",
+        "services/chat/src/config.ts",
+        "services/chat/src/routing/**",
+        "services/chat/test/providers.test.ts",
+        "services/chat/test/routing.test.ts"
+      ],
+      "excludes": [],
+      "report": "docs/handoffs/2026-10-31-gemini-argon/evidence/A06.md",
+      "acceptance": [
+        "Preserve Gateway-only own-key traffic, evaluated pinned models, explicit refusal handling and bounded fallback.",
+        "Define embedding adapter contracts with A08 and pricing with A13; never interpret the mockup's JEV label as an approved new subsystem."
+      ]
+    },
+    {
+      "id": "A07",
+      "role": "Approved knowledge and CAG",
+      "status": "planned",
+      "wave": 2,
+      "mode": "implementation",
+      "dependsOn": [
+        "A01",
+        "A02",
+        "A03"
+      ],
+      "owns": [
+        "chat/knowledge/**",
+        "tools/build-chat-knowledge.cjs",
+        "tools/build-chat-client.cjs",
+        "dist/chat-evidence.json",
+        "tests/chat-knowledge.test.cjs"
+      ],
+      "excludes": [],
+      "report": "docs/handoffs/2026-10-31-gemini-argon/evidence/A07.md",
+      "acceptance": [
+        "Regenerate only from the approved public evidence input; preserve source/qualification/version distinctions.",
+        "Provide deterministic indexed chunk manifests and CAG alignment without promoting private corpus or mockup claims."
+      ]
+    },
+    {
+      "id": "A08",
+      "role": "Ingestion and embeddings",
+      "status": "planned",
+      "wave": 2,
+      "mode": "implementation",
+      "dependsOn": [
+        "A01",
+        "A03",
+        "A07",
+        "A13"
+      ],
+      "owns": [
+        "services/chat/src/ingestion/**",
+        "services/chat/test/ingestion.test.ts",
+        "tools/ingest-chat-knowledge.cjs"
+      ],
+      "excludes": [],
+      "report": "docs/handoffs/2026-10-31-gemini-argon/evidence/A08.md",
+      "acceptance": [
+        "Build versioned S3/S3 Vectors ingestion with evaluated OpenAI embeddings through Gateway and pinned configuration.",
+        "Prove dimension/model/corpus consistency, bounded paid ingestion, atomic activation and rollback to the previous index."
+      ]
+    },
+    {
+      "id": "A09",
+      "role": "Retrieval and ranking",
+      "status": "planned",
+      "wave": 2,
+      "mode": "implementation",
+      "dependsOn": [
+        "A01",
+        "A03",
+        "A07",
+        "A08"
+      ],
+      "owns": [
+        "services/chat/src/retrieval/**",
+        "services/chat/test/retrieval.test.ts"
+      ],
+      "excludes": [],
+      "report": "docs/handoffs/2026-10-31-gemini-argon/evidence/A09.md",
+      "acceptance": [
+        "Combine semantic results with deterministic qualification-aware matching and bounded context.",
+        "Measure retrieval quality; reject inactive or mismatched evidence and demonstrate truthful degraded search without silent career guesses."
+      ]
+    },
+    {
+      "id": "A10",
+      "role": "MCP transport and workload authentication",
+      "status": "planned",
+      "wave": 2,
+      "mode": "implementation",
+      "dependsOn": [
+        "A01",
+        "A03"
+      ],
+      "owns": [
+        "services/portfolio-mcp/**"
+      ],
+      "excludes": [
+        "services/portfolio-mcp/src/tools/**",
+        "services/portfolio-mcp/test/tools/**"
+      ],
+      "report": "docs/handoffs/2026-10-31-gemini-argon/evidence/A10.md",
+      "acceptance": [
+        "Implement stateless Streamable HTTP with pinned SDK/protocol, initialize/list/call and API Gateway AWS_IAM authentication.",
+        "Prove the signing-capable client transport, exact caller permissions, output/deadline limits and rejection of unexpected tool discovery."
+      ]
+    },
+    {
+      "id": "A11",
+      "role": "Three read-only portfolio tools",
+      "status": "planned",
+      "wave": 2,
+      "mode": "implementation",
+      "dependsOn": [
+        "A01",
+        "A03",
+        "A07",
+        "A10"
+      ],
+      "owns": [
+        "services/portfolio-mcp/src/tools/**",
+        "services/portfolio-mcp/test/tools/**"
+      ],
+      "excludes": [],
+      "report": "docs/handoffs/2026-10-31-gemini-argon/evidence/A11.md",
+      "acceptance": [
+        "Implement search_public_evidence, get_case_study and compare_job_requirements using their existing argument contracts.",
+        "Prove allowlisting, canonical qualified evidence, bounded untrusted job text and no arbitrary URL/file/admin access or model spending."
+      ]
+    },
+    {
+      "id": "A12",
+      "role": "Sessions, replay and privacy",
+      "status": "planned",
+      "wave": 2,
+      "mode": "implementation",
+      "dependsOn": [
+        "A01",
+        "A02",
+        "A03"
+      ],
+      "owns": [
+        "services/chat/src/state.ts",
+        "services/chat/test/state.test.ts",
+        "services/chat/test/state.integration.test.ts"
+      ],
+      "excludes": [],
+      "report": "docs/handoffs/2026-10-31-gemini-argon/evidence/A12.md",
+      "acceptance": [
+        "Extend the existing DynamoDB model without a parallel store or stateful resource replacement.",
+        "Prove atomic reservations, ownership, expiry, clear/restart/cancel races and no free text in the long-retention ledger."
+      ]
+    },
+    {
+      "id": "A13",
+      "role": "Cost policy and reservations",
+      "status": "planned",
+      "wave": 2,
+      "mode": "implementation",
+      "dependsOn": [
+        "A01",
+        "A03",
+        "A06"
+      ],
+      "owns": [
+        "services/chat/src/chat-pricing.ts",
+        "services/chat/src/budget-policy.ts",
+        "services/chat/test/pricing.test.ts"
+      ],
+      "excludes": [],
+      "report": "docs/handoffs/2026-10-31-gemini-argon/evidence/A13.md",
+      "acceptance": [
+        "Account for embeddings, generation, tool-context and fallback before chargeable work; retain conservative unknown charges.",
+        "Keep existing aggregate/provider caps unless Josh explicitly changes them; coordinate transaction implementation with A12."
+      ]
+    },
+    {
+      "id": "A14",
+      "role": "Private edge and local adapters",
+      "status": "planned",
+      "wave": 2,
+      "mode": "implementation",
+      "dependsOn": [
+        "A01",
+        "A02",
+        "A03"
+      ],
+      "owns": [
+        "services/edge/**",
+        "worker.mjs",
+        "serve.cjs",
+        "tests/chat-public-boundary.test.cjs"
+      ],
+      "excludes": [
+        "services/edge/chat-preview.html"
+      ],
+      "report": "docs/handoffs/2026-10-31-gemini-argon/evidence/A14.md",
+      "acceptance": [
+        "Preserve private access, signed method/path/body/session, nonce checks, CSRF controls and explicit asset allowlists.",
+        "Keep public and probe flags off; integrate new client assets only on owner request and prove forged/oversized/replayed inputs cannot start paid work."
+      ]
+    },
+    {
+      "id": "A15",
+      "role": "AWS infrastructure",
+      "status": "planned",
+      "wave": 2,
+      "mode": "implementation",
+      "dependsOn": [
+        "A01",
+        "A03",
+        "A08",
+        "A09",
+        "A10",
+        "A12",
+        "A13"
+      ],
+      "owns": [
+        "infra/aws/**"
+      ],
+      "excludes": [],
+      "report": "docs/handoffs/2026-10-31-gemini-argon/evidence/A15.md",
+      "acceptance": [
+        "Extend the existing us-east-2 stack for versioned retrieval and least-privilege internal MCP; verify new-experience service support first.",
+        "Use reviewed changesets, stable stateful IDs, retained data and termination protection; no paid-plan upgrade or new Region without authority."
+      ]
+    },
+    {
+      "id": "A16",
+      "role": "Main chat frontend integration",
+      "status": "planned",
+      "wave": 3,
+      "mode": "implementation",
+      "dependsOn": [
+        "A04",
+        "A05",
+        "A14",
+        "A20"
+      ],
+      "owns": [
+        "dist/chat-assistant.js",
+        "tests/chat-ui.test.cjs"
+      ],
+      "excludes": [],
+      "report": "docs/handoffs/2026-10-31-gemini-argon/evidence/A16.md",
+      "acceptance": [
+        "Keep chat conversational with safe inert text, suggestions and request selection separate from inspection.",
+        "Establish the details-module boundary for A18 before it edits; prove lifecycle behaviour and backwards-compatible saved responses."
+      ]
+    },
+    {
+      "id": "A17",
+      "role": "Visual implementation and approved assets",
+      "status": "planned",
+      "wave": 3,
+      "mode": "implementation",
+      "dependsOn": [
+        "A04",
+        "A14"
+      ],
+      "owns": [
+        "dist/chat-assistant.css",
+        "services/edge/chat-preview.html",
+        "dist/assets/chat/**"
+      ],
+      "excludes": [],
+      "report": "docs/handoffs/2026-10-31-gemini-argon/evidence/A17.md",
+      "acceptance": [
+        "Implement the approved visual spec with responsive layout, contrast and reduced motion.",
+        "Use approved existing imagery or reviewed new assets only; preserve the user's untracked personal images and do not add voice controls."
+      ]
+    },
+    {
+      "id": "A18",
+      "role": "Request details panel",
+      "status": "planned",
+      "wave": 3,
+      "mode": "implementation",
+      "dependsOn": [
+        "A01",
+        "A16",
+        "A20"
+      ],
+      "owns": [
+        "dist/chat-request-details.js",
+        "tests/chat-request-details.test.cjs"
+      ],
+      "excludes": [],
+      "report": "docs/handoffs/2026-10-31-gemini-argon/evidence/A18.md",
+      "acceptance": [
+        "After A16 extracts the boundary, implement selected-request Evidence/Trace/Tools/Context views for real data.",
+        "Prove keyboard/focus/Escape, truthful skipped/error states and older-request pinning; before extraction submit a spec to A16 instead of editing its file."
+      ]
+    },
+    {
+      "id": "A19",
+      "role": "Accessibility and mobile review",
+      "status": "planned",
+      "wave": 3,
+      "mode": "read_only_review",
+      "dependsOn": [
+        "A16",
+        "A17",
+        "A18"
+      ],
+      "owns": [],
+      "excludes": [],
+      "report": "docs/handoffs/2026-10-31-gemini-argon/evidence/A19.md",
+      "acceptance": [
+        "Test actual desktop/mobile browser interactions, keyboard and focus, contrast, overflow and reduced motion.",
+        "Return actionable defects to source owners with reproducible evidence; do not edit their files."
+      ]
+    },
+    {
+      "id": "A20",
+      "role": "Truthful request traces",
+      "status": "planned",
+      "wave": 2,
+      "mode": "implementation",
+      "dependsOn": [
+        "A01",
+        "A03",
+        "A06",
+        "A09",
+        "A10",
+        "A11",
+        "A13"
+      ],
+      "owns": [
+        "services/chat/src/trace.ts",
+        "services/chat/test/trace.test.ts",
+        "tests/chat-traces.test.cjs"
+      ],
+      "excludes": [],
+      "report": "docs/handoffs/2026-10-31-gemini-argon/evidence/A20.md",
+      "acceptance": [
+        "Extend bounded trace observations for actual routing, retrieval, MCP, provider, validation and settlement.",
+        "Include measured duration/version/outcome and distinguish skipped or unknown values; no prompts, private reasoning, credentials or raw job text."
+      ]
+    },
+    {
+      "id": "A21",
+      "role": "Cross-system functional qualification",
+      "status": "planned",
+      "wave": 4,
+      "mode": "verification",
+      "dependsOn": [
+        "A05",
+        "A08",
+        "A09",
+        "A10",
+        "A11",
+        "A12",
+        "A13",
+        "A14",
+        "A15",
+        "A16",
+        "A17",
+        "A18",
+        "A20"
+      ],
+      "owns": [
+        "services/chat/test/phase4.integration.test.ts",
+        "tests/chat-phase4-flow.test.cjs"
+      ],
+      "excludes": [],
+      "report": "docs/handoffs/2026-10-31-gemini-argon/evidence/A21.md",
+      "acceptance": [
+        "Exercise real database, actual private HTTP caller and authenticated MCP exchanges in the final integrated build.",
+        "Cover CAG-only, RAG, all three tools, general turns, retry/cancel/clear/reload and degraded outcomes; label every simulation and skip."
+      ]
+    },
+    {
+      "id": "A22",
+      "role": "Adversarial and answer-quality evaluation",
+      "status": "planned",
+      "wave": 4,
+      "mode": "verification",
+      "dependsOn": [
+        "A05",
+        "A07",
+        "A09",
+        "A10",
+        "A11",
+        "A13",
+        "A16",
+        "A20"
+      ],
+      "owns": [
+        "chat/evaluation/**",
+        "tests/chat-golden.test.cjs",
+        "tests/chat-adversarial.test.cjs",
+        "services/chat/test/phase4.security.test.ts"
+      ],
+      "excludes": [],
+      "report": "docs/handoffs/2026-10-31-gemini-argon/evidence/A22.md",
+      "acceptance": [
+        "Run golden questions through actual model/retriever/tool paths, preserving separate offline contract results.",
+        "Assess citation grounding, qualification retention, unsupported claims, prompt injection, privacy canaries and cost abuse; retain reproducible failures."
+      ]
+    },
+    {
+      "id": "A23",
+      "role": "Operations, spending and observability",
+      "status": "planned",
+      "wave": 4,
+      "mode": "verification",
+      "dependsOn": [
+        "A05",
+        "A13",
+        "A14",
+        "A15",
+        "A20",
+        "A21",
+        "A22"
+      ],
+      "owns": [
+        "tools/probe-chat-private.cjs",
+        "tools/probe-chat-origin.cjs",
+        "tools/probe-chat-cloud.cjs",
+        "tools/chat-cloud-ops.cjs",
+        "tests/chat-private-probe.test.cjs",
+        "tests/chat-origin-probe.test.cjs",
+        "tests/chat-probe-runner.test.cjs",
+        "tests/chat-cloud-ops.test.cjs",
+        "docs/operations/chat-phase4-*.md"
+      ],
+      "excludes": [],
+      "report": "docs/handoffs/2026-10-31-gemini-argon/evidence/A23.md",
+      "acceptance": [
+        "Measure representative latency/cost, confirm provider billing-credit attribution and inspect metadata-only logging/retention.",
+        "Record exact deployments, limits, alarms, disable/rollback steps and sanitized operator receipts; never publish raw credentials or chats."
+      ]
+    },
+    {
+      "id": "A24",
+      "role": "Independent final qualification",
+      "status": "planned",
+      "wave": 5,
+      "mode": "read_only_review",
+      "dependsOn": [
+        "A19",
+        "A21",
+        "A22",
+        "A23"
+      ],
+      "owns": [],
+      "excludes": [],
+      "report": "docs/handoffs/2026-10-31-gemini-argon/evidence/A24.md",
+      "acceptance": [
+        "Reproduce at the exact pushed SHA in a clean checkout and independently challenge all R01–R12 claims.",
+        "Verify real deployed/browser/operator paths and local Gemini determinism requirements; report unmet requirements first and keep public/voice off."
+      ]
+    }
+  ]
+}

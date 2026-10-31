@@ -1,0 +1,122 @@
+{
+  "schemaVersion": "1.0.0",
+  "capturedAt": "2026-10-31T14:14:10Z",
+  "scope": "Private assistant spike handoff; no Gemini agents launched by this preparation",
+  "source": {
+    "repository": "https://github.com/JoshBoyer/Joshboyer.ca",
+    "branch": "codex/chat-conversation-panel",
+    "checkpoint": "ef53778832429cd2f4d2e39e47945c1328b19db5",
+    "mainOnlyCommits": 1,
+    "branchOnlyCommits": 6,
+    "workingTree": "User changes remain; see CURRENT-STATE.md",
+    "cleanCheckoutQualified": false
+  },
+  "deployment": {
+    "awsProject": "099256072947",
+    "region": "us-east-2",
+    "profile": "joshboyer-portfolio",
+    "stack": "PortfolioChatDev",
+    "stackStatus": "UPDATE_COMPLETE",
+    "terminationProtection": true,
+    "awsOrigin": "https://7fvk4i6eg7.execute-api.us-east-2.amazonaws.com/dev",
+    "cloudflareAccount": "019f6ca21aafa442ceed0e09bdf76f7f",
+    "gateway": "joshboyer-chat-dev",
+    "worker": "joshboyer-chat-dev",
+    "workerVersion": "cda469e6-c859-4dce-b175-69b0d7c370f3",
+    "preview": "https://joshboyer-chat-dev.boyer-josh1985.workers.dev/chat-preview",
+    "flags": {
+      "CHAT_PRIVATE_ENABLED": true,
+      "PUBLIC_CHAT_ENABLED": false,
+      "PROBE_ENABLED": false
+    },
+    "latestDriftCheck": "Not rerun after conversational deployment"
+  },
+  "capabilities": {
+    "conversation": "implemented/deployed; one greeting observed in actual browser",
+    "cag": "implemented; 7 of 14 approved claims; provider cache hit not established",
+    "evidenceAndTracePanel": "implemented/deployed; wider browser matrix pending",
+    "rag": "not implemented",
+    "applicationMcp": "not implemented",
+    "voice": "deferred",
+    "publicAccess": "disabled"
+  },
+  "corpusVersion": "sha256:f42b9375285ed967b92742982e8c0c2de1692c3d29dadb71ff5e44089cffd9cf",
+  "limits": {
+    "monthlyAggregateUsd": 25,
+    "monthlyPerProviderUsd": 25,
+    "sessionHours": 24,
+    "turnsPerSession": 8,
+    "turnsPerOperatorDay": 16,
+    "activeTurnsPerSession": 1,
+    "messageUtf8Bytes": 8192,
+    "httpBodyBytes": 12288,
+    "providerRequestBytes": 49152,
+    "maxOutputTokens": 1536,
+    "maxProviderAttempts": 2,
+    "turnDeadlineSeconds": 50,
+    "maxReservedMicroUsdPerProvider": 10804,
+    "maxReservedMicroUsdPerTurn": 21608
+  },
+  "models": {
+    "primary": "gpt-6-luna",
+    "fallback": "claude-haiku-5-5",
+    "priceVersion": "2026-10-31-standard-conversation-v2"
+  },
+  "verification": {
+    "environment": "Existing Windows workspace, not clean checkout",
+    "root": {
+      "pass": 277,
+      "fail": 0,
+      "cancel": 0,
+      "skip": 0
+    },
+    "backend": {
+      "pass": 84,
+      "fail": 0,
+      "cancel": 0,
+      "skip": 0,
+      "database": "Real DynamoDB Local at http://127.0.0.1:8007"
+    },
+    "typechecks": "All three cloud packages passed",
+    "clientEvidenceFreshness": "passed",
+    "securityCheck": {
+      "status": "passed",
+      "runtimeTextFiles": 123
+    },
+    "historicalOnly": {
+      "edgePass": 19,
+      "infrastructurePass": 9
+    },
+    "browser": {
+      "requestId": "38c03917-9c9a-4134-ae74-abbfe78994db",
+      "result": "Natural greeting and five completed side-panel trace stages; no observed console warnings/errors",
+      "matrixComplete": false
+    },
+    "directLiveEvaluations": {
+      "count": 4,
+      "scope": "Local updated orchestrator using live AWS state/Gateway; not the deployed browser caller",
+      "coverage": [
+        "greeting/queue analogy",
+        "contextual follow-up",
+        "unsupported certification",
+        "credentials/action refusal"
+      ],
+      "semanticStatus": "Manually reviewed examples; not broad quality qualification"
+    }
+  },
+  "remaining": [
+    "RAG ingestion/retrieval/version rollback",
+    "Authenticated application MCP and three tools",
+    "Embedding/tool budget integration",
+    "Reference-inspired UI finish",
+    "Full browser/lifecycle/adversarial/quality qualification",
+    "Provider billing-credit attribution and representative latency/cost",
+    "Clean-checkout deterministic tests and independent final review"
+  ],
+  "handoff": {
+    "manifest": "agent-workstreams.json",
+    "plannedSubagents": 24,
+    "launchedGeminiSubagents": 0,
+    "argonInvocationVerified": false
+  }
+}
