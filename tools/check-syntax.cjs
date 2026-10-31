@@ -6,8 +6,10 @@ const root = path.resolve(__dirname, '..');
 let checked = 0;
 function walk(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    if (['node_modules', '.git'].includes(entry.name)) continue;
+    if (['node_modules', '.git', '.wrangler', 'cdk.out'].includes(entry.name)) continue;
     const full = path.join(dir, entry.name);
+    if (entry.isDirectory() && dir === root && entry.name === 'build') continue;
+    if (entry.isDirectory() && /^services[/\\][^/\\]+[/\\]build$/.test(path.relative(root, full))) continue;
     if (entry.isDirectory()) walk(full);
     else if (/\.(?:js|cjs|mjs)$/.test(entry.name)) {
       const result = spawnSync(process.execPath, ['--check', full], { encoding: 'utf8' });

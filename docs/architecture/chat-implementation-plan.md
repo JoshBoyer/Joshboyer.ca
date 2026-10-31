@@ -1,12 +1,12 @@
 # Portfolio AI chat implementation plan
 
-Version: 1.1 | Date: 2026-10-31 | Status: Platform approved; Phase 1 implemented locally
+Version: 1.2 | Date: 2026-10-31 | Status: Phases 1–2 implemented; private provider path verified
 
 ## Decision in one screen
 
 Build a small, inspectable chat assistant for JoshBoyer.ca. Keep the existing static website and Cloudflare delivery. Run the application backend on AWS in **us-east-2**, route model requests through **Cloudflare AI Gateway**, and use Josh's own OpenAI and Anthropic API keys and eligible provider credits.
 
-Local Agent Toolkit setup is complete and independently verified; see the [setup record](../operations/aws-agent-toolkit-setup.md). Phase 1 now provides strict chat/tool contracts, deterministic public-only knowledge artifacts, canonical claim rendering and offline regression fixtures; see the [chat foundation](../../chat/README.md). Hosted application implementation and deployment remain ahead.
+Local Agent Toolkit setup is complete and independently verified; see the [setup record](../operations/aws-agent-toolkit-setup.md). Phase 1 provides strict chat/tool contracts, deterministic public-only knowledge artifacts, canonical claim rendering and offline regression fixtures; see the [chat foundation](../../chat/README.md). Phase 2 deploys the isolated AWS and Cloudflare operator path, with both provider-key routes and rejection controls observed live; see the [verification record](../operations/chat-phase2-verification.md). Public chat, sessions, budgets, retrieval and tool execution remain ahead.
 
 The assistant should explain Josh's experience, find public evidence, compare a pasted job description with that evidence, and explain how its own retrieval and tools worked. It must distinguish delivered work, analysis/design, proposals and independent projects. Voice is a later phase.
 
@@ -178,7 +178,7 @@ Set an application deadline well below AWS's maximum stream duration. A closed b
 | 6. Private qualification | Browser, deployed integration, adversarial and cost evaluation | Observed billing attribution, privacy checks, end-to-end tool/retrieval trace and measured latency/quality/cost. Public flag remains off until this passes. |
 | 7. Public release | Feature flag, documented rollback/runbook | Enable deliberately, observe traffic and errors, verify actual production callers. Revert by disabling chat without affecting the portfolio. |
 
-Planning estimate: **5–8 focused development days**, including deployed qualification, after access and provider credentials are ready. Update after the transport/security spike; permissions and platform constraints can change this estimate. Josh subsequently authorised orchestration of Phase 1. This local foundation does not deploy or enable the application.
+Original planning estimate: **5–8 focused development days**, including deployed qualification, after access and provider credentials are ready. Josh authorised Phases 1 and 2; their foundation and private transport/security spike are now implemented. The remaining phases still require their own implementation and qualification. The operator pilot does not enable public website chat.
 
 ## Verification and release evidence
 

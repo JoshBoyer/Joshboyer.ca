@@ -1,0 +1,25 @@
+{
+  "name": "@joshboyer/chat-infrastructure",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "check": "tsc --noEmit",
+    "build": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test test/*.test.ts",
+    "synth": "cdk synth --strict",
+    "diff": "cdk diff",
+    "deploy": "cdk deploy",
+    "bootstrap:policy": "tsx bin/bootstrap-policy.ts"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "2.275.0",
+    "constructs": "10.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "aws-cdk": "2.1147.0",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2"
+  }
+}

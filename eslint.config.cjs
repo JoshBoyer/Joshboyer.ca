@@ -5,7 +5,7 @@ const globals = require('globals');
 module.exports = [
   // Vendored libraries and the preserved generated Worker are checked for syntax,
   // credentials and route containment, but should not receive authored-code rewrites.
-  { ignores: ['node_modules/**', '.wrangler/**', 'dist/vendor/**', 'legacy/**'] },
+  { ignores: ['**/node_modules/**', '**/.wrangler/**', 'build/**', 'infra/aws/cdk.out/**', 'services/*/build/**', 'dist/vendor/**', 'legacy/**'] },
   js.configs.recommended,
   {
     files: ['**/*.js', '**/*.cjs', '**/*.mjs'],

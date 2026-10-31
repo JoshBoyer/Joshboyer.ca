@@ -14,3 +14,10 @@ knowledge/source-documents/
 # Private working research stays local and outside public Git.
 /knowledge/
 /JOSH-BOYER-PORTFOLIO-CORPUS.md
+
+# Generated chat packages and local deployment receipts.
+/build/
+services/*/build/
+services/*/.wrangler/
+infra/aws/cdk.out/
+infra/aws/deployment-outputs.json

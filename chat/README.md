@@ -54,7 +54,7 @@ The export reads only `dist/career-evidence.v3.json` as evidence. It checks publ
 
 ## Integration ahead
 
-Continue with Phase 2 of the [implementation plan](../docs/architecture/chat-implementation-plan.md): reviewable AWS infrastructure and the authenticated Cloudflare AI Gateway provider path. Follow with sessions and budgets, real retrieval/MCP execution, then the website interface. Provider, cloud, browser-chat and billing behaviour still require deployed qualification. Voice remains deferred.
+The isolated Phase 2 implementation is in `infra/aws/`, `services/chat/` and `services/edge/`. Follow the [cloud pilot runbook](../docs/operations/chat-phase2-pilot.md) for deployment and observed qualification. Sessions and budgets, real retrieval/MCP execution, then the website interface follow in the [implementation plan](../docs/architecture/chat-implementation-plan.md). Voice remains deferred.
 
 ## Verification record — 2026-10-31
 
