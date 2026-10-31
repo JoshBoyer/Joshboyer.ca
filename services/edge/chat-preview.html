@@ -2,18 +2,26 @@
 <html lang="en-CA">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="referrer" content="no-referrer">
-  <meta name="theme-color" content="#0755ff">
+  <meta name="theme-color" content="#0b1324">
   <title>Private chat preview — Josh Boyer</title>
   <link rel="stylesheet" href="/chat-assistant.css">
+  <script src="/chat-request-details.js" defer></script>
   <script src="/chat-assistant.js" defer></script>
 </head>
 <body class="chat-preview-page">
   <header class="chat-preview-header">
-    <a class="chat-preview-brand" href="https://joshboyer.ca/">Josh Boyer<span>.</span></a>
-    <span class="chat-private-label">Private preview</span>
+    <div class="chat-preview-brand-group">
+      <a class="chat-preview-brand" href="https://joshboyer.ca/">Josh Boyer<span>.</span></a>
+      <span class="chat-private-label">Private preview</span>
+    </div>
+    <div class="chat-guardrail-pills" aria-label="Architecture and guardrails">
+      <span class="chat-guardrail-pill chat-guardrail-pill--active">Private Preview</span>
+      <span class="chat-guardrail-pill">CAG + Hybrid RAG + MCP</span>
+      <span class="chat-guardrail-pill">Pinned Gateway Models</span>
+    </div>
   </header>
   <main class="chat-preview-layout">
     <div class="chat-preview-main">
@@ -25,7 +33,40 @@
         <button class="chat-send" type="submit">Open private chat</button>
         <p role="status" aria-live="polite"></p>
       </form>
-      <div data-chat-preview></div>
+      <aside class="chat-preview-rail chat-identity-rail" aria-label="Josh Boyer portfolio identity and guardrails">
+        <section class="chat-identity-card" aria-label="Portfolio identity">
+          <div class="chat-identity-profile">
+            <picture class="chat-avatar-ring">
+              <source srcset="/assets/optimized-extra/personal/josh-portrait-vest-640.webp" type="image/webp">
+              <img class="chat-identity-portrait" src="/assets/personal/josh-portrait-smiling.jpg" alt="Josh Boyer" width="96" height="96" loading="eager" decoding="async">
+            </picture>
+            <div class="chat-identity-meta">
+              <p class="chat-identity-caption">Josh Boyer · Business Architecture, Insurance Systems & AI</p>
+              <p class="chat-identity-pillars">People · Business · Technology · AI</p>
+            </div>
+          </div>
+          <div class="chat-scope-chips" aria-label="Verified portfolio scope">
+            <span class="chat-scope-chip">Dell Support (Sept 2006+)</span>
+            <span class="chat-scope-chip">Grenville (2009–2022)</span>
+            <span class="chat-scope-chip">Guidewire Takeover & VBA</span>
+            <span class="chat-scope-chip">Medavie Claims REST/Event</span>
+            <span class="chat-scope-chip">SQL & Reporting Continuity</span>
+            <span class="chat-scope-chip">NEXUS Capstone</span>
+          </div>
+        </section>
+        <section class="chat-identity-callout" aria-label="Suggested topics">
+          <p class="chat-callout-title">Ask me about:</p>
+          <ul class="chat-callout-list">
+            <li>Experience</li>
+            <li>NEXUS</li>
+            <li>Insurance systems</li>
+            <li>Integrations & SQL</li>
+            <li>Or general tech questions</li>
+          </ul>
+        </section>
+        <p class="chat-trust-footer">Private session · 24h auto-expiry · Clear removes history immediately</p>
+      </aside>
+      <div id="chat-assistant-root" class="chat-assistant-root" data-chat-preview></div>
     </div>
   </main>
 </body>
