@@ -30,6 +30,7 @@ export default {async fetch(request,env,ctx){
  const context={request,env,waitUntil:ctx.waitUntil.bind(ctx),passThroughOnException:ctx.passThroughOnException.bind(ctx)};
  try{
   if(pathname==='/api/contact'||pathname==='/api/contact/')return secure(await contact(context),true);
+  if(pathname==='/api/chat'||pathname.startsWith('/api/chat/'))return secure(new Response(JSON.stringify({schemaVersion:'1.0.0',error:{code:'unavailable',retryable:false}}),{status:404,headers:{'Content-Type':'application/json'}}),true);
   if(/^\/api\/(?:twin(?:\/|$)|explore(?:\/|$)|config\/?$)/i.test(pathname))return secure(new Response(JSON.stringify({ok:false,enabled:false,available:false,error:{code:'TWIN_REMOVED',message:'The digital twin and its AI access have been removed.'}}),{status:410,headers:{'Content-Type':'application/json'}}),true);
   if(/^\/(?:twin-(?:drawer|voice)\.(?:js|css)|josh-3d-avatar\.(?:js|css)|twin-context\.json|career-guide-ui\.js)$/i.test(pathname))return secure(new Response('Digital twin removed',{status:410}),true);
   if(pathname.startsWith('/api/'))return secure(await previous.fetch(request,env,ctx),true);

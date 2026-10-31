@@ -52,9 +52,9 @@ The export reads only `dist/career-evidence.v3.json` as evidence. It checks publ
 
 **Technical note:** Schemas validate structure, not authority. Later services must still authenticate sessions and MCP workloads, enforce budgets and cancellation, validate tool results, and reject stale corpus versions. Treat user text and retrieved content as data, never permission to call an administrative tool.
 
-## Integration ahead
+## Private conversation integration
 
-The isolated Phase 2 implementation is in `infra/aws/`, `services/chat/` and `services/edge/`. Follow the [cloud pilot runbook](../docs/operations/chat-phase2-pilot.md) for deployment and observed qualification. Sessions and budgets, real retrieval/MCP execution, then the website interface follow in the [implementation plan](../docs/architecture/chat-implementation-plan.md). Voice remains deferred.
+The implementation is in `infra/aws/`, `services/chat/` and `services/edge/`. Phase 3 adds durable sessions, atomic spending reservations, CAG answers and a separately gated frontend shell; follow the [private chat runbook](../docs/operations/chat-phase3-private.md). The [Phase 2 record](../docs/operations/chat-phase2-pilot.md) describes the earlier fixed provider probe, now disabled in the private conversation deployment. Retrieval/MCP and public release remain ahead in the [implementation plan](../docs/architecture/chat-implementation-plan.md). Voice remains deferred.
 
 ## Verification record — 2026-10-31
 

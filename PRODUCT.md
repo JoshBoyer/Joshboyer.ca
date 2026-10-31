@@ -24,7 +24,7 @@ Visitors arrive via desktop or mobile web browsers, often reviewing multiple can
 
 ## Capabilities and Constraints
 
-- **Static architecture:** Served from `dist/` via `serve.cjs` using vanilla HTML, CSS, and JavaScript without external runtime dependencies or network calls in client scripts.
+- **Static portfolio and private chat:** The public portfolio is served from `dist/` using vanilla HTML, CSS and JavaScript. The private chat preview uses same-origin requests through an authenticated Cloudflare Worker to an AWS backend and Cloudflare AI Gateway. Public chat remains disabled until conversation, security and spending controls pass verification. Voice, retrieval and MCP tools are later phases.
 - **Career accuracy & corpus alignment (`JOSH-BOYER-PORTFOLIO-CORPUS.md` & `AGENTS.md`):**
   - Historical responsibilities do not create a formal Architect job title.
   - Dell starts September 2006 (Gloves Off team, Latitude/OptiPlex support; no resolution-rate percentage asserted).

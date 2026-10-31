@@ -12,10 +12,11 @@
     "check:security": "node tools/security-check.cjs",
     "build:chat-knowledge": "node tools/build-chat-knowledge.cjs",
     "check:chat-knowledge": "node tools/build-chat-knowledge.cjs --check",
+    "check:chat-client": "node tools/build-chat-client.cjs --check",
     "check:chat-cloud": "npm --prefix services/chat run check && npm --prefix services/edge run check && npm --prefix infra/aws run check",
     "test:chat-cloud": "npm --prefix services/chat test && npm --prefix services/edge test && npm --prefix infra/aws test",
     "build:chat-cloud": "npm --prefix services/chat run build && npm --prefix services/edge run build && npm --prefix infra/aws run synth -- --profile joshboyer-portfolio",
-    "build": "npm run check && npm run check:security && npm run check:chat-knowledge && node tools/build-manifest.cjs"
+    "build": "npm run check && npm run check:security && npm run check:chat-knowledge && npm run check:chat-client && node tools/build-manifest.cjs"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

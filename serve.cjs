@@ -125,6 +125,10 @@ const server = http.createServer((req, res) => {
     sendJson(res, 410, { ok: false, enabled: false, available: false, error: { code: 'TWIN_REMOVED', message: 'The digital twin and its AI access have been removed.' } });
     return;
   }
+  if (pathname === '/api/chat' || pathname.startsWith('/api/chat/')) {
+    sendJson(res, 404, { schemaVersion: '1.0.0', error: { code: 'unavailable', retryable: false } });
+    return;
+  }
   if (pathname === '/api/contact' || pathname === '/api/contact/') {
     handleContactApi(req, res).catch(() => {
       if (!res.headersSent) sendJson(res, 500, { ok: false, code: 'INTERNAL_ERROR', error: 'Internal server error' });

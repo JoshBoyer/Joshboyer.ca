@@ -1,0 +1,326 @@
+{
+  "schemaVersion": "1.0.0",
+  "corpusVersion": "sha256:f42b9375285ed967b92742982e8c0c2de1692c3d29dadb71ff5e44089cffd9cf",
+  "claims": [
+    {
+      "kind": "claim",
+      "claimId": "claim-experience-claims",
+      "title": "Provider data for claims adjudication",
+      "period": "2022–present; parallel workstreams",
+      "text": "Defined provider relationships, mappings and scheduled synchronization changes with architects and developers, then supported testing and the live integrations in production.",
+      "qualificationNotes": [
+        "Integrations are live by Josh’s account, with continuing testing and production support.",
+        "Requirements, mappings and support do not imply sole service development or a Kafka implementation.",
+        "Claims architecture describes work, not a claimed formal Architect title."
+      ],
+      "sourceIds": [
+        "source-claims"
+      ]
+    },
+    {
+      "kind": "claim",
+      "claimId": "claim-experience-continuity",
+      "title": "Claims reporting continuity mapping",
+      "period": "2022–present; overlapping migration work",
+      "text": "Traced a reporting request to downstream integration needs, completed an approved compatibility design and delivered operational interim SQL reports. The permanent extract remains unconfirmed live.",
+      "qualificationNotes": [
+        "Design contribution confirmed; REST service implementation and bridge go-live remain unconfirmed.",
+        "Unconfirmed intermediate acronym is omitted.",
+        "No private operational specification, client identity, schema or transport-security claim is published.",
+        "Claims architecture describes work, not a claimed formal Architect title."
+      ],
+      "sourceIds": [
+        "source-continuity"
+      ]
+    },
+    {
+      "kind": "claim",
+      "claimId": "claim-experience-dell",
+      "title": "Latitude and OptiPlex support",
+      "period": "2006–2007",
+      "text": "Supported Latitude laptops and OptiPlex desktops on Dell’s Gloves Off team, working through hardware diagnosis with clients and explaining the next steps clearly.",
+      "qualificationNotes": [
+        "No numerical first-call resolution rate is established.",
+        "September 2006 start confirmed; broad subsequent chronology."
+      ],
+      "sourceIds": [
+        "source-dell"
+      ]
+    },
+    {
+      "kind": "claim",
+      "claimId": "claim-experience-foundations",
+      "title": "Small Business Server swing migrations",
+      "period": "2007–2009",
+      "text": "Developed a repeatable Small Business Server swing-migration process, separating infrastructure roles while accounting for data, email and identity dependencies.",
+      "qualificationNotes": [
+        "No audited preservation guarantee or exact project date is asserted.",
+        "Broad résumé-supported career period."
+      ],
+      "sourceIds": [
+        "source-foundations"
+      ]
+    },
+    {
+      "kind": "claim",
+      "claimId": "claim-experience-headquarters",
+      "title": "Headquarters infrastructure and move",
+      "period": "Building completed 2012; occupancy January 2013; exact IT move date unconfirmed",
+      "text": "Carried headquarters infrastructure design from planning through build and move-in, accounting for networking, AV, security, cooling and resilient power.",
+      "qualificationNotes": [
+        "No budget or quantified reliability claim.",
+        "The broader bare-metal blade centre to ESXi work has no established exact date.",
+        "This is a responsibility summary, not a single formal job title. The exact analyst transition year is unresolved (2014 versus 2016 in prior accounts)."
+      ],
+      "sourceIds": [
+        "source-headquarters"
+      ]
+    },
+    {
+      "kind": "claim",
+      "claimId": "claim-experience-inquiry",
+      "title": "Broker policy inquiry",
+      "period": "Within 2009–2022; overlapping work",
+      "text": "Connected broker inquiry workflows to backend policy, billing and claims information through mockups, field/value mappings, SOAP/XML request diagnosis and integration testing; REST was used in the later backend.",
+      "qualificationNotes": [
+        "Exact completion date is not established.",
+        "Do not turn REST experience into unverified JSON standards experience.",
+        "This is a responsibility summary, not a single formal job title. The exact analyst transition year is unresolved (2014 versus 2016 in prior accounts)."
+      ],
+      "sourceIds": [
+        "source-inquiry"
+      ]
+    },
+    {
+      "kind": "claim",
+      "claimId": "claim-experience-newbusiness",
+      "title": "Auto and residential new-business integration",
+      "period": "2010 onward; overlapping work",
+      "text": "Implemented rating and underwriting rules and helped design broker-portal messages for correction, referral or binding, with validation that distinguished new business, renewals and endorsements.",
+      "qualificationNotes": [
+        "No universal automation rate or project-volume claim.",
+        "This is a responsibility summary, not a single formal job title. The exact analyst transition year is unresolved (2014 versus 2016 in prior accounts)."
+      ],
+      "sourceIds": [
+        "source-newbusiness"
+      ]
+    },
+    {
+      "kind": "claim",
+      "claimId": "claim-experience-nexus",
+      "title": "NEXUS",
+      "period": "Active development",
+      "text": "Set the product direction and architecture of NEXUS, using AI-assisted implementation to explore scoped context, model routing, approvals and evaluation in an independent platform under active development.",
+      "qualificationNotes": [
+        "Independent project, not employer experience.",
+        "Pub/sub architecture is not established by this approved public snapshot.",
+        "Do not imply every product vision feature shipped.",
+        "No employer delivery or production maturity is inferred from personal projects."
+      ],
+      "sourceIds": [
+        "source-nexus"
+      ]
+    },
+    {
+      "kind": "claim",
+      "claimId": "claim-experience-provider-sync-review",
+      "title": "ProviderRegistry synchronization solution review",
+      "period": "2022–present; exact project date not established",
+      "text": "Defined provider relationships, mappings and scheduled synchronization changes with architects and developers, then supported testing and the live integrations in production.",
+      "qualificationNotes": [
+        "Integrations are live by Josh’s account, with continuing testing and production support.",
+        "Requirements, mappings and support do not imply sole service development or a Kafka implementation.",
+        "Claims architecture describes work, not a claimed formal Architect title."
+      ],
+      "sourceIds": [
+        "source-provider-sync-review"
+      ]
+    },
+    {
+      "kind": "claim",
+      "claimId": "claim-experience-renewals",
+      "title": "Renewal eligibility and exception routing",
+      "period": "Within 2009–2022; project date not established",
+      "text": "Designed the renewal eligibility framework and implemented rating and underwriting rules that classified standard policies for automatic renewal while referring exceptions for human review.",
+      "qualificationNotes": [
+        "No independently audited automation result is inferred.",
+        "This is a responsibility summary, not a single formal job title. The exact analyst transition year is unresolved (2014 versus 2016 in prior accounts)."
+      ],
+      "sourceIds": [
+        "source-renewals"
+      ]
+    },
+    {
+      "kind": "claim",
+      "claimId": "claim-experience-sql",
+      "title": "Claims SQL and financial reconciliation",
+      "period": "2022–present; overlapping reporting work",
+      "text": "Reworked claims and financial SQL, reconciled transaction-history treatment with finance and supplied corrected logic adopted in the payment team’s production process.",
+      "qualificationNotes": [
+        "No financial volumes, private queries or database schemas are published.",
+        "Claims architecture describes work, not a claimed formal Architect title."
+      ],
+      "sourceIds": [
+        "source-sql"
+      ]
+    },
+    {
+      "kind": "claim",
+      "claimId": "claim-experience-takeover",
+      "title": "Claims-history loading and Excel VBA automation",
+      "period": "2022–present; project date not established",
+      "text": "Designed and built a production Excel VBA add-in for data validation, XML batch preparation and returned-error reconciliation, enabling teams to prepare and load claims history independently. Documented receiving-system gaps and guided backend changes with a developer.",
+      "qualificationNotes": [
+        "Josh designed and built the production Excel VBA add-in; backend and schema changes were guided with developers.",
+        "No private claim records, exact operating windows or unaudited financial scale are published.",
+        "Claims architecture describes work, not a claimed formal Architect title."
+      ],
+      "sourceIds": [
+        "source-takeover"
+      ]
+    },
+    {
+      "kind": "claim",
+      "claimId": "claim-experience-upload",
+      "title": "Authenticated document upload and support tooling",
+      "period": "2013–2018 source range; approximately 2018",
+      "text": "Built a C#/.NET portal using REST APIs for authenticated submission into policy records, with operational logging and internal log-search tooling to investigate recurring integration issues.",
+      "qualificationNotes": [
+        "No audited security certification, encryption mechanism or authentication protocol is asserted.",
+        "This is a responsibility summary, not a single formal job title. The exact analyst transition year is unresolved (2014 versus 2016 in prior accounts)."
+      ],
+      "sourceIds": [
+        "source-upload"
+      ]
+    },
+    {
+      "kind": "claim",
+      "claimId": "claim-experience-workflows",
+      "title": "Commercial quoting and broker integration",
+      "period": "2010 onward; overlapping work",
+      "text": "Designed and implemented P&C rating and underwriting rules, mapped CSIO/ACORD broker payloads to proprietary backend fields, and directed UI/specification changes so commercial quoting collected the required risk information.",
+      "qualificationNotes": [
+        "Responsibility does not imply a formal Architect job title.",
+        "Vendor teams performed commercial quoting development.",
+        "AL3 and eDocs familiarity is supported; hands-on JSON standards experience is not claimed.",
+        "This is a responsibility summary, not a single formal job title. The exact analyst transition year is unresolved (2014 versus 2016 in prior accounts)."
+      ],
+      "sourceIds": [
+        "source-workflows"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-claims",
+      "url": "https://joshboyer.ca/#projects/claims",
+      "revision": "public-summary-review-2026-10-28"
+    },
+    {
+      "id": "source-continuity",
+      "url": "https://joshboyer.ca/#projects/continuity",
+      "revision": "public-summary-review-2026-10-28"
+    },
+    {
+      "id": "source-dell",
+      "url": "https://joshboyer.ca/#projects/dell",
+      "revision": "public-summary-review-2026-10-28"
+    },
+    {
+      "id": "source-foundations",
+      "url": "https://joshboyer.ca/#projects/foundations",
+      "revision": "public-summary-review-2026-10-28"
+    },
+    {
+      "id": "source-headquarters",
+      "url": "https://joshboyer.ca/#projects/headquarters",
+      "revision": "public-summary-review-2026-10-28"
+    },
+    {
+      "id": "source-inquiry",
+      "url": "https://joshboyer.ca/#projects/inquiry",
+      "revision": "public-summary-review-2026-10-28"
+    },
+    {
+      "id": "source-newbusiness",
+      "url": "https://joshboyer.ca/#projects/newbusiness",
+      "revision": "public-summary-review-2026-10-28"
+    },
+    {
+      "id": "source-nexus",
+      "url": "https://joshboyer.ca/#projects/nexus",
+      "revision": "public-summary-review-2026-10-28"
+    },
+    {
+      "id": "source-provider-sync-review",
+      "url": "https://joshboyer.ca/#projects/claims",
+      "revision": "public-summary-review-2026-10-28"
+    },
+    {
+      "id": "source-renewals",
+      "url": "https://joshboyer.ca/#projects/renewals",
+      "revision": "public-summary-review-2026-10-28"
+    },
+    {
+      "id": "source-sql",
+      "url": "https://joshboyer.ca/#projects/sql",
+      "revision": "public-summary-review-2026-10-28"
+    },
+    {
+      "id": "source-takeover",
+      "url": "https://joshboyer.ca/#projects/takeover",
+      "revision": "public-summary-review-2026-10-28"
+    },
+    {
+      "id": "source-upload",
+      "url": "https://joshboyer.ca/#projects/upload",
+      "revision": "public-summary-review-2026-10-28"
+    },
+    {
+      "id": "source-workflows",
+      "url": "https://joshboyer.ca/#projects/workflows",
+      "revision": "public-summary-review-2026-10-28"
+    }
+  ],
+  "notices": [
+    {
+      "kind": "notice",
+      "code": "unsupported_evidence",
+      "text": "The approved public evidence does not establish that claim."
+    },
+    {
+      "kind": "notice",
+      "code": "limited_evidence",
+      "text": "This answer is limited to the approved public evidence and its stated qualifications."
+    },
+    {
+      "kind": "notice",
+      "code": "tools_unavailable",
+      "text": "The portfolio tools are unavailable. This answer uses only the approved context available for this request."
+    },
+    {
+      "kind": "notice",
+      "code": "retrieval_degraded",
+      "text": "Search is running with reduced capability. Relevant public evidence may be missing."
+    }
+  ],
+  "pageContexts": [
+    "#home",
+    "#career",
+    "#skills",
+    "#projects",
+    "#projects/dell",
+    "#projects/foundations",
+    "#projects/headquarters",
+    "#projects/inquiry",
+    "#projects/workflows",
+    "#projects/newbusiness",
+    "#projects/renewals",
+    "#projects/upload",
+    "#projects/claims",
+    "#projects/takeover",
+    "#projects/continuity",
+    "#projects/sql",
+    "#projects/nexus"
+  ]
+}

@@ -6,8 +6,8 @@
   "scripts": {
     "check": "tsc --noEmit",
     "test": "node --import tsx --test tests/*.test.ts",
-    "build": "wrangler deploy --config wrangler.jsonc --dry-run --outdir build",
-    "deploy": "wrangler deploy --config wrangler.jsonc"
+    "build": "node build-assets.cjs && wrangler deploy --config wrangler.jsonc --dry-run --outdir build/worker",
+    "deploy": "node build-assets.cjs && wrangler deploy --config wrangler.jsonc"
   },
   "devDependencies": {
     "@types/node": "26.6.6",

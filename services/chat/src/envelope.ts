@@ -14,7 +14,7 @@ export interface RequestEvent {
 }
 
 export interface Keyring { activeKeyId: string; keys: Record<string, Buffer> }
-export interface Envelope { keyId: string; nonce: string; timestamp: number; bodyHash: string }
+export interface Envelope { keyId: string; nonce: string; timestamp: number; bodyHash: string; context: string }
 export const HEADER_NAMES = ['x-chat-key-id', 'x-chat-timestamp', 'x-chat-nonce', 'x-chat-body-sha256', 'x-chat-context', 'x-chat-signature'] as const;
 
 function deny(): never { throw new ServiceError('UNAUTHORISED', 403); }
@@ -54,12 +54,21 @@ export function oneHeader(event: RequestEvent, name: string): string {
 }
 
 export function assertRoute(event: RequestEvent): void {
-  if (event.httpMethod !== 'POST' || event.path !== PROBE_PATH ||
+  if (!allowedRoute(event.httpMethod ?? '', event.path ?? '') ||
       Object.keys(event.queryStringParameters ?? {}).length || Object.keys(event.multiValueQueryStringParameters ?? {}).length) deny();
 }
 
-export function canonicalEnvelope(keyId: string, timestamp: string, nonce: string, bodyHash: string): string {
-  return ['chat-edge-v1', keyId, timestamp, nonce, 'POST', PROBE_PATH, bodyHash, 'phase2-operator'].join('\n');
+export function allowedRoute(method: string, path: string): boolean {
+  return (method === 'POST' && path === PROBE_PATH) ||
+    (method === 'GET' && path === '/api/chat/config') ||
+    ((method === 'POST' || method === 'DELETE') && path === '/api/chat/session') ||
+    (method === 'POST' && path === '/api/chat/messages') ||
+    (method === 'POST' && /^\/api\/chat\/requests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\/cancel$/.test(path));
+}
+
+export function canonicalEnvelope(keyId: string, timestamp: string, nonce: string, bodyHash: string,
+  method = 'POST', path = PROBE_PATH, context = 'phase2-operator'): string {
+  return ['chat-edge-v1', keyId, timestamp, nonce, method, path, bodyHash, context].join('\n');
 }
 
 export function verifyEnvelope(event: RequestEvent, keyring: Keyring, nowSeconds: number): Envelope {
@@ -68,26 +77,32 @@ export function verifyEnvelope(event: RequestEvent, keyring: Keyring, nowSeconds
   const [keyId, timestampText, nonce, bodyHash, context, signature] = values as [string, string, string, string, string, string];
   if (!/^[A-Za-z0-9_-]{1,32}$/.test(keyId) || !/^\d{10}$/.test(timestampText) ||
       !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(nonce) ||
-      !/^[0-9a-f]{64}$/.test(bodyHash) || context !== 'phase2-operator' || !/^[A-Za-z0-9_-]{43}$/.test(signature)) deny();
+      !/^[0-9a-f]{64}$/.test(bodyHash) || !/^[A-Za-z0-9_-]{43}$/.test(signature)) deny();
+  if (event.path === PROBE_PATH ? context !== 'phase2-operator' :
+    !/^private:[A-Za-z0-9_-]{43}:(?:[A-Za-z0-9_-]{43}|-)$/.test(context)) deny();
   const timestamp = Number(timestampText);
   if (nowSeconds - timestamp > 60 || timestamp - nowSeconds > 5 || !Number.isSafeInteger(nowSeconds)) deny();
   const key = keyring.keys[keyId];
   if (!key) deny();
   const supplied = Buffer.from(signature, 'base64url');
-  const expected = createHmac('sha256', key).update(canonicalEnvelope(keyId, timestampText, nonce, bodyHash)).digest();
+  const expected = createHmac('sha256', key).update(canonicalEnvelope(keyId, timestampText, nonce, bodyHash,
+    event.httpMethod, event.path, context)).digest();
   if (supplied.toString('base64url') !== signature || supplied.length !== expected.length || !timingSafeEqual(supplied, expected)) deny();
-  return { keyId, nonce, timestamp, bodyHash };
+  return { keyId, nonce, timestamp, bodyHash, context };
 }
 
 export function verifiedBody(event: RequestEvent, envelope: Envelope): Buffer {
-  if (typeof event.body !== 'string' || event.body.length > 1024) throw new ServiceError('INVALID_REQUEST', 400);
+  const maximum = event.path === PROBE_PATH ? 256 : 12288;
+  const body = event.body ?? (event.httpMethod === 'GET' ? '' : null);
+  if (typeof body !== 'string' || body.length > maximum * 2) throw new ServiceError('INVALID_REQUEST', 400);
   let bytes: Buffer;
   if (event.isBase64Encoded) {
-    if (!/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(event.body)) throw new ServiceError('INVALID_REQUEST', 400);
-    bytes = Buffer.from(event.body, 'base64');
-    if (bytes.toString('base64') !== event.body) throw new ServiceError('INVALID_REQUEST', 400);
-  } else bytes = Buffer.from(event.body, 'utf8');
-  if (bytes.length > 256) throw new ServiceError('INVALID_REQUEST', 400);
+    if (!/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(body)) throw new ServiceError('INVALID_REQUEST', 400);
+    bytes = Buffer.from(body, 'base64');
+    if (bytes.toString('base64') !== body) throw new ServiceError('INVALID_REQUEST', 400);
+  } else bytes = Buffer.from(body, 'utf8');
+  if (bytes.length > maximum) throw new ServiceError('INVALID_REQUEST', 400);
+  try { new TextDecoder('utf-8', { fatal: true }).decode(bytes); } catch { throw new ServiceError('INVALID_REQUEST', 400); }
   const actual = createHash('sha256').update(bytes).digest('hex');
   if (actual !== envelope.bodyHash) deny();
   if (oneHeader(event, 'content-type').toLowerCase() !== 'application/json') throw new ServiceError('INVALID_REQUEST', 415);

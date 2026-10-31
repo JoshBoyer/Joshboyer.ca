@@ -95,18 +95,26 @@ export class PortfolioChatStack extends Stack {
       actions: ['dynamodb:PutItem'], resources: [state.tableArn],
       conditions: { 'ForAllValues:StringLike': { 'dynamodb:LeadingKeys': ['NONCE#*'] } }
     }));
+    handlerRole.addToPolicy(new iam.PolicyStatement({
+      actions: ['dynamodb:GetItem', 'dynamodb:PutItem', 'dynamodb:UpdateItem'],
+      resources: [state.tableArn],
+      conditions: { 'ForAllValues:StringLike': { 'dynamodb:LeadingKeys': ['SESSION#*', 'REQUEST#*', 'BUDGET#*', 'VISITOR#*'] } }
+    }));
 
     const handler = new lambda.Function(this, 'Handler', {
       functionName: `${PREFIX}-handler`, code, handler: 'handler.handler',
       runtime: lambda.Runtime.NODEJS_24_X, architecture: lambda.Architecture.ARM_64,
-      memorySize: 256, timeout: Duration.seconds(30), reservedConcurrentExecutions: 2,
+      memorySize: 256, timeout: Duration.seconds(60), reservedConcurrentExecutions: 2,
       role: handlerRole, logGroup: handlerLogs, loggingFormat: lambda.LoggingFormat.JSON,
       environment: {
         OPENAI_SECRET_ARN: secrets.openai.ref, ANTHROPIC_SECRET_ARN: secrets.anthropic.ref,
         GATEWAY_SECRET_ARN: secrets.gateway.ref, EDGE_SECRET_ARN: secrets.edge.ref,
         STATE_TABLE_NAME: state.tableName, GATEWAY_ACCOUNT_ID: gatewayAccountId.valueAsString,
         GATEWAY_ID: gatewayId.valueAsString, OPENAI_MODEL: openaiModel.valueAsString,
-        ANTHROPIC_MODEL: anthropicModel.valueAsString
+        ANTHROPIC_MODEL: anthropicModel.valueAsString,
+        CHAT_PRIVATE_ENABLED: 'true', PUBLIC_CHAT_ENABLED: 'false', PROBE_ENABLED: 'false',
+        CHAT_MONTHLY_BUDGET_MICROS: '25000000', CHAT_OPENAI_BUDGET_MICROS: '25000000',
+        CHAT_ANTHROPIC_BUDGET_MICROS: '25000000', CHAT_DAILY_VISITOR_TURNS: '16'
       }
     });
     const authorizerHandler = new lambda.Function(this, 'AuthorizerHandler', {
@@ -160,11 +168,23 @@ export class PortfolioChatStack extends Stack {
       handler: authorizerHandler, resultsCacheTtl: Duration.seconds(0),
       identitySources: [apigateway.IdentitySource.header('x-chat-signature')]
     });
-    const probe = api.root.addResource('api').addResource('chat').addResource('_probe');
+    const chat = api.root.addResource('api').addResource('chat');
+    const probe = chat.addResource('_probe');
     probe.addMethod('POST', new apigateway.LambdaIntegration(handler, {
       proxy: true, responseTransferMode: apigateway.ResponseTransferMode.STREAM,
       timeout: Duration.seconds(35), allowTestInvoke: false
     }), { authorizer, authorizationType: apigateway.AuthorizationType.CUSTOM });
+    const chatIntegration = new apigateway.LambdaIntegration(handler, {
+      proxy: true, responseTransferMode: apigateway.ResponseTransferMode.STREAM,
+      timeout: Duration.seconds(65), allowTestInvoke: false
+    });
+    const chatAuthorization = { authorizer, authorizationType: apigateway.AuthorizationType.CUSTOM };
+    chat.addResource('config').addMethod('GET', chatIntegration, chatAuthorization);
+    const session = chat.addResource('session');
+    session.addMethod('POST', chatIntegration, chatAuthorization);
+    session.addMethod('DELETE', chatIntegration, chatAuthorization);
+    chat.addResource('messages').addMethod('POST', chatIntegration, chatAuthorization);
+    chat.addResource('requests').addResource('{requestId}').addResource('cancel').addMethod('POST', chatIntegration, chatAuthorization);
     for (const [id, type] of [['Default4xx', apigateway.ResponseType.DEFAULT_4XX], ['Default5xx', apigateway.ResponseType.DEFAULT_5XX]] as const) {
       api.addGatewayResponse(id, {
         type, responseHeaders: { 'Cache-Control': "'no-store'", 'Content-Type': "'application/json'" },

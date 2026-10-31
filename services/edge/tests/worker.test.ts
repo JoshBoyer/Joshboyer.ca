@@ -259,8 +259,11 @@ test('deployment config is isolated from production bindings', () => {
   assert.equal(config.workers_dev, true);
   assert.equal(config.preview_urls, false);
   assert.equal(config.observability.enabled, false);
-  for (const key of ['routes', 'assets', 'durable_objects', 'send_email', 'triggers', 'services']) assert.equal(config[key], undefined);
-  assert.deepEqual(Object.keys(config.vars), ['AWS_ORIGIN']);
+  for (const key of ['routes', 'durable_objects', 'send_email', 'triggers', 'services']) assert.equal(config[key], undefined);
+  assert.equal(config.assets.run_worker_first, true);
+  assert.equal(config.assets.directory, './build/assets');
+  assert.equal(config.vars.PUBLIC_CHAT_ENABLED, 'false');
+  assert.equal(config.vars.CHAT_PRIVATE_ENABLED, 'true');
   const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
   for (const command of [pkg.scripts.build, pkg.scripts.deploy]) assert.match(command, /--config wrangler\.jsonc/);
 });

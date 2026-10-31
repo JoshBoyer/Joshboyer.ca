@@ -28,9 +28,13 @@ test('rejects another Region, unresolved project and missing runtime artifacts',
   }), /Build the chat service/);
 });
 
-test('only POST probe is available and uses a non-cached REQUEST authorizer', t => {
+test('private chat and probe use a non-cached REQUEST authorizer and streaming integration', t => {
   const { template } = fixture(t);
-  template.resourceCountIs('AWS::ApiGateway::Method', 1);
+  template.resourceCountIs('AWS::ApiGateway::Method', 6);
+  for (const method of Object.values(template.findResources('AWS::ApiGateway::Method'))) {
+    assert.equal(method.Properties.AuthorizationType, 'CUSTOM');
+    assert.equal(method.Properties.Integration.ResponseTransferMode, 'STREAM');
+  }
   template.hasResourceProperties('AWS::ApiGateway::Method', {
     HttpMethod: 'POST', AuthorizationType: 'CUSTOM', AuthorizerId: Match.anyValue(),
     Integration: Match.objectLike({ Type: 'AWS_PROXY', ResponseTransferMode: 'STREAM', TimeoutInMillis: 35000 })
@@ -77,7 +81,14 @@ test('templates cannot manage secret values and runtime policies separate edge a
   const handlerPolicy = policies.find(resource => JSON.stringify(resource.Properties.Roles).includes('HandlerRole'))!;
   const nonce = handlerPolicy.Properties.PolicyDocument.Statement.find((s: { Action: string }) => s.Action === 'dynamodb:PutItem');
   assert.deepEqual(nonce.Condition, { 'ForAllValues:StringLike': { 'dynamodb:LeadingKeys': ['NONCE#*'] } });
-  assert.doesNotMatch(JSON.stringify(handlerPolicy), /dynamodb:(GetItem|Scan|Query|DeleteItem)|s3:/);
+  assert.doesNotMatch(JSON.stringify(handlerPolicy), /dynamodb:(Scan|Query|DeleteItem)|s3:/);
+  const state = handlerPolicy.Properties.PolicyDocument.Statement.find((s: { Action: unknown }) => Array.isArray(s.Action) && s.Action.includes('dynamodb:GetItem'));
+  assert.deepEqual([...state.Action].sort(), ['dynamodb:GetItem', 'dynamodb:PutItem', 'dynamodb:UpdateItem']);
+  assert.deepEqual(state.Condition, { 'ForAllValues:StringLike': { 'dynamodb:LeadingKeys': ['SESSION#*', 'REQUEST#*', 'BUDGET#*', 'VISITOR#*'] } });
+  const handler = Object.values(template.findResources('AWS::Lambda::Function')).find(resource => resource.Properties.Handler === 'handler.handler')!;
+  assert.equal(handler.Properties.Environment.Variables.PUBLIC_CHAT_ENABLED, 'false');
+  assert.equal(handler.Properties.Environment.Variables.CHAT_PRIVATE_ENABLED, 'true');
+  assert.equal(handler.Properties.Environment.Variables.CHAT_MONTHLY_BUDGET_MICROS, '25000000');
 });
 
 test('evidence and state are encrypted, private and retained', t => {

@@ -53,3 +53,24 @@ export function credential(value: string): string {
   if (!/^[A-Za-z0-9_.-]{16,2048}$/.test(value)) throw new ServiceError('CREDENTIAL_UNAVAILABLE', 503);
   return value;
 }
+
+export function loadChatLimits(env: Env) {
+  const amount = (name: string, fallback: number, maximum: number): number => {
+    const raw = env[name];
+    if (raw === undefined) return fallback;
+    if (!/^(?:0|[1-9][0-9]*)$/.test(raw) || Number(raw) > maximum) {
+      throw new ServiceError('CONFIGURATION_UNAVAILABLE', 503);
+    }
+    return Number(raw);
+  };
+  // A smaller allowance may be used for private qualification; increasing the
+  // release ceiling needs a reviewed code/config change.
+  return {
+    monthlyBudgetMicros: amount('CHAT_MONTHLY_BUDGET_MICROS', 25_000_000, 25_000_000),
+    providerBudgetMicros: {
+      openai: amount('CHAT_OPENAI_BUDGET_MICROS', 25_000_000, 25_000_000),
+      anthropic: amount('CHAT_ANTHROPIC_BUDGET_MICROS', 25_000_000, 25_000_000)
+    },
+    dailyVisitorTurns: amount('CHAT_DAILY_VISITOR_TURNS', 16, 16)
+  };
+}

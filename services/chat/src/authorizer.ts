@@ -11,9 +11,10 @@ export function createAuthorizer(options: { secrets: SecretReader; env: Env; now
       const config = edgeConfig(options.env);
       const keyring = parseKeyring(await options.secrets.read(config.edgeSecretArn, AbortSignal.timeout(4000)));
       verifyEnvelope(event, keyring, Math.floor((options.now ?? Date.now)() / 1000));
-      if (!/^arn:aws:execute-api:us-east-2:\d{12}:[a-z0-9]+\/dev\/POST\/api\/chat\/_probe$/.test(event.methodArn)) throw new Error();
+      const suffix = `/dev/${event.httpMethod}${event.path}`;
+      if (!/^arn:aws:execute-api:us-east-2:\d{12}:[a-z0-9]+\//.test(event.methodArn) || !event.methodArn.endsWith(suffix)) throw new Error();
       return {
-        principalId: 'portfolio-phase2-operator',
+        principalId: 'portfolio-private-chat',
         policyDocument: { Version: '2012-10-17', Statement: [{ Action: 'execute-api:Invoke', Effect: 'Allow', Resource: event.methodArn }] }
       };
     } catch {

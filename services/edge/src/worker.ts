@@ -1,15 +1,21 @@
+import { privateChat } from './private-chat.js';
+
 export interface Env {
   AWS_ORIGIN?: string;
   PROBE_TOKEN?: string;
   EDGE_KEYRING?: string;
+  CHAT_PRIVATE_ENABLED?: string;
+  PROBE_ENABLED?: string;
+  PUBLIC_CHAT_ENABLED?: string;
+  CHAT_ASSETS?: { fetch(request: Request): Promise<Response> };
 }
 
-interface Keyring {
+export interface Keyring {
   activeKeyId: string;
   keys: Record<string, string>;
 }
 
-interface Dependencies {
+export interface Dependencies {
   fetcher?: typeof fetch;
   now?: () => number;
   nonce?: () => string;
@@ -21,7 +27,7 @@ export const MAX_BODY_BYTES = 256;
 export const MAX_RESPONSE_BYTES = 65536;
 const encoder = new TextEncoder();
 
-function failure(status: number, code: string): Response {
+export function failure(status: number, code: string): Response {
   return new Response(JSON.stringify({ error: { code } }), {
     status,
     headers: {
@@ -36,11 +42,11 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
 
-function toBase64Url(bytes: Uint8Array): string {
+export function toBase64Url(bytes: Uint8Array): string {
   return btoa(String.fromCharCode(...bytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
-function decodeKey(value: string): Uint8Array<ArrayBuffer> {
+export function decodeKey(value: string): Uint8Array<ArrayBuffer> {
   if (!/^[A-Za-z0-9_-]{43,86}$/.test(value)) throw new Error('Invalid key');
   const raw = atob(value.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - value.length % 4) % 4));
   const bytes = Uint8Array.from(raw, character => character.charCodeAt(0));
@@ -62,7 +68,7 @@ function parseKeyring(serialised: string): Keyring {
   return value as unknown as Keyring;
 }
 
-function validatedConfig(env: Env): { origin: string; token: string; keyring: Keyring } {
+export function validatedConfig(env: Env): { origin: string; token: string; keyring: Keyring } {
   if (!env.AWS_ORIGIN || !/^https:\/\/[a-z0-9]{10}\.execute-api\.us-east-2\.amazonaws\.com\/dev$/.test(env.AWS_ORIGIN) ||
       !env.PROBE_TOKEN || !/^[A-Za-z0-9_-]{43,128}$/.test(env.PROBE_TOKEN) || !env.EDGE_KEYRING) {
     throw new Error('Invalid configuration');
@@ -70,11 +76,11 @@ function validatedConfig(env: Env): { origin: string; token: string; keyring: Ke
   return { origin: env.AWS_ORIGIN, token: env.PROBE_TOKEN, keyring: parseKeyring(env.EDGE_KEYRING) };
 }
 
-async function hmacKey(bytes: Uint8Array<ArrayBuffer>): Promise<CryptoKey> {
+export async function hmacKey(bytes: Uint8Array<ArrayBuffer>): Promise<CryptoKey> {
   return crypto.subtle.importKey('raw', bytes, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign', 'verify']);
 }
 
-async function authorised(header: string | null, expected: string): Promise<boolean> {
+export async function authorised(header: string | null, expected: string): Promise<boolean> {
   if (!header || !/^Bearer [A-Za-z0-9_-]{43,128}$/.test(header)) return false;
   const candidate = header.slice(7);
   // Let Web Crypto compare MACs instead of comparing secret strings in JavaScript.
@@ -85,14 +91,15 @@ async function authorised(header: string | null, expected: string): Promise<bool
   return crypto.subtle.verify('HMAC', candidateKey, tag, label);
 }
 
-export async function signedHeaders(body: Uint8Array<ArrayBuffer>, keyring: Keyring, timestamp: string, nonce: string): Promise<Headers> {
+export async function signedHeaders(body: Uint8Array<ArrayBuffer>, keyring: Keyring, timestamp: string, nonce: string,
+  method = 'POST', path = PROBE_PATH, context = 'phase2-operator'): Promise<Headers> {
   const keyId = keyring.activeKeyId;
   const key = keyring.keys[keyId];
   if (!key || !/^[1-9][0-9]{8,10}$/.test(timestamp) ||
       !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(nonce)) throw new Error('Invalid envelope');
   const digest = new Uint8Array(await crypto.subtle.digest('SHA-256', body));
   const bodyHash = [...digest].map(byte => byte.toString(16).padStart(2, '0')).join('');
-  const envelope = ['chat-edge-v1', keyId, timestamp, nonce, 'POST', PROBE_PATH, bodyHash, 'phase2-operator'].join('\n');
+  const envelope = ['chat-edge-v1', keyId, timestamp, nonce, method, path, bodyHash, context].join('\n');
   const signature = await crypto.subtle.sign('HMAC', await hmacKey(decodeKey(key)), encoder.encode(envelope));
   return new Headers({
     'Content-Type': 'application/json',
@@ -101,14 +108,14 @@ export async function signedHeaders(body: Uint8Array<ArrayBuffer>, keyring: Keyr
     'x-chat-timestamp': timestamp,
     'x-chat-nonce': nonce,
     'x-chat-body-sha256': bodyHash,
-    'x-chat-context': 'phase2-operator',
+    'x-chat-context': context,
     'x-chat-signature': toBase64Url(new Uint8Array(signature))
   });
 }
 
-async function readBody(request: Request, signal: AbortSignal): Promise<Uint8Array<ArrayBuffer>> {
+export async function readBody(request: Request, signal: AbortSignal, maximum = MAX_BODY_BYTES): Promise<Uint8Array<ArrayBuffer>> {
   const declaredLength = request.headers.get('Content-Length');
-  if (declaredLength && (!/^[0-9]+$/.test(declaredLength) || Number(declaredLength) > MAX_BODY_BYTES)) throw new RangeError('Body limit');
+  if (declaredLength && (!/^[0-9]+$/.test(declaredLength) || Number(declaredLength) > maximum)) throw new RangeError('Body limit');
   if (!request.body) return new Uint8Array();
   const reader = request.body.getReader();
   const chunks: Uint8Array[] = [];
@@ -122,7 +129,7 @@ async function readBody(request: Request, signal: AbortSignal): Promise<Uint8Arr
       if (signal.aborted) throw new Error('Aborted');
       if (next.done) break;
       length += next.value.byteLength;
-      if (length > MAX_BODY_BYTES) {
+      if (length > maximum) {
         void reader.cancel().catch(() => undefined);
         throw new RangeError('Body limit');
       }
@@ -138,7 +145,7 @@ async function readBody(request: Request, signal: AbortSignal): Promise<Uint8Arr
   return body;
 }
 
-function streamBody(body: ReadableStream<Uint8Array>, controller: AbortController, cleanup: () => void): ReadableStream<Uint8Array> {
+export function streamBody(body: ReadableStream<Uint8Array>, controller: AbortController, cleanup: () => void): ReadableStream<Uint8Array> {
   const reader = body.getReader();
   let length = 0;
   let ended = false;
@@ -189,6 +196,8 @@ export function createWorker(dependencies: Dependencies = {}) {
   return {
     async fetch(request: Request, env: Env): Promise<Response> {
       const url = new URL(request.url);
+      if (url.pathname !== PROBE_PATH) return privateChat(request, env, dependencies);
+      if (env.PROBE_ENABLED === 'false') return failure(404, 'NOT_FOUND');
       if (url.pathname !== PROBE_PATH || url.search || url.hash) return failure(404, 'NOT_FOUND');
       if (request.method !== 'POST') return failure(405, 'METHOD_NOT_ALLOWED');
       let config: ReturnType<typeof validatedConfig>;

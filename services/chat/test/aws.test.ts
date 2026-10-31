@@ -41,7 +41,7 @@ test('nonce claims use an atomic conditional write with short TTL and no read-be
     });
   } } as unknown as DynamoDBClient;
   const store = new AwsNonces(client);
-  await store.consume(CONFIG.stateTable, { keyId: 'k1', nonce: 'test-nonce', timestamp: NOW, bodyHash: 'unused' }, NOW, new AbortController().signal);
+  await store.consume(CONFIG.stateTable, { keyId: 'k1', nonce: 'test-nonce', timestamp: NOW, bodyHash: 'unused', context: 'phase2-operator' }, NOW, new AbortController().signal);
   assert.equal(calls, 1);
 });
 
@@ -49,7 +49,7 @@ test('nonce conflicts and uncertain persistence fail closed with safe errors', a
   for (const [name, code] of [['ConditionalCheckFailedException', 'REPLAY_REJECTED'], ['TimeoutError', 'REPLAY_STORE_UNAVAILABLE']]) {
     let calls = 0;
     const client = { async send() { calls++; throw Object.assign(new Error('private-persistence-detail'), { name }); } } as unknown as DynamoDBClient;
-    await assert.rejects(new AwsNonces(client).consume(CONFIG.stateTable, { keyId: 'k1', nonce: 'n', timestamp: NOW, bodyHash: 'h' }, NOW, new AbortController().signal), { code, message: code });
+    await assert.rejects(new AwsNonces(client).consume(CONFIG.stateTable, { keyId: 'k1', nonce: 'n', timestamp: NOW, bodyHash: 'h', context: 'phase2-operator' }, NOW, new AbortController().signal), { code, message: code });
     assert.equal(calls, 1);
   }
 });
