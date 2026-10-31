@@ -35,14 +35,6 @@
     2: { id: 2, label: "Floor 2 — Conference & Training", y: 240, minX: 60, maxX: 1330 }
   };
 
-  // Staircase connections between floors
-  // Stair A (Floor 0 <-> Floor 1): yellow steel stairs from (240, 600) up to (40, 478)
-  // Stair B (Floor 1 <-> Floor 2): yellow steel stairs from (40, 478) up to (60, 240)
-  const STAIRS = [
-    { fromFloor: 0, toFloor: 1, x0: 240, y0: 600, x1: 40, y1: 478 },
-    { fromFloor: 1, toFloor: 2, x0: 40, y0: 478, x1: 60, y1: 240 }
-  ];
-
   // Nostalgic Dell Call Center Soundtracks (16-bar retro stereo loops)
   const TRACKS = [
     { id: "lofi", title: "Gloves Off Lo-Fi", src: "assets/tycoon/soundtrack-dell-lofi.mp3" },
@@ -165,9 +157,7 @@
 
     // Sound effects via Web Audio API
     let audioCtx = null;
-    let isFooterIntersecting = false;
     let userWantsMusic = false;
-    let isMouseOverFooter = false;
     let footerFocusedState = false;
 
     function isMobile() {
@@ -353,7 +343,6 @@
     let musicSourceNode = null;
     let musicFilterNode = null;
     let musicGainNode = null;
-    let musicHasStarted = false;
     let currentFilterMuffled = false;
 
     function initMusic() {
@@ -439,7 +428,6 @@
         playPromise
           .then(() => {
             state.musicPlaying = true;
-            musicHasStarted = true;
             updateSoundtrackUI();
           })
           .catch(() => {
@@ -2169,7 +2157,6 @@
             (entries) => {
               for (const entry of entries) {
                 if (entry.target === hostEl) {
-                  isFooterIntersecting = entry.isIntersecting && entry.intersectionRatio > 0.05;
                   ensureLoopRunning();
                   checkFooterFocusAndSyncAudio();
                 }
@@ -2231,11 +2218,9 @@
       window.addEventListener("portfolio:routechange", checkFooterFocusAndSyncAudio);
 
       hostEl.addEventListener("mouseenter", () => {
-        isMouseOverFooter = true;
         checkFooterFocusAndSyncAudio();
       });
       hostEl.addEventListener("mouseleave", () => {
-        isMouseOverFooter = false;
         checkFooterFocusAndSyncAudio();
       });
       hostEl.addEventListener("focusin", checkFooterFocusAndSyncAudio);

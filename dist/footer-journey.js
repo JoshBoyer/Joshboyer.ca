@@ -3079,7 +3079,6 @@
     }
 
     function renderStage1Body(st) {
-      const nextEmptySlot = st.data.slots.findIndex((s) => s === null);
       const isAssembled = st.status === "success" || st.data.lineDrawn;
       const hasPart = (partId) => st.data.slots.includes(partId);
       const placedCount = st.data.slots.filter(Boolean).length;
@@ -4679,11 +4678,6 @@
       const orderedStepIds = ["submission", middleIds[0], middleIds[1], middleIds[2], "notify"];
       const orderValid = middleIds.join(",") === WORKFLOW_CANONICAL_MIDDLE.join(",");
       const isCompleted = st.status === "success";
-      const validateRuleOk =
-        st.data.stepConfigs &&
-        st.data.stepConfigs.validate &&
-        st.data.stepConfigs.validate.ruleOptionId === "acord_schema_check";
-
       const speechText = isCompleted
         ? "Workflow connected! Policy Completed!"
         : orderValid
@@ -5452,7 +5446,6 @@
 
     renderAll();
 
-    let lastMatPointerInstallAtMs = 0;
 
     function installWorkshopPartFromUi(partId, sourceEl) {
       if (!partId) return;
@@ -6110,7 +6103,6 @@
       ev.preventDefault();
       const dyPx = ev.clientY - dragInfo.startY;
       if (dragInfo.curSvgY < 320 || dyPx < -36) {
-        lastMatPointerInstallAtMs = Date.now();
         installWorkshopPartFromUi(dragInfo.partId, null);
       } else {
         dragInfo.el.style.transition = "";
@@ -6198,7 +6190,6 @@
       );
       if (penOrSlotTarget && dragPayload && dragPayload.kind === "workshop-part") {
         ev.preventDefault();
-        lastMatPointerInstallAtMs = Date.now();
         installWorkshopPartFromUi(dragPayload.id, null);
         dragPayload = null;
         return;
