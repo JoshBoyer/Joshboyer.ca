@@ -30,13 +30,15 @@ export default {async fetch(request,env,ctx){
  const context={request,env,waitUntil:ctx.waitUntil.bind(ctx),passThroughOnException:ctx.passThroughOnException.bind(ctx)};
  try{
   if(pathname==='/api/contact'||pathname==='/api/contact/')return secure(await contact(context),true);
-  if(pathname==='/api/chat'||pathname.startsWith('/api/chat/'))return secure(new Response(JSON.stringify({schemaVersion:'1.0.0',error:{code:'unavailable',retryable:false}}),{status:404,headers:{'Content-Type':'application/json'}}),true);
+  if(/^\/api\/chat(?:\/|$)/i.test(pathname))return secure(new Response(JSON.stringify({schemaVersion:'1.0.0',error:{code:'unavailable',retryable:false}}),{status:404,headers:{'Content-Type':'application/json'}}),true);
   if(/^\/api\/(?:twin(?:\/|$)|explore(?:\/|$)|config\/?$)/i.test(pathname))return secure(new Response(JSON.stringify({ok:false,enabled:false,available:false,error:{code:'TWIN_REMOVED',message:'The digital twin and its AI access have been removed.'}}),{status:410,headers:{'Content-Type':'application/json'}}),true);
   if(/^\/(?:twin-(?:drawer|voice)\.(?:js|css)|josh-3d-avatar\.(?:js|css)|twin-context\.json|career-guide-ui\.js)$/i.test(pathname))return secure(new Response('Digital twin removed',{status:410}),true);
-  if(pathname.startsWith('/api/'))return secure(await previous.fetch(request,env,ctx),true);
+  if(/^\/chat-preview(?:\.html)?\/?$/i.test(pathname))return secure(new Response('Not found',{status:404}),true);
+  if(/^\/api\/calendar\/(?:review|confirm)\/?$/i.test(pathname))return secure(await previous.fetch(request,env,ctx),true);
+  if(/^\/api(?:\/|$)/i.test(pathname))return secure(new Response(JSON.stringify({schemaVersion:'1.0.0',error:{code:'unavailable',retryable:false}}),{status:404,headers:{'Content-Type':'application/json'}}),true);
   if(!['GET','HEAD'].includes(request.method))return secure(new Response('Method not allowed',{status:405,headers:{Allow:'GET, HEAD'}}));
   if(pathname==='/'||/^\/(?:home|stories|story|projects|project|about|explore|contact|thinking|privacy)(?:\/[a-z0-9-]+)?\/?$/i.test(pathname))pathname='/index.html';
-  if(!allowed.has(pathname))return secure(new Response('Not found',{status:404}));
+  if(!Object.prototype.hasOwnProperty.call(Object.fromEntries(allowed),pathname)||!allowed.has(pathname))return secure(new Response('Not found',{status:404}),true);
   const assetURL=new URL(request.url);assetURL.pathname=pathname;
   const media=/\.(?:mp4|webm)$/i.test(pathname),assetHeaders=new Headers(request.headers);
   if(media)assetHeaders.set('Accept-Encoding','identity');

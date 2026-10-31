@@ -1,6 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { createWorker, type Env } from '../src/worker.js';
+import { ASSET_TYPES } from '../src/private-chat.js';
 import { parseKeyring, verifyEnvelope, verifiedBody } from '../../chat/src/envelope.js';
 
 const token = 't'.repeat(43);
@@ -88,4 +91,214 @@ test('tampered or expired access cookies, cross-site posts, redirects and unknow
   assert.equal(calls, 1);
   now += 3_601_000;
   assert.equal((await worker.fetch(request('/api/chat/config', 'GET', undefined, cookies), env)).status, 401);
+});
+
+test('allowlisted static assets require operator cookie and preserve binary portrait bytes without UTF-8 corruption', async () => {
+  assert.equal(ASSET_TYPES['/chat-assistant.css'], 'text/css; charset=utf-8');
+  assert.equal(ASSET_TYPES['/chat-assistant.js'], 'text/javascript; charset=utf-8');
+  assert.equal(ASSET_TYPES['/chat-request-details.js'], 'text/javascript; charset=utf-8');
+  assert.equal(ASSET_TYPES['/chat-evidence.json'], 'application/json; charset=utf-8');
+  assert.equal(ASSET_TYPES['/assets/personal/josh-portrait-smiling.jpg'], 'image/jpeg');
+  assert.equal(ASSET_TYPES['/assets/optimized-extra/personal/josh-portrait-vest-640.webp'], 'image/webp');
+
+  const jpgBytes = new Uint8Array(readFileSync(fileURLToPath(new URL('../../../dist/assets/personal/josh-portrait-smiling.jpg', import.meta.url))));
+  const webpBytes = new Uint8Array(readFileSync(fileURLToPath(new URL('../../../dist/assets/optimized-extra/personal/josh-portrait-vest-640.webp', import.meta.url))));
+  const detailsJsBytes = new Uint8Array(new TextEncoder().encode('globalThis.PortfolioChatDetails = {};\n'));
+
+  let assetCalls = 0;
+  let originCalls = 0;
+  const assetPayloads: Record<string, Uint8Array<ArrayBuffer>> = {
+    '/chat-request-details.js': detailsJsBytes,
+    '/assets/personal/josh-portrait-smiling.jpg': jpgBytes,
+    '/assets/optimized-extra/personal/josh-portrait-vest-640.webp': webpBytes
+  };
+  const assetEnv: Env = {
+    ...env,
+    CHAT_ASSETS: undefined,
+    ASSETS: {
+      async fetch(req: Request) {
+        assetCalls++;
+        const pathname = new URL(req.url).pathname;
+        const payload = assetPayloads[pathname];
+        if (!payload) return new Response('Not found', { status: 404 });
+        return new Response(payload);
+      }
+    }
+  };
+
+  const worker = createWorker({ fetcher: async () => { originCalls++; throw new Error('Unexpected origin call'); } });
+
+  for (const path of Object.keys(assetPayloads)) {
+    const unauth = await worker.fetch(request(path), assetEnv);
+    assert.equal(unauth.status, 401, `Unauthenticated ${path} must return 401`);
+  }
+  assert.equal(assetCalls, 0);
+  assert.equal(originCalls, 0);
+
+  const cookies = await login(worker);
+  for (const [path, expectedBytes] of Object.entries(assetPayloads)) {
+    const res = await worker.fetch(request(path, 'GET', undefined, cookies), assetEnv);
+    assert.equal(res.status, 200, `Authenticated ${path} must return 200`);
+    assert.equal(res.headers.get('Content-Type'), ASSET_TYPES[path]);
+    assert.equal(res.headers.get('Cache-Control'), 'private, no-store');
+    assert.equal(res.headers.get('X-Robots-Tag'), 'noindex, nofollow, noarchive');
+    assert.equal(res.headers.get('X-Content-Type-Options'), 'nosniff');
+    const actualBytes = new Uint8Array(await res.arrayBuffer());
+    assert.equal(Buffer.compare(Buffer.from(actualBytes), Buffer.from(expectedBytes)), 0, `Binary byte mismatch for ${path}`);
+  }
+  assert.equal(assetCalls, 3);
+  assert.equal(originCalls, 0);
+
+  for (const unapproved of ['/assets/personal/josh-curiosity-seated-sketching.png', '/assets/personal/other.jpg', '/JOSH-BOYER-PORTFOLIO-CORPUS.md']) {
+    const denied = await worker.fetch(request(unapproved, 'GET', undefined, cookies), assetEnv);
+    assert.equal(denied.status, 404, unapproved);
+    assert.deepEqual(await denied.json(), { schemaVersion: '1.0.0', error: { code: 'unavailable', retryable: false } });
+  }
+  assert.equal(assetCalls, 3);
+  assert.equal(originCalls, 0);
+});
+test('internal routes /api/chat/_mcp and /api/chat/_probe are strictly denied at private edge with and without operator cookie', async () => {
+  let originCalls = 0;
+  const worker = createWorker({ fetcher: async () => { originCalls++; return Response.json({ ok: true }); } });
+  const cookies = await login(worker);
+  const fullCookies = `${cookies}; __Host-jb_chat=${'s'.repeat(43)}`;
+
+  for (const path of ['/api/chat/_mcp', '/api/chat/_probe', '/api/chat/_mcp/tools', '/api/chat/_internal']) {
+    for (const method of ['GET', 'POST', 'DELETE']) {
+      for (const cookieHeader of [undefined, cookies, fullCookies]) {
+        const res = await worker.fetch(request(path, method, method === 'GET' ? undefined : { jsonrpc: '2.0' }, cookieHeader, {
+          Authorization: 'Bearer ' + token
+        }), env);
+        assert.equal(res.status, 404, `${method} ${path} (cookie=${Boolean(cookieHeader)})`);
+        assert.match(res.headers.get('Cache-Control') ?? '', /no-store/);
+        assert.deepEqual(await res.json(), { schemaVersion: '1.0.0', error: { code: 'unavailable', retryable: false } });
+      }
+    }
+  }
+  assert.equal(originCalls, 0);
+});
+test('access cookie enforces exact 3-point millisecond expiry boundary (expiresAt - 1, expiresAt, expiresAt + 1)', async () => {
+  let now = 1_800_000_000_000;
+  let originCalls = 0;
+  const worker = createWorker({
+    now: () => now,
+    fetcher: async () => {
+      originCalls++;
+      return Response.json({ schemaVersion: '1.0.0', available: true });
+    }
+  });
+  const cookies = await login(worker);
+  const expirySeconds = Number(cookies.split('=')[1]!.split('.')[0]);
+  const expiresAtMs = expirySeconds * 1000;
+  assert.equal(expiresAtMs, 1_800_003_600_000);
+
+  now = expiresAtMs - 1;
+  const beforeAsset = await worker.fetch(request('/chat-request-details.js', 'GET', undefined, cookies), env);
+  assert.equal(beforeAsset.status, 200);
+  await beforeAsset.text();
+  const beforeApi = await worker.fetch(request('/api/chat/config', 'GET', undefined, cookies), env);
+  assert.equal(beforeApi.status, 200);
+  await beforeApi.json();
+  assert.equal(originCalls, 1);
+
+  now = expiresAtMs;
+  const exactAsset = await worker.fetch(request('/chat-request-details.js', 'GET', undefined, cookies), env);
+  assert.equal(exactAsset.status, 401);
+  await exactAsset.text();
+  const exactApi = await worker.fetch(request('/api/chat/config', 'GET', undefined, cookies), env);
+  assert.equal(exactApi.status, 401);
+  await exactApi.text();
+  assert.equal(originCalls, 1);
+
+  now = expiresAtMs + 1;
+  const afterAsset = await worker.fetch(request('/chat-request-details.js', 'GET', undefined, cookies), env);
+  assert.equal(afterAsset.status, 401);
+  await afterAsset.text();
+  const afterApi = await worker.fetch(request('/api/chat/config', 'GET', undefined, cookies), env);
+  assert.equal(afterApi.status, 401);
+  await afterApi.text();
+  assert.equal(originCalls, 1);
+
+  now = 1_800_000_000_000 - 1;
+  const futureDated = await worker.fetch(request('/api/chat/config', 'GET', undefined, cookies), env);
+  assert.equal(futureDated.status, 401);
+  await futureDated.text();
+  assert.equal(originCalls, 1);
+});
+
+test('hostile path, header and cookie inputs and seeded fuzz inputs fail closed without origin calls or canary leakage', async () => {
+  const canary = 'CANARY-A14-TOKEN-771';
+  let originCalls = 0;
+  const worker = createWorker({ fetcher: async () => { originCalls++; throw new Error(canary); } });
+  const cookies = await login(worker);
+
+  const hostilePaths = [
+    '/api/chat/%2e%2e/session',
+    '/api/chat/%252e%252e/session',
+    '/api/chat/..%2fsession',
+    '/api/chat/..',
+    '/api/chat/%00',
+    '/api/chat/%0d%0a',
+    '/__proto__',
+    '/api/chat/__proto__',
+    `/chat-request-details.js?canary=${canary}`,
+    `/api/chat/config#${canary}`,
+    '/api/chat\\messages'
+  ];
+  for (const path of hostilePaths) {
+    const res = await worker.fetch(new Request(origin + path, {
+      method: 'GET',
+      headers: { Origin: origin, Cookie: cookies, 'X-Canary': canary }
+    }), env);
+    assert.equal(res.status, 404, path);
+    const body = await res.text();
+    assert.ok(!body.includes(canary), `Canary leaked in body for ${path}`);
+    assert.ok(!body.includes(token), `Operator token leaked in body for ${path}`);
+    assert.ok(!JSON.stringify([...res.headers]).includes(canary), `Canary leaked in headers for ${path}`);
+  }
+
+  const hostileCookies = [
+    `__Host-jb_chat_access=${canary}`,
+    `__Host-jb_chat_access=1800003600.${canary}`,
+    `${cookies}; ${cookies}`,
+    `${cookies}; __Host-jb_chat=__proto__`,
+    `${cookies}; __Host-jb_chat=${canary}`,
+    `${cookies}; __Host-jb_chat=${'s'.repeat(43)}; __Host-jb_chat=${'b'.repeat(43)}`
+  ];
+  for (const badCookie of hostileCookies) {
+    const res = await worker.fetch(request('/api/chat/session', 'POST', {}, badCookie, { 'X-Canary': canary }), env);
+    assert.equal(res.status, 401, badCookie);
+    const body = await res.text();
+    assert.ok(!body.includes(canary));
+    assert.ok(!body.includes(token));
+    assert.ok(!JSON.stringify([...res.headers]).includes(canary));
+  }
+
+  // Deterministic seeded property test (seed = 0x20261031):
+  // Invariant: never throws unclassified error, never calls origin, never emits canary or operator token, same input -> same output.
+  let seed = 0x20261031;
+  const nextRand = () => {
+    seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+    return seed;
+  };
+  const alphabet = ['..', '%2e%2e', '%00', '%0d%0a', '__proto__', 'constructor', '_mcp', '_probe', '\\', '?', '#', canary];
+  for (let i = 0; i < 60; i++) {
+    const seg1 = alphabet[nextRand() % alphabet.length]!;
+    const seg2 = alphabet[nextRand() % alphabet.length]!;
+    const cookieVal = `${seg1}=${canary}; __Host-jb_chat_access=${seg2}`;
+    const targetUrl = `${origin}/api/chat/${encodeURIComponent(seg1)}/${encodeURIComponent(seg2)}`;
+    const req1 = new Request(targetUrl, { method: 'POST', headers: { Origin: origin, 'Content-Type': 'application/json', Cookie: cookieVal }, body: JSON.stringify({ canary }) });
+    const req2 = new Request(targetUrl, { method: 'POST', headers: { Origin: origin, 'Content-Type': 'application/json', Cookie: cookieVal }, body: JSON.stringify({ canary }) });
+    const res1 = await worker.fetch(req1, env);
+    const res2 = await worker.fetch(req2, env);
+    const text1 = await res1.text();
+    const text2 = await res2.text();
+    assert.equal(res1.status, res2.status);
+    assert.equal(text1, text2);
+    assert.ok([401, 403, 404].includes(res1.status), `Unexpected status ${res1.status} on seed iteration ${i}`);
+    assert.ok(!text1.includes(canary));
+    assert.ok(!text1.includes(token));
+    assert.ok(!JSON.stringify([...res1.headers]).includes(canary));
+  }
+  assert.equal(originCalls, 0);
 });

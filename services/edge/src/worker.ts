@@ -8,6 +8,7 @@ export interface Env {
   PROBE_ENABLED?: string;
   PUBLIC_CHAT_ENABLED?: string;
   CHAT_ASSETS?: { fetch(request: Request): Promise<Response> };
+  ASSETS?: { fetch(request: Request): Promise<Response> };
 }
 
 export interface Keyring {
@@ -196,8 +197,9 @@ export function createWorker(dependencies: Dependencies = {}) {
   return {
     async fetch(request: Request, env: Env): Promise<Response> {
       const url = new URL(request.url);
-      if (url.pathname !== PROBE_PATH) return privateChat(request, env, dependencies);
-      if (env.PROBE_ENABLED === 'false') return failure(404, 'NOT_FOUND');
+      if (url.pathname !== PROBE_PATH || env.PROBE_ENABLED === 'false' || (env.CHAT_PRIVATE_ENABLED === 'true' && env.PROBE_ENABLED !== 'true')) {
+        return privateChat(request, env, dependencies);
+      }
       if (url.pathname !== PROBE_PATH || url.search || url.hash) return failure(404, 'NOT_FOUND');
       if (request.method !== 'POST') return failure(405, 'METHOD_NOT_ALLOWED');
       let config: ReturnType<typeof validatedConfig>;

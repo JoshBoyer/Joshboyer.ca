@@ -4,29 +4,45 @@ import { authorised, failure, hmacKey, readBody, signedHeaders, streamBody, toBa
 const encoder = new TextEncoder();
 const ACCESS_COOKIE = '__Host-jb_chat_access';
 const SESSION_COOKIE = '__Host-jb_chat';
-const ASSETS = new Set(['/chat-assistant.js', '/chat-assistant.css', '/chat-evidence.json',
-  '/assets/fonts/manrope-latin.woff2', '/assets/fonts/plus-jakarta-sans-latin.woff2',
-  '/assets/fonts/ibm-plex-mono-400-latin.woff2']);
+export const ASSET_TYPES: Readonly<Record<string, string>> = Object.freeze(Object.assign(Object.create(null) as Record<string, string>, {
+  '/chat-assistant.css': 'text/css; charset=utf-8',
+  '/chat-assistant.js': 'text/javascript; charset=utf-8',
+  '/chat-request-details.js': 'text/javascript; charset=utf-8',
+  '/chat-evidence.json': 'application/json; charset=utf-8',
+  '/assets/fonts/manrope-latin.woff2': 'font/woff2',
+  '/assets/fonts/plus-jakarta-sans-latin.woff2': 'font/woff2',
+  '/assets/fonts/ibm-plex-mono-400-latin.woff2': 'font/woff2',
+  '/assets/personal/josh-portrait-smiling.jpg': 'image/jpeg',
+  '/assets/optimized-extra/personal/josh-portrait-vest-640.webp': 'image/webp'
+}));
+export const ASSETS = new Set(Object.keys(ASSET_TYPES));
 const CSP = "default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; connect-src 'self'; img-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'";
 
 function cookie(request: Request, name: string): string | undefined {
-  const matches = (request.headers.get('Cookie') ?? '').split(';').map(part => part.trim()).filter(part => part.startsWith(name + '='));
-  return matches.length === 1 ? matches[0]!.slice(name.length + 1) : undefined;
+  const raw = request.headers.get('Cookie') ?? '';
+  // eslint-disable-next-line no-control-regex -- Reject control characters in Cookie header.
+  if (/[\u0000-\u001f\u007f]/.test(raw)) return '';
+  const matches = raw.split(';').map(part => part.trim()).filter(part => part.startsWith(name + '='));
+  if (matches.length === 0) return undefined;
+  if (matches.length > 1) return '';
+  return matches[0]!.slice(name.length + 1);
 }
 
 async function mac(secret: string, value: string): Promise<string> {
   return toBase64Url(new Uint8Array(await crypto.subtle.sign('HMAC', await hmacKey(encoder.encode(secret)), encoder.encode(value))));
 }
 
-async function access(request: Request, secret: string, now: number): Promise<boolean> {
+async function access(request: Request, secret: string, nowMs: number): Promise<boolean> {
   const value = cookie(request, ACCESS_COOKIE);
   const parts = value?.match(/^([0-9]{10})\.([A-Za-z0-9_-]{43})$/);
-  if (!parts || Number(parts[1]) <= now || Number(parts[1]) > now + 3600) return false;
+  const expiresAtMs = parts ? Number(parts[1]) * 1000 : 0;
+  if (!parts || expiresAtMs <= nowMs || expiresAtMs > nowMs + 3_600_000) return false;
   return authorised('Bearer ' + parts[2], await mac(secret, 'private-access-v1:' + parts[1]));
 }
 
-function secure(response: Response, csp = CSP): Response {
+function secure(response: Response, csp = CSP, contentType?: string): Response {
   const result = new Response(response.body, response);
+  if (contentType) result.headers.set('Content-Type', contentType);
   result.headers.set('Cache-Control', 'private, no-store');
   result.headers.set('X-Content-Type-Options', 'nosniff');
   result.headers.set('Referrer-Policy', 'no-referrer');
@@ -35,6 +51,13 @@ function secure(response: Response, csp = CSP): Response {
   result.headers.set('Cross-Origin-Resource-Policy', 'same-origin');
   result.headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
   return result;
+}
+
+function unavailable(): Response {
+  return secure(new Response(JSON.stringify({ schemaVersion: '1.0.0', error: { code: 'unavailable', retryable: false } }), {
+    status: 404,
+    headers: { 'Content-Type': 'application/json; charset=utf-8' }
+  }));
 }
 
 function login(): Response {
@@ -55,12 +78,18 @@ function route(method: string, path: string): boolean {
 
 export async function privateChat(request: Request, env: Env, dependencies: Dependencies = {}): Promise<Response> {
   const url = new URL(request.url);
-  if (url.search || url.hash || /%|\\/.test(url.pathname)) return failure(404, 'NOT_FOUND');
-  if (env.CHAT_PRIVATE_ENABLED !== 'true' || env.PUBLIC_CHAT_ENABLED === 'true') return failure(404, 'NOT_FOUND');
+  // eslint-disable-next-line no-control-regex -- Reject control characters, percent-encoding, backslashes, and prototype segments.
+  if (url.search || url.hash || /%|\\|[\u0000-\u001f\u007f]/.test(url.pathname) ||
+      url.pathname.split('/').some(part => part === '.' || part === '..' || part === '__proto__')) {
+    return unavailable();
+  }
+  if (env.CHAT_PRIVATE_ENABLED !== 'true' || env.PUBLIC_CHAT_ENABLED === 'true') return unavailable();
+  if (/^\/api\/chat\/_/i.test(url.pathname)) return unavailable();
   let config: ReturnType<typeof validatedConfig>;
   try { config = validatedConfig(env); } catch { return failure(503, 'NOT_CONFIGURED'); }
   if (url.protocol !== 'https:' && !['localhost', '127.0.0.1'].includes(url.hostname)) return failure(403, 'HTTPS_REQUIRED');
-  const now = Math.floor((dependencies.now ?? Date.now)() / 1000);
+  const nowMs = (dependencies.now ?? Date.now)();
+  const now = Math.floor(nowMs / 1000);
   const isRead = request.method === 'GET' || request.method === 'HEAD';
   if (!isRead && (request.headers.get('Origin') !== url.origin ||
       ['cross-site', 'none'].includes(request.headers.get('Sec-Fetch-Site') ?? '') ||
@@ -82,20 +111,23 @@ export async function privateChat(request: Request, env: Env, dependencies: Depe
     } catch (error) { return failure(error instanceof RangeError ? 413 : 400, 'INVALID_REQUEST'); }
   }
 
-  const authenticated = await access(request, config.token, now);
+  const assets = env.CHAT_ASSETS ?? env.ASSETS;
+  const authenticated = await access(request, config.token, nowMs);
   if (url.pathname === '/chat-preview' || url.pathname === '/chat-preview.html' || url.pathname === '/') {
     if (!isRead) return failure(405, 'METHOD_NOT_ALLOWED');
     if (!authenticated) return login();
-    if (!env.CHAT_ASSETS) return failure(503, 'ASSETS_UNAVAILABLE');
-    return secure(await env.CHAT_ASSETS.fetch(new Request(new URL('/chat-preview.html', url), { method: request.method })));
+    if (!assets) return failure(503, 'ASSETS_UNAVAILABLE');
+    return secure(await assets.fetch(new Request(new URL('/chat-preview.html', url), { method: request.method })));
   }
-  if (ASSETS.has(url.pathname)) {
+  if (Object.hasOwn(ASSET_TYPES, url.pathname)) {
     if (!isRead) return failure(405, 'METHOD_NOT_ALLOWED');
     if (!authenticated) return failure(401, 'UNAUTHORISED');
-    if (!env.CHAT_ASSETS) return failure(503, 'ASSETS_UNAVAILABLE');
-    return secure(await env.CHAT_ASSETS.fetch(new Request(url, { method: request.method })));
+    if (!assets) return failure(503, 'ASSETS_UNAVAILABLE');
+    const assetResponse = await assets.fetch(new Request(url, { method: request.method }));
+    if (assetResponse.status === 404) return unavailable();
+    return secure(assetResponse, CSP, ASSET_TYPES[url.pathname]);
   }
-  if (!route(request.method, url.pathname)) return failure(404, 'NOT_FOUND');
+  if (!route(request.method, url.pathname)) return unavailable();
   if (!authenticated) return failure(401, 'UNAUTHORISED');
 
   const controller = new AbortController();

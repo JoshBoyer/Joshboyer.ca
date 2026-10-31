@@ -106,33 +106,49 @@ async function handleContactApi(req, res) {
 }
 
 const server = http.createServer((req, res) => {
+  if (typeof req.url !== 'string' || /(?:^|\/)(?:\.\.?|%2e%2e?)(?:\/|[?#]|$)/i.test(req.url)) {
+    res.writeHead(403, { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer' });
+    res.end('Forbidden');
+    return;
+  }
   let parsedUrl, pathname;
   try {
     parsedUrl = new URL(req.url, 'http://localhost');
     pathname = decodeURIComponent(parsedUrl.pathname);
   } catch {
-    res.writeHead(400);
+    res.writeHead(400, { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer' });
     res.end('Invalid request');
     return;
   }
 
   // Match production containment before static routing, for every HTTP method.
   // eslint-disable-next-line no-control-regex -- Intentional rejection or removal of control characters.
-  if (/[\\\u0000-\u001f%:]/.test(pathname) || pathname.split('/').some(p => p.startsWith('.'))) {
-    res.writeHead(403); res.end('Forbidden'); return;
+  if (/[\\\u0000-\u001f\u007f%:]/.test(pathname) || pathname.split('/').some(p => p.startsWith('.') || p === '__proto__')) {
+    res.writeHead(403, { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer' });
+    res.end('Forbidden');
+    return;
   }
   if (/^\/api\/(?:twin(?:\/|$)|explore(?:\/|$)|config\/?$)/i.test(pathname) || /^\/(?:twin-(?:drawer|voice)\.(?:js|css)|josh-3d-avatar\.(?:js|css)|twin-context\.json|career-guide-ui\.js)$/i.test(pathname)) {
     sendJson(res, 410, { ok: false, enabled: false, available: false, error: { code: 'TWIN_REMOVED', message: 'The digital twin and its AI access have been removed.' } });
     return;
   }
-  if (pathname === '/api/chat' || pathname.startsWith('/api/chat/')) {
+  if (/^\/api\/chat(?:\/|$)/i.test(pathname)) {
     sendJson(res, 404, { schemaVersion: '1.0.0', error: { code: 'unavailable', retryable: false } });
+    return;
+  }
+  if (/^\/chat-preview(?:\.html)?\/?$/i.test(pathname)) {
+    res.writeHead(404, { 'Content-Type': 'text/plain;charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer' });
+    res.end('Not found');
     return;
   }
   if (pathname === '/api/contact' || pathname === '/api/contact/') {
     handleContactApi(req, res).catch(() => {
       if (!res.headersSent) sendJson(res, 500, { ok: false, code: 'INTERNAL_ERROR', error: 'Internal server error' });
     });
+    return;
+  }
+  if (/^\/api(?:\/|$)/i.test(pathname)) {
+    sendJson(res, 404, { schemaVersion: '1.0.0', error: { code: 'unavailable', retryable: false } });
     return;
   }
 
