@@ -4,7 +4,6 @@
 
   const stateKey = "joshBoyerPortfolio";
   const pages = Array.from(document.querySelectorAll("section[data-page]"));
-  const navigation = Array.from(document.querySelectorAll("[data-nav]"));
   const detail = document.getElementById("project-detail");
   const menu = document.getElementById("primary-nav");
   const menuToggle = document.getElementById("menu-toggle");
