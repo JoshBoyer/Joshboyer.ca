@@ -1,31 +1,32 @@
 # Chat infrastructure
 
-Version: 1.0 | Date: 2026-10-31 | Scope: Phase 2 operator pilot
+Version: 1.1 | Date: 2026-10-31 | Scope: Private chat, RAG retrieval and MCP infrastructure (`us-east-2`)
 
-This package defines the AWS side of the private provider probe. It does not enable visitor chat. Regional resources are locked to **us-east-2**; the deployment project must be supplied explicitly.
+This package defines the AWS side of the private portfolio assistant (`PUBLIC_CHAT_ENABLED=false`). Regional resources are locked to **us-east-2**; the deployment project must be supplied explicitly.
 
 ```text
-Authenticated Cloudflare probe
+Authenticated Cloudflare edge
              |
              v
-REST API + edge-signature authoriser
+REST API + edge-signature authoriser (CUSTOM) / internal MCP route (AWS_IAM)
              |
+             +--> Streaming chat Lambda -> AI Gateway / S3 / S3 Vectors / DynamoDB
+             |           |
+             |           +--> SigV4 POST /api/chat/_mcp
              v
-Streaming Lambda -> AI Gateway
-       |
-       +-> DynamoDB nonce receipt
+      Stateless MCP Lambda (read-only public corpus tools)
 ```
 
-The authoriser verifies the signed request envelope. The handler then verifies the actual body and consumes a one-time nonce before calling a provider. The **nonce** is a unique request value that prevents replay. Authentication, body checks and provider behaviour are implemented in `services/chat/`; this package wires their permissions and runtime.
+The authoriser verifies the signed request envelope on edge routes. The chat handler verifies the actual body, consumes a one-time nonce, enforces session and budget state in DynamoDB, queries read-only RAG evidence in S3 / S3 Vectors, and invokes the internal MCP route (`POST /api/chat/_mcp`) using AWS SigV4 (`AWS_IAM`). Authentication, body checks and provider behaviour are implemented in `services/chat/` and `services/portfolio-mcp/`; this package wires their permissions and runtime.
 
 ## Resources and boundaries
 
-- One regional REST API exposes only `POST /api/chat/_probe`. Its REQUEST authoriser has a zero-second cache. Response streaming uses Lambda's streaming invocation endpoint.
-- Two Node.js 24 / ARM64 Lambda functions have separate roles, 256 MB memory and two reserved executions each. Handler timeout is 30 seconds; authoriser timeout is 10 seconds. Neither has a VPC or function URL.
-- DynamoDB uses on-demand billing, `pk`/`sk`, an `expiresAt` time-to-live field and point-in-time recovery. The handler can only write `NONCE#*` keys. TTL deletion is asynchronous; the application still checks request age.
-- A versioned S3 bucket holds future approved evidence artifacts. Public access is blocked, encryption is enabled and HTTPS is required. The Phase 2 functions have no bucket permissions.
-- Four Secrets Manager resources separate OpenAI, Anthropic, Gateway and edge-signing credentials. Only the handler can read provider/Gateway values; the authoriser can read only the edge keyring. Values are provisioned separately, never embedded in the template or Lambda environment.
-- Three log groups retain data for seven days. API logs contain request ID, status, response size and latency only. Execution-body logging is disabled. Four alarms track function errors and throttles; notification destinations are not configured by this package.
+- One regional REST API exposes the edge-authenticated chat routes (`POST /api/chat/_probe`, `GET /api/chat/config`, `POST /api/chat/session`, `DELETE /api/chat/session`, `POST /api/chat/messages`, `POST /api/chat/requests/{requestId}/cancel`) with a zero-second-cache `REQUEST` authoriser and Lambda response streaming, plus the internal `POST /api/chat/_mcp` route protected by `AWS_IAM`.
+- Three Node.js 24 Lambda functions have separate least-privilege roles and 256 MB memory: `handler` (ARM64, 60s timeout, 2 reserved executions), `authorizer` (ARM64, 10s timeout, 2 reserved executions), and `mcp` (`joshboyer-chat-dev-mcp`, x86_64, 10s timeout, 4 reserved executions). None has a VPC or function URL.
+- DynamoDB uses on-demand billing, `pk`/`sk`, an `expiresAt` time-to-live field and point-in-time recovery. `HandlerRole` is scoped by `dynamodb:LeadingKeys` to `NONCE#*` (`PutItem`) and `SESSION#*`, `REQUEST#*`, `BUDGET#*`, `VISITOR#*` (`GetItem`, `PutItem`, `UpdateItem`). `McpRole` has zero DynamoDB permissions.
+- A versioned S3 bucket holds approved evidence and index artifacts. Public access is blocked, encryption is enabled and HTTPS is required. `HandlerRole` has read-only `s3:GetObject` on `indexes/*`, `s3:ListBucket` on the evidence bucket, and read-only `s3vectors:QueryVectors`/`GetVectors`/`GetIndex`/`GetVectorBucket` on `joshboyer-chat-dev-vectors*`, plus `execute-api:Invoke` on `POST /api/chat/_mcp`. `McpRole` has zero S3, S3 Vectors, DynamoDB or Secrets Manager permissions.
+- Four Secrets Manager resources separate OpenAI, Anthropic, Gateway and edge-signing credentials. Only the handler can read provider/Gateway values; the authoriser can read only the edge keyring; the MCP function can read none. Values are provisioned separately, never embedded in the template or Lambda environment.
+- Four log groups retain data for seven days. API logs contain request ID, status, response size and latency only. Execution-body logging is disabled. Six alarms track function errors and throttles across `handler`, `authorizer`, and `mcp`; notification destinations are not configured by this package.
 - State, secrets, evidence and logs are retained on deletion or replacement. The stack has termination protection. Cleanup must explicitly consider retained resources and any persisted data.
 
 The stage permits one request/second with a burst of two. These controls limit throughput; they are not spending limits. The later session and budget phase must reserve provider cost before public inference is enabled.
