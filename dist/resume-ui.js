@@ -13,7 +13,6 @@
   const posting = $('job-posting'), profile = $('role-focus');
 
   let data = null;
-  let twinContext = null;
   let result = null;
   let resume = null;
   let selected = new Set();
