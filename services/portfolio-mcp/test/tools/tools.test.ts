@@ -64,7 +64,7 @@ const chunksManifest = require('../../../../chat/knowledge/chunks-manifest.json'
 };
 
 const TEST_CREDENTIALS: AwsCredentials = Object.freeze({
-  accessKeyId: 'AKIAIOSFODNN7EXAMPLE',
+  accessKeyId: 'TESTACCESSKEYID12345',
   secretAccessKey: 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY',
   sessionToken: 'AQoDYXdzEJr1EXAMPLETOKEN9988776655'
 });

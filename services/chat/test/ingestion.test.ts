@@ -51,7 +51,7 @@ const cliTool = require('../../../tools/ingest-chat-knowledge.cjs') as {
 };
 
 const TEST_AWS_CREDENTIALS = Object.freeze({
-  accessKeyId: 'AKIAIOSFODNN7EXAMPLE',
+  accessKeyId: 'TESTACCESSKEYID12345',
   secretAccessKey: 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY',
   sessionToken: 'AQoDYXdzEJr1EXAMPLETOKEN998877665544'
 });
@@ -688,7 +688,7 @@ test('Full versioned ingestion lifecycle: v1 ingest -> idempotent re-run (0 paid
     // 1. Ingest v1
     const v1Result = await ingestKnowledgeIndex({
       config,
-      openAiApiKey: 'sk-test-openai-valid-credential-123456',
+      openAiApiKey: 'test-openai-credential-123456',
       gatewayToken: 'cf-test-gateway-valid-credential-123456',
       s3Store,
       vectorStore,
@@ -720,7 +720,7 @@ test('Full versioned ingestion lifecycle: v1 ingest -> idempotent re-run (0 paid
     // 2. Idempotent re-run of v1 (force = false) makes 0 paid embedding calls
     const v1Reused = await ingestKnowledgeIndex({
       config,
-      openAiApiKey: 'sk-test-openai-valid-credential-123456',
+      openAiApiKey: 'test-openai-credential-123456',
       gatewayToken: 'cf-test-gateway-valid-credential-123456',
       s3Store,
       vectorStore,
@@ -742,7 +742,7 @@ test('Full versioned ingestion lifecycle: v1 ingest -> idempotent re-run (0 paid
       corpus: v2Bundle.corpus,
       cag: v2Bundle.cag,
       chunksManifest: v2Bundle.chunksManifest,
-      openAiApiKey: 'sk-test-openai-valid-credential-123456',
+      openAiApiKey: 'test-openai-credential-123456',
       gatewayToken: 'cf-test-gateway-valid-credential-123456',
       s3Store,
       vectorStore,
@@ -812,7 +812,7 @@ test('Partial failures during v2 ingestion or rollback leave active-pointer.json
     // Establish v1 active index
     const v1 = await ingestKnowledgeIndex({
       config,
-      openAiApiKey: 'sk-test-openai-valid-credential-123456',
+      openAiApiKey: 'test-openai-credential-123456',
       gatewayToken: 'cf-test-gateway-valid-credential-123456',
       s3Store,
       vectorStore,
@@ -833,7 +833,7 @@ test('Partial failures during v2 ingestion or rollback leave active-pointer.json
           corpus: v2Bundle.corpus,
           cag: v2Bundle.cag,
           chunksManifest: v2Bundle.chunksManifest,
-          openAiApiKey: 'sk-test-openai-valid-credential-123456',
+          openAiApiKey: 'test-openai-credential-123456',
           gatewayToken: 'cf-test-gateway-valid-credential-123456',
           s3Store,
           vectorStore,
@@ -854,7 +854,7 @@ test('Partial failures during v2 ingestion or rollback leave active-pointer.json
           corpus: v2Bundle.corpus,
           cag: v2Bundle.cag,
           chunksManifest: v2Bundle.chunksManifest,
-          openAiApiKey: 'sk-test-openai-valid-credential-123456',
+          openAiApiKey: 'test-openai-credential-123456',
           gatewayToken: 'cf-test-gateway-valid-credential-123456',
           s3Store,
           vectorStore,
@@ -875,7 +875,7 @@ test('Partial failures during v2 ingestion or rollback leave active-pointer.json
           corpus: v2Bundle.corpus,
           cag: v2Bundle.cag,
           chunksManifest: v2Bundle.chunksManifest,
-          openAiApiKey: 'sk-test-openai-valid-credential-123456',
+          openAiApiKey: 'test-openai-credential-123456',
           gatewayToken: 'cf-test-gateway-valid-credential-123456',
           s3Store,
           vectorStore,
@@ -899,7 +899,7 @@ test('Partial failures during v2 ingestion or rollback leave active-pointer.json
           corpus: v2Bundle.corpus,
           cag: v2Bundle.cag,
           chunksManifest: v2Bundle.chunksManifest,
-          openAiApiKey: 'sk-test-openai-valid-credential-123456',
+          openAiApiKey: 'test-openai-credential-123456',
           gatewayToken: 'cf-test-gateway-valid-credential-123456',
           s3Store,
           vectorStore,
@@ -961,7 +961,7 @@ test('3-point dimension/allowance boundaries, zero-vector rejection, and tampere
       () =>
         ingestKnowledgeIndex({
           config,
-          openAiApiKey: 'sk-test-openai-valid-credential-123456',
+          openAiApiKey: 'test-openai-credential-123456',
           gatewayToken: 'cf-test-gateway-valid-credential-123456',
           maxAllowanceMicros: 255,
           s3Store,
@@ -979,7 +979,7 @@ test('3-point dimension/allowance boundaries, zero-vector rejection, and tampere
         () =>
           ingestKnowledgeIndex({
             config,
-            openAiApiKey: 'sk-test-openai-valid-credential-123456',
+            openAiApiKey: 'test-openai-credential-123456',
             gatewayToken: 'cf-test-gateway-valid-credential-123456',
             maxAllowanceMicros: 256,
             s3Store,
@@ -999,7 +999,7 @@ test('3-point dimension/allowance boundaries, zero-vector rejection, and tampere
       () =>
         ingestKnowledgeIndex({
           config,
-          openAiApiKey: 'sk-test-openai-valid-credential-123456',
+          openAiApiKey: 'test-openai-credential-123456',
           gatewayToken: 'cf-test-gateway-valid-credential-123456',
           maxAllowanceMicros: 256,
           s3Store,
@@ -1021,7 +1021,7 @@ test('3-point dimension/allowance boundaries, zero-vector rejection, and tampere
         ingestKnowledgeIndex({
           config,
           chunksManifest: tamperedManifest,
-          openAiApiKey: 'sk-test-openai-valid-credential-123456',
+          openAiApiKey: 'test-openai-credential-123456',
           gatewayToken: 'cf-test-gateway-valid-credential-123456',
           s3Store,
           vectorStore,
@@ -1035,7 +1035,7 @@ test('3-point dimension/allowance boundaries, zero-vector rejection, and tampere
     for (const allowedCap of [256, 257]) {
       const okRes = await ingestKnowledgeIndex({
         config,
-        openAiApiKey: 'sk-test-openai-valid-credential-123456',
+        openAiApiKey: 'test-openai-credential-123456',
         gatewayToken: 'cf-test-gateway-valid-credential-123456',
         maxAllowanceMicros: allowedCap,
         s3Store,
@@ -1080,7 +1080,7 @@ test('Adversarial inputs, inactive chunks, private corpus canaries (CANARY-A08-P
         ingestKnowledgeIndex({
           config,
           corpus: inactiveCorpus,
-          openAiApiKey: 'sk-test-openai-valid-credential-123456',
+          openAiApiKey: 'test-openai-credential-123456',
           gatewayToken: 'cf-test-gateway-valid-credential-123456',
           s3Store,
           vectorStore,
@@ -1198,7 +1198,7 @@ test('CLI tool tools/ingest-chat-knowledge.cjs supports --dry-run, --ingest, --v
       write: (s: string) => out.push(s),
       writeError: (s: string) => errOut.push(s),
       config: makeConfig(),
-      openAiApiKey: 'sk-test-openai-valid-credential-123456',
+      openAiApiKey: 'test-openai-credential-123456',
       gatewayToken: 'cf-test-gateway-valid-credential-123456',
       s3Endpoint: harness.s3Endpoint,
       s3VectorsEndpoint: harness.s3VectorsEndpoint,
