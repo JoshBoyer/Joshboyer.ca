@@ -1,7 +1,7 @@
 'use strict';
 
 const Ajv2020 = require('ajv/dist/2020');
-const { isDeepStrictEqual } = require('node:util');
+const { isDeepStrictEqual, types } = require('node:util');
 const schema = require('./schema.json');
 const { validateCorpus } = require('../knowledge/validate.cjs');
 
@@ -23,6 +23,11 @@ const NOTICE_TEXT = Object.freeze({
   general_knowledge: 'This reply uses general model knowledge. No live sources were retrieved.'
 });
 const TOOL_NAMES = Object.freeze([...schema.$defs.toolName.enum]);
+const TOOL_OUTPUT_SCHEMAS = Object.freeze({
+  search_public_evidence: 'search_public_evidence_output',
+  get_case_study: 'get_case_study_output',
+  compare_job_requirements: 'compare_job_requirements_output'
+});
 const PROJECT_IDS = Object.freeze([...schema.$defs.projectId.enum]);
 const PAGE_CONTEXTS = Object.freeze([...schema.$defs.pageContext.enum]);
 const FACETS = Object.freeze([...schema.$defs.facet.enum]);
@@ -57,8 +62,47 @@ function validatorFor(name) {
   return validators.get(name);
 }
 
+function isSafeValue(value, seen = new Set()) {
+  try {
+    if (value === null || typeof value !== 'object') return true;
+    if (types.isProxy(value) || seen.has(value)) return false;
+    seen.add(value);
+    try {
+      if (Array.isArray(value)) {
+        if (Object.getPrototypeOf(value) !== Array.prototype || Object.getOwnPropertySymbols(value).length > 0) return false;
+        const descriptors = Object.getOwnPropertyDescriptors(value);
+        if (Object.keys(descriptors).length !== value.length + 1) return false;
+        for (let i = 0; i < value.length; i += 1) {
+          const desc = descriptors[i];
+          if (!desc || 'get' in desc || 'set' in desc || !desc.enumerable || !isSafeValue(desc.value, seen)) return false;
+        }
+        return true;
+      }
+      const proto = Object.getPrototypeOf(value);
+      if ((proto !== Object.prototype && proto !== null) || Object.getOwnPropertySymbols(value).length > 0) return false;
+      for (const [key, desc] of Object.entries(Object.getOwnPropertyDescriptors(value))) {
+        if (key === '__proto__' || 'get' in desc || 'set' in desc || !desc.enumerable || !isSafeValue(desc.value, seen)) return false;
+      }
+      return true;
+    } finally {
+      seen.delete(value);
+    }
+  } catch {
+    return false;
+  }
+}
+
+function checkUtf8Limit(text, maxBytes, path, errors) {
+  if (typeof text === 'string' && Buffer.byteLength(text, 'utf8') > maxBytes) {
+    errors.push({ path, keyword: 'maxUtf8Bytes' });
+  }
+}
+
 function validate(name, value) {
   const validator = validatorFor(name);
+  if (!isSafeValue(value)) {
+    return { valid: false, errors: [{ path: '', keyword: 'type' }] };
+  }
   const validShape = validator(value);
   // Error details are structural only; never echo visitor text or supplied credentials.
   const errors = validShape ? [] : validator.errors.map(error => ({
@@ -87,6 +131,46 @@ function validate(name, value) {
       errors.push({ path: '/suggestions', keyword: 'maxUtf8Bytes' });
     }
   }
+  if (name === 'search_public_evidence_output' && Array.isArray(value?.matches)) {
+    value.matches.forEach((match, index) => {
+      checkUtf8Limit(match?.title, 256, `/matches/${index}/title`, errors);
+      checkUtf8Limit(match?.period, 128, `/matches/${index}/period`, errors);
+      checkUtf8Limit(match?.text, 4096, `/matches/${index}/text`, errors);
+      if (Array.isArray(match?.qualificationNotes)) {
+        match.qualificationNotes.forEach((note, nIdx) => checkUtf8Limit(note, 2048, `/matches/${index}/qualificationNotes/${nIdx}`, errors));
+      }
+    });
+  }
+  if (name === 'get_case_study_output' && value && typeof value === 'object') {
+    checkUtf8Limit(value.title, 256, '/title', errors);
+    checkUtf8Limit(value.period, 128, '/period', errors);
+    checkUtf8Limit(value.text, 4096, '/text', errors);
+    checkUtf8Limit(value.decision, 2048, '/decision', errors);
+    checkUtf8Limit(value.technicalGuidance, 4096, '/technicalGuidance', errors);
+    checkUtf8Limit(value.outcome, 2048, '/outcome', errors);
+    if (Array.isArray(value.process)) {
+      value.process.forEach((step, idx) => checkUtf8Limit(step, 1024, `/process/${idx}`, errors));
+    }
+    if (Array.isArray(value.qualificationNotes)) {
+      value.qualificationNotes.forEach((note, idx) => checkUtf8Limit(note, 2048, `/qualificationNotes/${idx}`, errors));
+    }
+  }
+  if (name === 'compare_job_requirements_output' && value && typeof value === 'object') {
+    if (Array.isArray(value.matches)) {
+      value.matches.forEach((match, index) => {
+        checkUtf8Limit(match?.requirement, 256, `/matches/${index}/requirement`, errors);
+        if (Array.isArray(match?.qualificationNotes)) {
+          match.qualificationNotes.forEach((note, nIdx) => checkUtf8Limit(note, 2048, `/matches/${index}/qualificationNotes/${nIdx}`, errors));
+        }
+      });
+    }
+    if (Array.isArray(value.gaps)) {
+      value.gaps.forEach((gap, idx) => checkUtf8Limit(gap, 256, `/gaps/${idx}`, errors));
+    }
+    if (Array.isArray(value.qualificationSummary)) {
+      value.qualificationSummary.forEach((item, idx) => checkUtf8Limit(item, 2048, `/qualificationSummary/${idx}`, errors));
+    }
+  }
   return { valid: errors.length === 0, errors };
 }
 
@@ -103,6 +187,13 @@ function assertToolInput(name, value) {
     throw new ContractError('UNKNOWN_TOOL', 'Tool is not in the portfolio catalogue.');
   }
   return assertValid(name, value);
+}
+
+function assertToolOutput(name, value) {
+  if (!Object.hasOwn(TOOL_OUTPUT_SCHEMAS, name)) {
+    throw new ContractError('UNKNOWN_TOOL', 'Tool is not in the portfolio catalogue.');
+  }
+  return assertValid(TOOL_OUTPUT_SCHEMAS[name], value);
 }
 
 function indexCorpus(corpus) {
@@ -228,10 +319,14 @@ function createEventValidator({ requestId, generation, corpus }) {
             (data.provider === 'anthropic' && data.model !== 'claude-haiku-5-5')) {
           streamError('Trace is late, oversized or has invalid timing.');
         }
-        const key = ['provider', 'validation'].includes(data.stage) ? `${data.stage}-${data.attempt ?? 1}` : data.stage;
+        const key = ['provider', 'validation'].includes(data.stage)
+          ? `${data.stage}-${data.attempt ?? 1}`
+          : data.stage === 'mcp'
+            ? `mcp-${data.toolCallId ?? data.mcpMethod ?? (data.attempt ?? 1)}`
+            : data.stage;
         const previous = traceStages.get(key);
         if (previous && previous !== 'started' || previous === 'started' && data.state === 'started' ||
-            !previous && ['provider', 'validation'].includes(data.stage) && data.state !== 'started') {
+            !previous && ['provider', 'validation', 'mcp'].includes(data.stage) && data.state !== 'started') {
           streamError('Trace stage transition is invalid.');
         }
         if (data.elapsedMs !== null) lastTraceTime = data.elapsedMs;
@@ -321,6 +416,7 @@ module.exports = {
   validate,
   assertValid,
   assertToolInput,
+  assertToolOutput,
   assertCorpusCompatible,
   renderAnswer,
   createEventValidator

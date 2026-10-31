@@ -44,3 +44,48 @@ test('conversation precedes evidence but only follows completed stages and appea
   stream.accept(frame(6,'done',{outcome:'completed'}));
   assert.throws(()=>stream.accept(frame(7,'conversation',reply())));
 });
+
+test('conversation waits for routing, retrieval and repeatable mcp stages to complete before emission', () => {
+  const pendingRouting = createEventValidator({requestId,generation,corpus});
+  pendingRouting.accept(frame(1,'trace',{stage:'routing',state:'started',elapsedMs:1}));
+  assert.throws(()=>pendingRouting.accept(frame(2,'conversation',reply())));
+
+  const pendingRetrieval = createEventValidator({requestId,generation,corpus});
+  pendingRetrieval.accept(frame(1,'trace',{stage:'retrieval',state:'started',elapsedMs:1}));
+  assert.throws(()=>pendingRetrieval.accept(frame(2,'conversation',reply())));
+
+  const pendingMcp = createEventValidator({requestId,generation,corpus});
+  pendingMcp.accept(frame(1,'trace',{stage:'mcp',state:'started',elapsedMs:1,mcpMethod:'tools/call',toolCallId:'tool-1',toolName:'get_case_study'}));
+  assert.throws(()=>pendingMcp.accept(frame(2,'conversation',reply())));
+
+  const fullConversation = createEventValidator({requestId,generation,corpus});
+  fullConversation.accept(frame(1,'trace',{stage:'routing',state:'completed',elapsedMs:2,routingMode:'portfolio_mcp',needsRetrieval:true,requestedTools:['get_case_study']}));
+  fullConversation.accept(frame(2,'trace',{stage:'retrieval',state:'completed',elapsedMs:15,retrievalMode:'hybrid',matchedCount:2,corpusVersion:corpus.corpusVersion}));
+  fullConversation.accept(frame(3,'trace',{stage:'mcp',state:'started',elapsedMs:16,mcpMethod:'tools/call',toolCallId:'tool-1',toolName:'get_case_study'}));
+  fullConversation.accept(frame(4,'trace',{stage:'mcp',state:'completed',elapsedMs:30,durationMs:14,mcpMethod:'tools/call',toolCallId:'tool-1',toolName:'get_case_study',toolOutcome:'completed'}));
+  fullConversation.accept(frame(5,'trace',{stage:'provider',state:'started',attempt:1,provider:'openai',model:'gpt-6-luna',elapsedMs:31}));
+  fullConversation.accept(frame(6,'trace',{stage:'provider',state:'completed',attempt:1,provider:'openai',model:'gpt-6-luna',elapsedMs:90,durationMs:59}));
+  fullConversation.accept(frame(7,'conversation',reply({kind:'portfolio',text:'NEXUS is an independent multi-agent capstone project.'})));
+  const evidence=renderAnswer({schemaVersion:SCHEMA_VERSION,corpusVersion:corpus.corpusVersion,claimIds:[corpus.claims[0].id],noticeCodes:[]},corpus);
+  fullConversation.accept(frame(8,'answer_block',evidence.blocks[0]));
+  fullConversation.accept(frame(9,'sources',{corpusVersion:corpus.corpusVersion,sources:evidence.sources}));
+  fullConversation.accept(frame(10,'done',{outcome:'completed'}));
+});
+
+test('conversation rejects NUL bytes, multi-line suggestions and hostile objects without leaking canaries', () => {
+  const canary = 'CANARY-CONV-7712b9a';
+  assert.equal(validate('conversationData',reply({text:`Valid start\u0000${canary}`})).valid,false);
+  assert.equal(validate('conversationData',reply({text:'\u0000'})).valid,false);
+  assert.equal(validate('conversationData',reply({suggestions:[`Line1\r\n${canary}`]})).valid,false);
+  assert.equal(validate('conversationData',reply({suggestions:[`Line1\n${canary}`]})).valid,false);
+  assert.equal(validate('conversationData',reply({suggestions:[`Line1\u2028${canary}`]})).valid,false);
+  assert.equal(validate('conversationSelection',selection({text:`Hello\u0000${canary}`})).valid,false);
+
+  const hostile = Object.defineProperty(reply(), 'text', {
+    enumerable: true,
+    get() { throw new Error(canary); }
+  });
+  const res = validate('conversationData', hostile);
+  assert.equal(res.valid, false);
+  assert.doesNotMatch(JSON.stringify(res), new RegExp(canary));
+});
