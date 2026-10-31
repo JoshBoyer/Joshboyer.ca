@@ -1156,18 +1156,132 @@
       contextData: copy(contextData)
     };
   }
+  const SVG_NS = 'http://www.w3.org/2000/svg';
   const TECH_STACK_ITEMS = Object.freeze([
-    { id: 'aws', glyph: 'AWS', name: 'AWS us-east-2', role: 'Cloud & IAM SigV4' },
-    { id: 'lambda', glyph: 'λ', name: 'AWS Lambda', role: 'Handler · Auth · MCP' },
-    { id: 's3', glyph: 'S3', name: 'S3 & S3 Vectors', role: '1536-d Vector Index' },
-    { id: 'dynamodb', glyph: 'DB', name: 'Amazon DynamoDB', role: 'Sessions & $25 Ledger' },
-    { id: 'apigw', glyph: 'API', name: 'API Gateway', role: 'REST + AWS_IAM Route' },
-    { id: 'secrets', glyph: 'IAM', name: 'Secrets & SSM', role: 'Keyring & Pointers' },
-    { id: 'cloudflare', glyph: 'CF', name: 'Cloudflare Edge', role: 'Worker & AI Gateway' },
-    { id: 'mcp', glyph: 'MCP', name: 'Portfolio MCP', role: 'JSON-RPC · 3 Tools' },
-    { id: 'openai', glyph: 'AI', name: 'OpenAI Primary', role: 'Luna + 1536-d Embed' },
-    { id: 'anthropic', glyph: 'CL', name: 'Anthropic Guard', role: 'Haiku 5.5 Fallback' }
+    {
+      id: 'aws',
+      glyph: 'AWS',
+      name: 'AWS us-east-2',
+      role: 'Cloud & IAM SigV4',
+      paths: [
+        { d: 'M12 2.5L20 7.1V16.4L12 21L4 16.4V7.1L12 2.5Z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.8', strokeLinejoin: 'round' },
+        { d: 'M4 7.1L12 11.7L20 7.1M12 11.7V21', fill: 'none', stroke: 'currentColor', strokeWidth: '1.6', strokeLinejoin: 'round' }
+      ]
+    },
+    {
+      id: 'lambda',
+      glyph: 'λ',
+      name: 'AWS Lambda',
+      role: 'Handler · Auth · MCP',
+      paths: [
+        { d: 'M7 4.5H10.6L17.5 19.5H13.9L11.6 14.2L9.1 19.5H5.7L9.9 10.8L7 4.5Z', fill: 'currentColor' }
+      ]
+    },
+    {
+      id: 's3',
+      glyph: 'S3',
+      name: 'S3 & S3 Vectors',
+      role: '1536-d Vector Index',
+      paths: [
+        { d: 'M5.5 6.5C5.5 4.8 8.4 3.5 12 3.5C15.6 3.5 18.5 4.8 18.5 6.5L17 17.5C17 19.2 14.8 20.5 12 20.5C9.2 20.5 7 19.2 7 17.5L5.5 6.5Z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.8', strokeLinejoin: 'round' },
+        { d: 'M5.5 6.5C5.5 8.2 8.4 9.5 12 9.5C15.6 9.5 18.5 8.2 18.5 6.5', fill: 'none', stroke: 'currentColor', strokeWidth: '1.6' }
+      ]
+    },
+    {
+      id: 'dynamodb',
+      glyph: 'DB',
+      name: 'Amazon DynamoDB',
+      role: 'Sessions & $25 Ledger',
+      paths: [
+        { d: 'M4.5 6.5C4.5 4.8 7.9 3.5 12 3.5C16.1 3.5 19.5 4.8 19.5 6.5V17.5C19.5 19.2 16.1 20.5 12 20.5C7.9 20.5 4.5 19.2 4.5 17.5V6.5Z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.8' },
+        { d: 'M4.5 12C4.5 13.7 7.9 15 12 15C16.1 15 19.5 13.7 19.5 12', fill: 'none', stroke: 'currentColor', strokeWidth: '1.6' },
+        { d: 'M13.2 7.2L10.2 12.2H13L11.2 16.8', fill: 'none', stroke: 'currentColor', strokeWidth: '1.6', strokeLinecap: 'round', strokeLinejoin: 'round' }
+      ]
+    },
+    {
+      id: 'apigw',
+      glyph: 'API',
+      name: 'API Gateway',
+      role: 'REST + AWS_IAM Route',
+      paths: [
+        { d: 'M7.5 7L3.5 12L7.5 17M16.5 7L20.5 12L16.5 17', fill: 'none', stroke: 'currentColor', strokeWidth: '1.9', strokeLinecap: 'round', strokeLinejoin: 'round' },
+        { d: 'M13.5 5.5L10.5 18.5', fill: 'none', stroke: 'currentColor', strokeWidth: '1.7', strokeLinecap: 'round' }
+      ]
+    },
+    {
+      id: 'secrets',
+      glyph: 'IAM',
+      name: 'Secrets & SSM',
+      role: 'Keyring & Pointers',
+      paths: [
+        { d: 'M12 2.8L19 5.8V11.4C19 16 15.9 19.7 12 21.2C8.1 19.7 5 16 5 11.4V5.8L12 2.8Z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.8', strokeLinejoin: 'round' },
+        { d: 'M12 9.5C10.9 9.5 10 10.4 10 11.5C10 12.3 10.5 13 11.2 13.3V15.8H12.8V13.3C13.5 13 14 12.3 14 11.5C14 10.4 13.1 9.5 12 9.5Z', fill: 'currentColor' }
+      ]
+    },
+    {
+      id: 'cloudflare',
+      glyph: 'CF',
+      name: 'Cloudflare Edge',
+      role: 'Worker & AI Gateway',
+      paths: [
+        { d: 'M6.8 17.5H17.8C19.8 17.5 21.2 16.1 21.2 14.2C21.2 12.4 19.9 11 18.1 10.9C17.5 7.9 14.9 5.8 11.8 5.8C8.9 5.8 6.4 7.7 5.7 10.4C3.9 10.7 2.8 12.2 2.8 14C2.8 16 4.5 17.5 6.8 17.5Z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.8', strokeLinejoin: 'round' }
+      ]
+    },
+    {
+      id: 'mcp',
+      glyph: 'MCP',
+      name: 'Portfolio MCP',
+      role: 'JSON-RPC · 3 Tools',
+      paths: [
+        { d: 'M12 6.5V12M12 12L7.2 16.2M12 12L16.8 16.2', fill: 'none', stroke: 'currentColor', strokeWidth: '1.8', strokeLinecap: 'round' },
+        { d: 'M12 4.5C13.1 4.5 14 5.4 14 6.5C14 7.6 13.1 8.5 12 8.5C10.9 8.5 10 7.6 10 6.5C10 5.4 10.9 4.5 12 4.5ZM6 15.5C7.1 15.5 8 16.4 8 17.5C8 18.6 7.1 19.5 6 19.5C4.9 19.5 4 18.6 4 17.5C4 16.4 4.9 15.5 6 15.5ZM18 15.5C19.1 15.5 20 16.4 20 17.5C20 18.6 19.1 19.5 18 19.5C16.9 19.5 16 18.6 16 17.5C16 16.4 16.9 15.5 18 15.5Z', fill: 'currentColor' }
+      ]
+    },
+    {
+      id: 'openai',
+      glyph: 'AI',
+      name: 'OpenAI Primary',
+      role: 'Luna + 1536-d Embed',
+      paths: [
+        { d: 'M12 3L14.2 9.8L21 12L14.2 14.2L12 21L9.8 14.2L3 12L9.8 9.8L12 3Z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.8', strokeLinejoin: 'round' }
+      ]
+    },
+    {
+      id: 'anthropic',
+      glyph: 'CL',
+      name: 'Anthropic Guard',
+      role: 'Haiku 5.5 Fallback',
+      paths: [
+        { d: 'M8.5 18.5L12 5.5L15.5 18.5M6.2 18.5L9.8 5.5M14.2 5.5L17.8 18.5M7.8 14.5H16.2', fill: 'none', stroke: 'currentColor', strokeWidth: '1.8', strokeLinecap: 'round', strokeLinejoin: 'round' }
+      ]
+    }
   ]);
+  function createTechIconNode(document, item) {
+    const iconWrap = element(document, 'span', `chat-tech-icon is-${item.id}`);
+    iconWrap.setAttribute('aria-hidden', 'true');
+    if (typeof document.createElementNS === 'function' && Array.isArray(item.paths)) {
+      const svg = document.createElementNS(SVG_NS, 'svg');
+      svg.setAttribute('viewBox', '0 0 24 24');
+      svg.setAttribute('width', '15');
+      svg.setAttribute('height', '15');
+      svg.setAttribute('aria-hidden', 'true');
+      svg.setAttribute('focusable', 'false');
+      for (const spec of item.paths) {
+        const path = document.createElementNS(SVG_NS, 'path');
+        path.setAttribute('d', spec.d);
+        if (spec.fill) path.setAttribute('fill', spec.fill);
+        if (spec.stroke) path.setAttribute('stroke', spec.stroke);
+        if (spec.strokeWidth) path.setAttribute('stroke-width', spec.strokeWidth);
+        if (spec.strokeLinecap) path.setAttribute('stroke-linecap', spec.strokeLinecap);
+        if (spec.strokeLinejoin) path.setAttribute('stroke-linejoin', spec.strokeLinejoin);
+        svg.append(path);
+      }
+      iconWrap.append(svg);
+    } else {
+      iconWrap.textContent = item.glyph;
+    }
+    return iconWrap;
+  }
   function createTechStackFooter(document) {
     const section = element(document, 'section', 'chat-tech-stack');
     section.setAttribute('aria-label', 'Solution architecture and cloud stack');
@@ -1180,8 +1294,7 @@
     for (const item of TECH_STACK_ITEMS) {
       const li = element(document, 'li', 'chat-tech-stack-item');
       li.setAttribute('data-tech-service', item.id);
-      const iconWrap = element(document, 'span', `chat-tech-icon is-${item.id}`, item.glyph);
-      iconWrap.setAttribute('aria-hidden', 'true');
+      const iconWrap = createTechIconNode(document, item);
       const copyWrap = element(document, 'div', 'chat-tech-copy');
       copyWrap.append(
         element(document, 'span', 'chat-tech-name', item.name),

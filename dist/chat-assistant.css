@@ -2191,6 +2191,12 @@
   letter-spacing: -0.02em;
 }
 
+.chat-tech-icon svg {
+  width: 15px;
+  height: 15px;
+  display: block;
+}
+
 .chat-tech-icon.is-aws {
   background-color: #fff3e0;
   color: #b85600;
