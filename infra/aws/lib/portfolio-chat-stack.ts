@@ -10,16 +10,22 @@ import { Construct } from 'constructs';
 
 export const REGION = 'us-east-2';
 export const PREFIX = 'joshboyer-chat-dev';
+export const VECTOR_BUCKET_NAME = `${PREFIX}-vectors`;
+export const VECTOR_INDEX_NAME = 'portfolio-evidence';
 
 export interface PortfolioChatStackProps extends StackProps {
   readonly serviceAssetPath?: string;
+  readonly mcpCodePath?: string;
   readonly reuseApiGatewayLogRole?: boolean;
 }
 
 export class PortfolioChatStack extends Stack {
   constructor(scope: Construct, id: string, props: PortfolioChatStackProps) {
     if (props.env?.region !== REGION) throw new Error(`Chat infrastructure must use ${REGION}.`);
-    if (!/^[0-9]{12}$/.test(props.env.account ?? '')) throw new Error('An explicit AWS project ID is required.');
+    const account = props.env.account ?? '';
+    if (typeof account !== 'string' || account.length !== 12 || !/^[0-9]{12}$/.test(account)) {
+      throw new Error('An explicit AWS project ID is required.');
+    }
     super(scope, id, { ...props, terminationProtection: true });
 
     const serviceAssetPath = props.serviceAssetPath ?? path.resolve(__dirname, '../../../services/chat/build');
@@ -30,6 +36,27 @@ export class PortfolioChatStack extends Stack {
       }
     }
     const code = lambda.Code.fromAsset(serviceAssetPath);
+    let mcpCode = code;
+    if (props.mcpCodePath !== undefined) {
+      if (
+        typeof props.mcpCodePath !== 'string' ||
+        props.mcpCodePath.length === 0 ||
+        !fs.existsSync(props.mcpCodePath) ||
+        fs.lstatSync(props.mcpCodePath).isSymbolicLink() ||
+        !fs.lstatSync(props.mcpCodePath).isDirectory()
+      ) {
+        throw new Error('Build the MCP service before synthesis: invalid mcpCodePath.');
+      }
+      const mcpCandidates = ['mcp.js', 'mcp.cjs', 'handler.js', 'index.js', 'index.cjs'];
+      const hasBundle = mcpCandidates.some(file => {
+        const candidate = path.join(props.mcpCodePath!, file);
+        return fs.existsSync(candidate) && fs.lstatSync(candidate).isFile() && !fs.lstatSync(candidate).isSymbolicLink();
+      });
+      if (!hasBundle) {
+        throw new Error('Build the MCP service before synthesis: missing regular handler bundle in mcpCodePath.');
+      }
+      mcpCode = lambda.Code.fromAsset(props.mcpCodePath);
+    }
     const gatewayAccountId = new CfnParameter(this, 'GatewayAccountId', {
       type: 'String', allowedPattern: '^[a-f0-9]{32}$',
       description: 'Cloudflare account identifier; not a credential.'
@@ -77,14 +104,22 @@ export class PortfolioChatStack extends Stack {
       logGroupName: `/aws/lambda/${PREFIX}-authorizer`, retention: logs.RetentionDays.ONE_WEEK,
       removalPolicy: RemovalPolicy.RETAIN
     });
+    const mcpLogs = new logs.LogGroup(this, 'McpLogs', {
+      logGroupName: `/aws/lambda/${PREFIX}-mcp`, retention: logs.RetentionDays.ONE_WEEK,
+      removalPolicy: RemovalPolicy.RETAIN
+    });
     const handlerRole = new iam.Role(this, 'HandlerRole', {
       roleName: `${PREFIX}-handler`, assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com')
     });
     const authorizerRole = new iam.Role(this, 'AuthorizerRole', {
       roleName: `${PREFIX}-authorizer`, assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com')
     });
+    const mcpRole = new iam.Role(this, 'McpRole', {
+      roleName: `${PREFIX}-mcp`, assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com')
+    });
     handlerLogs.grantWrite(handlerRole);
     authorizerLogs.grantWrite(authorizerRole);
+    mcpLogs.grantWrite(mcpRole);
     handlerRole.addToPolicy(new iam.PolicyStatement({
       actions: ['secretsmanager:GetSecretValue'], resources: Object.values(secrets).map(secret => secret.ref)
     }));
@@ -100,6 +135,18 @@ export class PortfolioChatStack extends Stack {
       resources: [state.tableArn],
       conditions: { 'ForAllValues:StringLike': { 'dynamodb:LeadingKeys': ['SESSION#*', 'REQUEST#*', 'BUDGET#*', 'VISITOR#*'] } }
     }));
+    handlerRole.addToPolicy(new iam.PolicyStatement({
+      actions: ['s3:GetObject'],
+      resources: [evidence.arnForObjects('indexes/*')]
+    }));
+    handlerRole.addToPolicy(new iam.PolicyStatement({
+      actions: ['s3:ListBucket'],
+      resources: [evidence.bucketArn]
+    }));
+    handlerRole.addToPolicy(new iam.PolicyStatement({
+      actions: ['s3vectors:QueryVectors', 's3vectors:GetVectors', 's3vectors:GetIndex', 's3vectors:GetVectorBucket'],
+      resources: [`arn:aws:s3vectors:${REGION}:${this.account}:bucket/${VECTOR_BUCKET_NAME}*`]
+    }));
 
     const handler = new lambda.Function(this, 'Handler', {
       functionName: `${PREFIX}-handler`, code, handler: 'handler.handler',
@@ -112,6 +159,9 @@ export class PortfolioChatStack extends Stack {
         STATE_TABLE_NAME: state.tableName, GATEWAY_ACCOUNT_ID: gatewayAccountId.valueAsString,
         GATEWAY_ID: gatewayId.valueAsString, OPENAI_MODEL: openaiModel.valueAsString,
         ANTHROPIC_MODEL: anthropicModel.valueAsString,
+        EVIDENCE_BUCKET_NAME: evidence.bucketName,
+        VECTOR_BUCKET_NAME,
+        VECTOR_INDEX_NAME,
         CHAT_PRIVATE_ENABLED: 'true', PUBLIC_CHAT_ENABLED: 'false', PROBE_ENABLED: 'false',
         CHAT_MONTHLY_BUDGET_MICROS: '25000000', CHAT_OPENAI_BUDGET_MICROS: '25000000',
         CHAT_ANTHROPIC_BUDGET_MICROS: '25000000', CHAT_DAILY_VISITOR_TURNS: '16'
@@ -124,6 +174,17 @@ export class PortfolioChatStack extends Stack {
       role: authorizerRole, logGroup: authorizerLogs, loggingFormat: lambda.LoggingFormat.JSON,
       environment: { EDGE_SECRET_ARN: secrets.edge.ref }
     });
+    const mcpHandler = new lambda.Function(this, 'McpFunction', {
+      functionName: `${PREFIX}-mcp`, code: mcpCode, handler: 'mcp.handler',
+      runtime: lambda.Runtime.NODEJS_24_X, architecture: lambda.Architecture.X86_64,
+      memorySize: 256, timeout: Duration.seconds(10), reservedConcurrentExecutions: 4,
+      role: mcpRole, logGroup: mcpLogs, loggingFormat: lambda.LoggingFormat.JSON,
+      environment: {
+        CHAT_ENVIRONMENT: 'dev',
+        NODE_OPTIONS: '--enable-source-maps'
+      }
+    });
+    (mcpHandler.node.defaultChild as lambda.CfnFunction).tracingConfig = { mode: 'PassThrough' };
 
     const accessLogs = new logs.LogGroup(this, 'ApiAccessLogs', {
       logGroupName: '/joshboyer/chat/dev/api', retention: logs.RetentionDays.ONE_WEEK,
@@ -174,6 +235,16 @@ export class PortfolioChatStack extends Stack {
       proxy: true, responseTransferMode: apigateway.ResponseTransferMode.STREAM,
       timeout: Duration.seconds(35), allowTestInvoke: false
     }), { authorizer, authorizationType: apigateway.AuthorizationType.CUSTOM });
+    const mcp = chat.addResource('_mcp');
+    mcp.addMethod('POST', new apigateway.LambdaIntegration(mcpHandler, {
+      proxy: true, timeout: Duration.seconds(10), allowTestInvoke: false
+    }), { authorizationType: apigateway.AuthorizationType.IAM });
+    const mcpEndpointUrl = `https://${api.restApiId}.execute-api.${REGION}.amazonaws.com/dev/api/chat/_mcp`;
+    handler.addEnvironment('MCP_ENDPOINT_URL', mcpEndpointUrl);
+    handlerRole.addToPolicy(new iam.PolicyStatement({
+      actions: ['execute-api:Invoke'],
+      resources: [`arn:${this.partition}:execute-api:${REGION}:${this.account}:${api.restApiId}/dev/POST/api/chat/_mcp`]
+    }));
     const chatIntegration = new apigateway.LambdaIntegration(handler, {
       proxy: true, responseTransferMode: apigateway.ResponseTransferMode.STREAM,
       timeout: Duration.seconds(65), allowTestInvoke: false
@@ -192,7 +263,7 @@ export class PortfolioChatStack extends Stack {
       });
     }
 
-    for (const [name, fn] of [['handler', handler], ['authorizer', authorizerHandler]] as const) {
+    for (const [name, fn] of [['handler', handler], ['authorizer', authorizerHandler], ['mcp', mcpHandler]] as const) {
       for (const [metricName, metric] of [['errors', fn.metricErrors()], ['throttles', fn.metricThrottles()]] as const) {
         new cloudwatch.Alarm(this, `${name}-${metricName}`, {
           alarmName: `${PREFIX}-${name}-${metricName}`, metric: metric.with({ period: Duration.minutes(1), statistic: 'Sum' }),
@@ -208,6 +279,10 @@ export class PortfolioChatStack extends Stack {
     new CfnOutput(this, 'EvidenceBucketName', { value: evidence.bucketName });
     new CfnOutput(this, 'HandlerFunctionName', { value: handler.functionName });
     new CfnOutput(this, 'AuthorizerFunctionName', { value: authorizerHandler.functionName });
+    new CfnOutput(this, 'McpFunctionName', { value: mcpHandler.functionName });
+    new CfnOutput(this, 'McpEndpointUrl', { value: mcpEndpointUrl });
+    new CfnOutput(this, 'VectorBucketName', { value: VECTOR_BUCKET_NAME });
+    new CfnOutput(this, 'VectorIndexName', { value: VECTOR_INDEX_NAME });
     for (const [name, secret] of Object.entries(secrets)) new CfnOutput(this, `${name}SecretArn`, { value: secret.ref });
   }
 }

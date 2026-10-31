@@ -1,7 +1,9 @@
 import { PREFIX, REGION } from './portfolio-chat-stack';
 
 export function buildExecutionPolicy(projectId: string) {
-  if (!/^[0-9]{12}$/.test(projectId)) throw new Error('Expected a 12-digit AWS project ID.');
+  if (typeof projectId !== 'string' || projectId.length !== 12 || !/^[0-9]{12}$/.test(projectId)) {
+    throw new Error('Expected a 12-digit AWS project ID.');
+  }
   const arn = (service: string, resource: string) => `arn:aws:${service}:${REGION}:${projectId}:${resource}`;
   const statement = (Sid: string, Action: string[], Resource: string | string[]) => ({ Sid, Effect: 'Allow', Action, Resource });
   const bucket = `arn:aws:s3:::${PREFIX}-${projectId}-${REGION}`;
@@ -37,6 +39,13 @@ export function buildExecutionPolicy(projectId: string) {
         's3:PutBucketPolicy', 's3:DeleteBucketPolicy', 's3:PutEncryptionConfiguration',
         's3:PutBucketVersioning', 's3:PutBucketPublicAccessBlock', 's3:PutBucketOwnershipControls', 's3:PutBucketTagging'
       ], bucket),
+      statement('ChatVectorResources', [
+        's3vectors:CreateVectorBucket', 's3vectors:DeleteVectorBucket', 's3vectors:GetVectorBucket',
+        's3vectors:ListVectorBuckets', 's3vectors:PutVectorBucketPolicy', 's3vectors:GetVectorBucketPolicy',
+        's3vectors:DeleteVectorBucketPolicy', 's3vectors:CreateIndex', 's3vectors:DeleteIndex',
+        's3vectors:GetIndex', 's3vectors:ListIndexes', 's3vectors:TagResource',
+        's3vectors:UntagResource', 's3vectors:ListTagsForResource'
+      ], arn('s3vectors', `bucket/${PREFIX}-vectors*`)),
       statement('ChatSecretResources', [
         'secretsmanager:CreateSecret', 'secretsmanager:DescribeSecret', 'secretsmanager:UpdateSecret',
         'secretsmanager:PutSecretValue', 'secretsmanager:DeleteSecret', 'secretsmanager:RestoreSecret',
