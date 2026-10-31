@@ -1,4 +1,5 @@
 'use strict';
+const path = require('node:path');
 const { build } = require('esbuild');
 build({
   entryPoints: {
@@ -11,6 +12,7 @@ build({
   target: 'node24',
   format: 'cjs',
   outdir: 'build',
+  nodePaths: [path.resolve(__dirname, 'node_modules')],
   sourcemap: false,
   legalComments: 'none',
   minify: false
