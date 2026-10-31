@@ -4,12 +4,14 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const { renderAnswer, assertValid } = require('../chat/contracts/index.cjs');
+const evaluator = require('../chat/evaluation/evaluator.cjs');
 
 const root = path.resolve(__dirname, '..');
 const fixtures = JSON.parse(fs.readFileSync(path.join(root, 'chat/evaluation/golden-questions.json'), 'utf8'));
 const corpus = JSON.parse(fs.readFileSync(path.join(root, 'chat/knowledge/corpus.json'), 'utf8'));
 const claimsById = new Map(corpus.claims.map(claim => [claim.id, claim]));
 const sourcesById = new Map(corpus.sources.map(source => [source.id, source]));
+const goldenPromptsSuite = evaluator.loadGoldenPrompts();
 
 function selectionFor(fixture) {
   return {
@@ -123,3 +125,79 @@ test('hostile question fixtures cannot alter the fixed unsupported rendering', (
     assert.deepEqual(renderAnswer(selectionFor(fixture), corpus), expectedAnswer);
   }
 });
+
+test('Phase 4 golden prompts dataset has >= 20 structured cases covering all 7 AGENTS.md career accuracy rules, general mode, and hybrid MCP/RAG flows', () => {
+  assert.equal(goldenPromptsSuite.evaluationVersion, '2.0.0');
+  assert.equal(goldenPromptsSuite.schemaVersion, '1.0.0');
+  assert.ok(Array.isArray(goldenPromptsSuite.cases), 'golden-prompts.json must contain a cases array');
+  assert.ok(
+    goldenPromptsSuite.cases.length >= 20,
+    `Expected >= 20 golden prompt cases, observed ${goldenPromptsSuite.cases.length}`
+  );
+
+  const categories = new Set(goldenPromptsSuite.cases.map(entry => entry.category));
+  assert.ok(categories.has('general_conversation'), 'Must cover general_conversation category');
+  assert.ok(categories.has('hybrid_job_fit'), 'Must cover hybrid_job_fit category');
+  assert.ok(categories.has('hybrid_rag_mcp'), 'Must cover hybrid_rag_mcp category');
+
+  const rulesCovered = new Set(
+    goldenPromptsSuite.cases.map(entry => entry.ruleNumber).filter(Boolean)
+  );
+  for (const requiredRuleNumber of [1, 2, 3, 4, 5, 6, 7]) {
+    assert.ok(rulesCovered.has(requiredRuleNumber), `Missing golden coverage for AGENTS.md career rule ${requiredRuleNumber}`);
+  }
+});
+
+for (const goldenCase of goldenPromptsSuite.cases) {
+  test(`Phase 4 Golden Prompt [${goldenCase.id}] (${goldenCase.category})`, async () => {
+    const result = await evaluator.evaluateGoldenCase(goldenCase);
+    assert.equal(
+      result.passed,
+      true,
+      `Golden case ${goldenCase.id} failed: ${JSON.stringify(result.diagnostics || result)}`
+    );
+    assert.equal(result.mode, goldenCase.expected.mode);
+    assert.equal(result.routingMode, goldenCase.expected.routingMode);
+    assert.equal(result.traceRoutingMode, goldenCase.expected.traceRoutingMode);
+    assert.equal(result.innerHtmlWrites, 0, 'Browser renderer must never assign innerHTML');
+
+    if (goldenCase.expected.mode === 'general') {
+      assert.deepEqual(result.claimIds, []);
+      assert.deepEqual(result.sources, []);
+      assert.ok(result.noticeCodes.includes('general_knowledge'));
+      assert.equal(result.domGeneralModeNoteVisible, true);
+    } else if (goldenCase.expected.mode === 'portfolio') {
+      assert.deepEqual(result.claimIds, goldenCase.expected.claimIds);
+      for (const expectedSourceId of goldenCase.expected.minimumExpectedSources || []) {
+        assert.ok(
+          result.sources.some(source => source.id === expectedSourceId),
+          `Expected source ${expectedSourceId} in ${JSON.stringify(result.sources)}`
+        );
+      }
+      if (goldenCase.expected.claimIds.length > 0) {
+        assert.ok(result.domSidePanelClaimCount >= 1, 'Side panel must render grounded claim cards');
+      }
+    }
+
+    if (goldenCase.expected.needsRetrieval) {
+      assert.ok(
+        result.retrievedChunks.length >= 1,
+        `Expected local RAG chunks for ${goldenCase.id}`
+      );
+      for (const chunk of result.retrievedChunks) {
+        assert.equal(
+          chunk.tier,
+          'approved-public-account',
+          `Unexpected chunk tier ${chunk.tier} on ${chunk.chunkId || chunk.id}`
+        );
+      }
+    }
+
+    for (const expectedTool of goldenCase.expected.requestedTools || []) {
+      assert.ok(
+        result.executedMcpTools.includes(expectedTool),
+        `Expected MCP tool ${expectedTool} to be executed for ${goldenCase.id}`
+      );
+    }
+  });
+}

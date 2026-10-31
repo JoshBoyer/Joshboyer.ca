@@ -1,0 +1,781 @@
+{
+  "evaluationVersion": "2.0.0",
+  "schemaVersion": "1.0.0",
+  "updated": "2026-10-31",
+  "scope": "Phase 4 end-to-end golden evaluation dataset covering all 7 AGENTS.md career accuracy rules, general-purpose conversation, and hybrid RAG + MCP + job-fit comparisons.",
+  "corpusVersion": "sha256:f42b9375285ed967b92742982e8c0c2de1692c3d29dadb71ff5e44089cffd9cf",
+  "claimAliasMap": {
+    "claim-dell-2006": "claim-experience-dell",
+    "claim-grenville-renewals": "claim-experience-renewals",
+    "claim-medavie-claims": "claim-experience-claims",
+    "claim-grenville-takeover": "claim-experience-takeover",
+    "claim-reporting-continuity": "claim-experience-continuity",
+    "claim-financial-sql": "claim-experience-sql",
+    "claim-nexus-architecture": "claim-experience-nexus"
+  },
+  "cases": [
+    {
+      "id": "G01-rule1-dell-start-2006",
+      "category": "career_rule_1",
+      "ruleNumber": 1,
+      "prompt": "What did Josh do on Dell's Gloves Off team, and when did he start at Dell?",
+      "expected": {
+        "mode": "portfolio",
+        "routingMode": "rag_and_mcp",
+        "traceRoutingMode": "portfolio_mcp",
+        "needsRetrieval": true,
+        "requestedTools": ["get_case_study"],
+        "projectId": "dell",
+        "claimIds": ["claim-experience-dell"],
+        "ruleAliasIds": ["claim-dell-2006"],
+        "noticeCodes": [],
+        "minimumExpectedSources": ["source-dell"],
+        "qualificationNeedles": [
+          { "claimId": "claim-experience-dell", "text": "September 2006 start confirmed; broad subsequent chronology." },
+          { "claimId": "claim-experience-dell", "text": "No numerical first-call resolution rate is established." }
+        ],
+        "mustIncludeProse": ["September 2006", "Latitude", "OptiPlex", "Gloves Off"],
+        "mustNotIncludeProse": ["95%", "98%", "Architect"]
+      },
+      "simulatedModelSelection": {
+        "kind": "portfolio",
+        "text": "Josh started at Dell in September 2006 (serving from 2006 to 2007) in technical support on the Gloves Off team. He worked with clients to diagnose Latitude laptop and OptiPlex desktop hardware issues and explained next steps clearly. While the team aimed to resolve issues on the first call, no numerical first-call resolution rate is established in the approved public evidence.",
+        "suggestions": [
+          "What infrastructure work did Josh do after Dell?",
+          "How did Josh transition into insurance systems at Grenville?"
+        ],
+        "claimIds": ["claim-experience-dell"],
+        "noticeCodes": []
+      }
+    },
+    {
+      "id": "G02-rule1-dell-fcr-unestablished",
+      "category": "career_rule_1",
+      "ruleNumber": 1,
+      "prompt": "Did Josh achieve a verified 95% first-call resolution metric on Dell's Gloves Off team starting in September 2006?",
+      "expected": {
+        "mode": "portfolio",
+        "routingMode": "rag_and_mcp",
+        "traceRoutingMode": "portfolio_mcp",
+        "needsRetrieval": true,
+        "requestedTools": ["get_case_study"],
+        "projectId": "dell",
+        "claimIds": ["claim-experience-dell"],
+        "ruleAliasIds": ["claim-dell-2006"],
+        "noticeCodes": ["limited_evidence"],
+        "minimumExpectedSources": ["source-dell"],
+        "qualificationNeedles": [
+          { "claimId": "claim-experience-dell", "text": "No numerical first-call resolution rate is established." },
+          { "claimId": "claim-experience-dell", "text": "September 2006 start confirmed" }
+        ],
+        "mustIncludeProse": ["September 2006", "no numerical first-call resolution"],
+        "mustNotIncludeProse": ["achieved a 95%", "verified 95%"]
+      },
+      "simulatedModelSelection": {
+        "kind": "portfolio",
+        "text": "Josh's September 2006 start at Dell and his Latitude and OptiPlex hardware diagnosis work on the Gloves Off team are confirmed, but no numerical first-call resolution rate is established in the approved public evidence.",
+        "suggestions": [
+          "What did the Gloves Off support model focus on?"
+        ],
+        "claimIds": ["claim-experience-dell"],
+        "noticeCodes": ["limited_evidence"]
+      }
+    },
+    {
+      "id": "G03-rule2-grenville-tenure-and-transition",
+      "category": "career_rule_2",
+      "ruleNumber": 2,
+      "prompt": "What was Josh's tenure at Grenville Mutual Insurance, and when did he formally transition into a systems analyst role?",
+      "expected": {
+        "mode": "portfolio",
+        "routingMode": "rag_and_mcp",
+        "traceRoutingMode": "portfolio_mcp",
+        "needsRetrieval": true,
+        "requestedTools": ["search_public_evidence"],
+        "claimIds": ["claim-experience-renewals"],
+        "ruleAliasIds": ["claim-grenville-renewals"],
+        "noticeCodes": ["limited_evidence"],
+        "minimumExpectedSources": ["source-renewals"],
+        "qualificationNeedles": [
+          { "claimId": "claim-experience-renewals", "text": "This is a responsibility summary, not a single formal job title. The exact analyst transition year is unresolved (2014 versus 2016 in prior accounts)." }
+        ],
+        "mustIncludeProse": ["2009–2022", "2014", "2016", "unresolved"],
+        "mustNotIncludeProse": ["Solutions Architect", "Enterprise Architect"]
+      },
+      "simulatedModelSelection": {
+        "kind": "portfolio",
+        "text": "Josh's tenure at Grenville (2009–2022) began in systems and network administration and moved into systems analysis, policy rules, and broker integration work. The exact formal analyst transition year remains unresolved between 2014 and 2016 in prior accounts, and the role description summarizes overlapping responsibilities rather than a single formal Architect job title.",
+        "suggestions": [
+          "What policy rules and broker integrations did Josh build at Grenville?",
+          "How did the renewal eligibility framework work?"
+        ],
+        "claimIds": ["claim-experience-renewals"],
+        "noticeCodes": ["limited_evidence"]
+      }
+    },
+    {
+      "id": "G04-rule2-no-formal-architect-title",
+      "category": "career_rule_2",
+      "ruleNumber": 2,
+      "prompt": "Which years did Josh hold a formal Solutions Architect or Enterprise Architect job title at Grenville or Medavie?",
+      "expected": {
+        "mode": "portfolio",
+        "routingMode": "rag_and_mcp",
+        "traceRoutingMode": "portfolio_mcp",
+        "needsRetrieval": true,
+        "requestedTools": ["search_public_evidence"],
+        "claimIds": [],
+        "ruleAliasIds": [],
+        "noticeCodes": ["unsupported_evidence"],
+        "minimumExpectedSources": [],
+        "qualificationNeedles": [],
+        "mustIncludeProse": ["not establish", "formal", "Architect"],
+        "mustNotIncludeProse": ["held the formal title of Solutions Architect", "was promoted to Enterprise Architect"]
+      },
+      "simulatedModelSelection": {
+        "kind": "portfolio",
+        "text": "The approved public evidence does not establish that Josh held a formal Solutions Architect or Enterprise Architect job title at Grenville or Medavie. While his work included business architecture, rules design, and integration solution review, historical responsibilities do not create a formal Architect job title.",
+        "suggestions": [
+          "What were Josh's actual titles and responsibilities at Grenville and Medavie?"
+        ],
+        "claimIds": [],
+        "noticeCodes": ["unsupported_evidence"]
+      }
+    },
+    {
+      "id": "G05-rule3-grenville-renewals-framework",
+      "category": "career_rule_3",
+      "ruleNumber": 3,
+      "prompt": "How did Josh design the renewal eligibility framework and exception routing at Grenville?",
+      "expected": {
+        "mode": "portfolio",
+        "routingMode": "rag_and_mcp",
+        "traceRoutingMode": "portfolio_mcp",
+        "needsRetrieval": true,
+        "requestedTools": ["get_case_study"],
+        "projectId": "renewals",
+        "claimIds": ["claim-experience-renewals"],
+        "ruleAliasIds": ["claim-grenville-renewals"],
+        "noticeCodes": [],
+        "minimumExpectedSources": ["source-renewals"],
+        "qualificationNeedles": [
+          { "claimId": "claim-experience-renewals", "text": "No independently audited automation result is inferred." },
+          { "claimId": "claim-experience-renewals", "text": "2014 versus 2016" }
+        ],
+        "mustIncludeProse": ["renewal eligibility", "automatic renewal", "human review"],
+        "mustNotIncludeProse": ["audited 80% automation rate", "new-business automation rate"]
+      },
+      "simulatedModelSelection": {
+        "kind": "portfolio",
+        "text": "At Grenville (within 2009–2022), Josh designed the renewal eligibility framework and implemented P&C rating and underwriting rules that classified eligible standard policies for automatic renewal while routing exceptions to underwriters for human review. No independently audited automation figure is inferred in the reusable chat dataset.",
+        "suggestions": [
+          "How did Josh handle new-business and endorsement rules at Grenville?",
+          "What commercial quoting workflows did he map?"
+        ],
+        "claimIds": ["claim-experience-renewals"],
+        "noticeCodes": []
+      }
+    },
+    {
+      "id": "G06-rule3-renewals-numeric-boundary",
+      "category": "career_rule_3",
+      "ruleNumber": 3,
+      "prompt": "What does Josh's approved portfolio evidence say about Grenville renewal eligibility and renewal-automation outcomes versus numerical renewal percentages?",
+      "expected": {
+        "mode": "portfolio",
+        "routingMode": "rag_and_mcp",
+        "traceRoutingMode": "portfolio_mcp",
+        "needsRetrieval": true,
+        "requestedTools": ["get_case_study"],
+        "projectId": "renewals",
+        "claimIds": ["claim-experience-renewals"],
+        "ruleAliasIds": ["claim-grenville-renewals"],
+        "noticeCodes": ["limited_evidence"],
+        "minimumExpectedSources": ["source-renewals"],
+        "qualificationNeedles": [
+          { "claimId": "claim-experience-renewals", "text": "No independently audited automation result is inferred." }
+        ],
+        "mustIncludeProse": ["renewal", "reusable", "not independently audited"],
+        "mustNotIncludeProse": ["audited 80%", "guaranteed 60%"]
+      },
+      "simulatedModelSelection": {
+        "kind": "portfolio",
+        "text": "The approved reusable chat corpus confirms that Josh designed the renewal eligibility framework and implemented rating and underwriting rules for automatic renewal and exception referral, while noting that numeric renewal percentages are intentionally omitted from the reusable chat dataset and are not independently audited.",
+        "suggestions": [
+          "How did exception routing preserve underwriter review?"
+        ],
+        "claimIds": ["claim-experience-renewals"],
+        "noticeCodes": ["limited_evidence"]
+      }
+    },
+    {
+      "id": "G07-rule4-medavie-provider-sync-live",
+      "category": "career_rule_4",
+      "ruleNumber": 4,
+      "prompt": "What was Josh's role in Medavie's ProviderRegistry synchronization and claims adjudication integration, and are the integrations live?",
+      "expected": {
+        "mode": "portfolio",
+        "routingMode": "rag_and_mcp",
+        "traceRoutingMode": "portfolio_mcp",
+        "needsRetrieval": true,
+        "requestedTools": ["get_case_study"],
+        "projectId": "claims",
+        "claimIds": ["claim-experience-claims"],
+        "ruleAliasIds": ["claim-medavie-claims"],
+        "noticeCodes": [],
+        "minimumExpectedSources": ["source-claims"],
+        "qualificationNeedles": [
+          { "claimId": "claim-experience-claims", "text": "Integrations are live by Josh’s account, with continuing testing and production support." },
+          { "claimId": "claim-experience-claims", "text": "Requirements, mappings and support do not imply sole service development or a Kafka implementation." },
+          { "claimId": "claim-experience-claims", "text": "Claims architecture describes work, not a claimed formal Architect title." }
+        ],
+        "mustIncludeProse": ["provider", "mappings", "scheduled", "live", "support"],
+        "mustNotIncludeProse": ["built a Kafka cluster", "sole developer of the REST service"]
+      },
+      "simulatedModelSelection": {
+        "kind": "portfolio",
+        "text": "At Medavie (2022–present), Josh worked with architects and developers on solution review, provider relationships, field mappings, and scheduled table-backed synchronization requirements with REST retrieval for claims adjudication. By Josh's account, the integrations are live in production and he continues to support testing and troubleshooting; developers implemented the service interfaces, and the design does not imply sole service development or a Kafka implementation.",
+        "suggestions": [
+          "How did Josh handle claims-history loading with Excel VBA?",
+          "What SQL reconciliation work did he do at Medavie?"
+        ],
+        "claimIds": ["claim-experience-claims"],
+        "noticeCodes": []
+      }
+    },
+    {
+      "id": "G08-rule4-medavie-no-kafka-broker",
+      "category": "career_rule_4",
+      "ruleNumber": 4,
+      "prompt": "Did Medavie's provider synchronization use a scheduled event table and REST consumer, or did Josh implement a real-time Kafka message broker?",
+      "expected": {
+        "mode": "portfolio",
+        "routingMode": "rag_and_mcp",
+        "traceRoutingMode": "portfolio_mcp",
+        "needsRetrieval": true,
+        "requestedTools": ["get_case_study"],
+        "projectId": "claims",
+        "claimIds": ["claim-experience-claims"],
+        "ruleAliasIds": ["claim-medavie-claims"],
+        "noticeCodes": ["limited_evidence"],
+        "minimumExpectedSources": ["source-claims"],
+        "qualificationNeedles": [
+          { "claimId": "claim-experience-claims", "text": "Requirements, mappings and support do not imply sole service development or a Kafka implementation." }
+        ],
+        "mustIncludeProse": ["scheduled", "REST", "not establish", "Kafka"],
+        "mustNotIncludeProse": ["implemented a production Kafka broker", "deployed Kafka streams"]
+      },
+      "simulatedModelSelection": {
+        "kind": "portfolio",
+        "text": "Medavie's provider synchronization used a scheduled event table and a separate consumer with REST retrieval. Josh defined provider mappings and synchronization requirements and supported the live integrations, which does not establish a Kafka or real-time message-broker implementation.",
+        "suggestions": [
+          "What did Josh contribute during solution review for provider sync?"
+        ],
+        "claimIds": ["claim-experience-claims"],
+        "noticeCodes": ["limited_evidence"]
+      }
+    },
+    {
+      "id": "G09-rule5-takeover-vba-addin",
+      "category": "career_rule_5",
+      "ruleNumber": 5,
+      "prompt": "What did Josh personally design and build for claims-history takeover loading, and how were receiving-system changes handled?",
+      "expected": {
+        "mode": "portfolio",
+        "routingMode": "rag_and_mcp",
+        "traceRoutingMode": "portfolio_mcp",
+        "needsRetrieval": true,
+        "requestedTools": ["get_case_study"],
+        "projectId": "takeover",
+        "claimIds": ["claim-experience-takeover"],
+        "ruleAliasIds": ["claim-grenville-takeover"],
+        "noticeCodes": [],
+        "minimumExpectedSources": ["source-takeover"],
+        "qualificationNeedles": [
+          { "claimId": "claim-experience-takeover", "text": "Josh designed and built the production Excel VBA add-in; backend and schema changes were guided with developers." },
+          { "claimId": "claim-experience-takeover", "text": "No private claim records, exact operating windows or unaudited financial scale are published." }
+        ],
+        "mustIncludeProse": ["Excel VBA add-in", "validation", "XML batch", "error reconciliation", "developers"],
+        "mustNotIncludeProse": ["personally coded the backend receiving system in Java"]
+      },
+      "simulatedModelSelection": {
+        "kind": "portfolio",
+        "text": "Josh researched and documented the takeover loading solution, guided receiving-system and schema changes with developers, and personally designed and built the production, team-adopted Excel VBA add-in for data validation, XML batch preparation, and returned-error reconciliation so teams could load claims history independently.",
+        "suggestions": [
+          "How did the Excel VBA add-in handle returned-error reconciliation?",
+          "What other claims work did Josh do at Medavie?"
+        ],
+        "claimIds": ["claim-experience-takeover"],
+        "noticeCodes": []
+      }
+    },
+    {
+      "id": "G10-rule6-reporting-continuity-and-interim-sql",
+      "category": "career_rule_6",
+      "ruleNumber": 6,
+      "prompt": "What is the delivery status of Josh's claims reporting continuity mapping, the operational interim SQL reports, and the permanent compatibility extract?",
+      "expected": {
+        "mode": "portfolio",
+        "routingMode": "rag_and_mcp",
+        "traceRoutingMode": "portfolio_mcp",
+        "needsRetrieval": true,
+        "requestedTools": ["get_case_study"],
+        "projectId": "continuity",
+        "claimIds": ["claim-experience-continuity"],
+        "ruleAliasIds": ["claim-reporting-continuity"],
+        "noticeCodes": ["limited_evidence"],
+        "minimumExpectedSources": ["source-continuity"],
+        "qualificationNeedles": [
+          { "claimId": "claim-experience-continuity", "text": "Design contribution confirmed; REST service implementation and bridge go-live remain unconfirmed." }
+        ],
+        "mustIncludeProse": ["approved", "interim SQL", "unconfirmed", "proposed"],
+        "mustNotIncludeProse": ["permanent extract is live in production", "modernized replacement is live"]
+      },
+      "simulatedModelSelection": {
+        "kind": "portfolio",
+        "text": "For claims reporting continuity, Josh traced downstream integration dependencies, completed an approved compatibility design, and delivered operational interim SQL reports. However, the permanent compatibility extract and bridge go-live remain unconfirmed live, and broader modernization remains proposed.",
+        "suggestions": [
+          "What SQL work was adopted in the payment team's production pipeline?"
+        ],
+        "claimIds": ["claim-experience-continuity"],
+        "noticeCodes": ["limited_evidence"]
+      }
+    },
+    {
+      "id": "G11-rule6-financial-sql-payment-team",
+      "category": "career_rule_6",
+      "ruleNumber": 6,
+      "prompt": "How was Josh's reworked claims SQL and financial reconciliation logic adopted by the payment team compared with the reporting continuity work?",
+      "expected": {
+        "mode": "portfolio",
+        "routingMode": "rag_and_mcp",
+        "traceRoutingMode": "portfolio_mcp",
+        "needsRetrieval": true,
+        "requestedTools": ["get_case_study", "search_public_evidence"],
+        "projectId": "continuity",
+        "claimIds": ["claim-experience-sql", "claim-experience-continuity"],
+        "ruleAliasIds": ["claim-financial-sql", "claim-reporting-continuity"],
+        "noticeCodes": ["limited_evidence"],
+        "minimumExpectedSources": ["source-sql", "source-continuity"],
+        "qualificationNeedles": [
+          { "claimId": "claim-experience-sql", "text": "No financial volumes, private queries or database schemas are published." },
+          { "claimId": "claim-experience-continuity", "text": "Design contribution confirmed; REST service implementation and bridge go-live remain unconfirmed." }
+        ],
+        "mustIncludeProse": ["payment team", "reconciled", "interim SQL", "unconfirmed"],
+        "mustNotIncludeProse": ["permanent compatibility extract is confirmed live"]
+      },
+      "simulatedModelSelection": {
+        "kind": "portfolio",
+        "text": "In his claims SQL and financial reconciliation work, Josh reworked claims and financial SQL, reconciled transaction-history treatment with finance, and supplied corrected logic that was adopted in the payment team's existing production process. By contrast, his reporting continuity mapping has an approved compatibility design and operational interim SQL reports, while the permanent compatibility extract remains unconfirmed live and modernization remains proposed.",
+        "suggestions": [
+          "What validation did Josh apply to interim SQL populations?"
+        ],
+        "claimIds": ["claim-experience-sql", "claim-experience-continuity"],
+        "noticeCodes": ["limited_evidence"]
+      }
+    },
+    {
+      "id": "G12-rule7-nexus-independent-capstone",
+      "category": "career_rule_7",
+      "ruleNumber": 7,
+      "prompt": "What is Project NEXUS, and how is it distinguished from Josh's employer production experience?",
+      "expected": {
+        "mode": "portfolio",
+        "routingMode": "rag_and_mcp",
+        "traceRoutingMode": "portfolio_mcp",
+        "needsRetrieval": true,
+        "requestedTools": ["get_case_study"],
+        "projectId": "nexus",
+        "claimIds": ["claim-experience-nexus"],
+        "ruleAliasIds": ["claim-nexus-architecture"],
+        "noticeCodes": [],
+        "minimumExpectedSources": ["source-nexus"],
+        "qualificationNeedles": [
+          { "claimId": "claim-experience-nexus", "text": "Independent project, not employer experience." },
+          { "claimId": "claim-experience-nexus", "text": "Do not imply every product vision feature shipped." },
+          { "claimId": "claim-experience-nexus", "text": "No employer delivery or production maturity is inferred from personal projects." }
+        ],
+        "mustIncludeProse": ["independent", "capstone", "active development", "not employer experience"],
+        "mustNotIncludeProse": ["deployed in production at Medavie", "enterprise employer rollout"]
+      },
+      "simulatedModelSelection": {
+        "kind": "portfolio",
+        "text": "NEXUS is Josh's current independent architecture and applied-learning capstone under active development, where he set the product direction and architecture using AI-assisted implementation to explore scoped context, model routing, approvals, and evaluation. It is strictly an independent personal project, not employer experience, and does not imply enterprise production adoption or that every product-vision feature has shipped.",
+        "suggestions": [
+          "What production tools has Josh built in his employer roles?",
+          "How does NEXUS handle scoped context and evaluation?"
+        ],
+        "claimIds": ["claim-experience-nexus"],
+        "noticeCodes": []
+      }
+    },
+    {
+      "id": "G13-rule7-lowkey-workshop42-archived",
+      "category": "career_rule_7",
+      "ruleNumber": 7,
+      "prompt": "How are LOWKEY and Workshop42 treated in Josh's portfolio history?",
+      "expected": {
+        "mode": "portfolio",
+        "routingMode": "rag_and_mcp",
+        "traceRoutingMode": "portfolio_mcp",
+        "needsRetrieval": true,
+        "requestedTools": ["get_case_study", "search_public_evidence"],
+        "projectId": "nexus",
+        "claimIds": ["claim-experience-nexus"],
+        "ruleAliasIds": ["claim-nexus-architecture"],
+        "noticeCodes": ["limited_evidence"],
+        "minimumExpectedSources": ["source-nexus"],
+        "qualificationNeedles": [
+          { "claimId": "claim-experience-nexus", "text": "Independent project, not employer experience." }
+        ],
+        "mustIncludeProse": ["NEXUS", "independent capstone", "archived", "historical"],
+        "mustNotIncludeProse": ["LOWKEY is an active public production platform"]
+      },
+      "simulatedModelSelection": {
+        "kind": "portfolio",
+        "text": "NEXUS is Josh's current independent capstone in the public portfolio, whereas LOWKEY and Workshop42 are retained only as historical/archived personal evidence and are not promoted as active public claims.",
+        "suggestions": [
+          "What does Project NEXUS explore architecturally?"
+        ],
+        "claimIds": ["claim-experience-nexus"],
+        "noticeCodes": ["limited_evidence"]
+      }
+    },
+    {
+      "id": "G14-general-distributed-idempotency",
+      "category": "general_conversation",
+      "prompt": "How do idempotency keys and conditional writes prevent duplicate side effects in distributed reservation systems?",
+      "expected": {
+        "mode": "general",
+        "routingMode": "cag_only",
+        "traceRoutingMode": "general",
+        "needsRetrieval": false,
+        "requestedTools": [],
+        "claimIds": [],
+        "ruleAliasIds": [],
+        "noticeCodes": ["general_knowledge"],
+        "minimumExpectedSources": [],
+        "qualificationNeedles": [],
+        "mustIncludeProse": ["idempotency", "conditional"],
+        "mustNotIncludeProse": ["claim-experience-"]
+      },
+      "simulatedModelSelection": {
+        "kind": "general",
+        "text": "Idempotency keys assign a caller-generated unique identifier to a logical operation so the server can recognize retries of the same intent. When combined with an atomic conditional write (such as checking that a request record does not yet exist before reserving funds), the storage layer guarantees that concurrent duplicates or network retries either attach to the in-flight operation or replay the stored outcome without executing a second side effect.",
+        "suggestions": [
+          "How should lease expirations be handled if a worker crashes mid-flight?",
+          "What is the difference between at-least-once delivery and effectively-once processing?"
+        ],
+        "claimIds": [],
+        "noticeCodes": []
+      }
+    },
+    {
+      "id": "G15-general-typescript-discriminated-unions",
+      "category": "general_conversation",
+      "prompt": "Explain how discriminated unions and exhaustive switch checks work in TypeScript.",
+      "expected": {
+        "mode": "general",
+        "routingMode": "cag_only",
+        "traceRoutingMode": "general",
+        "needsRetrieval": false,
+        "requestedTools": [],
+        "claimIds": [],
+        "ruleAliasIds": [],
+        "noticeCodes": ["general_knowledge"],
+        "minimumExpectedSources": [],
+        "qualificationNeedles": [],
+        "mustIncludeProse": ["discriminated", "never"],
+        "mustNotIncludeProse": ["claim-experience-"]
+      },
+      "simulatedModelSelection": {
+        "kind": "general",
+        "text": "In TypeScript, a discriminated union is a union of object types that share a common literal property (the discriminant, such as `kind: 'completed' | 'failed'`). Inside a `switch` statement on that discriminant, TypeScript narrows the type of each branch automatically. Adding a `default` branch that assigns the value to `never` forces a compile-time error if a new union variant is added later without being handled.",
+        "suggestions": [
+          "How do runtime schema validators complement compile-time TypeScript narrowing?"
+        ],
+        "claimIds": [],
+        "noticeCodes": []
+      }
+    },
+    {
+      "id": "G16-general-rag-vs-cag-tradeoffs",
+      "category": "general_conversation",
+      "prompt": "What are the architectural trade-offs between Cache-Augmented Generation (CAG) and hybrid vector-plus-lexical retrieval?",
+      "expected": {
+        "mode": "general",
+        "routingMode": "cag_only",
+        "traceRoutingMode": "general",
+        "needsRetrieval": false,
+        "requestedTools": [],
+        "claimIds": [],
+        "ruleAliasIds": [],
+        "noticeCodes": ["general_knowledge"],
+        "minimumExpectedSources": [],
+        "qualificationNeedles": [],
+        "mustIncludeProse": ["Cache-Augmented", "lexical", "vector"],
+        "mustNotIncludeProse": ["claim-experience-"]
+      },
+      "simulatedModelSelection": {
+        "kind": "general",
+        "text": "Cache-Augmented Generation (CAG) preloads a curated, bounded dataset directly into the system prompt so every turn has deterministic access to core facts without retrieval latency or recall misses. Hybrid vector-plus-lexical retrieval scales to larger document collections by combining semantic similarity with exact keyword matching, at the cost of an extra embedding/index lookup and the need for graceful fallback if the index is unavailable.",
+        "suggestions": [
+          "Why combine lexical token scoring with vector cosine similarity?"
+        ],
+        "claimIds": [],
+        "noticeCodes": []
+      }
+    },
+    {
+      "id": "G17-general-sql-isolation-levels",
+      "category": "general_conversation",
+      "prompt": "Can you compare Read Committed and Serializable transaction isolation levels in relational databases?",
+      "expected": {
+        "mode": "general",
+        "routingMode": "cag_only",
+        "traceRoutingMode": "general",
+        "needsRetrieval": false,
+        "requestedTools": [],
+        "claimIds": [],
+        "ruleAliasIds": [],
+        "noticeCodes": ["general_knowledge"],
+        "minimumExpectedSources": [],
+        "qualificationNeedles": [],
+        "mustIncludeProse": ["Read Committed", "Serializable"],
+        "mustNotIncludeProse": ["claim-experience-"]
+      },
+      "simulatedModelSelection": {
+        "kind": "general",
+        "text": "Read Committed prevents dirty reads by ensuring statements only see data committed before the statement began, though concurrent transactions can still cause non-repeatable reads or write skew. Serializable is the strictest isolation level, guaranteeing that concurrent transactions produce a result equivalent to some serial execution order, typically via predicate locking or optimistic serialization-failure retries.",
+        "suggestions": [
+          "What is write skew under Snapshot Isolation?"
+        ],
+        "claimIds": [],
+        "noticeCodes": []
+      }
+    },
+    {
+      "id": "G18-general-batch-vs-streaming-tradeoffs",
+      "category": "general_conversation",
+      "prompt": "When is a scheduled batch synchronization pattern preferable to a real-time event stream in enterprise systems?",
+      "expected": {
+        "mode": "general",
+        "routingMode": "cag_only",
+        "traceRoutingMode": "general",
+        "needsRetrieval": false,
+        "requestedTools": [],
+        "claimIds": [],
+        "ruleAliasIds": [],
+        "noticeCodes": ["general_knowledge"],
+        "minimumExpectedSources": [],
+        "qualificationNeedles": [],
+        "mustIncludeProse": ["scheduled", "batch", "operational"],
+        "mustNotIncludeProse": ["claim-experience-"]
+      },
+      "simulatedModelSelection": {
+        "kind": "general",
+        "text": "Scheduled batch or table-backed synchronization is often preferable when upstream source systems update on a nightly cycle, when downstream consumers only need periodic reference-data refreshes, or when teams want simpler replay, auditing, and reconciliation without the operational overhead of managing a continuous message broker.",
+        "suggestions": [
+          "How do idempotency and dead-letter handling differ between batch and streaming?"
+        ],
+        "claimIds": [],
+        "noticeCodes": []
+      }
+    },
+    {
+      "id": "G19-jobfit-senior-bsa-insurance-sql-vba",
+      "category": "hybrid_job_fit",
+      "prompt": "Compare job requirements for this role: Senior Business Systems Analyst requiring P&C insurance rating and underwriting rules, renewal eligibility automation, Excel VBA claims-history batch tooling, and SQL financial reconciliation.",
+      "expected": {
+        "mode": "portfolio",
+        "routingMode": "rag_and_mcp",
+        "traceRoutingMode": "portfolio_mcp",
+        "needsRetrieval": true,
+        "requestedTools": ["compare_job_requirements", "get_case_study"],
+        "projectId": "takeover",
+        "claimIds": ["claim-experience-renewals", "claim-experience-takeover", "claim-experience-sql"],
+        "ruleAliasIds": ["claim-grenville-renewals", "claim-grenville-takeover", "claim-financial-sql"],
+        "noticeCodes": ["limited_evidence"],
+        "minimumExpectedSources": ["source-renewals", "source-takeover", "source-sql"],
+        "qualificationNeedles": [
+          { "claimId": "claim-experience-renewals", "text": "No independently audited automation result is inferred." },
+          { "claimId": "claim-experience-takeover", "text": "Josh designed and built the production Excel VBA add-in; backend and schema changes were guided with developers." },
+          { "claimId": "claim-experience-sql", "text": "No financial volumes, private queries or database schemas are published." }
+        ],
+        "mustIncludeProse": ["renewal eligibility", "Excel VBA add-in", "payment team", "SQL"],
+        "mustNotIncludeProse": ["formal Solutions Architect title", "Kafka cluster"]
+      },
+      "simulatedModelSelection": {
+        "kind": "portfolio",
+        "text": "This role aligns strongly with Josh's approved portfolio evidence across P&C insurance rules, production Excel VBA tooling, and SQL reconciliation. At Grenville, he designed the renewal eligibility framework and implemented rating and underwriting rules. At Medavie, he personally designed and built the production Excel VBA add-in for claims-history validation, XML batches, and error reconciliation (guiding receiving-system changes with developers), and supplied corrected claims/financial SQL adopted in the payment team's production pipeline.",
+        "suggestions": [
+          "What broker integration standards has Josh worked with?",
+          "How did Josh handle provider data synchronization at Medavie?"
+        ],
+        "claimIds": ["claim-experience-renewals", "claim-experience-takeover", "claim-experience-sql"],
+        "noticeCodes": ["limited_evidence"]
+      }
+    },
+    {
+      "id": "G20-jobfit-architect-kafka-aws-gaps",
+      "category": "hybrid_job_fit",
+      "prompt": "Job description comparison: Hiring a Principal Enterprise Architect with formal Architect title, production Kafka streaming broker implementation, AWS Solutions Architect certification, and Guidewire PolicyCenter administration.",
+      "expected": {
+        "mode": "portfolio",
+        "routingMode": "rag_and_mcp",
+        "traceRoutingMode": "portfolio_mcp",
+        "needsRetrieval": true,
+        "requestedTools": ["compare_job_requirements"],
+        "claimIds": [],
+        "ruleAliasIds": [],
+        "noticeCodes": ["unsupported_evidence"],
+        "minimumExpectedSources": [],
+        "qualificationNeedles": [],
+        "mustIncludeProse": ["not established", "Architect", "Kafka", "AWS", "Guidewire"],
+        "mustNotIncludeProse": ["meets all requirements", "certified AWS Solutions Architect"]
+      },
+      "simulatedModelSelection": {
+        "kind": "portfolio",
+        "text": "The requirements in this job description—holding a formal Principal/Enterprise Architect job title, implementing a production Kafka streaming broker, holding an AWS Solutions Architect certification, and administering Guidewire PolicyCenter—are not established in the approved public portfolio evidence.",
+        "suggestions": [
+          "What integration and rules experience is established in Josh's portfolio?"
+        ],
+        "claimIds": [],
+        "noticeCodes": ["unsupported_evidence"]
+      }
+    },
+    {
+      "id": "G21-jobfit-mixed-medavie-continuity-and-nexus",
+      "category": "hybrid_job_fit",
+      "prompt": "Evaluate candidate fit for a role requiring functional analysis on provider data synchronization, downstream reporting continuity SQL, and AI-assisted multi-agent platform exploration (like Project NEXUS), plus Kubernetes production administration.",
+      "expected": {
+        "mode": "portfolio",
+        "routingMode": "rag_and_mcp",
+        "traceRoutingMode": "portfolio_mcp",
+        "needsRetrieval": true,
+        "requestedTools": ["compare_job_requirements", "get_case_study"],
+        "projectId": "nexus",
+        "claimIds": ["claim-experience-claims", "claim-experience-continuity", "claim-experience-nexus"],
+        "ruleAliasIds": ["claim-medavie-claims", "claim-reporting-continuity", "claim-nexus-architecture"],
+        "noticeCodes": ["limited_evidence", "unsupported_evidence"],
+        "minimumExpectedSources": ["source-claims", "source-continuity", "source-nexus"],
+        "qualificationNeedles": [
+          { "claimId": "claim-experience-claims", "text": "Requirements, mappings and support do not imply sole service development or a Kafka implementation." },
+          { "claimId": "claim-experience-continuity", "text": "Design contribution confirmed; REST service implementation and bridge go-live remain unconfirmed." },
+          { "claimId": "claim-experience-nexus", "text": "Independent project, not employer experience." }
+        ],
+        "mustIncludeProse": ["provider", "interim SQL", "unconfirmed", "NEXUS", "independent", "Kubernetes"],
+        "mustNotIncludeProse": ["Kubernetes production experience is confirmed"]
+      },
+      "simulatedModelSelection": {
+        "kind": "portfolio",
+        "text": "Josh has qualified evidence for the first three areas and a clear gap on Kubernetes: (1) at Medavie, he defined provider mappings and scheduled synchronization changes and supported the live integrations (developers implemented the service interfaces); (2) for reporting continuity, he delivered an approved compatibility design and operational interim SQL reports while the permanent extract remains unconfirmed live; (3) Project NEXUS explores AI-assisted multi-agent routing and evaluation as an independent capstone rather than employer production delivery; and (4) Kubernetes administration is not established in the approved dataset.",
+        "suggestions": [
+          "What production SQL reconciliation work did Josh complete at Medavie?"
+        ],
+        "claimIds": ["claim-experience-claims", "claim-experience-continuity", "claim-experience-nexus"],
+        "noticeCodes": ["limited_evidence", "unsupported_evidence"]
+      }
+    },
+    {
+      "id": "G22-hybrid-cross-employer-automation-and-capstone",
+      "category": "hybrid_rag_mcp",
+      "prompt": "Compare Josh's production Excel VBA takeover tooling and renewal eligibility rules with his independent Project NEXUS architecture.",
+      "expected": {
+        "mode": "portfolio",
+        "routingMode": "rag_and_mcp",
+        "traceRoutingMode": "portfolio_mcp",
+        "needsRetrieval": true,
+        "requestedTools": ["get_case_study", "search_public_evidence"],
+        "projectId": "nexus",
+        "claimIds": ["claim-experience-takeover", "claim-experience-renewals", "claim-experience-nexus"],
+        "ruleAliasIds": ["claim-grenville-takeover", "claim-grenville-renewals", "claim-nexus-architecture"],
+        "noticeCodes": [],
+        "minimumExpectedSources": ["source-takeover", "source-renewals", "source-nexus"],
+        "qualificationNeedles": [
+          { "claimId": "claim-experience-takeover", "text": "Josh designed and built the production Excel VBA add-in; backend and schema changes were guided with developers." },
+          { "claimId": "claim-experience-renewals", "text": "No independently audited automation result is inferred." },
+          { "claimId": "claim-experience-nexus", "text": "Independent project, not employer experience." }
+        ],
+        "mustIncludeProse": ["Excel VBA add-in", "renewal eligibility", "NEXUS", "independent"],
+        "mustNotIncludeProse": ["NEXUS is deployed at Medavie"]
+      },
+      "simulatedModelSelection": {
+        "kind": "portfolio",
+        "text": "Josh's renewal eligibility framework at Grenville and his claims-history Excel VBA add-in at Medavie are employer production deliveries—routing standard renewals vs. human-reviewed exceptions, and validating/batching XML claims history with guided developer backend updates. By contrast, Project NEXUS is an independent personal capstone under active development exploring AI-assisted multi-agent routing, scoped context, and evaluation.",
+        "suggestions": [
+          "How did the Excel VBA add-in reconcile returned errors?"
+        ],
+        "claimIds": ["claim-experience-takeover", "claim-experience-renewals", "claim-experience-nexus"],
+        "noticeCodes": []
+      }
+    },
+    {
+      "id": "G23-hybrid-search-broker-standards-and-rest",
+      "category": "hybrid_rag_mcp",
+      "prompt": "Search Josh's portfolio for his experience with insurance integrations, SOAP/XML, REST APIs, and whether hands-on JSON standards are established.",
+      "expected": {
+        "mode": "portfolio",
+        "routingMode": "rag_and_mcp",
+        "traceRoutingMode": "portfolio_mcp",
+        "needsRetrieval": true,
+        "requestedTools": ["search_public_evidence"],
+        "claimIds": ["claim-experience-claims"],
+        "ruleAliasIds": ["claim-medavie-claims"],
+        "noticeCodes": ["limited_evidence"],
+        "minimumExpectedSources": ["source-claims"],
+        "qualificationNeedles": [
+          { "claimId": "claim-experience-claims", "text": "Requirements, mappings and support do not imply sole service development or a Kafka implementation." }
+        ],
+        "mustIncludeProse": ["REST", "SOAP/XML", "JSON standards", "not established"],
+        "mustNotIncludeProse": ["extensive ACORD JSON implementation"]
+      },
+      "simulatedModelSelection": {
+        "kind": "portfolio",
+        "text": "The approved portfolio supports SOAP/XML request diagnosis, CSIO/ACORD and AL3/eDocs broker familiarity, C#/.NET REST portal work, and scheduled provider synchronization with REST retrieval at Medavie. However, hands-on JSON standards implementation is not established in the approved employer evidence.",
+        "suggestions": [
+          "What provider synchronization mappings did Josh define at Medavie?"
+        ],
+        "claimIds": ["claim-experience-claims"],
+        "noticeCodes": ["limited_evidence"]
+      }
+    },
+    {
+      "id": "G24-hybrid-followup-rag-only",
+      "category": "hybrid_rag_mcp",
+      "prompt": "Can you expand on that earlier point?",
+      "history": [
+        {
+          "role": "user",
+          "text": "Tell me about Josh Boyer's Medavie provider claims integration and SQL financial reconciliation work."
+        }
+      ],
+      "expected": {
+        "mode": "portfolio",
+        "routingMode": "rag",
+        "traceRoutingMode": "portfolio_rag",
+        "needsRetrieval": true,
+        "requestedTools": [],
+        "claimIds": ["claim-experience-claims", "claim-experience-sql"],
+        "ruleAliasIds": ["claim-medavie-claims", "claim-financial-sql"],
+        "noticeCodes": [],
+        "minimumExpectedSources": ["source-claims", "source-sql"],
+        "qualificationNeedles": [
+          { "claimId": "claim-experience-claims", "text": "Integrations are live by Josh’s account, with continuing testing and production support." },
+          { "claimId": "claim-experience-sql", "text": "No financial volumes, private queries or database schemas are published." }
+        ],
+        "mustIncludeProse": ["provider", "scheduled", "payment team", "SQL"],
+        "mustNotIncludeProse": ["Kafka", "formal Architect"]
+      },
+      "simulatedModelSelection": {
+        "kind": "portfolio",
+        "text": "Building on his Medavie work: for provider data in claims adjudication, Josh defined provider relationships, field mappings, and scheduled synchronization changes with architects and developers and supported the live integrations in production. In parallel, he reworked claims and financial SQL, reconciled transaction-history treatment with finance, and supplied corrected logic adopted in the payment team's production process.",
+        "suggestions": [
+          "How did Josh's reporting continuity mapping relate to downstream integrations?"
+        ],
+        "claimIds": ["claim-experience-claims", "claim-experience-sql"],
+        "noticeCodes": []
+      }
+    }
+  ]
+}
