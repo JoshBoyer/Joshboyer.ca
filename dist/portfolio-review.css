@@ -120,3 +120,30 @@ body[data-active-route="home"] #main :is(
     padding-right: max(16px, env(safe-area-inset-right, 0px)) !important;
   }
 }
+/* Featured Builds: keep the heading inside its column at every display size. */
+#home-featured-projects .home-fw-intro-col #home-sum-proj-heading.home-fw-heading {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+#home-featured-projects .home-fw-intro-col #home-sum-proj-heading.home-fw-heading span {
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+}
+
+/* Card shadows were being clipped into a rectangular backing by the scroll rail. */
+#home-featured-projects .home-fw-rotating-rail .home-fw-secondary-card {
+  box-shadow: none !important;
+}
+#home-featured-projects .home-fw-rotating-rail .home-fw-secondary-card.is-selected {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.32) !important;
+}
+
+/* Keep preview artwork flush and consistently aligned inside the existing cells. */
+#home-featured-projects .eb-preview-gal-thumb {
+  min-width: 0 !important;
+  margin: 0 !important;
+  align-self: stretch;
+}
+#home-featured-projects .eb-preview-gal-thumb img {
+  object-position: center;
+}

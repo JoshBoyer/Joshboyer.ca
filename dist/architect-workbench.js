@@ -1179,7 +1179,7 @@
 
     const heroLead = heroCopyCol?.querySelector(".hero-lead");
     if (heroLead) {
-      heroLead.textContent = "I connect business needs and technical systems, from integration and data to AI orchestration — grounded in hands-on experience.";
+      heroLead.textContent = "I connect business needs and technical systems, from integration and data to AI orchestration — and make the work clear through documentation, diagrams and training.";
     }
 
     if (heroActions) {
@@ -7672,12 +7672,6 @@
         detailDomain: "Commercial Lines",
         detailTech: "C#, .NET, SOAP/REST, CSIO/ACORD",
         detailRole: "Integration, Analysis, Implementation",
-        gallery: [
-          "assets/builds/preview-gal-1.png",
-          "assets/builds/preview-gal-2.png",
-          "assets/builds/preview-gal-3.png",
-          "assets/builds/preview-gal-4.png"
-        ]
       },
       upload: {
         catPill: "Development",
@@ -7911,12 +7905,8 @@
         detailDomain: custom.detailDomain || proj.glance?.previewDomain || proj.glance?.domain || "Enterprise Systems",
         detailTech: custom.detailTech || proj.glance?.technologies || (proj.cardTags || []).join(", "),
         detailRole: custom.detailRole || proj.glance?.previewRole || proj.glance?.role || "Systems Analysis & Delivery",
-        gallery: custom.gallery || [
-          proj.banner || "assets/builds/preview-gal-1.png",
-          "assets/builds/preview-gal-2.png",
-          "assets/builds/preview-gal-3.png",
-          "assets/builds/preview-gal-4.png"
-        ]
+        // Use the project's existing artwork, rather than enlarging 51px mockup thumbnails.
+        gallery: [...new Set([custom.mainImage, proj.banner].filter(Boolean))]
       };
     }
 
@@ -8123,7 +8113,7 @@
           </div>
           <div class="eb-preview-gallery-row" role="group" aria-label="Project preview thumbnails">
             ${disp.gallery.map((gSrc, gIdx) => `
-              <button type="button" class="eb-preview-gal-thumb ${gIdx === selectedExploreGalleryIdx ? "is-active" : ""}" data-eb-gal-thumb="${gIdx}" aria-label="Preview view ${gIdx + 1}">
+              <button type="button" class="eb-preview-gal-thumb ${gIdx === selectedExploreGalleryIdx ? "is-active" : ""}" data-eb-gal-thumb="${gIdx}" aria-label="Preview view ${gIdx + 1}" aria-pressed="${gIdx === selectedExploreGalleryIdx}">
                 <img src="${gSrc}" alt="" loading="lazy" decoding="async">
               </button>
             `).join("")}
@@ -8438,7 +8428,7 @@
                   <span class="about-title-dark">Curiosity</span><br>
                   <span class="about-title-accent">built this.</span>
                 </h2>
-                <p class="home-sum-about-body">I've always liked taking things apart to understand how they work. That curiosity grew from mechanical pencils to complex systems, and now to AI.</p>
+                <p class="home-sum-about-body">I've always liked taking things apart to understand how they work. That curiosity grew from mechanical pencils to complex systems, and now to AI. I also help business and technical teams understand how a solution works and why it matters.</p>
                 <div class="about-handwritten-callout">
                   <p class="mindset-postit-lead">Same curiosity.<br><strong>Bigger possibilities.</strong></p>
                   <svg class="about-handwritten-underline" viewBox="0 0 210 24" fill="none" aria-hidden="true">
@@ -17189,6 +17179,10 @@
                       <div class="sk-v5-pill-row">
                         <span class="sk-v5-pill is-gold">Change Management</span>
                         <span class="sk-v5-pill is-gold">Validation &amp; Testing</span>
+                      </div>
+                      <div class="sk-v5-pill-row">
+                        <span class="sk-v5-pill is-gold">Technical Writing</span>
+                        <span class="sk-v5-pill is-gold">Training &amp; Documentation</span>
                       </div>
                     </div>
                   </div>
