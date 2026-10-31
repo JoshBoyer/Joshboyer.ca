@@ -19,7 +19,8 @@ const NOTICE_TEXT = Object.freeze({
   unsupported_evidence: 'The approved public evidence does not establish that claim.',
   limited_evidence: 'This answer is limited to the approved public evidence and its stated qualifications.',
   tools_unavailable: 'The portfolio tools are unavailable. This answer uses only the approved context available for this request.',
-  retrieval_degraded: 'Search is running with reduced capability. Relevant public evidence may be missing.'
+  retrieval_degraded: 'Search is running with reduced capability. Relevant public evidence may be missing.',
+  general_knowledge: 'This reply uses general model knowledge. No live sources were retrieved.'
 });
 const TOOL_NAMES = Object.freeze([...schema.$defs.toolName.enum]);
 const PROJECT_IDS = Object.freeze([...schema.$defs.projectId.enum]);
@@ -67,12 +68,24 @@ function validate(name, value) {
   const textLimits = {
     messageRequest: ['text', LIMITS.maxMessageBytes],
     search_public_evidence: ['query', LIMITS.maxQueryBytes],
-    compare_job_requirements: ['jobText', LIMITS.maxMessageBytes]
+    compare_job_requirements: ['jobText', LIMITS.maxMessageBytes],
+    conversationData: ['text', 6000],
+    conversationSelection: ['text', 6000]
   };
   const textLimit = textLimits[name];
   if (textLimit && typeof value?.[textLimit[0]] === 'string' &&
       Buffer.byteLength(value[textLimit[0]], 'utf8') > textLimit[1]) {
     errors.push({ path: `/${textLimit[0]}`, keyword: 'maxUtf8Bytes' });
+  }
+  const conversation = name === 'streamEvent' && value?.event === 'conversation' ? value.data :
+    ['conversationData', 'conversationSelection'].includes(name) ? value : null;
+  if (conversation) {
+    if (typeof conversation.text === 'string' && Buffer.byteLength(conversation.text, 'utf8') > 6000) {
+      errors.push({ path: '/text', keyword: 'maxUtf8Bytes' });
+    }
+    if (Array.isArray(conversation.suggestions) && conversation.suggestions.some(text => typeof text === 'string' && Buffer.byteLength(text, 'utf8') > 200)) {
+      errors.push({ path: '/suggestions', keyword: 'maxUtf8Bytes' });
+    }
   }
   return { valid: errors.length === 0, errors };
 }
@@ -200,6 +213,12 @@ function createEventValidator({ requestId, generation, corpus }) {
 
     // Commit state only after the event is fully checked, allowing a caller to reject bad frames.
     switch (event.event) {
+      case 'conversation':
+        if (answerStarted || receiptSent || pendingTools.size || [...traceStages.values()].includes('started')) {
+          streamError('Conversation is duplicated, late or preceding an unfinished stage.');
+        }
+        answerStarted = true;
+        break;
       case 'trace': {
         if (answerStarted || receiptSent || traceCount >= 24 ||
             (data.elapsedMs !== null && data.elapsedMs < lastTraceTime) ||

@@ -1,6 +1,6 @@
 # Portfolio AI chat implementation plan
 
-Version: 1.3 | Date: 2026-10-31 | Status: Phase 3 and private frontend shell deployed; public chat disabled
+Version: 1.4 | Date: 2026-10-31 | Status: Private conversational assistant and evidence panel; public chat disabled
 
 ## Decision in one screen
 
@@ -8,7 +8,7 @@ Build a small, inspectable chat assistant for JoshBoyer.ca. Keep the existing st
 
 Local Agent Toolkit setup is complete and independently verified; see the [setup record](../operations/aws-agent-toolkit-setup.md). Phase 1 provides strict contracts, deterministic public-only knowledge artifacts and canonical rendering; see the [chat foundation](../../chat/README.md). Phase 2 verified both provider-key routes; see its [verification record](../operations/chat-phase2-verification.md). Phase 3 adds durable sessions, spending reservations and CAG, with the frontend shell brought forward for private qualification. See the [private runbook](../operations/chat-phase3-private.md). Public chat, retrieval and tool execution remain ahead.
 
-The assistant should explain Josh's experience, find public evidence, compare a pasted job description with that evidence, and explain how its own retrieval and tools worked. It must distinguish delivered work, analysis/design, proposals and independent projects. Voice is a later phase.
+Josh expanded the private assistant to general-purpose conversation with guardrails on October 31. It can discuss broader topics and use conversational history, while grounding Josh-specific claims in approved portfolio evidence. Evidence and traces belong in a separate request-details panel. Finding wider public evidence, comparing job requirements through tools, and voice remain later phases. Delivered work, analysis/design, proposals and independent projects must stay distinct.
 
 - **Cache-Augmented Generation (CAG):** a short, versioned pack of approved facts and boundaries always accompanies the question. Provider prompt caching may reuse this prefix; a cache hit is an optimisation, not a correctness dependency.
 - **Retrieval-Augmented Generation (RAG):** search the approved public evidence for the particular question, then attach the relevant passages and source identifiers.
@@ -110,7 +110,7 @@ The us-east-2 selection governs AWS resources; it does not guarantee that Cloudf
 5. **Publish an index version.** Write chunks and vectors to a new version, test retrieval and source resolution, then atomically switch the active manifest pointer. Retain the previous version for rollback. Never mix CAG version A with vectors from version B.
 6. **Retrieve a bounded result set.** Combine semantic search with existing deterministic keyword/qualification matching. Cap chunks and context size. Filter inactive or superseded evidence. Exact ranking/fusion weights are chosen through an evaluation set, not assumed from legacy weights.
 7. **Run the bounded orchestration loop.** Assemble trusted instructions, untrusted visitor text and labelled source passages separately. Execute only authorised tools, with argument/result schemas and budgets.
-8. **Validate before display.** Ask the model for structured answer blocks referencing approved claim/chunk IDs. In v1, render factual career assertions from approved canonical fields/templates, including responsibilities and technology experience as well as dates, titles, metrics and delivery status. The model may select and organise these facts but cannot introduce arbitrary factual prose by attaching a valid ID. Unsupported factual blocks are omitted and replaced with an uncertainty response.
+8. **Validate before display.** The model returns bounded conversational prose separately from approved claim IDs. Validate the response shape, byte limits and identifiers, then render prose as inert text. Render the evidence panel from canonical fields only. This replaces the earlier canonical-only chat restriction at Josh's explicit request: reference validation does not prove generated prose true or relevant. General replies identify the absence of live retrieval; unsupported portfolio claims should be acknowledged. Test semantic behaviour separately from transport/schema safety.
 9. **Return a trace receipt.** Show public sources, corpus version, which tools ran and a brief explanation of why sources were selected. Show observable actions, not private chain-of-thought, raw prompts, secret configuration or provider credentials.
 
 Open-ended interpretation must be labelled as interpretation and grounded in the displayed sources. A second model's approval is not sufficient to guarantee factual correctness. Maintain regression cases for fabricated certifications, changed job titles, exaggerated metrics and proposed work described as live.
@@ -172,7 +172,7 @@ Set an application deadline well below AWS's maximum stream duration. A closed b
 | 0. Local AWS setup | Agent Toolkit, named profile, preserved MCP configuration, project rules; no application deployment | CLI identity works; toolkit catalogue loads; correct profile configured; fresh-session MCP handshake documented. |
 | 1. Contracts and knowledge | `chat/contracts/`, `chat/knowledge/`, `tools/build-chat-knowledge.cjs`, fixtures | Deterministic public-only export, canonical claims, source integrity and version checks. Golden questions include unsupported/hostile cases. |
 | 2. Infrastructure and provider path | `infra/aws/`, `services/chat/`, Gateway settings | Reviewable IaC diff; temporary credential deployment; authenticated edge path; both provider-key routes work through Gateway; no billing fallback. |
-| 3. Sessions, budgets and CAG | `services/chat/src/{session,budget,providers,validation,telemetry}` | Concurrency/idempotency/expiry tests pass; CAG-only answers obey canonical facts; missing secrets fail closed. |
+| 3. Sessions, budgets and CAG | `services/chat/src/{session,budget,providers,validation,telemetry}` | Concurrency/idempotency/expiry tests pass; conversational replies remain distinct from canonical evidence; missing secrets fail closed. |
 | 4. RAG and MCP | `services/portfolio-mcp/`, retrieval/ingestion modules | Real protocol tool calls, hybrid retrieval evaluation, index rollback and degraded-search tests; no administrative capability exposure. |
 | 5. Website chat | `dist/chat-assistant.js`, `dist/chat-assistant.css`, minimal mount, public manifest, edge/local adapters | Same-origin stream works; source receipts, cancel/clear/retry and accessible interaction pass; legacy 410/contact/media paths preserved. |
 | 6. Private qualification | Browser, deployed integration, adversarial and cost evaluation | Observed billing attribution, privacy checks, end-to-end tool/retrieval trace and measured latency/quality/cost. Public flag remains off until this passes. |

@@ -8,7 +8,7 @@ import type { Usage } from './provider.js';
 // Both models: input $0.10/M, output $0.50/M. The allowance deliberately charges
 // every input token at the higher $0.20/M cache-write rate, ignoring discounts.
 // This is a conservative application allowance, not an invoice calculation.
-export const PRICE_VERSION = '2026-10-31-standard-short-context-v1';
+export const PRICE_VERSION = '2026-10-31-standard-conversation-v2';
 export const MAX_PROVIDER_RESERVATION_MICROS = Math.ceil((INPUT_TOKEN_ALLOWANCE * 200 + MAX_OUTPUT_TOKENS * 500) / 1000);
 
 export function reserveCosts(providers: Provider[]): Record<Provider, number> {

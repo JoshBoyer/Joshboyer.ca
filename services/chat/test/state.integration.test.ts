@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash, randomUUID } from 'node:crypto';
-import { DynamoDBClient, CreateTableCommand, DeleteTableCommand, ScanCommand, TransactWriteItemsCommand } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient, CreateTableCommand, DeleteTableCommand, ScanCommand, TransactWriteItemsCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb';
 import { AwsChatState, type Identity, type StateLimits } from '../src/state.js';
 
 // Opt-in integration tests use only an explicitly selected loopback DynamoDB Local endpoint.
@@ -259,5 +259,85 @@ integration('DynamoDB: month rollover settles against the original reservation m
     await store.completeTurn({ turn: first.turn, actualCosts: { openai: 20, anthropic: 0 }, result: { kind: 'error' } }, signal);
     assert.equal((await rows()).find(row => row.pk?.S === 'BUDGET#2026-10' && row.sk?.S === 'ALL')?.used?.N, '20');
     assert.ok(!(await rows()).some(row => row.pk?.S === 'BUDGET#2026-11'));
+  });
+});
+
+integration('DynamoDB: generated replies stay in session history, replay with ownership and disappear on clear', async () => {
+  await fixture(async (store, identity, { rows, secondStore }) => {
+    const request = input(identity, 'The visitor shared a private detail.');
+    const first = await store.beginTurn(request, signal);
+    const replyText = 'A private generated follow-up that must not remain in the accounting ledger.';
+    const result = { kind: 'answer', reply: { text: replyText, basis: 'general_knowledge' },
+      answer: { blocks: ['canonical public evidence'] }, trace: [{ stage: 'context', state: 'completed' }] };
+    const completion = { turn: first.turn, actualCosts: { openai: 30, anthropic: 0 }, result,
+      historyEntry: { text: request.text, result, requestId: 'untrusted-caller-value' } };
+    assert.equal((await store.completeTurn(completion, signal)).published, true);
+    const all = await rows();
+    const ledger = all.find(row => row.pk?.S?.startsWith('REQUEST#'))!;
+    assert.ok(!JSON.stringify(ledger).includes(replyText));
+    assert.ok(!Object.hasOwn(JSON.parse(ledger.result!.S!), 'reply'));
+    assert.equal(ledger.resultDigest?.S, digest(JSON.stringify(result)));
+    const history = (await store.requireSession(identity, signal)).history;
+    assert.equal(history[0]?.requestId, first.turn.requestId);
+    assert.deepEqual(history[0]?.result, result);
+    const found = await secondStore().findTurn(identity, request.requestId, request.digest, signal);
+    assert.deepEqual(found?.turn.result, result);
+    assert.deepEqual((await store.beginTurn(request, signal)).turn.result, result);
+    await assert.rejects(store.findTurn({ ...identity, visitorId: 'another-private-visitor' }, request.requestId, request.digest, signal), { code: 'SESSION_EXPIRED' });
+    await store.completeTurn(completion, signal);
+    assert.equal((await rows()).find(row => row.sk?.S === 'ALL')?.used?.N, '30');
+    assert.equal((await store.requireSession(identity, signal)).history.length, 1);
+    const conflicting = { ...completion, result: { ...result, reply: { text: 'Changed output' } } };
+    assert.equal((await store.completeTurn(conflicting, signal)).published, false);
+    assert.deepEqual((await store.requireSession(identity, signal)).history[0]?.result, result);
+    await store.clear(identity, signal);
+    const cleared = await rows();
+    assert.ok(!JSON.stringify(cleared).includes(replyText));
+    assert.ok(!JSON.stringify(cleared).includes(request.text));
+    assert.equal(cleared.find(row => row.sk?.S === 'ALL')?.used?.N, '30');
+    await assert.rejects(store.findTurn(identity, request.requestId, request.digest, signal), { code: 'SESSION_EXPIRED' });
+  });
+});
+
+integration('DynamoDB: late completion after clear never persists generated text or restores history', async () => {
+  await fixture(async (store, identity, { rows }) => {
+    const request = input(identity, 'A private input awaiting its answer.');
+    const first = await store.beginTurn(request, signal);
+    await store.clear(identity, signal);
+    const reply = 'Late private generated text';
+    const result = { kind: 'answer', reply: { text: reply }, answer: { blocks: ['public canonical content'] } };
+    const completed = await store.completeTurn({ turn: first.turn, actualCosts: { openai: 70, anthropic: 0 }, result,
+      historyEntry: { text: request.text, result } }, signal);
+    assert.equal(completed.published, false);
+    const all = await rows();
+    assert.ok(!JSON.stringify(all).includes(reply));
+    assert.ok(!JSON.stringify(all).includes(request.text));
+    assert.equal(all.find(row => row.sk?.S === 'ALL')?.used?.N, '70');
+    assert.equal(all.find(row => row.pk?.S?.startsWith('SESSION#'))?.history?.S, '[]');
+  });
+});
+
+integration('DynamoDB: cancelled and legacy results replay canonical evidence without recovering generated reply', async () => {
+  await fixture(async (store, identity, { tableName }) => {
+    const request = input(identity);
+    const first = await store.beginTurn(request, signal);
+    const canonical = { kind: 'answer', answer: { blocks: ['public canonical fact'] } };
+    const full = { ...canonical, reply: { text: 'Only the session may retain this generated text.' } };
+    await store.completeTurn({ turn: first.turn, actualCosts: { openai: 10, anthropic: 0 }, result: full,
+      historyEntry: { text: request.text, result: full } }, signal);
+    await store.cancel(identity, request.requestId, signal);
+    assert.deepEqual((await store.findTurn(identity, request.requestId, request.digest, signal))?.turn.result, canonical);
+
+    const secondIdentity = await store.openSession({ visitorId }, signal);
+    const legacyRequest = input({ visitorId, credential: secondIdentity.credential });
+    const legacy = await store.beginTurn(legacyRequest, signal);
+    await store.completeTurn({ turn: legacy.turn, actualCosts: { openai: 10, anthropic: 0 }, result: canonical,
+      historyEntry: { text: legacyRequest.text, result: canonical } }, signal);
+    await client!.send(new UpdateItemCommand({
+      TableName: tableName, Key: { pk: { S: `REQUEST#${legacy.turn.sessionId}` }, sk: { S: legacy.turn.requestId } },
+      UpdateExpression: 'REMOVE resultDigest'
+    }));
+    assert.deepEqual((await store.findTurn(legacyRequest.identity, legacyRequest.requestId, legacyRequest.digest, signal))?.turn.result, canonical);
+    assert.equal((await store.completeTurn({ turn: legacy.turn, actualCosts: { openai: 10, anthropic: 0 }, result: canonical }, signal)).published, false);
   });
 });

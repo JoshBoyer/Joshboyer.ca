@@ -3,8 +3,8 @@ import type { Config, Provider } from './config.js';
 import { credential } from './config.js';
 import type { SecretReader } from './aws.js';
 import { ServiceError, record } from './errors.js';
-import { assertContract, buildUserContext, CAG_CLAIM_IDS, CAG_VERSION, frameBuilder, validateMessage, validateSavedAnswer,
-  renderSelection, type MessageRequest, type RenderedAnswer } from './cag.js';
+import { assertContract, buildUserContext, CAG_CLAIM_IDS, CAG_VERSION, frameBuilder, validateMessage, validateSavedAnswer, validateSavedReply,
+  renderSelection, type ConversationReply, type MessageRequest, type RenderedAnswer } from './cag.js';
 import { callChatProvider, providerBody, type ChatProviderResult } from './chat-provider.js';
 import { PRICE_VERSION, reserveCosts, usageAllowance } from './chat-pricing.js';
 import type { Fetch } from './provider.js';
@@ -28,7 +28,7 @@ export interface ChatReceipt {
 export interface ChatResponse { statusCode: number; body?: unknown; events?: AsyncIterable<string>; sessionToken?: string; clearSession?: boolean }
 type PublicErrorCode = 'unavailable' | 'invalid_request' | 'session_expired' | 'rate_limited' | 'budget_exhausted' |
   'deadline_exceeded' | 'upstream_failure' | 'validation_failed' | 'request_conflict';
-type SavedResult = ({ kind: 'answer'; answer: RenderedAnswer } | { kind: 'error'; code: PublicErrorCode; retryable: boolean } | { kind: 'cancelled' }) &
+type SavedResult = ({ kind: 'answer'; answer: RenderedAnswer; reply?: ConversationReply } | { kind: 'error'; code: PublicErrorCode; retryable: boolean } | { kind: 'cancelled' }) &
   { trace?: TracePoint[]; settlement?: SettlementSummary };
 const publicErrors = new Set<PublicErrorCode>(['unavailable', 'invalid_request', 'session_expired', 'rate_limited', 'budget_exhausted',
   'deadline_exceeded', 'upstream_failure', 'validation_failed', 'request_conflict']);
@@ -67,7 +67,8 @@ function savedResult(value: unknown): SavedResult {
     ...(value.settlement === undefined ? {} : { settlement: validateSettlement(value.settlement) })
   } : {};
   if (details.settlement && ((details.trace?.length ?? 0) > 23 || details.trace?.some(point => point.stage === 'settlement'))) throw new ServiceError('ANSWER_VALIDATION_FAILED', 502);
-  if (record(value) && value.kind === 'answer') return { kind: 'answer', answer: validateSavedAnswer(value.answer), ...details };
+  if (record(value) && value.kind === 'answer') return { kind: 'answer', answer: validateSavedAnswer(value.answer),
+    ...(value.reply === undefined ? {} : { reply: validateSavedReply(value.reply) }), ...details };
   if (record(value) && value.kind === 'cancelled') return { kind: 'cancelled', ...details };
   if (record(value) && value.kind === 'error' && typeof value.code === 'string' && publicErrors.has(value.code as PublicErrorCode) && typeof value.retryable === 'boolean') {
     return { kind: 'error', code: value.code as PublicErrorCode, retryable: value.retryable, ...details };
@@ -93,6 +94,10 @@ async function* resultFrames(result: SavedResult, turn: Turn, identity: Identity
     }
   }
   if (result.kind === 'answer') {
+    if (result.reply) {
+      if (!await alive(state, identity, turn.generation) || await state.isCancelled(turn, AbortSignal.timeout(3000))) return;
+      yield frame('conversation', result.reply);
+    }
     for (const block of result.answer.blocks) {
       if (!await alive(state, identity, turn.generation) || await state.isCancelled(turn, AbortSignal.timeout(3000))) return;
       yield frame('answer_block', block);
@@ -100,7 +105,7 @@ async function* resultFrames(result: SavedResult, turn: Turn, identity: Identity
     if (!await alive(state, identity, turn.generation) || await state.isCancelled(turn, AbortSignal.timeout(3000))) return;
     yield frame('sources', { corpusVersion: result.answer.corpusVersion, sources: result.answer.sources });
     if (!await alive(state, identity, turn.generation) || await state.isCancelled(turn, AbortSignal.timeout(3000))) return;
-    yield frame('done', { outcome: result.answer.blocks.some(block => block.kind === 'notice') ? 'limited' : 'completed' });
+    yield frame('done', { outcome: result.answer.blocks.some(block => block.kind === 'notice' && block.code !== 'general_knowledge') ? 'limited' : 'completed' });
   } else if (await alive(state, identity, turn.generation)) {
     if (result.kind === 'cancelled') yield frame('done', { outcome: 'cancelled' });
     else yield frame('error', { code: result.code, retryable: result.retryable });
@@ -174,7 +179,8 @@ async function* runTurn(input: {
         validationStarted = trace.timestamp();
         let validationCompleted = false;
         try {
-          result = { kind: 'answer', answer: renderSelection(response.text) };
+          const rendered = renderSelection(response.text);
+          result = { kind: 'answer', answer: rendered.answer, reply: rendered.reply };
           validationCompleted = true;
           yield await emitTrace(trace.add({ stage: 'validation', state: 'completed', ...details,
             durationMs: trace.duration(validationStarted), corpusVersion: CAG_VERSION,

@@ -76,7 +76,7 @@ function parseStream(text, requestId, generation) {
   requireCondition(records.length >= 3 && records.length <= 96, 'INVALID_STREAM');
   const validator = createEventValidator({ requestId, generation, corpus });
   const blocks = [], sources = [];
-  let outcome;
+  let outcome, conversation;
   try {
     for (const record of records) {
       const lines = record.split('\n');
@@ -84,6 +84,7 @@ function parseStream(text, requestId, generation) {
       const frame = JSON.parse(lines[1].slice(6));
       requireCondition(frame.event === lines[0].slice(7), 'INVALID_STREAM');
       validator.accept(frame);
+      if (frame.event === 'conversation') conversation = frame.data;
       if (frame.event === 'answer_block') blocks.push(frame.data);
       if (frame.event === 'sources') sources.push(...frame.data.sources);
       if (frame.event === 'done') outcome = frame.data.outcome;
@@ -97,7 +98,8 @@ function parseStream(text, requestId, generation) {
   const claimIds = blocks.filter(block => block.kind === 'claim').map(block => block.claimId);
   requireCondition(claimIds.includes('claim-experience-nexus'), 'EXPECTED_EVIDENCE_MISSING');
   return { requestId, generation, corpusVersion: corpus.corpusVersion, claimIds, outcome, eventCount: records.length,
-    canonicalDigest: createHash('sha256').update(JSON.stringify({ blocks, sources })).digest('hex') };
+    ...(conversation ? { replyKind: conversation.kind, replyBytes: Buffer.byteLength(conversation.text, 'utf8'), suggestionCount: conversation.suggestions.length } : {}),
+    canonicalDigest: createHash('sha256').update(JSON.stringify({ conversation, blocks, sources })).digest('hex') };
 }
 
 function acceptCookies(headers, jar) {
@@ -175,7 +177,7 @@ async function runPrivateProbe({ url, token, fetchImpl = fetch, sleep = millisec
     await request('revoked_session', 'POST', '/api/chat/messages', message, 401, { cookies: oldCookie });
     const publicChat = ({ canonicalDigest: _digest, ...value }) => value;
     return { schemaVersion: '1.0.0', status: 'passed', origin: url, checks,
-      chat: publicChat(chat), replay: { ...publicChat(replay), sameCanonicalAnswer: true },
+      chat: publicChat(chat), replay: { ...publicChat(replay), sameCanonicalAnswer: true, ...(chat.replyKind ? { sameConversation: true } : {}) },
       billingEvidence: 'one_new_request_id_replayed; confirm provider invocation count in AWS ledger', cleanup: 'session_cleared' };
   } catch (error) {
     const safe = error instanceof PrivateProbeError ? error : new PrivateProbeError('PROBE_UNAVAILABLE');

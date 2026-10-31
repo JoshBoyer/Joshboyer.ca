@@ -14,9 +14,10 @@ const COOKIE = `${'1999999999'}.${'c'.repeat(43)}`;
 const answer = renderAnswer({ schemaVersion: '1.0.0', corpusVersion: corpus.corpusVersion,
   claimIds: ['claim-experience-nexus'], noticeCodes: [] }, corpus);
 
-function stream({ altered = false, crlf = false } = {}) {
+function stream({ altered = false, crlf = false, conversation } = {}) {
   const records = [
     { event: 'status', data: { code: 'accepted' } },
+    ...(conversation ? [{ event: 'conversation', data: conversation }] : []),
     ...answer.blocks.map(data => ({ event: 'answer_block', data: altered ? { ...data, text: 'Invented certification.' } : data })),
     { event: 'sources', data: { corpusVersion: corpus.corpusVersion, sources: answer.sources } },
     { event: 'done', data: { outcome: 'completed' } }
@@ -25,6 +26,17 @@ function stream({ altered = false, crlf = false } = {}) {
     generation: GENERATION, seq: index + 1, ...record })}\n\n`).join('');
   return crlf ? text.replace(/\n/g, '\r\n') : text;
 }
+
+test('private probe checks conversational replay without exposing response text', () => {
+  const conversation = { kind: 'portfolio', text: 'NEXUS is Josh’s independent project.', suggestions: ['What has been built?'] };
+  const result = parseStream(stream({ conversation }), REQUEST, GENERATION);
+  const changed = parseStream(stream({ conversation: { ...conversation, text: 'A different reply.' } }), REQUEST, GENERATION);
+  assert.equal(result.replyKind, 'portfolio');
+  assert.equal(result.replyBytes, Buffer.byteLength(conversation.text));
+  assert.equal(result.suggestionCount, 1);
+  assert.notEqual(result.canonicalDigest, changed.canonicalDigest);
+  assert.equal(JSON.stringify(result).includes(conversation.text), false);
+});
 
 function fixture(options = {}) {
   const calls = [], pauses = [];

@@ -54,7 +54,7 @@ The export reads only `dist/career-evidence.v3.json` as evidence. It checks publ
 
 ## Private conversation integration
 
-The implementation is in `infra/aws/`, `services/chat/` and `services/edge/`. Phase 3 adds durable sessions, atomic spending reservations, CAG answers and a separately gated frontend shell; follow the [private chat runbook](../docs/operations/chat-phase3-private.md). The [Phase 2 record](../docs/operations/chat-phase2-pilot.md) describes the earlier fixed provider probe, now disabled in the private conversation deployment. Retrieval/MCP and public release remain ahead in the [implementation plan](../docs/architecture/chat-implementation-plan.md). Voice remains deferred.
+The implementation is in `infra/aws/`, `services/chat/` and `services/edge/`. Phase 3 adds durable sessions, atomic spending reservations, general-purpose conversation and CAG-supported portfolio evidence. Evidence and traces appear in a separate panel in the private shell; follow the [private chat runbook](../docs/operations/chat-phase3-private.md). The [Phase 2 record](../docs/operations/chat-phase2-pilot.md) describes the earlier fixed provider probe, now disabled in the private conversation deployment. Retrieval/MCP and public release remain ahead in the [implementation plan](../docs/architecture/chat-implementation-plan.md). Voice remains deferred.
 
 ## Verification record — 2026-10-31
 

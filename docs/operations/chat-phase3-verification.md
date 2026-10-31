@@ -78,6 +78,16 @@ The final UI preserves an already-visible partial trace when a cancelled request
 
 ## Remaining qualification
 
+### Conversational checkpoint — 2026-10-31
+
+The next private deployment adds general-purpose conversational replies and moves canonical evidence and traces into a separate request-details panel. Worker version `cda469e6-c859-4dce-b175-69b0d7c370f3` and AWS stack `PortfolioChatDev` (`UPDATE_COMPLETE`) were observed at handoff. Public access and the unmetered probe remain disabled.
+
+At the final workspace checkpoint, the root suite passed **277 tests**, the backend passed **84 tests** with the local DynamoDB endpoint explicitly enabled, and all three TypeScript packages plus evidence freshness and security checks passed. These are workspace results; a clean-checkout run at the final handoff SHA remains a receiving-team gate. Earlier counts above describe earlier checkpoints.
+
+The deployed browser returned a natural greeting for request `38c03917-9c9a-4134-ae74-abbfe78994db`, with traces in the separate panel and no observed console errors. Four additional fixed evaluation cases used the local updated orchestrator against live AWS state/Gateway: a queue explanation, a contextual follow-up, an unsupported certification and a credential/action refusal. These passed transport checks and were reviewed as sensible responses; they do not establish general semantic accuracy.
+
+Broader browser verification of this newest layout is unfinished, including mobile drawer focus, older-request selection, suggested follow-ups, cancel/retry/clear and reload behaviour. Generated prose is model-dependent. The request ledger now strips the generated reply; authorised replay recovers it from expiring session history, which Clear removes. See the Gemini/Argon handoff for continuation priorities.
+
 Phase 4 RAG/MCP is not implemented. Broad adversarial/model-quality evaluation, representative latency distributions, provider billing-credit attribution and release approval remain future work. Current latency figures are individual samples, not p95 measurements. The preview stays private.
 
 Sanitized machine receipts and browser screenshots are retained outside the web root in the local Codex setup directory. No credential, cookie or raw private request was added to the repository.

@@ -16,9 +16,9 @@
   const VERSION = '1.0.0';
   const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
   const SOURCE_URL = /^https:\/\/joshboyer\.ca\/(?:index\.html)?#projects\/(?:dell|foundations|headquarters|inquiry|workflows|newbusiness|renewals|upload|claims|takeover|continuity|sql|nexus)$/;
-  const NOTICE_CODES = ['unsupported_evidence', 'limited_evidence', 'tools_unavailable', 'retrieval_degraded'];
+  const NOTICE_CODES = ['unsupported_evidence', 'limited_evidence', 'tools_unavailable', 'retrieval_degraded', 'general_knowledge'];
   const ERROR_CODES = ['unavailable', 'invalid_request', 'session_expired', 'rate_limited', 'budget_exhausted', 'deadline_exceeded', 'upstream_failure', 'validation_failed', 'request_conflict'];
-  const STATUS_LABELS = { accepted: 'Question received', retrieving: 'Finding approved evidence', thinking: 'Choosing relevant evidence', validating: 'Checking the answer against its sources' };
+  const STATUS_LABELS = { accepted: 'Request received', retrieving: 'Finding relevant evidence', thinking: 'Thinking about your request', validating: 'Checking the response' };
   const TRACE_STAGES = Object.freeze({
     context: { label: 'Approved context', explanation: 'The versioned public evidence supplied with this question.' },
     budget: { label: 'Spending reservation', explanation: 'An allowance is held before a paid model request can start.' },
@@ -126,6 +126,13 @@
     if (required.some(key => !Object.hasOwn(value, key))) fail();
     return copy(value);
   }
+  function validateConversation(value) {
+    if (!exact(value, ['kind', 'text', 'suggestions']) || !['general', 'portfolio', 'clarification', 'refusal'].includes(value.kind) ||
+        typeof value.text !== 'string' || !value.text.trim() || encoder.encode(value.text).byteLength > 6000 ||
+        !Array.isArray(value.suggestions) || value.suggestions.length > 3 ||
+        value.suggestions.some(text => typeof text !== 'string' || !text.trim() || encoder.encode(text).byteLength > 200)) fail();
+    return copy(value);
+  }
   function createEventValidator({ requestId, generation, evidence, allowTools = false }) {
     if (!UUID.test(requestId) || !UUID.test(generation)) fail();
     const approved = validateEvidence(evidence);
@@ -135,7 +142,7 @@
     const selectedClaims = new Set(), selectedNotices = new Set(), selectedSources = new Set();
     const tools = new Map(), pendingTools = new Set();
     const traceStages = new Map();
-    let sequence = 1, terminal = false, revoked = false, receipt = false, answer = false, traceCount = 0, traceElapsed = 0;
+    let sequence = 1, terminal = false, revoked = false, receipt = false, answer = false, conversation = false, traceCount = 0, traceElapsed = 0;
     return Object.freeze({
       accept(frame) {
         if (revoked || terminal || !exact(frame, ['schemaVersion', 'requestId', 'generation', 'seq', 'event', 'data']) ||
@@ -144,11 +151,16 @@
         const data = frame.data;
         switch (frame.event) {
           case 'status':
-            if (answer || receipt || !exact(data, ['code']) || !Object.hasOwn(STATUS_LABELS, data.code)) fail();
+            if (answer || conversation || receipt || !exact(data, ['code']) || !Object.hasOwn(STATUS_LABELS, data.code)) fail();
+            break;
+          case 'conversation':
+            validateConversation(data);
+            if (conversation || answer || receipt || pendingTools.size || [...traceStages.values()].includes('started')) fail();
+            conversation = true;
             break;
           case 'trace': {
             const trace = validateTraceData(data);
-            if (answer || receipt || traceCount >= 24 || (trace.elapsedMs !== null && trace.elapsedMs < traceElapsed) ||
+            if (answer || conversation || receipt || traceCount >= 24 || (trace.elapsedMs !== null && trace.elapsedMs < traceElapsed) ||
                 (trace.corpusVersion && trace.corpusVersion !== approved.corpusVersion)) fail();
             const key = ['provider', 'validation'].includes(trace.stage) ? `${trace.stage}-${trace.attempt ?? 1}` : trace.stage;
             const previous = traceStages.get(key);
@@ -160,7 +172,7 @@
             break;
           }
           case 'tool_start':
-            if (!allowTools || answer || receipt || !exact(data, ['toolCallId', 'name']) ||
+            if (!allowTools || answer || conversation || receipt || !exact(data, ['toolCallId', 'name']) ||
                 !/^tool-[a-zA-Z0-9_-]{1,64}$/.test(data.toolCallId) || tools.has(data.toolCallId) || tools.size >= 4 ||
                 !['search_public_evidence', 'get_case_study', 'compare_job_requirements'].includes(data.name)) fail();
             tools.set(data.toolCallId, data.name); pendingTools.add(data.toolCallId);
@@ -185,13 +197,13 @@
             break;
           }
           case 'sources':
-            if (!answer || receipt || !exact(data, ['corpusVersion', 'sources']) || data.corpusVersion !== approved.corpusVersion ||
+            if ((!answer && !conversation) || receipt || !exact(data, ['corpusVersion', 'sources']) || data.corpusVersion !== approved.corpusVersion ||
                 !equal(data.sources, [...selectedSources].map(id => sources.get(id)))) fail();
             receipt = true;
             break;
           case 'done':
             if (!exact(data, ['outcome']) || !['completed', 'limited', 'cancelled'].includes(data.outcome) ||
-                (data.outcome !== 'cancelled' && (!answer || !receipt || pendingTools.size || [...traceStages.values()].includes('started')))) fail();
+                (data.outcome !== 'cancelled' && ((!answer && !conversation) || !receipt || pendingTools.size || [...traceStages.values()].includes('started')))) fail();
             terminal = true;
             break;
           case 'error':
@@ -549,52 +561,180 @@
       get outcome() { return finalOutcome; }
     });
   }
-  function createAnswerView(document, previous) {
+  function renderParagraphs(document, host, text) {
+    host.replaceChildren(...text.split(/\n\s*\n/).map(paragraph => element(document, 'p', '', paragraph)));
+  }
+  function createAnswerView(document, previous, options = {}) {
     const card = element(document, 'article', 'chat-message chat-answer');
     const timeline = createRequestTimeline(document);
-    card.append(element(document, 'p', 'chat-small-label', 'Portfolio assistant'), timeline.element);
-    const candidate = { element: card, timeline };
+    const body = element(document, 'div', 'chat-answer-text'); renderParagraphs(document, body, 'Thinking…');
+    const suggestions = element(document, 'div', 'chat-suggestions');
+    const actions = element(document, 'div', 'chat-response-actions');
+    const detailsButton = element(document, 'button', 'chat-view-details', 'View details'); detailsButton.type = 'button';
+    detailsButton.setAttribute('aria-label', 'View request evidence and trace');
+    actions.append(detailsButton);
+    card.append(element(document, 'p', 'chat-small-label', 'Assistant'), body, suggestions, actions);
+    const evidence = element(document, 'section', 'chat-request-evidence');
+    const evidenceIntro = element(document, 'p', 'chat-evidence-intro', 'Evidence references will appear here if this response uses the public portfolio.');
+    const blocks = element(document, 'div', 'chat-evidence-blocks');
+    const sources = element(document, 'div', 'chat-evidence-sources');
+    evidence.append(evidenceIntro, blocks, sources);
+    const candidate = { element: card, timeline, evidence, body, detailsButton, requestId: null, kind: null, claims: [], notices: [], hasConversation: false };
+    detailsButton.addEventListener('click', () => options.onDetails?.(candidate, detailsButton));
     let current = previous?.view || candidate;
+    function finishText(outcome) {
+      if (current.hasConversation) return;
+      if (outcome === 'completed' || outcome === 'limited') {
+        const text = current.claims.length
+          ? current.claims.map(claim => [claim.text, ...claim.qualificationNotes].join('\n\n')).join('\n\n')
+          : current.notices.map(notice => notice.text).join('\n\n');
+        renderParagraphs(document, current.body, text || 'There is no supported response available for this request.');
+      } else renderParagraphs(document, current.body, outcome === 'cancelled' ? 'Stopped before a response was returned.' : 'The response was interrupted. You can check this request again.');
+    }
     return Object.freeze({
       get view() { return current; },
       get element() { return current.element; },
-      identify(id) { timeline.identify(id); },
+      identify(id) { timeline.identify(id); candidate.requestId = id; },
       accept(frame) {
         // An empty cancellation receipt must not replace details already seen.
         // A real replay starts a fresh view instead of appending duplicate points.
-        if (frame.event === 'trace' || frame.event === 'answer_block') current = candidate;
+        if (['trace', 'conversation', 'answer_block'].includes(frame.event)) current = candidate;
+        current.requestId = frame.requestId;
         if (frame.event === 'trace') current.timeline.accept(frame);
         else current.timeline.identify(frame.requestId);
-        if (frame.event === 'answer_block') current.element.append(renderBlock(document, frame.data));
-        if (frame.event === 'sources') {
-          current.element.append(renderSources(document, frame.data.sources),
-            element(document, 'p', 'chat-receipt', `Approved evidence · ${frame.data.corpusVersion.slice(7, 19)}`));
+        if (frame.event === 'conversation') {
+          const conversation = validateConversation(frame.data);
+          current.kind = conversation.kind; current.hasConversation = true;
+          renderParagraphs(document, current.body, conversation.text);
+          suggestions.replaceChildren(...conversation.suggestions.map(text => {
+            const button = element(document, 'button', '', text); button.type = 'button';
+            button.addEventListener('click', () => options.onSuggestion?.(text)); return button;
+          }));
+          evidenceIntro.textContent = conversation.kind === 'general'
+            ? 'This is a general response. It does not cite Josh’s portfolio.'
+            : conversation.kind === 'portfolio' ? 'Selected public portfolio evidence for this response.' : 'No portfolio evidence has been cited for this response.';
         }
-        if (frame.event === 'done') current.timeline.finish(frame.data.outcome, { retained: current !== candidate });
-        if (frame.event === 'error') current.timeline.finish('interrupted', { retained: current !== candidate });
+        if (frame.event === 'answer_block') {
+          if (frame.data.kind === 'claim') current.claims.push(copy(frame.data));
+          else current.notices.push(copy(frame.data));
+          blocks.append(renderBlock(document, frame.data));
+        }
+        if (frame.event === 'sources') {
+          if (frame.data.sources.length) {
+            evidenceIntro.textContent = 'Selected public portfolio evidence. These references validate the displayed evidence records, not every sentence of the model’s response.';
+            sources.replaceChildren(renderSources(document, frame.data.sources),
+              element(document, 'p', 'chat-receipt', `Evidence version · ${frame.data.corpusVersion}`));
+          } else {
+            sources.replaceChildren(element(document, 'p', 'chat-evidence-empty', 'No portfolio references for this response.'));
+          }
+        }
+        if (frame.event === 'done') { current.timeline.finish(frame.data.outcome, { retained: current !== candidate }); finishText(frame.data.outcome); }
+        if (frame.event === 'error') { current.timeline.finish('interrupted', { retained: current !== candidate }); finishText('interrupted'); }
       },
       fail(outcome) {
         const retained = current !== candidate;
         current.timeline.finish(retained ? current.timeline.outcome || outcome : outcome, { retained });
+        finishText(outcome);
       }
+    });
+  }
+  function createRequestSelection() {
+    let latest, selected, pinned = false;
+    return Object.freeze({
+      update(view) {
+        const previousLatest = latest; latest = view;
+        if (!selected || (!pinned && selected === previousLatest) || (view.requestId && selected.requestId === view.requestId)) selected = view;
+        return selected;
+      },
+      select(view) { selected = view; pinned = view !== latest; return selected; },
+      clear() { latest = selected = undefined; pinned = false; },
+      get selected() { return selected; },
+      get pinned() { return pinned; }
+    });
+  }
+  function createDetailsPanel(document, options = {}) {
+    const selection = createRequestSelection();
+    const desktop = element(document, 'aside', 'chat-details-panel'); desktop.setAttribute('aria-label', 'Request details');
+    const content = element(document, 'div', 'chat-details-content');
+    const heading = element(document, 'header', 'chat-details-heading');
+    const title = element(document, 'h2', '', 'Request details'); title.id = 'chat-details-title';
+    const close = element(document, 'button', 'chat-details-close', 'Close details'); close.type = 'button';
+    heading.append(title, close);
+    const identity = element(document, 'p', 'chat-details-identity', 'Choose a response to inspect its evidence and activity.');
+    const tabs = element(document, 'div', 'chat-details-tabs'); tabs.setAttribute('role', 'tablist'); tabs.setAttribute('aria-label', 'Request details');
+    const panels = {}, buttons = {};
+    let activeTab = 'evidence', returnFocus, renderedView;
+    const dialog = element(document, 'dialog', 'chat-details-dialog'); dialog.setAttribute('aria-labelledby', title.id);
+    const mobile = () => options.modalOnly || document.defaultView?.matchMedia?.('(max-width: 900px)').matches === true;
+    function activate(name, focus = false) {
+      activeTab = name;
+      for (const key of ['evidence', 'trace']) {
+        buttons[key].setAttribute('aria-selected', String(key === name)); buttons[key].tabIndex = key === name ? 0 : -1;
+        panels[key].hidden = key !== name;
+      }
+      if (focus) buttons[name].focus();
+    }
+    for (const name of ['evidence', 'trace']) {
+      const button = element(document, 'button', '', name === 'evidence' ? 'Evidence' : 'Trace'); button.type = 'button';
+      button.id = `chat-${name}-tab`; button.setAttribute('role', 'tab'); button.setAttribute('aria-controls', `chat-${name}-panel`);
+      const panel = element(document, 'div', 'chat-details-tab-panel'); panel.id = `chat-${name}-panel`; panel.tabIndex = 0;
+      panel.setAttribute('role', 'tabpanel'); panel.setAttribute('aria-labelledby', button.id);
+      button.addEventListener('click', () => activate(name));
+      button.addEventListener('keydown', event => {
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault(); activate(event.key === 'Home' ? 'evidence' : event.key === 'End' ? 'trace' : name === 'evidence' ? 'trace' : 'evidence', true);
+      });
+      buttons[name] = button; panels[name] = panel; tabs.append(button);
+    }
+    content.append(heading, identity, tabs, panels.evidence, panels.trace); desktop.append(content); document.body.append(dialog);
+    function render() {
+      const view = selection.selected;
+      identity.textContent = view?.requestId ? `Request ${view.requestId}` : 'Choose a response to inspect its evidence and activity.';
+      if (view && view === renderedView) return;
+      renderedView = view;
+      panels.evidence.replaceChildren(view?.evidence || element(document, 'p', 'chat-details-empty', 'Selected portfolio evidence will appear here. General responses may have no portfolio references.'));
+      panels.trace.replaceChildren(view?.timeline.element || element(document, 'p', 'chat-details-empty', 'Select a response to see the stages reported for that request.'));
+    }
+    function restore() {
+      desktop.append(content);
+      if (returnFocus?.isConnected) returnFocus.focus();
+    }
+    close.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('close', restore);
+    document.defaultView?.matchMedia?.('(max-width: 900px)').addEventListener('change', event => {
+      if (!event.matches && !options.modalOnly && dialog.open) dialog.close();
+    });
+    activate(activeTab); render();
+    return Object.freeze({
+      element: desktop,
+      update(view) { selection.update(view); if (selection.selected === view) render(); },
+      open(view, trigger) {
+        selection.select(view); render(); returnFocus = trigger;
+        if (mobile()) { dialog.append(content); if (!dialog.open) dialog.showModal(); }
+        buttons[activeTab].focus();
+      },
+      clear() { selection.clear(); render(); if (dialog.open) dialog.close(); },
+      get selected() { return selection.selected; }
     });
   }
   function mount(host, options = {}) {
     if (host.dataset.chatMounted === 'true') return;
     host.dataset.chatMounted = 'true';
     const document = host.ownerDocument, client = createClient(options);
-    const panel = element(document, 'section', 'chat-panel'); panel.setAttribute('aria-label', 'Portfolio assistant');
+    const shell = element(document, 'section', 'chat-shell');
+    const panel = element(document, 'section', 'chat-panel'); panel.setAttribute('aria-label', 'Chat with Josh’s assistant');
+    const details = createDetailsPanel(document, { modalOnly: host.tagName?.toLowerCase() === 'dialog' });
     const heading = element(document, 'header', 'chat-heading');
     const headingCopy = element(document, 'div');
-    headingCopy.append(element(document, 'p', 'chat-small-label', 'Josh’s portfolio assistant'), element(document, 'h2', '', 'Ask about the work.'));
+    headingCopy.append(element(document, 'p', 'chat-small-label', 'Private preview'), element(document, 'h1', '', 'Josh’s assistant'));
     const clear = element(document, 'button', 'chat-text-button', 'Clear chat'); clear.type = 'button'; clear.disabled = true;
     heading.append(headingCopy, clear);
-    const scope = element(document, 'p', 'chat-scope', 'Answers use approved public evidence. Search and tools are coming later.');
+    const scope = element(document, 'p', 'chat-scope', 'General help, with Josh’s public portfolio when it is relevant.');
     const messages = element(document, 'div', 'chat-messages'); messages.setAttribute('aria-label', 'Conversation'); messages.setAttribute('role', 'log'); messages.setAttribute('aria-live', 'polite'); messages.setAttribute('aria-relevant', 'additions'); messages.tabIndex = 0;
     const welcome = element(document, 'div', 'chat-welcome');
-    welcome.append(element(document, 'span', 'chat-monogram', 'jb.'), element(document, 'h3', '', 'Start with a question.'), element(document, 'p', '', 'Explore experience, decisions and delivery — with the evidence alongside the answer.'));
+    welcome.append(element(document, 'span', 'chat-monogram', 'jb.'), element(document, 'h2', '', 'What can I help with?'), element(document, 'p', '', 'Talk through an idea, ask a question, or explore Josh’s work.'));
     const starters = element(document, 'div', 'chat-starters');
-    ['What has Josh built?', 'Tell me about insurance integrations.', 'What is NEXUS?'].forEach(text => {
+    ['Help me think through a project.', 'Explain an API simply.', 'What has Josh built?'].forEach(text => {
       const button = element(document, 'button', '', text); button.type = 'button'; button.disabled = true;
       button.addEventListener('click', () => { input.value = text; form.requestSubmit(); }); starters.append(button);
     });
@@ -603,21 +743,22 @@
     const form = element(document, 'form', 'chat-compose');
     const label = element(document, 'label', 'chat-small-label', 'Your question'); label.htmlFor = 'portfolio-chat-question';
     const input = element(document, 'textarea'); input.id = label.htmlFor; input.name = 'question'; input.rows = 3; input.maxLength = 8192;
-    input.placeholder = 'Ask about Josh’s experience…'; input.required = true; input.disabled = true;
+    input.placeholder = 'Ask a question or share an idea…'; input.required = true; input.disabled = true;
     input.setAttribute('aria-describedby', 'portfolio-chat-hint');
     const footer = element(document, 'div', 'chat-compose-footer');
-    const hint = element(document, 'p', 'chat-hint', 'Up to 8,192 bytes · Enter to send'); hint.id = 'portfolio-chat-hint';
+    const hint = element(document, 'p', 'chat-hint', 'Enter to send · Shift + Enter for a new line'); hint.id = 'portfolio-chat-hint';
     const actions = element(document, 'div', 'chat-compose-actions');
     const stop = element(document, 'button', 'chat-secondary', 'Stop'); stop.type = 'button'; stop.hidden = true;
     const retry = element(document, 'button', 'chat-secondary', 'Check request again'); retry.type = 'button'; retry.hidden = true;
     const send = element(document, 'button', 'chat-send', 'Send question ↗'); send.type = 'submit'; send.disabled = true;
     actions.append(stop, retry, send); footer.append(hint, actions); form.append(label, input, footer);
-    panel.append(heading, scope, messages, status, form); host.append(panel);
+    panel.append(heading, scope, messages, status, form); shell.append(panel, details.element); host.append(shell);
     let ready = false, busy = false, currentReply, uiEpoch = 0, limit = 8192;
     function update() {
       input.disabled = !ready || busy; send.disabled = !ready || busy;
       clear.disabled = !ready; stop.hidden = !busy; retry.hidden = busy || !client.canRetry;
       for (const button of starters.children) button.disabled = !ready || busy;
+      for (const button of messages.querySelectorAll('.chat-suggestions button')) button.disabled = !ready || busy;
     }
     function nearBottom() { return messages.scrollHeight - messages.clientHeight - messages.scrollTop < 100; }
     function scroll(follow) { if (follow) messages.scrollTop = messages.scrollHeight; }
@@ -627,7 +768,8 @@
       const previousCard = currentReply.element;
       currentReply.accept(frame);
       if (previousCard !== currentReply.element) previousCard.replaceWith(currentReply.element);
-      if (frame.event === 'done') status.textContent = frame.data.outcome === 'cancelled' ? 'Stopped.' : 'Answer checked against approved evidence.';
+      details.update(currentReply.view);
+      if (frame.event === 'done') status.textContent = frame.data.outcome === 'cancelled' ? 'Stopped.' : currentReply.view.claims.length ? 'Response complete · evidence references validated.' : 'Response complete.';
       if (frame.event === 'error') status.textContent = ERROR_LABELS[frame.data.code];
       scroll(follow);
     }
@@ -643,23 +785,28 @@
         const question = element(document, 'article', 'chat-message chat-question'); question.append(element(document, 'p', 'chat-small-label', 'You'), element(document, 'p', '', text));
         messages.append(question); input.value = '';
       }
-      currentReply = createAnswerView(document, isRetry ? currentReply : null);
+      currentReply = createAnswerView(document, isRetry ? currentReply : null, {
+        onDetails: (view, trigger) => details.open(view, trigger),
+        onSuggestion: text => { if (ready && !busy) { input.value = text; form.requestSubmit(); } }
+      });
       if (!isRetry) messages.append(currentReply.element);
+      details.update(currentReply.view);
       status.textContent = isRetry ? 'Checking the original request…' : 'Sending your question…'; update(); scroll(true);
       try {
         const receive = frame => { if (ownEpoch === uiEpoch) event(frame); };
         const sending = isRetry ? client.retry(receive) : client.send(text, receive, document.defaultView?.location.hash);
-        if (client.requestId) currentReply.identify(client.requestId);
+        if (client.requestId) { currentReply.identify(client.requestId); details.update(currentReply.view); }
         await sending;
       } catch (error) {
         if (ownEpoch === uiEpoch) {
           currentReply.fail(error.name === 'AbortError' ? 'cancelled' : 'interrupted');
+          details.update(currentReply.view);
           status.textContent = error.name === 'AbortError' ? 'Stopped. The server may still be settling this request.' : ERROR_LABELS[error.code] || ERROR_LABELS.unavailable;
         }
       } finally {
         if (ownEpoch === uiEpoch) {
           busy = false; update();
-          if (!document.hidden && !document.activeElement?.closest?.('.chat-request-trace')) input.focus();
+          if (!document.hidden && !document.activeElement?.closest?.('.chat-details-content')) input.focus();
         }
       }
     }
@@ -676,6 +823,7 @@
     clear.addEventListener('click', async () => {
       uiEpoch += 1; busy = false; ready = false; update();
       messages.replaceChildren(welcome); welcome.hidden = false; currentReply = null; input.value = ''; status.textContent = 'Clearing the conversation…';
+      details.clear();
       try { await client.clear(); ready = true; status.textContent = 'Conversation cleared. Your next question starts a new session.'; }
       catch { status.textContent = 'The server could not confirm deletion. Reload before starting another conversation.'; }
       update(); if (ready) input.focus();
@@ -685,7 +833,7 @@
       limit = config.limits.maxMessageBytes;
       if (ready) {
         status.textContent = 'Private chat is ready.';
-        scope.textContent = config.capabilities.rag || config.capabilities.mcp ? 'Answers use approved public evidence, with sources and any tool activity shown below.' : 'Approved context is available. Retrieval and tools are not enabled in this preview.';
+        scope.textContent = 'General help, with Josh’s public portfolio when it is relevant. Details stay beside the conversation.';
       } else status.textContent = 'Chat is currently disabled.';
       update();
     }).catch(error => {
@@ -693,7 +841,7 @@
       const access = document.querySelector('[data-chat-access]'); if (access) access.hidden = false;
       update();
     });
-    return Object.freeze({ client, element: panel });
+    return Object.freeze({ client, element: shell });
   }
   function mountDrawer(trigger, options = {}) {
     const document = trigger.ownerDocument;
@@ -724,5 +872,5 @@
       } catch { status.textContent = 'Access was not granted. Check the private token and try again.'; button.disabled = false; field.focus(); }
     });
   }
-  return Object.freeze({ VERSION, validateEvidence, validateTraceData, createEventValidator, readEventStream, createClient, createRequestTimeline, createAnswerView, renderBlock, renderSources, mount, mountDrawer, boot });
+  return Object.freeze({ VERSION, validateEvidence, validateTraceData, validateConversation, createEventValidator, readEventStream, createClient, createRequestTimeline, createAnswerView, createRequestSelection, createDetailsPanel, renderBlock, renderSources, mount, mountDrawer, boot });
 });

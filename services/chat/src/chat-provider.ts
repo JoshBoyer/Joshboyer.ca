@@ -1,5 +1,5 @@
 import { credential, type Config, type Provider } from './config.js';
-import { MAX_OUTPUT_TOKENS, MAX_PROVIDER_REQUEST_BYTES, selectionSchema, SYSTEM_PREFIX } from './cag.js';
+import { CAG_VERSION, MAX_OUTPUT_TOKENS, MAX_PROVIDER_REQUEST_BYTES, MAX_SELECTION_BYTES, selectionSchema, SYSTEM_PREFIX } from './cag.js';
 import { ServiceError, record } from './errors.js';
 import { normaliseUsage, type Fetch, type Usage } from './provider.js';
 
@@ -82,20 +82,29 @@ export async function callChatProvider(options: {
     const value = await boundedBody(response, signal);
     if (!record(value) || (value.model !== undefined && value.model !== config.models[provider])) throw new ServiceError('PROVIDER_RESPONSE_INVALID', 502, 'unknown');
     let text = '';
+    let refused = false;
     if (provider === 'openai') {
       if (value.status !== 'completed' || !Array.isArray(value.output)) throw new ServiceError('PROVIDER_RESPONSE_INVALID', 502, 'unknown');
       for (const item of value.output) {
         if (!record(item) || item.type !== 'message' || !Array.isArray(item.content)) continue;
         for (const block of item.content) {
-          if (record(block) && block.type === 'refusal') throw new ServiceError('ANSWER_VALIDATION_FAILED', 502, 'unknown');
+          if (record(block) && block.type === 'refusal') refused = true;
           if (record(block) && block.type === 'output_text' && typeof block.text === 'string') text += block.text;
         }
       }
     } else {
-      if (value.stop_reason !== 'end_turn' || !Array.isArray(value.content)) throw new ServiceError('PROVIDER_RESPONSE_INVALID', 502, 'unknown');
+      if (!['end_turn', 'refusal'].includes(String(value.stop_reason)) || !Array.isArray(value.content)) throw new ServiceError('PROVIDER_RESPONSE_INVALID', 502, 'unknown');
+      refused = value.stop_reason === 'refusal';
       for (const block of value.content) if (record(block) && block.type === 'text' && typeof block.text === 'string') text += block.text;
     }
-    if (!text || Buffer.byteLength(text, 'utf8') > 8192) throw new ServiceError('PROVIDER_RESPONSE_INVALID', 502, 'unknown');
+    if (refused) {
+      // A provider safety refusal ends this attempt successfully; never route
+      // around it by asking the fallback provider the same harmful request.
+      text = JSON.stringify({ schemaVersion: '1.0.0', corpusVersion: CAG_VERSION, kind: 'refusal',
+        text: 'I can’t help with that request. I can help with a safer alternative or explain the topic at a high level.',
+        suggestions: [], claimIds: [], noticeCodes: [] });
+    }
+    if (!text || Buffer.byteLength(text, 'utf8') > MAX_SELECTION_BYTES) throw new ServiceError('PROVIDER_RESPONSE_INVALID', 502, 'unknown');
     return {
       provider, model: config.models[provider], text, usage: normaliseUsage(provider, value.usage),
       providerRequestId: requestId(response.headers.get(provider === 'openai' ? 'x-request-id' : 'request-id') ?? value.id),

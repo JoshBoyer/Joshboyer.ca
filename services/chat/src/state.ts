@@ -4,10 +4,10 @@ import {
   type AttributeValue, type TransactWriteItem
 } from '@aws-sdk/client-dynamodb';
 import { REGION, type Provider } from './config.js';
-import { ServiceError } from './errors.js';
+import { ServiceError, record } from './errors.js';
 
 export interface Identity { visitorId: string; credential: string }
-export interface HistoryEntry { text: string; result: unknown }
+export interface HistoryEntry { text: string; result: unknown; requestId?: string }
 export interface Session {
   id: string; generation: string; expiresAt: number; remainingTurns: number; history: HistoryEntry[];
 }
@@ -83,6 +83,21 @@ function serialise(value: unknown, bytes: number): string {
   try { encoded = JSON.stringify(value); } catch { /* Fail closed below. */ }
   if (typeof encoded !== 'string' || Buffer.byteLength(encoded) > bytes) throw new ServiceError('INVALID_REQUEST', 400);
   return encoded;
+}
+
+function storedResult(value: unknown): { full: string; retained: string; digest: string } {
+  const full = serialise(value, 65_536);
+  // Free-written replies can echo visitor input. Retain them only in session
+  // history, which clear removes; the longer-lived ledger keeps public evidence.
+  const retained = record(value) ? { ...value } : value;
+  if (record(retained)) delete retained.reply;
+  return { full, retained: serialise(retained, 65_536), digest: hash(full) };
+}
+
+function sameResult(row: Row, result: ReturnType<typeof storedResult>): boolean {
+  return row.resultDigest?.S === undefined
+    ? string(row, 'result') === result.full
+    : row.resultDigest.S === result.digest && string(row, 'result') === result.retained;
 }
 
 function conditional(error: unknown): boolean {
@@ -169,17 +184,26 @@ export class AwsChatState implements ChatStateStore {
     return sessionView(id, row);
   }
 
-  private async replay(id: string, generation: string, requestId: string, digest: string, signal: AbortSignal): Promise<Turn | undefined> {
+  private async replay(id: string, generation: string, requestId: string, digest: string, history: HistoryEntry[], signal: AbortSignal): Promise<Turn | undefined> {
     const row = await this.read(`REQUEST#${id}`, requestId, signal);
     if (!row) return undefined;
     if (string(row, 'generation') !== generation || string(row, 'digest') !== digest) throw new ServiceError('REQUEST_CONFLICT', 409);
-    return turnView(row);
+    const turn = turnView(row);
+    if (turn.status === 'finished' && row.published?.BOOL && !row.cancelRequested?.BOOL) {
+      const entry = history.find(item => item.requestId === requestId);
+      if (entry && row.resultDigest?.S) {
+        const result = storedResult(entry.result);
+        if (!sameResult(row, result)) throw new ServiceError('STATE_UNAVAILABLE', 503);
+        return { ...turn, result: entry.result };
+      }
+    }
+    return turn;
   }
 
   async findTurn(identity: Identity, requestId: string, digest: string, signal: AbortSignal): Promise<{ kind: 'running' | 'finished'; session: Session; turn: Turn } | undefined> {
     if (!uuid.test(requestId) || !/^[a-f0-9]{64}$/.test(digest)) throw new ServiceError('INVALID_REQUEST', 400);
     const session = await this.requireSession(identity, signal);
-    const turn = await this.replay(session.id, session.generation, requestId, digest, signal);
+    const turn = await this.replay(session.id, session.generation, requestId, digest, session.history, signal);
     return turn ? { kind: turn.status === 'pending' ? 'running' : 'finished', session, turn } : undefined;
   }
 
@@ -199,7 +223,7 @@ export class AwsChatState implements ChatStateStore {
         !input.text.trim() || Buffer.byteLength(input.text) > 8192) throw new ServiceError('INVALID_REQUEST', 400);
     const { id, row } = await this.authorised(input.identity, signal);
     const session = sessionView(id, row);
-    const existing = await this.replay(id, session.generation, input.requestId, input.digest, signal);
+    const existing = await this.replay(id, session.generation, input.requestId, input.digest, session.history, signal);
     if (existing) return { kind: existing.status === 'pending' ? 'running' : 'finished', session, turn: existing };
     const now = this.now();
     const month = new Date(now).toISOString().slice(0, 7);
@@ -241,7 +265,8 @@ export class AwsChatState implements ChatStateStore {
       if (!conditional(error)) throw new ServiceError('STATE_UNAVAILABLE', 503);
       // A racing identical request may have won. Read its durable receipt before classifying denial.
       const current = await this.authorised(input.identity, signal);
-      const replay = await this.replay(id, string(current.row, 'generation'), input.requestId, input.digest, signal);
+      const replay = await this.replay(id, string(current.row, 'generation'), input.requestId, input.digest,
+        sessionView(id, current.row).history, signal);
       if (replay) return { kind: replay.status === 'pending' ? 'running' : 'finished', session: sessionView(id, current.row), turn: replay };
       if (number(current.row, 'turns') >= 8) throw new ServiceError('RATE_LIMITED', 429);
       if (current.row.activeRequestId && number(current.row, 'activeUntil') > this.now()) throw new ServiceError('REQUEST_ACTIVE', 409);
@@ -271,7 +296,7 @@ export class AwsChatState implements ChatStateStore {
 
   async completeTurn(input: CompleteTurnInput, signal: AbortSignal): Promise<{ published: boolean }> {
     costs(input.actualCosts);
-    const encodedResult = serialise(input.result, 65_536);
+    const encodedResult = storedResult(input.result);
     const row = await this.read(`REQUEST#${input.turn.sessionId}`, input.turn.requestId, signal);
     if (!row || string(row, 'generation') !== input.turn.generation || string(row, 'digest') !== input.turn.digest) throw new ServiceError('REQUEST_CONFLICT', 409);
     const authoritative = turnView(row);
@@ -280,11 +305,12 @@ export class AwsChatState implements ChatStateStore {
       const refunds = PROVIDERS.map(provider => authoritative.reservations[provider] - input.actualCosts[provider]);
       const items: TransactWriteItem[] = [{ Update: {
         TableName: this.table, Key: key(`REQUEST#${authoritative.sessionId}`, authoritative.requestId),
-        UpdateExpression: 'SET #status = :finished, #result = :result, actualCosts = :actual',
+        UpdateExpression: 'SET #status = :finished, #result = :result, resultDigest = :resultDigest, actualCosts = :actual',
         ConditionExpression: '#status = :pending AND generation = :generation AND digest = :digest',
         ExpressionAttributeNames: { '#status': 'status', '#result': 'result' },
         ExpressionAttributeValues: {
-          ':finished': s('finished'), ':pending': s('pending'), ':result': s(encodedResult), ':actual': s(serialise(input.actualCosts, 256)),
+          ':finished': s('finished'), ':pending': s('pending'), ':result': s(encodedResult.retained),
+          ':resultDigest': s(encodedResult.digest), ':actual': s(serialise(input.actualCosts, 256)),
           ':generation': s(authoritative.generation), ':digest': s(authoritative.digest)
         }
       } }];
@@ -302,17 +328,17 @@ export class AwsChatState implements ChatStateStore {
         if (!conditional(error)) throw new ServiceError('STATE_UNAVAILABLE', 503);
         const settled = await this.read(`REQUEST#${authoritative.sessionId}`, authoritative.requestId, signal);
         if (!settled || string(settled, 'status') !== 'finished') throw new ServiceError('STATE_UNAVAILABLE', 503);
-        if (string(settled, 'result') !== encodedResult) return { published: false };
+        if (!sameResult(settled, encodedResult)) return { published: false };
       }
-    } else if (serialise(authoritative.result, 65_536) !== encodedResult) return { published: false };
+    } else if (!sameResult(row, encodedResult)) return { published: false };
 
     const session = await this.read(`SESSION#${authoritative.sessionId}`, 'STATE', signal);
     if (!session || session.revoked?.BOOL || string(session, 'generation') !== authoritative.generation ||
         number(session, 'expiresMs') <= this.now() || session.activeRequestId?.S !== authoritative.requestId) return { published: false };
     let history = json<HistoryEntry[]>(session, 'history');
     if (input.historyEntry) {
-      if (input.historyEntry.text !== session.pendingText?.S || serialise(input.historyEntry.result, 65_536) !== encodedResult) throw new ServiceError('INVALID_REQUEST', 400);
-      history = [...history, input.historyEntry];
+      if (input.historyEntry.text !== session.pendingText?.S || serialise(input.historyEntry.result, 65_536) !== encodedResult.full) throw new ServiceError('INVALID_REQUEST', 400);
+      history = [...history, { ...input.historyEntry, requestId: authoritative.requestId }];
     }
     if (history.length > 8) throw new ServiceError('STATE_UNAVAILABLE', 503);
     try {

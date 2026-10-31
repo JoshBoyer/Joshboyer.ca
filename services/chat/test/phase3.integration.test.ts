@@ -34,8 +34,10 @@ const ORIGIN = 'https://private-chat.example';
 const TOKEN = 'test-operator-' + 'a'.repeat(43);
 test.after(() => client?.destroy());
 
-function selectionResponse(provider: 'openai' | 'anthropic', unknownUsage: boolean) {
-  const text = JSON.stringify({ schemaVersion: '1.0.0', corpusVersion: CAG_VERSION, claimIds: [CAG_CLAIM_IDS[0]], noticeCodes: [] });
+function selectionResponse(provider: 'openai' | 'anthropic', unknownUsage: boolean, general = false) {
+  const text = JSON.stringify({ schemaVersion: '1.0.0', corpusVersion: CAG_VERSION, kind: general ? 'general' : 'portfolio',
+    text: general ? 'Hi! We can talk about technology or explore Josh’s portfolio.' : 'Josh’s public portfolio includes Dell technical support work. Here is the relevant evidence.', suggestions: [],
+    claimIds: general ? [] : [CAG_CLAIM_IDS[0]], noticeCodes: [] });
   return Response.json(provider === 'openai' ? {
     model: CONFIG.models.openai, status: 'completed', output: [{ type: 'message', content: [{ type: 'output_text', text }] }],
     usage: unknownUsage ? {} : { input_tokens: 100, output_tokens: 10, total_tokens: 110 }
@@ -60,7 +62,7 @@ async function fixture(run: (runtime: {
   raw(method: string, path: string, body?: unknown, cookie?: string): Promise<Response>;
   rows(): Promise<Record<string, import('@aws-sdk/client-dynamodb').AttributeValue>[]>;
   calls: string[]; cookies: Map<string, string>;
-}) => Promise<void>, options: { limits?: Partial<StateLimits>; failOpenai?: boolean; unknownUsage?: boolean } = {}) {
+}) => Promise<void>, options: { limits?: Partial<StateLimits>; failOpenai?: boolean; unknownUsage?: boolean; general?: boolean } = {}) {
   if (!client) throw new Error('No DynamoDB Local client');
   const tableName = 'phase3-http-test-' + randomUUID();
   await client.send(new CreateTableCommand({ TableName: tableName, BillingMode: 'PAY_PER_REQUEST',
@@ -84,7 +86,7 @@ async function fixture(run: (runtime: {
       const result = await prepareChat(request, config, { state, secrets, fetchImpl: async providerUrl => {
         const provider = String(providerUrl).includes('/openai/') ? 'openai' : 'anthropic'; calls.push(provider);
         if (provider === 'openai' && options.failOpenai) throw new Error('ambiguous transport failure');
-        return selectionResponse(provider, !!options.unknownUsage);
+        return selectionResponse(provider, !!options.unknownUsage, !!options.general);
       } }, init?.signal ?? new AbortController().signal);
       const headers = new Headers({ 'Content-Type': result.events ? 'text/event-stream; charset=utf-8' : 'application/json' });
       if (result.sessionToken) headers.set('Set-Cookie', `__Host-jb_chat=${result.sessionToken}; Path=/; Secure; HttpOnly; SameSite=Strict; Max-Age=86400`);
@@ -160,6 +162,8 @@ integration('private HTTP path uses real signed edge authentication and DynamoDB
     const saved = JSON.parse(rows.find(row => row.pk?.S?.startsWith('REQUEST#'))!.result!.S!);
     assert.deepEqual(saved.trace, traces.slice(0, -1));
     assert.equal(saved.settlement.chargedMicros, 25);
+    assert.equal(Object.hasOwn(saved, 'reply'), false);
+    assert.match(rows.find(row => row.pk?.S?.startsWith('REQUEST#'))!.resultDigest!.S!, /^[a-f0-9]{64}$/);
     const conflict = await runtime.send('POST', '/api/chat/messages', { ...message, text: 'Different text' });
     assert.equal(conflict.status, 409); await conflict.text();
     const oldCookie = [...runtime.cookies].map(([name, value]) => `${name}=${value}`).join('; ');
@@ -234,4 +238,32 @@ integration('fallback retains ambiguous primary charge and reconciles the second
     assert.equal(Number(rows.find(row => row.pk?.S?.startsWith('BUDGET#') && row.sk?.S === 'anthropic')?.used?.N), 25);
     assert.deepEqual(runtime.calls, ['openai', 'anthropic']);
   }, { failOpenai: true });
+});
+
+integration('general conversation replays from private session history while durable ledger excludes free reply text', async () => {
+  await fixture(async runtime => {
+    await loginAndOpen(runtime);
+    const message = { schemaVersion: '1.0.0', requestId: randomUUID(), text: 'Hello!' };
+    const first = await runtime.send('POST', '/api/chat/messages', message);
+    const original = await first.text();
+    assert.match(original, /event: conversation/);
+    assert.match(original, /Hi! We can talk about technology/);
+    assert.match(original, /general_knowledge/);
+    const replay = await runtime.send('POST', '/api/chat/messages', message);
+    assert.match(await replay.text(), /Hi! We can talk about technology/);
+    assert.equal(runtime.calls.length, 1);
+    let rows = await runtime.rows();
+    const request = rows.find(row => row.pk?.S?.startsWith('REQUEST#'))!;
+    const saved = JSON.parse(request.result!.S!);
+    assert.equal(Object.hasOwn(saved, 'reply'), false);
+    assert.ok(!request.result!.S!.includes('Hi! We can talk about technology'));
+    const history = JSON.parse(rows.find(row => row.pk?.S?.startsWith('SESSION#'))!.history!.S!);
+    assert.equal(history[0].requestId, message.requestId);
+    assert.match(history[0].result.reply.text, /Hi! We can talk about technology/);
+    const clear = await runtime.send('DELETE', '/api/chat/session', {});
+    await clear.json();
+    rows = await runtime.rows();
+    assert.equal(rows.find(row => row.pk?.S?.startsWith('SESSION#'))!.history!.S, '[]');
+    assert.ok(!JSON.stringify(rows).includes('Hi! We can talk about technology'));
+  }, { general: true });
 });

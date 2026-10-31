@@ -56,14 +56,28 @@ function traceFrames() {
 }
 
 class TestNode {
-  constructor(tag) { this.tag = tag; this.children = []; this.textContent = ''; this.attributes = {}; }
-  append(...nodes) { this.children.push(...nodes); }
-  replaceChildren(...nodes) { this.children = nodes; }
+  constructor(tag, document) { this.tag = tag; this.ownerDocument = document; this.children = []; this.textContent = ''; this.attributes = {}; this.events = {}; }
+  append(...nodes) { for (const node of nodes) { node.remove(); this.children.push(node); node.parentNode = this; } }
+  replaceChildren(...nodes) { for (const node of this.children) node.parentNode = null; this.children = []; this.append(...nodes); }
+  remove() { if (this.parentNode) this.parentNode.children = this.parentNode.children.filter(child => child !== this); this.parentNode = null; }
   setAttribute(name, value) { this.attributes[name] = value; }
+  addEventListener(name, callback) { (this.events[name] ||= []).push(callback); }
+  dispatch(name, event = {}) { for (const callback of this.events[name] || []) callback({ preventDefault() {}, ...event }); }
+  focus() { this.ownerDocument.activeElement = this; }
+  showModal() { this.open = true; }
+  close() { this.open = false; this.dispatch('close'); }
+  get isConnected() { return this.tag === 'body' || this.parentNode?.isConnected === true; }
   set innerHTML(_) { throw new Error('HTML injection sink'); }
 }
-const testDocument = () => ({ createElement: tag => new TestNode(tag) });
+const testDocument = (mobile = false) => {
+  const media = { matches: mobile, addEventListener() {} };
+  const document = { defaultView: { matchMedia: () => media } };
+  document.createElement = tag => new TestNode(tag, document);
+  document.body = document.createElement('body');
+  return document;
+};
 const nodeText = node => [node.textContent, ...node.children.map(nodeText)].join(' ');
+function descendants(node) { return [node, ...node.children.flatMap(descendants)]; }
 
 test('browser projection contains exactly canonical public display fields and is fresh', () => {
   assert.deepEqual(JSON.parse(fs.readFileSync(path.join(__dirname, '../dist/chat-evidence.json'), 'utf8')), evidence);
@@ -393,9 +407,10 @@ test('cancel then terminal-only retry preserves the last reported trace and the 
   assert.equal(retry.element, priorElement);
   await client.retry(frame => retry.accept(frame));
   assert.equal(retry.element, priorElement);
-  const text = nodeText(retry.element);
+  const text = nodeText(retry.view.timeline.element);
   for (const expected of ['Approved context', 'Spending reservation', 'Model request', 'gpt-6-luna', 'Stopped · last reported activity']) assert.ok(text.includes(expected), expected);
   assert.doesNotMatch(text, /No trace recorded|chat-answer-block/);
+  assert.doesNotMatch(nodeText(retry.element), /Request activity|Spending reservation/);
   assert.equal(retry.view.timeline.outcome, 'cancelled');
   assert.equal(simulatedProviderDispatches, 1);
   assert.equal(payloads.length, 2); assert.equal(payloads[0], payloads[1]);
@@ -415,10 +430,112 @@ test('a completed replay replaces the previous view and never duplicates trace p
   function countClass(node, className) {
     return (node.className === className ? 1 : 0) + node.children.reduce((sum, child) => sum + countClass(child, className), 0);
   }
-  assert.equal(countClass(replay.element, 'chat-trace-points'), 5);
-  assert.equal(countClass(replay.element, 'chat-answer-block chat-answer-claim'), 1);
-  assert.equal(nodeText(replay.element).split('req_example123').length - 1, 1);
-  assert.match(nodeText(replay.element), /Complete · recorded run/);
+  assert.equal(countClass(replay.view.timeline.element, 'chat-trace-points'), 5);
+  assert.equal(countClass(replay.view.evidence, 'chat-answer-block chat-answer-claim'), 1);
+  assert.equal(nodeText(replay.view.timeline.element).split('req_example123').length - 1, 1);
+  assert.match(nodeText(replay.view.timeline.element), /Complete · recorded run/);
+});
+
+test('conversation is plain chat prose; canonical evidence and traces never appear inside the chat bubble', () => {
+  const document = testDocument();
+  const reply = chat.createAnswerView(document);
+  const history = traceFrames();
+  const conversation = { schemaVersion: '1.0.0', requestId, generation, seq: 8, event: 'conversation',
+    data: { kind: 'portfolio', text: 'Josh has worked on insurance integrations.\n\nWould you like to explore that work?', suggestions: ['Tell me more.'] } };
+  const events = [...history.slice(0, 7), conversation, ...history.slice(7).map(frame => ({ ...frame, seq: frame.seq + 1 }))];
+  const validate = validator();
+  for (const frame of events) { validate.accept(frame); reply.accept(frame); }
+  const inline = nodeText(reply.element);
+  assert.match(inline, /Josh has worked on insurance integrations/);
+  assert.match(inline, /View details/);
+  assert.doesNotMatch(inline, /Request activity|Gateway request ID|Spending reservation|PUBLIC SOURCES|Selected public portfolio evidence/);
+  assert.ok(!descendants(reply.element).some(node => /chat-answer-block|chat-sources|chat-request-trace/.test(node.className || '')));
+  assert.match(nodeText(reply.view.evidence), /Selected public portfolio evidence/);
+  assert.match(nodeText(reply.view.timeline.element), /Gateway request ID/);
+});
+
+test('general responses permit empty portfolio references and honestly display their general-knowledge note in Evidence', () => {
+  const notice = evidence.notices.find(value => value.code === 'general_knowledge');
+  assert.ok(notice);
+  const events = [
+    { event: 'conversation', data: { kind: 'general', text: 'An API is a way for one program to ask another program for something.', suggestions: [] } },
+    { event: 'answer_block', data: notice },
+    { event: 'sources', data: { corpusVersion: evidence.corpusVersion, sources: [] } },
+    { event: 'done', data: { outcome: 'completed' } }
+  ].map((frame, index) => ({ schemaVersion: '1.0.0', requestId, generation, seq: index + 1, ...frame }));
+  const reply = chat.createAnswerView(testDocument()), clientValidation = validator();
+  const serverValidation = contracts.createEventValidator({ requestId, generation, corpus });
+  for (const frame of events) { serverValidation.accept(frame); clientValidation.accept(frame); reply.accept(frame); }
+  assert.match(nodeText(reply.element), /one program to ask another/);
+  assert.doesNotMatch(nodeText(reply.element), /No live sources|No portfolio references|Request activity/);
+  assert.match(nodeText(reply.view.evidence), /No portfolio references/);
+  assert.match(nodeText(reply.view.evidence), /No live sources were retrieved/);
+});
+
+test('older canonical-only replies remain readable without inline evidence cards or trace data', () => {
+  const reply = chat.createAnswerView(testDocument());
+  for (const frame of frames()) reply.accept(frame);
+  assert.ok(nodeText(reply.element).includes(evidence.claims[0].text));
+  assert.ok(!descendants(reply.element).some(node => /chat-answer-block|chat-sources|chat-request-trace/.test(node.className || '')));
+  assert.match(nodeText(reply.view.evidence), /Selected public portfolio evidence/);
+  assert.match(nodeText(reply.view.timeline.element), /No trace recorded/);
+});
+
+test('conversation guards bound UTF-8, reject hidden payloads and prevent premature or duplicate narratives', () => {
+  const valid = { kind: 'general', text: 'A useful answer.', suggestions: ['Show me an example.'] };
+  for (const invalid of [
+    { ...valid, hiddenPrompt: 'leak' }, { ...valid, kind: 'admin' }, { ...valid, text: 'é'.repeat(3001) },
+    { ...valid, text: ' ' }, { ...valid, suggestions: ['é'.repeat(101)] }, { ...valid, suggestions: ['a', 'b', 'c', 'd'] }
+  ]) assert.throws(() => chat.validateConversation(invalid));
+  const premature = validator(); premature.accept({ ...traceFrames()[2], seq: 1 });
+  const frame = { schemaVersion: '1.0.0', requestId, generation, seq: 2, event: 'conversation', data: valid };
+  assert.throws(() => premature.accept(frame));
+  const check = validator(); check.accept({ ...frame, seq: 1 });
+  assert.throws(() => check.accept(frame));
+  assert.throws(() => check.accept({ ...traceFrames()[0], seq: 2 }));
+});
+
+test('conversation markup and suggestions remain text, without model-supplied links or HTML', () => {
+  const document = testDocument(); let suggested;
+  const reply = chat.createAnswerView(document, null, { onSuggestion: text => { suggested = text; } });
+  reply.accept({ schemaVersion: '1.0.0', requestId, generation, seq: 1, event: 'conversation', data: {
+    kind: 'general', text: '<img src=x onerror=alert(1)>\n\nhttps://untrusted.example/', suggestions: ['<script>example</script>']
+  } });
+  assert.match(nodeText(reply.element), /<img src=x onerror=alert\(1\)>/);
+  assert.ok(!descendants(reply.element).some(node => ['a', 'img', 'script'].includes(node.tag)));
+  const suggestion = descendants(reply.element).find(node => node.tag === 'button' && node.textContent.includes('<script>'));
+  suggestion.dispatch('click'); assert.equal(suggested, '<script>example</script>');
+});
+
+test('request selection follows live activity but preserves manual inspection of an older request', () => {
+  const selection = chat.createRequestSelection();
+  const older = { requestId }, current = { requestId: generation }, following = { requestId: '33333333-3333-4333-8333-333333333333' };
+  assert.equal(selection.update(older), older);
+  assert.equal(selection.update(current), current);
+  selection.select(older); assert.equal(selection.pinned, true);
+  assert.equal(selection.update(following), older);
+  selection.select(following); assert.equal(selection.pinned, false);
+  const replay = { requestId: following.requestId };
+  assert.equal(selection.update(replay), replay);
+  selection.clear(); assert.equal(selection.selected, undefined);
+});
+
+test('details use accessible Evidence/Trace tabs and a native mobile dialog with focus return', () => {
+  const document = testDocument(true), details = chat.createDetailsPanel(document);
+  document.body.append(details.element);
+  const reply = chat.createAnswerView(document); reply.identify(requestId);
+  const trigger = reply.view.detailsButton; document.body.append(trigger);
+  details.update(reply.view); details.open(reply.view, trigger);
+  const dialog = document.body.children.find(node => node.tag === 'dialog');
+  assert.equal(dialog.open, true);
+  const nodes = descendants(dialog), tabs = nodes.filter(node => node.attributes.role === 'tab');
+  assert.equal(tabs.length, 2); assert.equal(tabs[0].attributes['aria-selected'], 'true');
+  tabs[0].dispatch('keydown', { key: 'ArrowRight' });
+  assert.equal(tabs[1].attributes['aria-selected'], 'true'); assert.equal(document.activeElement, tabs[1]);
+  const tracePanel = nodes.find(node => node.id === 'chat-trace-panel'); assert.equal(tracePanel.hidden, false);
+  dialog.close(); assert.equal(document.activeElement, trigger);
+  assert.ok(descendants(details.element).includes(tracePanel));
+  details.clear(); assert.equal(details.selected, undefined);
 });
 
 test('safe rendering treats even markup-shaped canonical text as text', () => {

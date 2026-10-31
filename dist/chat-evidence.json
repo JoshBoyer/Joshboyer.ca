@@ -302,6 +302,11 @@
       "kind": "notice",
       "code": "retrieval_degraded",
       "text": "Search is running with reduced capability. Relevant public evidence may be missing."
+    },
+    {
+      "kind": "notice",
+      "code": "general_knowledge",
+      "text": "This reply uses general model knowledge. No live sources were retrieved."
     }
   ],
   "pageContexts": [

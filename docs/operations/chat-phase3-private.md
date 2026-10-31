@@ -1,6 +1,6 @@
 # Private portfolio chat
 
-Version: 1.0 | Date: 2026-10-31 | Status: Deployed private preview
+Version: 1.1 | Date: 2026-10-31 | Status: Private general-purpose conversation
 
 Phase 3 turns the fixed provider probe into a private conversation service. The existing portfolio remains static. Open the separate [private preview](https://joshboyer-chat-dev.boyer-josh1985.workers.dev/chat-preview) and use the operator token stored in the Windows user environment as `JOSH_CHAT_PROBE_TOKEN`. Never put that token into a URL, source file, browser storage or chat message.
 
@@ -20,13 +20,13 @@ Private preview + HttpOnly cookies
 
 ## What is available
 
-- Chat with the approved **cache-augmented generation (CAG)** fact pack. The model selects claim identifiers; the server renders approved wording and qualifications. The browser checks it against the same public corpus before display.
+- General-purpose conversation, technical explanations and contextual follow-ups. The model writes the reply; the server validates its structure and bounds. For Josh-specific questions, the **cache-augmented generation (CAG)** fact pack supplies approved evidence.
 - Streaming progress, validated answers and source links, bounded conversation history, explicit retry, cancellation and clear.
-- An expandable request timeline shows actual context, reservation, provider, validation and settlement events. Provider details include the model, measured round-trip time, token/cache usage and trace identifiers. Reopening a trace or checking an existing request does not start another model call.
+- A separate request-details panel contains Evidence and Trace tabs. Evidence wording remains canonical; generated chat prose is not a factual guarantee. Trace shows actual context, reservation, provider, validation and settlement events. Opening these details does not start another model call.
 - OpenAI `gpt-6-luna` primary and one Anthropic `claude-haiku-5-5` fallback. The browser cannot select a model or provide history, system messages or tool output.
 - A private sign-in screen and one-hour access cookie. Chat session cookies are separate, opaque, Secure, HttpOnly and SameSite=Strict. Chat sessions expire after 24 hours; expiry is checked in application code.
 
-Retrieval-augmented generation (RAG), Model Context Protocol (MCP) tooling and voice remain disabled. The current CAG pack contains seven of the fourteen approved public claims. Questions beyond that pack should produce an evidence limitation, not a fabricated answer.
+Retrieval-augmented generation (RAG), Model Context Protocol (MCP) tooling and voice remain disabled. The current CAG pack contains seven of the fourteen approved public claims. General questions can use model knowledge; unsupported claims about Josh should receive an evidence limitation. The assistant must not claim live research, account access or actions it cannot perform. Explicit provider safety refusals do not trigger a fallback attempt.
 
 ## Spending and lifecycle controls
 
@@ -38,7 +38,7 @@ Retrieval-augmented generation (RAG), Model Context Protocol (MCP) tooling and v
 | Session turns | 8, with one active request |
 | Message | 8,192 UTF-8 bytes; complete HTTP body at most 12,288 bytes |
 | Model calls | At most two: primary and one fallback |
-| Provider request/output | At most 32 KiB serialized input and 768 output tokens |
+| Provider request/output | At most 48 KiB serialized input and 1,536 output tokens |
 | Turn deadline | 50 seconds; outer handler/edge deadlines also bounded |
 
 **Reservation** means holding the largest permitted charge before making a provider call. DynamoDB transactions update the request ledger, session lock, visitor allowance, aggregate budget and provider budgets together. Repeating an identical request returns its saved result; reusing its identifier with different content fails.
@@ -47,7 +47,7 @@ Amounts are integer USD microdollars. The versioned allowance table conservative
 
 Missing/ambiguous usage after dispatch consumes the full reservation. A crash leaves its reservation counted. Unused fallback reservations are released only during exactly-once settlement. A timed-out active lease may permit another bounded turn after 120 seconds; it does not release the abandoned charge or allow the same request to run again.
 
-Clear first revokes the generation and removes active history. Cancellation and clear suppress later output. Neither resets the visitor allowance nor erases unsettled charges. A separate request ledger stores canonical results and accounting metadata for 100 days; operational logs retain metadata for seven days. Provider and infrastructure billing remain separate: AWS credits do not cover OpenAI/Anthropic charges, and provider credit attribution needs a billing-console check.
+Clear first revokes the generation and removes active history. Cancellation and clear suppress later output. Neither resets the visitor allowance nor erases unsettled charges. Generated replies and raw visitor text stay in the 24-hour session history; clear removes them. Expiry is immediate for application access, while DynamoDB time-to-live deletion is asynchronous. The 100-day request ledger contains canonical evidence, accounting metadata and a digest, without generated reply text. Authorised retries recover the original reply from active session history. Operational logs retain metadata for seven days. Provider retention follows the provider's own settings; this is not a zero-retention claim. AWS credits do not cover OpenAI/Anthropic charges, and provider credit attribution needs a billing-console check.
 
 ## Private access and deployment
 
