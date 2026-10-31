@@ -67,7 +67,20 @@ class TestNode {
   showModal() { this.open = true; }
   close() { this.open = false; this.dispatch('close'); }
   get isConnected() { return this.tag === 'body' || this.parentNode?.isConnected === true; }
+  getAttribute(name) { return this.attributes[name] ?? null; }
+  replaceWith(node) {
+    if (!this.parentNode) return;
+    const index = this.parentNode.children.indexOf(this);
+    if (index !== -1) {
+      node.remove();
+      this.parentNode.children.splice(index, 1, node);
+      node.parentNode = this.parentNode;
+      this.parentNode = null;
+    }
+  }
   set innerHTML(_) { throw new Error('HTML injection sink'); }
+  set outerHTML(_) { throw new Error('HTML injection sink'); }
+  insertAdjacentHTML() { throw new Error('HTML injection sink'); }
 }
 const testDocument = (mobile = false) => {
   const media = { matches: mobile, addEventListener() {} };
@@ -529,10 +542,18 @@ test('details use accessible Evidence/Trace tabs and a native mobile dialog with
   const dialog = document.body.children.find(node => node.tag === 'dialog');
   assert.equal(dialog.open, true);
   const nodes = descendants(dialog), tabs = nodes.filter(node => node.attributes.role === 'tab');
-  assert.equal(tabs.length, 2); assert.equal(tabs[0].attributes['aria-selected'], 'true');
+  assert.equal(tabs.length, 4);
+  assert.deepEqual(tabs.map(tab => tab.textContent), ['Trace', 'Evidence', 'Tools', 'Context']);
+  assert.equal(tabs[0].attributes['aria-selected'], 'true');
+  const tracePanel = nodes.find(node => node.id === 'chat-trace-panel'); assert.equal(tracePanel.hidden, false);
   tabs[0].dispatch('keydown', { key: 'ArrowRight' });
   assert.equal(tabs[1].attributes['aria-selected'], 'true'); assert.equal(document.activeElement, tabs[1]);
-  const tracePanel = nodes.find(node => node.id === 'chat-trace-panel'); assert.equal(tracePanel.hidden, false);
+  const evidencePanel = nodes.find(node => node.id === 'chat-evidence-panel'); assert.equal(evidencePanel.hidden, false);
+  tabs[1].dispatch('keydown', { key: 'End' });
+  assert.equal(tabs[3].attributes['aria-selected'], 'true'); assert.equal(document.activeElement, tabs[3]);
+  const contextPanel = nodes.find(node => node.id === 'chat-context-panel'); assert.equal(contextPanel.hidden, false);
+  tabs[3].dispatch('keydown', { key: 'Home' });
+  assert.equal(tabs[0].attributes['aria-selected'], 'true'); assert.equal(document.activeElement, tabs[0]);
   dialog.close(); assert.equal(document.activeElement, trigger);
   assert.ok(descendants(details.element).includes(tracePanel));
   details.clear(); assert.equal(details.selected, undefined);
@@ -552,4 +573,347 @@ test('safe rendering treats even markup-shaped canonical text as text', () => {
   assert.throws(() => chat.renderSources(document, [{ id: 'source-x', url: 'javascript:alert(1)' }]));
   const sources = chat.renderSources(document, evidence.sources.slice(0, 1));
   assert.equal(sources.children[1].rel, 'noopener noreferrer');
+});
+
+test('8-stage trace validation and timeline rendering support routing, retrieval, mcp, skipped, ok and degraded statuses', () => {
+  assert.deepEqual(chat.TRACE_STAGES, ['routing', 'retrieval', 'mcp', 'context', 'budget', 'provider', 'validation', 'settlement']);
+  assert.equal(chat.TRACE_LABELS.retrieval, 'RAG Retrieval');
+  assert.equal(chat.TRACE_LABELS.mcp, 'MCP Tools');
+
+  const eightStagePoints = [
+    { stage: 'routing', state: 'completed', elapsedMs: 2, routingMode: 'portfolio_mcp', needsRetrieval: true, requestedTools: ['search_public_evidence', 'get_case_study'] },
+    { stage: 'retrieval', state: 'started', elapsedMs: 4, retrievalMode: 'hybrid', indexVersion: 'idx-2026-10-31', embeddingModel: 'text-embedding-3-small' },
+    { stage: 'retrieval', state: 'completed', elapsedMs: 18, durationMs: 14, retrievalMode: 'hybrid', indexVersion: 'idx-2026-10-31', embeddingModel: 'text-embedding-3-small', matchedCount: 2, corpusVersion: corpus.corpusVersion },
+    { stage: 'mcp', state: 'started', elapsedMs: 19, mcpMethod: 'initialize' },
+    { stage: 'mcp', state: 'completed', elapsedMs: 23, durationMs: 4, mcpMethod: 'initialize', toolOutcome: 'completed' },
+    { stage: 'mcp', state: 'started', elapsedMs: 24, mcpMethod: 'tools/call', toolCallId: 'tool-1', toolName: 'search_public_evidence', attempt: 1 },
+    { stage: 'mcp', state: 'completed', elapsedMs: 36, durationMs: 12, mcpMethod: 'tools/call', toolCallId: 'tool-1', toolName: 'search_public_evidence', toolOutcome: 'completed', attempt: 1 },
+    { stage: 'context', state: 'completed', elapsedMs: 38, corpusVersion: corpus.corpusVersion, claimCount: corpus.claims.length },
+    { stage: 'budget', state: 'completed', elapsedMs: 40, reservedMicros: 6400, priceVersion: 'prices-v2' },
+    { stage: 'provider', state: 'started', elapsedMs: 42, attempt: 1, provider: 'openai', model: 'gpt-6-luna' },
+    { stage: 'provider', state: 'completed', elapsedMs: 242, durationMs: 200, attempt: 1, provider: 'openai', model: 'gpt-6-luna', usageStatus: 'known', inputTokens: 1400, outputTokens: 90 },
+    { stage: 'validation', state: 'started', elapsedMs: 243, attempt: 1 },
+    { stage: 'validation', state: 'completed', elapsedMs: 245, durationMs: 2, attempt: 1, claimCount: 1 },
+    { stage: 'settlement', state: 'completed', elapsedMs: 250, durationMs: 5, reservedMicros: 6400, chargedMicros: 520, priceVersion: 'prices-v2', usageStatus: 'known' }
+  ];
+
+  const streamCheck = chat.createEventValidator({ requestId, generation, evidence, allowTools: true });
+  const serverCheck = contracts.createEventValidator({ requestId, generation, corpus });
+  const timeline = chat.createRequestTimeline(testDocument());
+  for (const [index, data] of eightStagePoints.entries()) {
+    assert.deepEqual(chat.validateTraceData(data), data);
+    const frame = { schemaVersion: '1.0.0', requestId, generation, seq: index + 1, event: 'trace', data };
+    serverCheck.accept(frame);
+    streamCheck.accept(frame);
+    timeline.accept(frame);
+  }
+  timeline.finish('completed');
+  const renderedText = nodeText(timeline.element);
+  for (const expected of ['Request routing', 'RAG Retrieval', 'MCP Tools', 'search_public_evidence', 'idx-2026-10-31', 'text-embedding-3-small', 'Approved context', 'Spending reservation', 'Model request', 'Answer validation', 'Usage settlement']) {
+    assert.ok(renderedText.includes(expected), `missing ${expected}`);
+  }
+
+  // Skipped and degraded retrieval rendering + stage summary array validation
+  const skippedTimeline = chat.createRequestTimeline(testDocument());
+  skippedTimeline.accept({
+    schemaVersion: '1.0.0', requestId, generation, seq: 1, event: 'trace',
+    data: { stage: 'retrieval', state: 'completed', elapsedMs: 3, retrievalMode: 'skipped', matchedCount: 0, corpusVersion: corpus.corpusVersion }
+  });
+  assert.match(nodeText(skippedTimeline.element), /Skipped/);
+  assert.ok(descendants(skippedTimeline.element).some(node => /is-skipped/.test(node.className || '')));
+
+  const degradedTimeline = chat.createRequestTimeline(testDocument());
+  degradedTimeline.accept({
+    schemaVersion: '1.0.0', requestId, generation, seq: 1, event: 'trace',
+    data: { stage: 'retrieval', state: 'completed', elapsedMs: 5, retrievalMode: 'degraded', matchedCount: 1, corpusVersion: corpus.corpusVersion }
+  });
+  assert.match(nodeText(degradedTimeline.element), /Degraded/);
+  assert.ok(descendants(degradedTimeline.element).some(node => /is-degraded|is-failed/.test(node.className || '')));
+
+  const phase4Summary = [
+    { stage: 'routing', status: 'ok', durationMs: 2 },
+    { stage: 'retrieval', status: 'skipped', durationMs: 0 },
+    { stage: 'mcp', status: 'degraded', durationMs: 12 },
+    { stage: 'context', status: 'ok', durationMs: 1 },
+    { stage: 'budget', status: 'ok', durationMs: 2 },
+    { stage: 'provider', status: 'ok', durationMs: 180 },
+    { stage: 'validation', status: 'ok', durationMs: 2 },
+    { stage: 'settlement', status: 'ok', durationMs: 4 }
+  ];
+  assert.equal(chat.validateTraceData(phase4Summary).length, 8);
+
+  // 3-point boundaries and negative trace stage checks
+  for (const [matchedCount, valid] of [[-1, false], [0, true], [1, true], [15, true], [16, true], [17, false]]) {
+    const candidate = { stage: 'retrieval', state: 'completed', elapsedMs: 10, retrievalMode: 'hybrid', matchedCount, corpusVersion: corpus.corpusVersion };
+    if (valid) assert.equal(chat.validateTraceData(candidate).matchedCount, matchedCount);
+    else assert.throws(() => chat.validateTraceData(candidate));
+  }
+  for (const invalid of [
+    { stage: 'routing', state: 'completed', elapsedMs: 1, routingMode: 'invalid_mode', needsRetrieval: false },
+    { stage: 'routing', state: 'completed', elapsedMs: 1, routingMode: 'general' },
+    { stage: 'retrieval', state: 'completed', elapsedMs: 1, retrievalMode: 'hybrid', matchedCount: 2 },
+    { stage: 'mcp', state: 'started', elapsedMs: 1 },
+    { stage: 'mcp', state: 'started', elapsedMs: 1, mcpMethod: 'tools/call', toolName: 'search_public_evidence' },
+    { stage: 'mcp', state: 'started', elapsedMs: 1, mcpMethod: 'tools/call', toolCallId: 'tool-1', toolName: 'aws_admin' },
+    [{ stage: 'settlement', status: 'ok', durationMs: 1 }, { stage: 'routing', status: 'ok', durationMs: 1 }]
+  ]) {
+    assert.throws(() => chat.validateTraceData(invalid));
+  }
+});
+
+test('older-turn selection pinning via [data-turn-select] and unpinning via [data-return-latest] across turns', () => {
+  const document = testDocument(false);
+  const details = chat.createDetailsPanel(document);
+  document.body.append(details.element);
+
+  const requestId1 = '11111111-1111-4111-8111-111111111111';
+  const requestId2 = '22222222-2222-4222-8222-222222222222';
+  const turn1 = chat.createAnswerView(document, null, { onDetails: (view, trigger) => details.open(view, trigger) });
+  const turn2 = chat.createAnswerView(document, null, { onDetails: (view, trigger) => details.open(view, trigger) });
+
+  for (const frame of traceFrames().map(f => ({ ...f, requestId: requestId1 }))) turn1.accept(frame);
+  details.update(turn1.view);
+  assert.equal(details.selected, turn1.view);
+  assert.equal(details.pinned, false);
+  assert.equal(turn1.view.detailsButton.getAttribute('aria-pressed'), 'true');
+  assert.ok(turn1.view.detailsButton.getAttribute('data-turn-select') !== null);
+
+  for (const frame of traceFrames().map(f => ({ ...f, requestId: requestId2 }))) turn2.accept(frame);
+  details.update(turn2.view);
+  assert.equal(details.selected, turn2.view);
+  assert.equal(details.pinned, false);
+  assert.equal(turn1.view.detailsButton.getAttribute('aria-pressed'), 'false');
+  assert.equal(turn2.view.detailsButton.getAttribute('aria-pressed'), 'true');
+
+  // Click [data-turn-select] on Turn 1 to pin Details to Turn 1
+  turn1.view.detailsButton.dispatch('click');
+  assert.equal(details.selected, turn1.view);
+  assert.equal(details.pinned, true);
+  assert.equal(turn1.view.detailsButton.getAttribute('aria-pressed'), 'true');
+  assert.equal(turn2.view.detailsButton.getAttribute('aria-pressed'), 'false');
+  assert.match(nodeText(details.element), new RegExp(requestId1));
+  assert.match(nodeText(details.element), /Viewing pinned turn/);
+
+  const returnLatestButton = descendants(details.element).find(node => node.getAttribute?.('data-return-latest') !== null);
+  assert.ok(returnLatestButton, 'expected [data-return-latest] button when pinned');
+  const pinBanner = descendants(details.element).find(node => (node.className || '').includes('chat-details-pin-banner'));
+  assert.equal(pinBanner.hidden, false);
+
+  // Clicking [data-return-latest] unpins and returns Details to Turn 2
+  returnLatestButton.dispatch('click');
+  assert.equal(details.selected, turn2.view);
+  assert.equal(details.pinned, false);
+  assert.equal(pinBanner.hidden, true);
+  assert.equal(turn1.view.detailsButton.getAttribute('aria-pressed'), 'false');
+  assert.equal(turn2.view.detailsButton.getAttribute('aria-pressed'), 'true');
+  assert.match(nodeText(details.element), new RegExp(requestId2));
+});
+
+test('delegation to globalThis.PortfolioChatDetails passes DOM roots, callbacks and canonical turn payload', () => {
+  const createdConfigs = [];
+  const renderedTurns = [];
+  const previousGlobal = globalThis.PortfolioChatDetails;
+  globalThis.PortfolioChatDetails = {
+    createDetailsPanel(options) {
+      createdConfigs.push(options);
+      return {
+        renderTurn(turnRecord, meta) {
+          renderedTurns.push({ turnRecord, meta });
+        }
+      };
+    }
+  };
+  try {
+    const document = testDocument(false);
+    const details = chat.createDetailsPanel(document);
+    assert.equal(createdConfigs.length, 1);
+    const cfg = createdConfigs[0];
+    assert.ok(cfg.desktopRoot);
+    assert.equal(cfg.desktopRoot.getAttribute('data-chat-details'), '');
+    assert.ok(cfg.mobileRoot);
+    assert.ok(cfg.mobileDialog);
+    assert.equal(cfg.mobileDialog.getAttribute('data-chat-drawer'), '');
+    assert.ok(cfg.selectionRoot);
+    assert.equal(cfg.selectionRoot.getAttribute('data-chat-selected-turn'), '');
+    assert.equal(typeof cfg.onSelectTurn, 'function');
+    assert.equal(typeof cfg.onReturnToLatest, 'function');
+
+    const turn1 = chat.createAnswerView(document, null, { onDetails: (view, trigger) => details.open(view, trigger) });
+    const degradedNotice = evidence.notices.find(item => item.code === 'retrieval_degraded');
+    const answer = contracts.renderAnswer({ schemaVersion: '1.0.0', corpusVersion: corpus.corpusVersion, claimIds: [corpus.claims[0].id], noticeCodes: ['retrieval_degraded'] }, corpus);
+    const turn1Frames = [
+      { event: 'trace', data: { stage: 'routing', state: 'completed', elapsedMs: 1, routingMode: 'portfolio_mcp', needsRetrieval: true, requestedTools: ['search_public_evidence'] } },
+      { event: 'trace', data: { stage: 'retrieval', state: 'started', elapsedMs: 2, retrievalMode: 'degraded', indexVersion: 'idx-v1', embeddingModel: 'text-embedding-3-small' } },
+      { event: 'trace', data: { stage: 'retrieval', state: 'completed', elapsedMs: 12, durationMs: 10, retrievalMode: 'degraded', indexVersion: 'idx-v1', embeddingModel: 'text-embedding-3-small', matchedCount: 1, corpusVersion: corpus.corpusVersion } },
+      { event: 'trace', data: { stage: 'mcp', state: 'started', elapsedMs: 13, mcpMethod: 'tools/call', toolCallId: 'tool-1', toolName: 'search_public_evidence', attempt: 1 } },
+      { event: 'tool_start', data: { toolCallId: 'tool-1', name: 'search_public_evidence' } },
+      { event: 'tool_end', data: { toolCallId: 'tool-1', name: 'search_public_evidence', outcome: 'completed' } },
+      { event: 'trace', data: { stage: 'mcp', state: 'completed', elapsedMs: 25, durationMs: 12, mcpMethod: 'tools/call', toolCallId: 'tool-1', toolName: 'search_public_evidence', toolOutcome: 'completed', attempt: 1 } },
+      { event: 'trace', data: { stage: 'context', state: 'completed', elapsedMs: 26, corpusVersion: corpus.corpusVersion, claimCount: corpus.claims.length } },
+      { event: 'trace', data: { stage: 'budget', state: 'completed', elapsedMs: 27, reservedMicros: 3200, priceVersion: 'prices-v1' } },
+      { event: 'trace', data: { stage: 'provider', state: 'started', elapsedMs: 28, attempt: 1, provider: 'openai', model: 'gpt-6-luna' } },
+      { event: 'trace', data: { stage: 'provider', state: 'completed', elapsedMs: 128, durationMs: 100, attempt: 1, provider: 'openai', model: 'gpt-6-luna', usageStatus: 'known', inputTokens: 900, outputTokens: 50 } },
+      { event: 'trace', data: { stage: 'validation', state: 'started', elapsedMs: 129, attempt: 1 } },
+      { event: 'trace', data: { stage: 'validation', state: 'completed', elapsedMs: 131, durationMs: 2, attempt: 1, claimCount: 1 } },
+      { event: 'trace', data: { stage: 'settlement', state: 'completed', elapsedMs: 135, durationMs: 4, reservedMicros: 3200, chargedMicros: 410, priceVersion: 'prices-v1', usageStatus: 'known' } },
+      { event: 'conversation', data: { kind: 'portfolio', text: 'Here is the verified portfolio evidence.', suggestions: [] } },
+      { event: 'answer_block', data: answer.blocks[0] },
+      { event: 'answer_block', data: degradedNotice },
+      { event: 'sources', data: { corpusVersion: corpus.corpusVersion, sources: answer.sources } },
+      { event: 'done', data: { outcome: 'completed' } }
+    ].map((item, idx) => ({ schemaVersion: '1.0.0', requestId, generation, seq: idx + 1, ...item }));
+
+    for (const frame of turn1Frames) turn1.accept(frame);
+    details.update(turn1.view);
+
+    assert.ok(renderedTurns.length >= 1);
+    const lastCall = renderedTurns.at(-1);
+    assert.equal(lastCall.meta.isPinned, false);
+    assert.equal(lastCall.meta.latestTurnId, requestId);
+    assert.equal(lastCall.turnRecord.requestId, requestId);
+    assert.equal(lastCall.turnRecord.degraded, true);
+    assert.equal(lastCall.turnRecord.citations.length, 1);
+    assert.equal(lastCall.turnRecord.toolCalls.length, 1);
+    assert.equal(lastCall.turnRecord.toolCalls[0].name, 'search_public_evidence');
+    assert.equal(lastCall.turnRecord.Retrieval.retrievalMode, 'degraded');
+    assert.equal(lastCall.turnRecord.Retrieval.matchedCount, 1);
+    assert.equal(lastCall.turnRecord.Retrieval.indexVersion, 'idx-v1');
+    assert.ok(lastCall.turnRecord.limits.maxTurns > 0);
+    assert.ok(lastCall.turnRecord.trace.some(stage => stage.stage === 'mcp'));
+
+    // Verify turn footer summary badges on turn1
+    const turnBadges = descendants(turn1.element);
+    assert.ok(turnBadges.some(node => node.getAttribute?.('data-evidence-count') === '1'));
+    assert.ok(turnBadges.some(node => node.getAttribute?.('data-tool-count') === '1'));
+    assert.ok(turnBadges.some(node => node.getAttribute?.('data-retrieval-badge') === 'degraded'));
+    assert.ok(turnBadges.some(node => node.getAttribute?.('data-model-badge') === 'gpt-6-luna'));
+  } finally {
+    if (previousGlobal === undefined) delete globalThis.PortfolioChatDetails;
+    else globalThis.PortfolioChatDetails = previousGlobal;
+  }
+});
+
+test('canary and XSS payloads in assistant reply, citation title and tool summary render strictly via textContent without leaks', () => {
+  const canary = 'CANARY_UI_9f8a7b6c4d2e';
+  const xss = '<img src=x onerror=alert(1)>';
+  const document = testDocument(false);
+
+  const reply = chat.createAnswerView(document);
+  reply.accept({
+    schemaVersion: '1.0.0', requestId, generation, seq: 1, event: 'conversation',
+    data: { kind: 'general', text: `Reply ${canary} ${xss}`, suggestions: [`Chip ${xss}`] }
+  });
+  const claimBlock = {
+    ...evidence.claims[0],
+    title: `Title ${canary} ${xss}`,
+    text: `Claim text ${xss}`,
+    qualificationNotes: [`Note ${canary} ${xss}`]
+  };
+  const renderedClaim = chat.renderBlock(document, claimBlock);
+  const renderedTools = chat.renderToolsView(document, {
+    toolCalls: [{ toolCallId: 'tool-1', name: 'search_public_evidence', state: 'completed', durationMs: 12, summary: `Tool summary ${canary} ${xss}` }]
+  });
+
+  for (const root of [reply.element, renderedClaim, renderedTools]) {
+    const allNodes = descendants(root);
+    assert.ok(!allNodes.some(node => ['img', 'script', 'iframe', 'svg'].includes(node.tag)));
+    for (const node of allNodes) {
+      for (const [attrName, attrVal] of Object.entries(node.attributes || {})) {
+        assert.ok(!String(attrVal).includes(canary), `canary leaked into attribute ${attrName}`);
+        assert.ok(!String(attrVal).includes('onerror'), `XSS attribute leaked into ${attrName}`);
+      }
+    }
+  }
+  assert.ok(nodeText(reply.element).includes(`Reply ${canary} ${xss}`));
+  assert.ok(nodeText(renderedClaim).includes(`Title ${canary} ${xss}`));
+  assert.ok(nodeText(renderedTools).includes(`Tool summary ${canary} ${xss}`));
+
+  // Verify sanitizeHref and validatePayload and localStorage history TTL boundaries
+  assert.equal(chat.sanitizeHref(evidence.sources[0].url), evidence.sources[0].url);
+  for (const hostileUrl of [
+    'javascript:alert(1)',
+    'data:text/html,<script>alert(1)</script>',
+    'https://joshboyer.ca@evil.example/#projects/dell',
+    'https://evil-joshboyer.ca/#projects/dell',
+    `https://joshboyer.ca/#projects/dell?leak=${canary}`
+  ]) {
+    assert.throws(() => chat.sanitizeHref(hostileUrl));
+  }
+  assert.equal(chat.MAX_STORED_TURNS, 12);
+  assert.equal(chat.HISTORY_TTL_MS, 1800000);
+
+  // 3-point time boundary on localStorage history TTL (window-1, window, window+1 ms) and turn cap (11, 12, 13)
+  const storeMap = new Map();
+  const mockStorage = {
+    getItem: key => storeMap.get(key) ?? null,
+    setItem: (key, val) => storeMap.set(key, String(val)),
+    removeItem: key => storeMap.delete(key)
+  };
+  const baseTime = 1700000000000;
+  const turns13 = Array.from({ length: 13 }, (_, idx) => ({ requestId: `turn-${idx + 1}`, kind: 'general', completedAt: baseTime + idx }));
+  chat.saveStoredHistory(mockStorage, turns13.slice(0, 11), () => baseTime);
+  assert.equal(chat.loadStoredHistory(mockStorage, () => baseTime).length, 11);
+  chat.saveStoredHistory(mockStorage, turns13.slice(0, 12), () => baseTime);
+  assert.equal(chat.loadStoredHistory(mockStorage, () => baseTime).length, 12);
+  chat.saveStoredHistory(mockStorage, turns13, () => baseTime);
+  const loadedAtBefore = chat.loadStoredHistory(mockStorage, () => baseTime + chat.HISTORY_TTL_MS - 1);
+  assert.equal(loadedAtBefore.length, 12);
+  assert.equal(loadedAtBefore[0].requestId, 'turn-2');
+  const loadedAtExact = chat.loadStoredHistory(mockStorage, () => baseTime + chat.HISTORY_TTL_MS);
+  assert.equal(loadedAtExact.length, 12);
+  const loadedAfterExpiry = chat.loadStoredHistory(mockStorage, () => baseTime + chat.HISTORY_TTL_MS + 1);
+  assert.equal(loadedAfterExpiry.length, 0);
+
+  // Hostile objects: throwing getters, Proxies, __proto__, NUL/CRLF, and seeded fuzz test (seed=0x20261031)
+  const throwingGetter = {};
+  Object.defineProperty(throwingGetter, 'stage', {
+    enumerable: true,
+    get() { throw new Error(`Getter leak ${canary}`); }
+  });
+  const protoPoison = JSON.parse(`{"stage":"routing","state":"completed","elapsedMs":1,"routingMode":"general","needsRetrieval":false,"__proto__":{"leak":"${canary}"}}`);
+  const inherited = Object.assign(Object.create({ secret: canary }), {
+    schemaVersion: '1.0.0', requestId, text: 'Valid question'
+  });
+  for (const fn of [
+    () => chat.validateTraceData(throwingGetter),
+    () => chat.validateTraceData(protoPoison),
+    () => chat.validatePayload(inherited),
+    () => chat.validatePayload({ schemaVersion: '1.0.0', requestId, text: `Hello\u0000${canary}` }),
+    () => chat.validateConversation({ kind: 'general', text: `Hello\u0000${canary}`, suggestions: [] }),
+    () => chat.validateConversation({ kind: 'general', text: 'Valid', suggestions: [`Line1\r\n${canary}`] })
+  ]) {
+    assert.throws(fn, err => {
+      assert.ok(!String(err.message).includes(canary), 'error message must never leak canary');
+      return true;
+    });
+  }
+
+  let seed = 0x20261031;
+  const nextRand = () => {
+    seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+    return seed;
+  };
+  for (let i = 0; i < 60; i += 1) {
+    const r = nextRand();
+    const fuzzTrace = {
+      stage: ['routing', 'retrieval', 'mcp', 'invalid_stage'][r % 4],
+      state: ['started', 'completed', 'failed'][r % 3],
+      elapsedMs: (r % 70000) - 5000,
+      indexVersion: r % 2 === 0 ? `idx-${r}` : `idx-${canary}`
+    };
+    let firstOutcome;
+    try {
+      firstOutcome = JSON.stringify(chat.validateTraceData(fuzzTrace));
+    } catch (err) {
+      assert.ok(!String(err.message).includes(canary));
+      firstOutcome = `ERR:${err.code}`;
+    }
+    let secondOutcome;
+    try {
+      secondOutcome = JSON.stringify(chat.validateTraceData(fuzzTrace));
+    } catch (err) {
+      secondOutcome = `ERR:${err.code}`;
+    }
+    assert.equal(firstOutcome, secondOutcome, `fuzz iteration ${i} (seed=0x20261031) must be deterministic`);
+  }
 });

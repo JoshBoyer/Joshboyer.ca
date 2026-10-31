@@ -14,24 +14,82 @@
 })(globalThis, function () {
   'use strict';
   const VERSION = '1.0.0';
+  const MAX_STORED_TURNS = 12;
+  const HISTORY_TTL_MS = 30 * 60 * 1000;
+  const HISTORY_STORAGE_KEY = 'joshboyer_private_chat_history_v1';
   const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
   const SOURCE_URL = /^https:\/\/joshboyer\.ca\/(?:index\.html)?#projects\/(?:dell|foundations|headquarters|inquiry|workflows|newbusiness|renewals|upload|claims|takeover|continuity|sql|nexus)$/;
   const NOTICE_CODES = ['unsupported_evidence', 'limited_evidence', 'tools_unavailable', 'retrieval_degraded', 'general_knowledge'];
   const ERROR_CODES = ['unavailable', 'invalid_request', 'session_expired', 'rate_limited', 'budget_exhausted', 'deadline_exceeded', 'upstream_failure', 'validation_failed', 'request_conflict'];
   const STATUS_LABELS = { accepted: 'Request received', retrieving: 'Finding relevant evidence', thinking: 'Thinking about your request', validating: 'Checking the response' };
-  const TRACE_STAGES = Object.freeze({
-    context: { label: 'Approved context', explanation: 'The versioned public evidence supplied with this question.' },
-    budget: { label: 'Spending reservation', explanation: 'An allowance is held before a paid model request can start.' },
-    provider: { label: 'Model request', explanation: 'Provider activity reported by the backend. Timing covers the Gateway and model together.' },
-    validation: { label: 'Answer validation', explanation: 'The selected claims are checked against the approved public evidence.' },
-    settlement: { label: 'Usage settlement', explanation: 'Reported usage is reconciled with the reserved allowance.' }
+  const TAB_NAMES = Object.freeze(['trace', 'evidence', 'tools', 'context']);
+  const TAB_LABELS = Object.freeze({ trace: 'Trace', evidence: 'Evidence', tools: 'Tools', context: 'Context' });
+  const TOOL_NAMES = Object.freeze(['search_public_evidence', 'get_case_study', 'compare_job_requirements']);
+  const TOOL_LABELS = Object.freeze({
+    search_public_evidence: 'Search public evidence',
+    get_case_study: 'Get case study',
+    compare_job_requirements: 'Compare job requirements'
   });
-  const TRACE_STATES = Object.freeze({ started: 'Started', completed: 'Completed', failed: 'Failed', cancelled: 'Cancelled' });
-  const TRACE_FIELDS = ['stage', 'state', 'elapsedMs', 'durationMs', 'attempt', 'provider', 'model', 'corpusVersion', 'claimCount',
+  const ROUTING_MODES = Object.freeze(['general', 'portfolio_cag', 'portfolio_rag', 'portfolio_mcp']);
+  const ROUTING_MODE_LABELS = Object.freeze({
+    general: 'General conversation',
+    portfolio_cag: 'Approved context (CAG)',
+    portfolio_rag: 'Hybrid retrieval (RAG)',
+    portfolio_mcp: 'Portfolio tools (MCP)'
+  });
+  const RETRIEVAL_MODES = Object.freeze(['hybrid', 'deterministic_only', 'cag_only', 'degraded', 'skipped']);
+  const RETRIEVAL_MODE_LABELS = Object.freeze({
+    hybrid: 'Hybrid (vector + lexical)',
+    deterministic_only: 'Deterministic lexical',
+    cag_only: 'CAG context only',
+    degraded: 'Degraded fallback',
+    skipped: 'Skipped'
+  });
+  const MCP_METHODS = Object.freeze(['initialize', 'tools/list', 'tools/call']);
+  const TOOL_OUTCOMES = Object.freeze(['completed', 'error', 'timeout', 'skipped']);
+  const TRACE_STAGES = Object.freeze(['routing', 'retrieval', 'mcp', 'context', 'budget', 'provider', 'validation', 'settlement']);
+  const TRACE_LABELS = Object.freeze({
+    routing: 'Request routing',
+    retrieval: 'RAG Retrieval',
+    mcp: 'MCP Tools',
+    context: 'Approved context',
+    budget: 'Spending reservation',
+    provider: 'Model request',
+    validation: 'Answer validation',
+    settlement: 'Usage settlement'
+  });
+  const TRACE_STAGE_META = Object.freeze({
+    routing: { label: TRACE_LABELS.routing, explanation: 'Determines whether the turn uses general conversation, approved context, retrieval, or portfolio tools.' },
+    retrieval: { label: TRACE_LABELS.retrieval, explanation: 'Bounded hybrid evidence retrieval over the versioned public portfolio index.' },
+    mcp: { label: TRACE_LABELS.mcp, explanation: 'Authenticated read-only portfolio MCP tool execution.' },
+    context: { label: TRACE_LABELS.context, explanation: 'The versioned public evidence supplied with this question.' },
+    budget: { label: TRACE_LABELS.budget, explanation: 'An allowance is held before a paid model request can start.' },
+    provider: { label: TRACE_LABELS.provider, explanation: 'Provider activity reported by the backend. Timing covers the Gateway and model together.' },
+    validation: { label: TRACE_LABELS.validation, explanation: 'The selected claims are checked against the approved public evidence.' },
+    settlement: { label: TRACE_LABELS.settlement, explanation: 'Reported usage is reconciled with the reserved allowance.' }
+  });
+  const TRACE_STATES = Object.freeze({
+    started: 'Started',
+    completed: 'Completed',
+    failed: 'Failed',
+    cancelled: 'Cancelled',
+    skipped: 'Skipped',
+    degraded: 'Degraded'
+  });
+  const TRACE_FIELDS = [
+    'stage', 'state', 'elapsedMs', 'durationMs', 'attempt', 'provider', 'model', 'corpusVersion', 'claimCount',
+    'routingMode', 'needsRetrieval', 'requestedTools', 'indexVersion', 'retrievalMode', 'embeddingModel', 'matchedCount',
+    'toolCallId', 'toolName', 'mcpMethod', 'toolOutcome',
     'reservedMicros', 'chargedMicros', 'priceVersion', 'usageStatus', 'inputTokens', 'outputTokens', 'cacheReadInputTokens',
-    'cacheWriteInputTokens', 'reasoningOutputTokens', 'providerRequestId', 'gatewayRequestId', 'code', 'replayed'];
-  const TOKEN_FIELDS = Object.freeze({ inputTokens: 'Input tokens', outputTokens: 'Output tokens', cacheReadInputTokens: 'Cache read tokens',
-    cacheWriteInputTokens: 'Cache write tokens', reasoningOutputTokens: 'Reasoning tokens' });
+    'cacheWriteInputTokens', 'reasoningOutputTokens', 'providerRequestId', 'gatewayRequestId', 'code', 'replayed'
+  ];
+  const TOKEN_FIELDS = Object.freeze({
+    inputTokens: 'Input tokens',
+    outputTokens: 'Output tokens',
+    cacheReadInputTokens: 'Cache read tokens',
+    cacheWriteInputTokens: 'Cache write tokens',
+    reasoningOutputTokens: 'Reasoning tokens'
+  });
   const ERROR_LABELS = {
     unavailable: 'Chat is unavailable. Try again later.',
     invalid_request: 'Check your question and try again.',
@@ -48,6 +106,35 @@
   const integer = (value, min, max) => Number.isSafeInteger(value) && value >= min && value <= max;
   const exact = (value, keys) => record(value) && Object.keys(value).sort().join(',') === keys.slice().sort().join(',');
   const copy = value => JSON.parse(JSON.stringify(value));
+  function isSafeValue(value, seen = new Set()) {
+    try {
+      if (value === null || typeof value !== 'object') return true;
+      if (seen.has(value)) return false;
+      seen.add(value);
+      try {
+        if (Array.isArray(value)) {
+          if (Object.getPrototypeOf(value) !== Array.prototype || Object.getOwnPropertySymbols(value).length > 0) return false;
+          const descriptors = Object.getOwnPropertyDescriptors(value);
+          if (Object.keys(descriptors).length !== value.length + 1) return false;
+          for (let i = 0; i < value.length; i += 1) {
+            const desc = descriptors[i];
+            if (!desc || 'get' in desc || 'set' in desc || !desc.enumerable || !isSafeValue(desc.value, seen)) return false;
+          }
+          return true;
+        }
+        const proto = Object.getPrototypeOf(value);
+        if ((proto !== Object.prototype && proto !== null) || Object.getOwnPropertySymbols(value).length > 0) return false;
+        for (const [key, desc] of Object.entries(Object.getOwnPropertyDescriptors(value))) {
+          if (key === '__proto__' || 'get' in desc || 'set' in desc || !desc.enumerable || !isSafeValue(desc.value, seen)) return false;
+        }
+        return true;
+      } finally {
+        seen.delete(value);
+      }
+    } catch {
+      return false;
+    }
+  }
   function fail(code = 'validation_failed', status = 0) {
     const error = new Error(ERROR_LABELS[code] || ERROR_LABELS.unavailable);
     error.code = code;
@@ -61,8 +148,54 @@
     const keys = Object.keys(left);
     return keys.length === Object.keys(right).length && keys.every(key => Object.hasOwn(right, key) && equal(left[key], right[key]));
   }
+  function sanitizeHref(url) {
+    if (typeof url !== 'string' || url.length > 256 || !SOURCE_URL.test(url)) fail();
+    return url;
+  }
+  function validatePayload(payload, { maxMessageBytes = 8192, pageContexts = null } = {}) {
+    if (!isSafeValue(payload) ||
+        !exact(payload, Object.hasOwn(payload, 'pageContext') ? ['schemaVersion', 'requestId', 'text', 'pageContext'] : ['schemaVersion', 'requestId', 'text']) ||
+        payload.schemaVersion !== VERSION || !UUID.test(payload.requestId) || typeof payload.text !== 'string' || !payload.text.trim() ||
+        payload.text.includes('\u0000') || encoder.encode(payload.text).byteLength > maxMessageBytes ||
+        (payload.pageContext !== undefined && Array.isArray(pageContexts) && !pageContexts.includes(payload.pageContext))) {
+      fail('invalid_request');
+    }
+    return copy(payload);
+  }
+  function loadStoredHistory(storage, now = Date.now) {
+    if (!storage || typeof storage.getItem !== 'function') return [];
+    try {
+      const raw = storage.getItem(HISTORY_STORAGE_KEY);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      if (!record(parsed) || !integer(parsed.savedAt, 1, Number.MAX_SAFE_INTEGER) || !Array.isArray(parsed.turns)) {
+        storage.removeItem?.(HISTORY_STORAGE_KEY);
+        return [];
+      }
+      if (now() - parsed.savedAt > HISTORY_TTL_MS) {
+        storage.removeItem?.(HISTORY_STORAGE_KEY);
+        return [];
+      }
+      return parsed.turns.slice(-MAX_STORED_TURNS);
+    } catch {
+      try { storage.removeItem?.(HISTORY_STORAGE_KEY); } catch { /* ignore storage errors */ }
+      return [];
+    }
+  }
+  function saveStoredHistory(storage, turns, now = Date.now) {
+    if (!storage || typeof storage.setItem !== 'function' || !Array.isArray(turns)) return [];
+    const bounded = turns.slice(-MAX_STORED_TURNS);
+    try {
+      storage.setItem(HISTORY_STORAGE_KEY, JSON.stringify({ savedAt: now(), turns: bounded }));
+    } catch { /* ignore quota or private mode errors */ }
+    return bounded;
+  }
+  function clearStoredHistory(storage) {
+    if (!storage || typeof storage.removeItem !== 'function') return;
+    try { storage.removeItem(HISTORY_STORAGE_KEY); } catch { /* ignore storage errors */ }
+  }
   function validateEvidence(value) {
-    if (!exact(value, ['schemaVersion', 'corpusVersion', 'claims', 'sources', 'notices', 'pageContexts']) ||
+    if (!isSafeValue(value) || !exact(value, ['schemaVersion', 'corpusVersion', 'claims', 'sources', 'notices', 'pageContexts']) ||
         value.schemaVersion !== VERSION || !/^sha256:[0-9a-f]{64}$/.test(value.corpusVersion) ||
         !Array.isArray(value.claims) || value.claims.length > 512 || !Array.isArray(value.sources) || value.sources.length > 128 ||
         !Array.isArray(value.notices) || value.notices.length !== NOTICE_CODES.length || !Array.isArray(value.pageContexts)) fail();
@@ -95,11 +228,43 @@
     if (value.pageContexts.some(context => typeof context !== 'string' || !/^#(?:home|career|skills|projects(?:\/(?:dell|foundations|headquarters|inquiry|workflows|newbusiness|renewals|upload|claims|takeover|continuity|sql|nexus))?)$/.test(context))) fail();
     return copy(value);
   }
-  function validateTraceData(value) {
+  function validateTraceStageArray(stages) {
+    if (!Array.isArray(stages) || !stages.length || stages.length > 24) fail();
+    if (stages.every(item => record(item) && Object.hasOwn(item, 'elapsedMs') && Object.hasOwn(item, 'state'))) {
+      let lastElapsed = 0;
+      return stages.map(item => {
+        const checked = validateTracePoint(item);
+        if (checked.elapsedMs !== null) {
+          if (checked.elapsedMs < lastElapsed) fail();
+          lastElapsed = checked.elapsedMs;
+        }
+        return checked;
+      });
+    }
+    let previousOrder = -1;
+    const seen = new Set();
+    for (const item of stages) {
+      if (!record(item) || !TRACE_STAGES.includes(item.stage)) fail();
+      const order = TRACE_STAGES.indexOf(item.stage);
+      if (order <= previousOrder || seen.has(item.stage)) fail();
+      previousOrder = order;
+      seen.add(item.stage);
+      const status = item.status ?? item.state;
+      if (!['ok', 'skipped', 'degraded', 'started', 'completed', 'failed', 'cancelled'].includes(status)) fail();
+      if (Object.hasOwn(item, 'durationMs') && !integer(item.durationMs, 0, 60000)) fail();
+    }
+    const requiredCore = seen.has('routing') || stages.length > 5
+      ? ['routing', 'context', 'budget', 'provider', 'validation', 'settlement']
+      : ['context', 'budget', 'provider', 'validation', 'settlement'];
+    if (requiredCore.some(stage => !seen.has(stage))) fail();
+    return copy(stages);
+  }
+  function validateTracePoint(value) {
     if (!record(value) || Object.keys(value).some(key => !TRACE_FIELDS.includes(key)) ||
-        !Object.hasOwn(value, 'elapsedMs') || !Object.hasOwn(TRACE_STAGES, value.stage) || !Object.hasOwn(TRACE_STATES, value.state) ||
+        !Object.hasOwn(value, 'elapsedMs') || !Object.hasOwn(TRACE_STAGE_META, value.stage) ||
+        !['started', 'completed', 'failed', 'cancelled'].includes(value.state) ||
         (value.elapsedMs !== null && !integer(value.elapsedMs, 0, 60000))) fail();
-    for (const [field, maximum] of [['durationMs', 60000], ['claimCount', 512], ['reservedMicros', 25000000], ['chargedMicros', 25000000]]) {
+    for (const [field, maximum] of [['durationMs', 60000], ['claimCount', 512], ['reservedMicros', 25000000], ['chargedMicros', 25000000], ['matchedCount', 16]]) {
       if (Object.hasOwn(value, field) && !integer(value[field], 0, maximum)) fail();
     }
     if (Object.hasOwn(value, 'attempt') && !integer(value.attempt, 1, 2)) fail();
@@ -110,8 +275,21 @@
     if (Object.hasOwn(value, 'model') && !['gpt-6-luna', 'claude-haiku-5-5'].includes(value.model)) fail();
     if (value.provider && value.model && (value.provider === 'openai') !== (value.model === 'gpt-6-luna')) fail();
     if (Object.hasOwn(value, 'corpusVersion') && (typeof value.corpusVersion !== 'string' || !/^sha256:[0-9a-f]{64}$/.test(value.corpusVersion))) fail();
-    for (const field of ['priceVersion', 'providerRequestId', 'gatewayRequestId']) {
-      if (Object.hasOwn(value, field) && (typeof value[field] !== 'string' || !/^[A-Za-z0-9._:-]{1,128}$/.test(value[field]))) fail();
+    if (Object.hasOwn(value, 'routingMode') && !ROUTING_MODES.includes(value.routingMode)) fail();
+    if (Object.hasOwn(value, 'needsRetrieval') && typeof value.needsRetrieval !== 'boolean') fail();
+    if (Object.hasOwn(value, 'requestedTools')) {
+      if (!Array.isArray(value.requestedTools) || value.requestedTools.length > 4 ||
+          new Set(value.requestedTools).size !== value.requestedTools.length ||
+          value.requestedTools.some(tool => !TOOL_NAMES.includes(tool))) fail();
+    }
+    if (Object.hasOwn(value, 'retrievalMode') && !RETRIEVAL_MODES.includes(value.retrievalMode)) fail();
+    if (Object.hasOwn(value, 'embeddingModel') && value.embeddingModel !== 'text-embedding-3-small') fail();
+    if (Object.hasOwn(value, 'mcpMethod') && !MCP_METHODS.includes(value.mcpMethod)) fail();
+    if (Object.hasOwn(value, 'toolName') && !TOOL_NAMES.includes(value.toolName)) fail();
+    if (Object.hasOwn(value, 'toolCallId') && (typeof value.toolCallId !== 'string' || !/^tool-[a-zA-Z0-9_-]{1,64}$/.test(value.toolCallId) || /canary-/i.test(value.toolCallId))) fail();
+    if (Object.hasOwn(value, 'toolOutcome') && !TOOL_OUTCOMES.includes(value.toolOutcome)) fail();
+    for (const field of ['priceVersion', 'providerRequestId', 'gatewayRequestId', 'indexVersion']) {
+      if (Object.hasOwn(value, field) && (typeof value[field] !== 'string' || !/^[A-Za-z0-9._:-]{1,128}$/.test(value[field]) || /canary-/i.test(value[field]))) fail();
     }
     if (Object.hasOwn(value, 'usageStatus') && !['known', 'unknown'].includes(value.usageStatus)) fail();
     if (Object.hasOwn(value, 'code') && !ERROR_CODES.includes(value.code)) fail();
@@ -121,17 +299,31 @@
     if (value.chargedMicros !== undefined && value.reservedMicros !== undefined && value.chargedMicros > value.reservedMicros) fail();
     const required = value.stage === 'provider' ? ['attempt', 'provider', 'model']
       : value.stage === 'context' ? ['corpusVersion', 'claimCount']
+      : value.stage === 'routing' && value.state === 'completed' ? ['routingMode', 'needsRetrieval']
+      : value.stage === 'retrieval' && value.state === 'completed' ? ['retrievalMode', 'matchedCount', 'corpusVersion']
       : value.stage === 'budget' ? ['reservedMicros', 'priceVersion']
+      : value.stage === 'mcp' ? (value.mcpMethod === 'tools/call' ? ['mcpMethod', 'toolName', 'toolCallId'] : ['mcpMethod'])
       : value.stage === 'settlement' && value.state === 'completed' ? ['reservedMicros', 'chargedMicros', 'priceVersion'] : [];
     if (required.some(key => !Object.hasOwn(value, key))) fail();
     return copy(value);
   }
+  function validateTraceData(value) {
+    if (!isSafeValue(value)) fail();
+    if (Array.isArray(value)) return validateTraceStageArray(value);
+    if (record(value) && Array.isArray(value.stages)) return validateTraceStageArray(value.stages);
+    return validateTracePoint(value);
+  }
   function validateConversation(value) {
-    if (!exact(value, ['kind', 'text', 'suggestions']) || !['general', 'portfolio', 'clarification', 'refusal'].includes(value.kind) ||
-        typeof value.text !== 'string' || !value.text.trim() || encoder.encode(value.text).byteLength > 6000 ||
+    if (!isSafeValue(value) || !exact(value, ['kind', 'text', 'suggestions']) || !['general', 'portfolio', 'clarification', 'refusal'].includes(value.kind) ||
+        typeof value.text !== 'string' || !value.text.trim() || value.text.includes('\u0000') || encoder.encode(value.text).byteLength > 6000 ||
         !Array.isArray(value.suggestions) || value.suggestions.length > 3 ||
-        value.suggestions.some(text => typeof text !== 'string' || !text.trim() || encoder.encode(text).byteLength > 200)) fail();
+        value.suggestions.some(text => typeof text !== 'string' || !text.trim() || text.includes('\u0000') || /[\r\n\u2028\u2029]/.test(text) || encoder.encode(text).byteLength > 200)) fail();
     return copy(value);
+  }
+  function traceStageKey(trace) {
+    if (['provider', 'validation'].includes(trace.stage)) return `${trace.stage}-${trace.attempt ?? 1}`;
+    if (trace.stage === 'mcp') return `mcp-${trace.toolCallId ?? trace.mcpMethod ?? (trace.attempt ?? 1)}`;
+    return trace.stage;
   }
   function createEventValidator({ requestId, generation, evidence, allowTools = false }) {
     if (!UUID.test(requestId) || !UUID.test(generation)) fail();
@@ -162,10 +354,10 @@
             const trace = validateTraceData(data);
             if (answer || conversation || receipt || traceCount >= 24 || (trace.elapsedMs !== null && trace.elapsedMs < traceElapsed) ||
                 (trace.corpusVersion && trace.corpusVersion !== approved.corpusVersion)) fail();
-            const key = ['provider', 'validation'].includes(trace.stage) ? `${trace.stage}-${trace.attempt ?? 1}` : trace.stage;
+            const key = traceStageKey(trace);
             const previous = traceStages.get(key);
             if ((previous && previous !== 'started') || (previous === 'started' && trace.state === 'started') ||
-                (!previous && ['provider', 'validation'].includes(trace.stage) && trace.state !== 'started')) fail();
+                (!previous && ['provider', 'validation', 'mcp'].includes(trace.stage) && trace.state !== 'started')) fail();
             traceCount += 1;
             if (trace.elapsedMs !== null) traceElapsed = trace.elapsedMs;
             traceStages.set(key, trace.state);
@@ -174,7 +366,7 @@
           case 'tool_start':
             if (!allowTools || answer || conversation || receipt || !exact(data, ['toolCallId', 'name']) ||
                 !/^tool-[a-zA-Z0-9_-]{1,64}$/.test(data.toolCallId) || tools.has(data.toolCallId) || tools.size >= 4 ||
-                !['search_public_evidence', 'get_case_study', 'compare_job_requirements'].includes(data.name)) fail();
+                !TOOL_NAMES.includes(data.name)) fail();
             tools.set(data.toolCallId, data.name); pendingTools.add(data.toolCallId);
             break;
           case 'tool_end':
@@ -337,10 +529,7 @@
     async function run(payload, onEvent, isRetry) {
       if (active) fail('request_conflict');
       if (!config?.available || !config.capabilities.chat || !evidence) fail('unavailable');
-      if (!exact(payload, Object.hasOwn(payload, 'pageContext') ? ['schemaVersion', 'requestId', 'text', 'pageContext'] : ['schemaVersion', 'requestId', 'text']) ||
-          payload.schemaVersion !== VERSION || !UUID.test(payload.requestId) || typeof payload.text !== 'string' || !payload.text.trim() ||
-          encoder.encode(payload.text).byteLength > config.limits.maxMessageBytes ||
-          (payload.pageContext !== undefined && !evidence.pageContexts.includes(payload.pageContext))) fail('invalid_request');
+      validatePayload(payload, { maxMessageBytes: config.limits.maxMessageBytes, pageContexts: evidence.pageContexts });
       const operation = { controller: new AbortController(), epoch, request: copy(payload), validator: null };
       active = operation;
       lastRequest = copy(payload);
@@ -435,9 +624,9 @@
     const section = element(document, 'div', 'chat-sources');
     section.append(element(document, 'p', 'chat-small-label', sources.length ? 'Public sources' : 'No supported source for this claim'));
     sources.forEach((source, index) => {
-      if (!SOURCE_URL.test(source.url)) fail();
+      const safeUrl = sanitizeHref(source.url);
       const link = element(document, 'a', '', `${index + 1}. ${source.id.replace(/^source-/, '').replace(/-/g, ' ')}`);
-      link.href = source.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; section.append(link);
+      link.href = safeUrl; link.target = '_blank'; link.rel = 'noopener noreferrer'; section.append(link);
     });
     return section;
   }
@@ -446,6 +635,77 @@
   }
   function formatAllowance(micros) {
     return (micros / 1000000).toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 6 });
+  }
+  function renderToolsInto(document, section, state = {}) {
+    const toolCalls = Array.isArray(state?.toolCalls) ? state.toolCalls : [];
+    if (!toolCalls.length) {
+      const emptyNote = state?.contextData?.mcpEnabled === false
+        ? 'No tools called for this request. Portfolio MCP tools are not enabled in this preview.'
+        : 'No tools called for this request. General conversation and turns answered directly from the approved context pack skip MCP tool calls.';
+      section.replaceChildren(element(document, 'p', 'chat-tools-empty', emptyNote));
+      return section;
+    }
+    const cards = toolCalls.map(call => {
+      const card = element(document, 'article', 'chat-tool-card');
+      const canonicalName = call.name || call.toolName || call.mcpMethod || 'mcp';
+      const label = TOOL_LABELS[canonicalName] ? `${TOOL_LABELS[canonicalName]} (${canonicalName})` : canonicalName;
+      const methodNode = element(document, 'span', 'chat-tool-method', label);
+      const outcomeValue = call.state || call.status || call.outcome || 'completed';
+      const outcomeLabel = outcomeValue === 'running' ? 'Running'
+        : outcomeValue === 'error' ? 'Error'
+        : outcomeValue === 'timeout' ? 'Timed out'
+        : outcomeValue === 'skipped' ? 'Skipped' : 'Completed';
+      const outcomeNode = element(document, 'span', `chat-tool-outcome is-${outcomeValue}`, outcomeLabel);
+      card.append(methodNode, outcomeNode);
+      if (call.toolCallId) card.append(element(document, 'p', 'chat-trace-id', String(call.toolCallId)));
+      if (call.durationMs !== undefined && integer(call.durationMs, 0, 60000)) {
+        card.append(element(document, 'p', 'chat-trace-note', `Duration · ${formatTraceTime(call.durationMs)}`));
+      }
+      if (typeof call.summary === 'string' && call.summary.length) {
+        card.append(element(document, 'p', 'chat-tool-summary', call.summary));
+      }
+      return card;
+    });
+    section.replaceChildren(...cards);
+    return section;
+  }
+  function renderToolsView(document, state = {}) {
+    const section = element(document, 'section', 'chat-request-tools');
+    return renderToolsInto(document, section, state);
+  }
+  function renderContextInto(document, section, state = {}) {
+    const contextData = state?.contextData || {};
+    const card = element(document, 'div', 'chat-context-card');
+    const list = element(document, 'dl', 'chat-trace-facts chat-context-grid');
+    function addRow(label, value, monospace = false) {
+      list.append(element(document, 'dt', '', label), element(document, 'dd', monospace ? 'chat-trace-id' : '', value));
+    }
+    const modeLabel = state?.kind === 'general' ? 'General conversation'
+      : state?.kind === 'portfolio' ? 'Portfolio-grounded'
+      : state?.kind === 'clarification' ? 'Clarification'
+      : state?.kind === 'refusal' ? 'Refusal'
+      : state?.claims?.length ? 'Canonical portfolio evidence' : 'Pending';
+    addRow('Response mode', modeLabel);
+    if (contextData.routingMode) addRow('Routing mode', ROUTING_MODE_LABELS[contextData.routingMode] || contextData.routingMode);
+    addRow('Page context', contextData.pageContext || 'None (standalone preview)', Boolean(contextData.pageContext));
+    if (contextData.corpusVersion) addRow('Approved CAG corpus', contextData.corpusVersion, true);
+    if (contextData.claimCount !== undefined) addRow('Approved claims', String(contextData.claimCount));
+    const retrievalText = contextData.retrievalMode
+      ? (RETRIEVAL_MODE_LABELS[contextData.retrievalMode] || contextData.retrievalMode)
+      : state?.kind === 'general' ? 'Skipped for general conversation' : 'CAG context only';
+    addRow('Retrieval status', retrievalText);
+    if (contextData.indexVersion) addRow('Index version', contextData.indexVersion, true);
+    if (contextData.matchedCount !== undefined) addRow('Matched evidence', String(contextData.matchedCount));
+    if (contextData.remainingTurns !== undefined && contextData.maxTurns !== undefined) {
+      addRow('Session turn allowance', `${contextData.remainingTurns} of ${contextData.maxTurns} turns remaining`);
+    }
+    card.append(list);
+    section.replaceChildren(card);
+    return section;
+  }
+  function renderContextView(document, state = {}) {
+    const section = element(document, 'section', 'chat-request-context');
+    return renderContextInto(document, section, state);
   }
   function createRequestTimeline(document) {
     const panel = element(document, 'details', 'chat-request-trace'); panel.open = true; panel.setAttribute('aria-live', 'off');
@@ -459,7 +719,7 @@
     const footer = element(document, 'dl', 'chat-trace-request');
     const requestLabel = element(document, 'dt', '', 'Request ID');
     const requestValue = element(document, 'dd', 'chat-trace-id', 'Not assigned yet');
-    const note = element(document, 'p', 'chat-trace-note', 'Only reported activity appears here. Retrieval and tools are not enabled in this preview.');
+    const note = element(document, 'p', 'chat-trace-note', 'Only reported activity appears here.');
     footer.append(requestLabel, requestValue); content.append(waiting, rows, footer, note); panel.append(summary, content);
     const groups = new Map();
     let count = 0, elapsed = 0, requestId, finished = false, corpusValue, replayed = false, finalOutcome;
@@ -470,14 +730,39 @@
     function addFact(list, label, value, monospace = false) {
       list.append(element(document, 'dt', '', label), element(document, 'dd', monospace ? 'chat-trace-id' : '', value));
     }
+    function resolveVisualState(value) {
+      if (value.retrievalMode === 'skipped' || value.toolOutcome === 'skipped') return { key: 'skipped', label: TRACE_STATES.skipped };
+      if (value.retrievalMode === 'degraded') return { key: 'degraded is-failed', label: TRACE_STATES.degraded };
+      return { key: value.state, label: TRACE_STATES[value.state] };
+    }
+    function formatStageLabel(value) {
+      const base = TRACE_STAGE_META[value.stage].label;
+      if (value.stage === 'mcp') {
+        const suffix = value.toolName || value.mcpMethod;
+        return `${base}${suffix ? ` · ${suffix}` : ''}${value.attempt ? ` · attempt ${value.attempt}` : ''}`;
+      }
+      return `${base}${value.attempt ? ` · attempt ${value.attempt}` : ''}`;
+    }
     function updateGroup(group) {
       const value = group.latest;
-      group.row.className = `chat-trace-stage is-${value.state}`;
-      group.state.textContent = TRACE_STATES[value.state];
+      const visual = resolveVisualState(value);
+      group.row.className = `chat-trace-stage is-${visual.key}${value.replayed ? ' is-replayed' : ''}`;
+      group.state.textContent = visual.label;
       group.time.textContent = value.elapsedMs === null
         ? (value.replayed ? 'Original request' : 'Timing not recorded')
         : value.durationMs !== undefined ? formatTraceTime(value.durationMs) : `at ${formatTraceTime(value.elapsedMs)}`;
       const facts = element(document, 'dl', 'chat-trace-facts');
+      if (value.routingMode) addFact(facts, 'Routing mode', `${ROUTING_MODE_LABELS[value.routingMode] || value.routingMode} (${value.routingMode})`);
+      if (value.needsRetrieval !== undefined) addFact(facts, 'Needs retrieval', value.needsRetrieval ? 'Yes' : 'No');
+      if (value.requestedTools?.length) addFact(facts, 'Requested tools', value.requestedTools.join(', '), true);
+      if (value.retrievalMode) addFact(facts, 'Retrieval mode', `${RETRIEVAL_MODE_LABELS[value.retrievalMode] || value.retrievalMode} (${value.retrievalMode})`);
+      if (value.indexVersion) addFact(facts, 'Index version', value.indexVersion, true);
+      if (value.embeddingModel) addFact(facts, 'Embedding model', value.embeddingModel, true);
+      if (value.matchedCount !== undefined) addFact(facts, 'Matched evidence', value.matchedCount.toLocaleString('en-CA'));
+      if (value.mcpMethod) addFact(facts, 'MCP method', value.mcpMethod, true);
+      if (value.toolName) addFact(facts, 'Tool name', value.toolName, true);
+      if (value.toolCallId) addFact(facts, 'Tool call ID', value.toolCallId, true);
+      if (value.toolOutcome) addFact(facts, 'Tool outcome', value.toolOutcome);
       if (value.provider) addFact(facts, 'Provider', value.provider === 'openai' ? 'OpenAI' : 'Anthropic');
       if (value.model) addFact(facts, 'Model', value.model, true);
       if (value.attempt !== undefined) addFact(facts, 'Attempt', String(value.attempt));
@@ -503,9 +788,9 @@
       const points = element(document, 'ol', 'chat-trace-points');
       for (const point of group.points) {
         const at = point.elapsedMs === null ? (point.replayed ? 'recorded on original request' : 'timing not recorded') : `at ${formatTraceTime(point.elapsedMs)}`;
-        points.append(element(document, 'li', '', `${TRACE_STATES[point.state]} · ${at}`));
+        points.append(element(document, 'li', '', `${ resolveVisualState(point).label } · ${at}`));
       }
-      group.body.replaceChildren(element(document, 'p', 'chat-trace-explanation', TRACE_STAGES[value.stage].explanation), facts, points);
+      group.body.replaceChildren(element(document, 'p', 'chat-trace-explanation', TRACE_STAGE_META[value.stage].explanation), facts, points);
       if (value.reservedMicros !== undefined || value.chargedMicros !== undefined) {
         group.body.append(element(document, 'p', 'chat-trace-ledger-note', 'Amounts are application ledger estimates, not provider invoices.'));
       }
@@ -516,29 +801,32 @@
       accept(frame) {
         if (finished || frame.event !== 'trace') fail();
         identify(frame.requestId);
-        const value = validateTraceData(frame.data);
+        const value = validateTracePoint(frame.data);
         if (count >= 24 || (value.elapsedMs !== null && value.elapsedMs < elapsed)) fail();
         count += 1;
         if (value.elapsedMs !== null) elapsed = value.elapsedMs;
         if (value.corpusVersion) corpusValue = value.corpusVersion;
         if (value.replayed) replayed = true;
         waiting.hidden = true;
-        const key = ['provider', 'validation'].includes(value.stage) ? `${value.stage}-${value.attempt ?? 1}` : value.stage;
+        const key = traceStageKey(value);
         let group = groups.get(key);
         if (!group) {
           const row = element(document, 'li', 'chat-trace-stage');
           const detail = element(document, 'details', 'chat-trace-stage-detail');
           const rowSummary = element(document, 'summary', 'chat-trace-stage-summary');
           const ordinal = element(document, 'span', 'chat-trace-ordinal', String(groups.size + 1).padStart(2, '0'));
-          const label = element(document, 'span', 'chat-trace-stage-name', `${TRACE_STAGES[value.stage].label}${value.attempt ? ` · attempt ${value.attempt}` : ''}`);
+          const label = element(document, 'span', 'chat-trace-stage-name', formatStageLabel(value));
           const state = element(document, 'span', 'chat-trace-stage-state');
           const time = element(document, 'span', 'chat-trace-stage-time');
           const body = element(document, 'div', 'chat-trace-stage-body');
           rowSummary.append(ordinal, label, state, time); detail.append(rowSummary, body); row.append(detail); rows.append(row);
-          group = { row, body, state, time, latest: {}, points: [] }; groups.set(key, group);
+          group = { row, label, body, state, time, latest: {}, points: [] }; groups.set(key, group);
+        } else {
+          group.label.textContent = formatStageLabel({ ...group.latest, ...value });
         }
         group.latest = { ...group.latest, ...value }; group.points.push(value); updateGroup(group);
-        summaryState.textContent = `${TRACE_STAGES[value.stage].label} · ${TRACE_STATES[value.state].toLowerCase()}${replayed ? ' · recorded run' : ''}`;
+        const visual = resolveVisualState(group.latest);
+        summaryState.textContent = `${TRACE_STAGE_META[value.stage].label} · ${visual.label.toLowerCase()}${replayed ? ' · recorded run' : ''}`;
       },
       finish(outcome, { retained = false } = {}) {
         finished = true;
@@ -570,41 +858,203 @@
     const body = element(document, 'div', 'chat-answer-text'); renderParagraphs(document, body, 'Thinking…');
     const suggestions = element(document, 'div', 'chat-suggestions');
     const actions = element(document, 'div', 'chat-response-actions');
+    const badgeRow = element(document, 'div', 'chat-evidence-refs');
     const detailsButton = element(document, 'button', 'chat-view-details', 'View details'); detailsButton.type = 'button';
     detailsButton.setAttribute('aria-label', 'View request evidence and trace');
-    actions.append(detailsButton);
+    detailsButton.setAttribute('data-turn-select', '');
+    detailsButton.setAttribute('data-inspect-request', '');
+    detailsButton.setAttribute('aria-pressed', 'false');
+    actions.append(badgeRow, detailsButton);
     card.append(element(document, 'p', 'chat-small-label', 'Assistant'), body, suggestions, actions);
     const evidence = element(document, 'section', 'chat-request-evidence');
     const evidenceIntro = element(document, 'p', 'chat-evidence-intro', 'Evidence references will appear here if this response uses the public portfolio.');
     const blocks = element(document, 'div', 'chat-evidence-blocks');
     const sources = element(document, 'div', 'chat-evidence-sources');
     evidence.append(evidenceIntro, blocks, sources);
-    const candidate = { element: card, timeline, evidence, body, detailsButton, requestId: null, kind: null, claims: [], notices: [], hasConversation: false };
+    const tools = element(document, 'section', 'chat-request-tools');
+    const context = element(document, 'section', 'chat-request-context');
+    const candidate = {
+      element: card,
+      timeline,
+      evidence,
+      tools,
+      context,
+      body,
+      detailsButton,
+      requestId: null,
+      turnId: null,
+      kind: null,
+      replyText: '',
+      claims: [],
+      notices: [],
+      sourcesList: [],
+      tracePoints: [],
+      toolCalls: [],
+      contextData: {
+        pageContext: options.pageContext,
+        mcpEnabled: options.mcpEnabled,
+        ragEnabled: options.ragEnabled,
+        remainingTurns: options.remainingTurns,
+        maxTurns: options.maxTurns ?? 8
+      },
+      limits: options.limits || { maxMessageBytes: 8192, maxTurns: 8, maxToolsPerTurn: 4, turnDeadlineMs: 60000 },
+      degraded: false,
+      hasConversation: false
+    };
+    renderToolsInto(document, tools, candidate);
+    renderContextInto(document, context, candidate);
     detailsButton.addEventListener('click', () => options.onDetails?.(candidate, detailsButton));
     let current = previous?.view || candidate;
+    function updateSummaryBadges() {
+      const pills = [];
+      if (current.claims.length > 0) {
+        const pill = element(document, 'span', 'chat-evidence-pill', `${current.claims.length} ${current.claims.length === 1 ? 'citation' : 'citations'}`);
+        pill.setAttribute('data-evidence-count', String(current.claims.length));
+        pills.push(pill);
+      }
+      if (current.toolCalls.length > 0) {
+        const pill = element(document, 'span', 'chat-evidence-pill', `${current.toolCalls.length} ${current.toolCalls.length === 1 ? 'tool' : 'tools'}`);
+        pill.setAttribute('data-tool-count', String(current.toolCalls.length));
+        pills.push(pill);
+      }
+      if (current.contextData.retrievalMode) {
+        const pill = element(document, 'span', 'chat-evidence-pill', `RAG: ${current.contextData.retrievalMode}`);
+        pill.setAttribute('data-retrieval-badge', current.contextData.retrievalMode);
+        pills.push(pill);
+      }
+      if (current.contextData.completedModel) {
+        const modelText = `${current.contextData.completedModel}${current.contextData.completedAttempt > 1 ? ' · fallback' : ''}`;
+        const pill = element(document, 'span', 'chat-model-badge', modelText);
+        pill.setAttribute('data-model-badge', current.contextData.completedModel);
+        pills.push(pill);
+      }
+      badgeRow.replaceChildren(...pills);
+    }
+    function recordToolTrace(data) {
+      if (data.mcpMethod !== 'tools/call' && !data.toolName && !data.toolCallId) return;
+      const id = data.toolCallId || `${data.mcpMethod}-${data.attempt ?? 1}`;
+      let entry = current.toolCalls.find(item => item.toolCallId === id);
+      const nextState = data.state === 'started' ? 'running' : (data.toolOutcome || (data.state === 'failed' ? 'error' : 'completed'));
+      if (!entry) {
+        entry = {
+          toolCallId: id,
+          name: data.toolName || data.mcpMethod,
+          toolName: data.toolName || data.mcpMethod,
+          mcpMethod: data.mcpMethod || 'tools/call',
+          state: nextState,
+          status: nextState,
+          outcome: data.toolOutcome || null,
+          ...(data.durationMs === undefined ? {} : { durationMs: data.durationMs })
+        };
+        current.toolCalls.push(entry);
+      } else {
+        entry.state = nextState;
+        entry.status = nextState;
+        if (data.toolOutcome) entry.outcome = data.toolOutcome;
+        if (data.durationMs !== undefined) entry.durationMs = data.durationMs;
+      }
+      if (data.state === 'failed' || data.toolOutcome === 'error' || data.toolOutcome === 'timeout') current.degraded = true;
+    }
     function finishText(outcome) {
       if (current.hasConversation) return;
       if (outcome === 'completed' || outcome === 'limited') {
         const text = current.claims.length
           ? current.claims.map(claim => [claim.text, ...claim.qualificationNotes].join('\n\n')).join('\n\n')
           : current.notices.map(notice => notice.text).join('\n\n');
-        renderParagraphs(document, current.body, text || 'There is no supported response available for this request.');
-      } else renderParagraphs(document, current.body, outcome === 'cancelled' ? 'Stopped before a response was returned.' : 'The response was interrupted. You can check this request again.');
+        current.replyText = text || 'There is no supported response available for this request.';
+        renderParagraphs(document, current.body, current.replyText);
+      } else {
+        current.replyText = outcome === 'cancelled' ? 'Stopped before a response was returned.' : 'The response was interrupted. You can check this request again.';
+        renderParagraphs(document, current.body, current.replyText);
+      }
     }
     return Object.freeze({
       get view() { return current; },
       get element() { return current.element; },
-      identify(id) { timeline.identify(id); candidate.requestId = id; },
+      identify(id) {
+        timeline.identify(id);
+        candidate.requestId = id;
+        candidate.turnId = id;
+        card.setAttribute('data-turn-id', id);
+        detailsButton.setAttribute('data-turn-select', id);
+      },
       accept(frame) {
         // An empty cancellation receipt must not replace details already seen.
         // A real replay starts a fresh view instead of appending duplicate points.
-        if (['trace', 'conversation', 'answer_block'].includes(frame.event)) current = candidate;
+        if (['trace', 'conversation', 'answer_block', 'tool_start', 'tool_end'].includes(frame.event)) current = candidate;
         current.requestId = frame.requestId;
-        if (frame.event === 'trace') current.timeline.accept(frame);
-        else current.timeline.identify(frame.requestId);
+        current.turnId = frame.requestId;
+        card.setAttribute('data-turn-id', frame.requestId);
+        detailsButton.setAttribute('data-turn-select', frame.requestId);
+        if (frame.event === 'trace') {
+          current.timeline.accept(frame);
+          const point = copy(frame.data);
+          current.tracePoints.push(point);
+          if (point.stage === 'routing') {
+            if (point.routingMode) current.contextData.routingMode = point.routingMode;
+            if (point.needsRetrieval !== undefined) current.contextData.needsRetrieval = point.needsRetrieval;
+            if (point.requestedTools) current.contextData.requestedTools = [...point.requestedTools];
+          } else if (point.stage === 'retrieval') {
+            if (point.retrievalMode) current.contextData.retrievalMode = point.retrievalMode;
+            if (point.indexVersion) current.contextData.indexVersion = point.indexVersion;
+            if (point.embeddingModel) current.contextData.embeddingModel = point.embeddingModel;
+            if (point.matchedCount !== undefined) current.contextData.matchedCount = point.matchedCount;
+            if (point.corpusVersion) current.contextData.corpusVersion = point.corpusVersion;
+            if (point.state === 'failed' || point.retrievalMode === 'degraded') current.degraded = true;
+          } else if (point.stage === 'context') {
+            if (point.corpusVersion) current.contextData.corpusVersion = point.corpusVersion;
+            if (point.claimCount !== undefined) current.contextData.claimCount = point.claimCount;
+          } else if (point.stage === 'mcp') {
+            recordToolTrace(point);
+          } else if (point.stage === 'provider') {
+            if (point.model) current.contextData.model = point.model;
+            if (point.provider) current.contextData.provider = point.provider;
+            if (point.attempt !== undefined) current.contextData.attempt = point.attempt;
+            if (point.state === 'completed' && point.model) {
+              current.contextData.completedModel = point.model;
+              current.contextData.completedAttempt = point.attempt ?? 1;
+            }
+            if ((point.attempt ?? 1) > 1 || point.state === 'failed') current.degraded = true;
+          }
+        } else {
+          current.timeline.identify(frame.requestId);
+        }
+        if (frame.event === 'tool_start') {
+          const existing = current.toolCalls.find(item => item.toolCallId === frame.data.toolCallId);
+          if (!existing) {
+            current.toolCalls.push({
+              toolCallId: frame.data.toolCallId,
+              name: frame.data.name,
+              toolName: frame.data.name,
+              mcpMethod: 'tools/call',
+              state: 'running',
+              status: 'running',
+              outcome: null
+            });
+          }
+        }
+        if (frame.event === 'tool_end') {
+          const existing = current.toolCalls.find(item => item.toolCallId === frame.data.toolCallId);
+          if (existing) {
+            existing.state = frame.data.outcome;
+            existing.status = frame.data.outcome;
+            existing.outcome = frame.data.outcome;
+          } else {
+            current.toolCalls.push({
+              toolCallId: frame.data.toolCallId,
+              name: frame.data.name,
+              toolName: frame.data.name,
+              mcpMethod: 'tools/call',
+              state: frame.data.outcome,
+              status: frame.data.outcome,
+              outcome: frame.data.outcome
+            });
+          }
+          if (frame.data.outcome === 'error' || frame.data.outcome === 'timeout') current.degraded = true;
+        }
         if (frame.event === 'conversation') {
           const conversation = validateConversation(frame.data);
-          current.kind = conversation.kind; current.hasConversation = true;
+          current.kind = conversation.kind; current.hasConversation = true; current.replyText = conversation.text;
           renderParagraphs(document, current.body, conversation.text);
           suggestions.replaceChildren(...conversation.suggestions.map(text => {
             const button = element(document, 'button', '', text); button.type = 'button';
@@ -616,10 +1066,15 @@
         }
         if (frame.event === 'answer_block') {
           if (frame.data.kind === 'claim') current.claims.push(copy(frame.data));
-          else current.notices.push(copy(frame.data));
+          else {
+            current.notices.push(copy(frame.data));
+            if (['retrieval_degraded', 'tools_unavailable'].includes(frame.data.code)) current.degraded = true;
+          }
           blocks.append(renderBlock(document, frame.data));
         }
         if (frame.event === 'sources') {
+          current.sourcesList = copy(frame.data.sources);
+          current.contextData.corpusVersion = frame.data.corpusVersion;
           if (frame.data.sources.length) {
             evidenceIntro.textContent = 'Selected public portfolio evidence. These references validate the displayed evidence records, not every sentence of the model’s response.';
             sources.replaceChildren(renderSources(document, frame.data.sources),
@@ -629,12 +1084,19 @@
           }
         }
         if (frame.event === 'done') { current.timeline.finish(frame.data.outcome, { retained: current !== candidate }); finishText(frame.data.outcome); }
-        if (frame.event === 'error') { current.timeline.finish('interrupted', { retained: current !== candidate }); finishText('interrupted'); }
+        if (frame.event === 'error') { current.degraded = true; current.timeline.finish('interrupted', { retained: current !== candidate }); finishText('interrupted'); }
+        renderToolsInto(document, current.tools, current);
+        renderContextInto(document, current.context, current);
+        updateSummaryBadges();
       },
       fail(outcome) {
         const retained = current !== candidate;
+        current.degraded = true;
         current.timeline.finish(retained ? current.timeline.outcome || outcome : outcome, { retained });
         finishText(outcome);
+        renderToolsInto(document, current.tools, current);
+        renderContextInto(document, current.context, current);
+        updateSummaryBadges();
       }
     });
   }
@@ -643,57 +1105,216 @@
     return Object.freeze({
       update(view) {
         const previousLatest = latest; latest = view;
-        if (!selected || (!pinned && selected === previousLatest) || (view.requestId && selected.requestId === view.requestId)) selected = view;
+        if (!selected || (!pinned && selected === previousLatest) || (view?.requestId && selected?.requestId === view.requestId)) {
+          selected = view;
+          if (selected === latest) pinned = false;
+        }
         return selected;
       },
-      select(view) { selected = view; pinned = view !== latest; return selected; },
+      select(view) { selected = view; pinned = Boolean(view && latest && view !== latest); return selected; },
+      returnToLatest() { selected = latest; pinned = false; return selected; },
       clear() { latest = selected = undefined; pinned = false; },
       get selected() { return selected; },
-      get pinned() { return pinned; }
+      get pinned() { return pinned; },
+      get latest() { return latest; }
     });
+  }
+  function toTurnRecord(view) {
+    if (!view) return null;
+    const contextData = view.contextData || {};
+    const retrievalMeta = {
+      mode: contextData.retrievalMode || 'skipped',
+      retrievalMode: contextData.retrievalMode || 'skipped',
+      matchedCount: contextData.matchedCount ?? 0,
+      indexVersion: contextData.indexVersion || null,
+      embeddingModel: contextData.embeddingModel || null,
+      corpusVersion: contextData.corpusVersion || null,
+      degraded: Boolean(view.degraded || contextData.retrievalMode === 'degraded')
+    };
+    return {
+      turnId: view.turnId || view.requestId || null,
+      requestId: view.requestId || null,
+      kind: view.kind || null,
+      reply: view.replyText || '',
+      trace: Array.isArray(view.tracePoints) ? copy(view.tracePoints) : [],
+      citations: Array.isArray(view.claims) ? copy(view.claims) : [],
+      claims: Array.isArray(view.claims) ? copy(view.claims) : [],
+      sources: Array.isArray(view.sourcesList) ? copy(view.sourcesList) : [],
+      notices: Array.isArray(view.notices) ? copy(view.notices) : [],
+      Retrieval: retrievalMeta,
+      retrieval: retrievalMeta,
+      toolCalls: Array.isArray(view.toolCalls) ? copy(view.toolCalls) : [],
+      limits: copy(view.limits || { maxMessageBytes: 8192, maxTurns: 8, maxToolsPerTurn: 4, turnDeadlineMs: 60000 }),
+      degraded: Boolean(view.degraded),
+      contextData: copy(contextData)
+    };
   }
   function createDetailsPanel(document, options = {}) {
     const selection = createRequestSelection();
-    const desktop = element(document, 'aside', 'chat-details-panel'); desktop.setAttribute('aria-label', 'Request details');
+    const knownViews = [];
+    const tabList = Array.isArray(options.tabs) && options.tabs.length ? options.tabs : TAB_NAMES;
+    const desktop = element(document, 'aside', 'chat-details-panel');
+    desktop.setAttribute('aria-label', 'Request details');
+    desktop.setAttribute('data-chat-details', '');
     const content = element(document, 'div', 'chat-details-content');
     const heading = element(document, 'header', 'chat-details-heading');
     const title = element(document, 'h2', '', 'Request details'); title.id = 'chat-details-title';
     const close = element(document, 'button', 'chat-details-close', 'Close details'); close.type = 'button';
     heading.append(title, close);
     const identity = element(document, 'p', 'chat-details-identity', 'Choose a response to inspect its evidence and activity.');
-    const tabs = element(document, 'div', 'chat-details-tabs'); tabs.setAttribute('role', 'tablist'); tabs.setAttribute('aria-label', 'Request details');
+    identity.setAttribute('data-chat-selected-turn', '');
+    const pinBanner = element(document, 'div', 'chat-details-pin-banner');
+    pinBanner.hidden = true;
+    const pinLabel = element(document, 'span', '', 'Viewing pinned turn — ');
+    const returnLatestBtn = element(document, 'button', '', 'Return to latest');
+    returnLatestBtn.type = 'button';
+    returnLatestBtn.setAttribute('data-return-latest', '');
+    returnLatestBtn.setAttribute('data-follow-latest', '');
+    pinBanner.append(pinLabel, returnLatestBtn);
+    const tabs = element(document, 'div', 'chat-details-tabs');
+    tabs.setAttribute('role', 'tablist');
+    tabs.setAttribute('aria-label', 'Request details');
     const panels = {}, buttons = {};
-    let activeTab = 'evidence', returnFocus, renderedView;
-    const dialog = element(document, 'dialog', 'chat-details-dialog'); dialog.setAttribute('aria-labelledby', title.id);
+    let activeTab = tabList.includes(options.defaultTab) ? options.defaultTab : tabList[0];
+    let returnFocus;
+    const dialog = element(document, 'dialog', 'chat-details-dialog');
+    dialog.setAttribute('aria-labelledby', title.id);
+    dialog.setAttribute('data-chat-drawer', '');
+    const mobileRoot = element(document, 'div', 'chat-mobile-details-root');
+    mobileRoot.setAttribute('data-chat-mobile-details', '');
+    dialog.append(mobileRoot);
     const mobile = () => options.modalOnly || document.defaultView?.matchMedia?.('(max-width: 900px)').matches === true;
+
+    function registerView(view) {
+      if (!view) return;
+      const existingIdx = knownViews.findIndex(item => item === view || (view.requestId && item.requestId === view.requestId));
+      if (existingIdx === -1) knownViews.push(view);
+      else knownViews[existingIdx] = view;
+    }
+    function syncTurnButtons() {
+      const currentSelected = selection.selected;
+      for (const item of knownViews) {
+        if (!item?.detailsButton) continue;
+        const isSelected = Boolean(currentSelected && (item === currentSelected || (item.requestId && item.requestId === currentSelected.requestId)));
+        item.detailsButton.setAttribute('aria-pressed', String(isSelected));
+        item.detailsButton.className = isSelected ? 'chat-view-details is-selected' : 'chat-view-details';
+      }
+    }
     function activate(name, focus = false) {
+      if (!buttons[name]) return;
       activeTab = name;
-      for (const key of ['evidence', 'trace']) {
-        buttons[key].setAttribute('aria-selected', String(key === name)); buttons[key].tabIndex = key === name ? 0 : -1;
+      for (const key of tabList) {
+        buttons[key].setAttribute('aria-selected', String(key === name));
+        buttons[key].tabIndex = key === name ? 0 : -1;
         panels[key].hidden = key !== name;
       }
       if (focus) buttons[name].focus();
     }
-    for (const name of ['evidence', 'trace']) {
-      const button = element(document, 'button', '', name === 'evidence' ? 'Evidence' : 'Trace'); button.type = 'button';
-      button.id = `chat-${name}-tab`; button.setAttribute('role', 'tab'); button.setAttribute('aria-controls', `chat-${name}-panel`);
-      const panel = element(document, 'div', 'chat-details-tab-panel'); panel.id = `chat-${name}-panel`; panel.tabIndex = 0;
-      panel.setAttribute('role', 'tabpanel'); panel.setAttribute('aria-labelledby', button.id);
+    tabList.forEach((name, index) => {
+      const button = element(document, 'button', 'chat-details-tab', TAB_LABELS[name] || name);
+      button.type = 'button';
+      button.id = `chat-${name}-tab`;
+      button.setAttribute('role', 'tab');
+      button.setAttribute('aria-controls', `chat-${name}-panel`);
+      const panel = element(document, 'div', 'chat-details-tab-panel');
+      panel.id = `chat-${name}-panel`;
+      panel.tabIndex = 0;
+      panel.setAttribute('role', 'tabpanel');
+      panel.setAttribute('aria-labelledby', button.id);
       button.addEventListener('click', () => activate(name));
       button.addEventListener('keydown', event => {
         if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
-        event.preventDefault(); activate(event.key === 'Home' ? 'evidence' : event.key === 'End' ? 'trace' : name === 'evidence' ? 'trace' : 'evidence', true);
+        event.preventDefault();
+        const nextIndex = event.key === 'Home' ? 0
+          : event.key === 'End' ? tabList.length - 1
+          : event.key === 'ArrowRight' ? (index + 1) % tabList.length
+          : (index - 1 + tabList.length) % tabList.length;
+        activate(tabList[nextIndex], true);
       });
-      buttons[name] = button; panels[name] = panel; tabs.append(button);
+      buttons[name] = button;
+      panels[name] = panel;
+      tabs.append(button);
+    });
+    content.append(heading, identity, pinBanner, tabs, ...tabList.map(name => panels[name]));
+    desktop.append(content);
+    document.body.append(dialog);
+
+    const externalFactory = options.detailsModule || globalThis.PortfolioChatDetails;
+    let externalController = null;
+    function selectByTurnId(turnId) {
+      const found = knownViews.find(item => item.requestId === turnId || item.turnId === turnId);
+      if (found) {
+        selection.select(found);
+        render();
+        notifyExternal();
+      }
     }
-    content.append(heading, identity, tabs, panels.evidence, panels.trace); desktop.append(content); document.body.append(dialog);
+    function handleReturnToLatest() {
+      selection.returnToLatest();
+      render();
+      notifyExternal();
+      options.onReturnToLatest?.();
+    }
+    returnLatestBtn.addEventListener('click', handleReturnToLatest);
+
+    if (externalFactory && typeof externalFactory.createDetailsPanel === 'function' && !options._internalFallback) {
+      const bridgeConfig = {
+        ...options,
+        _internalFallback: true,
+        document,
+        desktopRoot: desktop,
+        mobileRoot,
+        mobileDialog: dialog,
+        selectionRoot: identity,
+        modalOnly: Boolean(options.modalOnly),
+        onSelectTurn: selectByTurnId,
+        onReturnToLatest: handleReturnToLatest,
+        createElement: tag => document.createElement(tag),
+        body: document.body,
+        defaultView: document.defaultView
+      };
+      try {
+        externalController = externalFactory.createDetailsPanel(bridgeConfig, bridgeConfig);
+      } catch {
+        externalController = null;
+      }
+    }
+
+    function notifyExternal() {
+      const view = selection.selected;
+      if (!externalController || !view) return;
+      if (typeof externalController.renderTurn === 'function') {
+        const idx = knownViews.indexOf(view);
+        externalController.renderTurn(toTurnRecord(view), {
+          isPinned: selection.pinned,
+          turnOrder: idx === -1 ? knownViews.length : idx + 1,
+          latestTurnId: selection.latest?.requestId || selection.latest?.turnId || null
+        });
+      }
+      if (typeof externalController.update === 'function') {
+        externalController.update(view);
+      }
+    }
+
     function render() {
       const view = selection.selected;
-      identity.textContent = view?.requestId ? `Request ${view.requestId}` : 'Choose a response to inspect its evidence and activity.';
-      if (view && view === renderedView) return;
-      renderedView = view;
-      panels.evidence.replaceChildren(view?.evidence || element(document, 'p', 'chat-details-empty', 'Selected portfolio evidence will appear here. General responses may have no portfolio references.'));
-      panels.trace.replaceChildren(view?.timeline.element || element(document, 'p', 'chat-details-empty', 'Select a response to see the stages reported for that request.'));
+      pinBanner.hidden = !selection.pinned;
+      identity.textContent = view?.requestId
+        ? `${selection.pinned ? 'Pinned · ' : ''}Request ${view.requestId}`
+        : 'Choose a response to inspect its evidence and activity.';
+      syncTurnButtons();
+      if (panels.trace) {
+        panels.trace.replaceChildren(view?.timeline?.element || element(document, 'p', 'chat-details-empty', 'Select a response to see the stages reported for that request.'));
+      }
+      if (panels.evidence) {
+        panels.evidence.replaceChildren(view?.evidence || element(document, 'p', 'chat-details-empty', 'Selected portfolio evidence will appear here. General responses may have no portfolio references.'));
+      }
+      if (panels.tools) {
+        panels.tools.replaceChildren(view ? (view.tools || renderToolsView(document, view)) : element(document, 'p', 'chat-details-empty', 'Select a response to inspect any portfolio MCP tool calls.'));
+      }
+      if (panels.context) {
+        panels.context.replaceChildren(view ? (view.context || renderContextView(document, view)) : element(document, 'p', 'chat-details-empty', 'Select a response to inspect its approved context and routing state.'));
+      }
     }
     function restore() {
       desktop.append(content);
@@ -707,23 +1328,47 @@
     activate(activeTab); render();
     return Object.freeze({
       element: desktop,
-      update(view) { selection.update(view); if (selection.selected === view) render(); },
-      open(view, trigger) {
-        selection.select(view); render(); returnFocus = trigger;
-        if (mobile()) { dialog.append(content); if (!dialog.open) dialog.showModal(); }
-        buttons[activeTab].focus();
+      dialog,
+      activate,
+      update(view) {
+        registerView(view);
+        selection.update(view);
+        render();
+        notifyExternal();
       },
-      clear() { selection.clear(); render(); if (dialog.open) dialog.close(); },
-      get selected() { return selection.selected; }
+      open(view, trigger) {
+        registerView(view);
+        selection.select(view);
+        render();
+        notifyExternal();
+        returnFocus = trigger;
+        if (mobile()) { dialog.append(content); if (!dialog.open) dialog.showModal(); }
+        buttons[activeTab]?.focus();
+      },
+      returnToLatest: handleReturnToLatest,
+      clear() {
+        knownViews.length = 0;
+        selection.clear();
+        render();
+        externalController?.clear?.();
+        if (dialog.open) dialog.close();
+      },
+      get selected() { return selection.selected; },
+      get pinned() { return selection.pinned; },
+      get activeTab() { return activeTab; }
     });
   }
   function mount(host, options = {}) {
-    if (host.dataset.chatMounted === 'true') return;
-    host.dataset.chatMounted = 'true';
+    if (host.dataset?.chatMounted === 'true' || host.getAttribute?.('data-chat-mounted') === 'true') return;
+    if (host.dataset) host.dataset.chatMounted = 'true';
+    host.setAttribute?.('data-chat-mounted', 'true');
     const document = host.ownerDocument, client = createClient(options);
+    const storage = options.storage ?? document.defaultView?.localStorage;
+    const now = options.now || Date.now;
+    let storedTurns = loadStoredHistory(storage, now);
     const shell = element(document, 'section', 'chat-shell');
     const panel = element(document, 'section', 'chat-panel'); panel.setAttribute('aria-label', 'Chat with Josh’s assistant');
-    const details = createDetailsPanel(document, { modalOnly: host.tagName?.toLowerCase() === 'dialog' });
+    const details = createDetailsPanel(document, { modalOnly: host.tagName?.toLowerCase() === 'dialog', detailsModule: options.detailsModule });
     const heading = element(document, 'header', 'chat-heading');
     const headingCopy = element(document, 'div');
     headingCopy.append(element(document, 'p', 'chat-small-label', 'Private preview'), element(document, 'h1', '', 'Josh’s assistant'));
@@ -753,23 +1398,28 @@
     const send = element(document, 'button', 'chat-send', 'Send question ↗'); send.type = 'submit'; send.disabled = true;
     actions.append(stop, retry, send); footer.append(hint, actions); form.append(label, input, footer);
     panel.append(heading, scope, messages, status, form); shell.append(panel, details.element); host.append(shell);
-    let ready = false, busy = false, currentReply, uiEpoch = 0, limit = 8192;
+    let ready = false, busy = false, currentReply, uiEpoch = 0, limit = 8192, currentConfig;
     function update() {
       input.disabled = !ready || busy; send.disabled = !ready || busy;
       clear.disabled = !ready; stop.hidden = !busy; retry.hidden = busy || !client.canRetry;
       for (const button of starters.children) button.disabled = !ready || busy;
-      for (const button of messages.querySelectorAll('.chat-suggestions button')) button.disabled = !ready || busy;
+      const suggestionButtons = messages.querySelectorAll ? messages.querySelectorAll('.chat-suggestions button') : [];
+      for (const button of suggestionButtons) button.disabled = !ready || busy;
     }
-    function nearBottom() { return messages.scrollHeight - messages.clientHeight - messages.scrollTop < 100; }
-    function scroll(follow) { if (follow) messages.scrollTop = messages.scrollHeight; }
+    function nearBottom() { return (messages.scrollHeight || 0) - (messages.clientHeight || 0) - (messages.scrollTop || 0) < 100; }
+    function scroll(follow) { if (follow) messages.scrollTop = messages.scrollHeight || 0; }
     function event(frame) {
       const follow = nearBottom();
       if (frame.event === 'status') status.textContent = STATUS_LABELS[frame.data.code];
       const previousCard = currentReply.element;
       currentReply.accept(frame);
       if (previousCard !== currentReply.element) previousCard.replaceWith(currentReply.element);
+      if (client.session) currentReply.view.contextData.remainingTurns = client.session.remainingTurns;
       details.update(currentReply.view);
-      if (frame.event === 'done') status.textContent = frame.data.outcome === 'cancelled' ? 'Stopped.' : currentReply.view.claims.length ? 'Response complete · evidence references validated.' : 'Response complete.';
+      if (frame.event === 'done') {
+        status.textContent = frame.data.outcome === 'cancelled' ? 'Stopped.' : currentReply.view.claims.length ? 'Response complete · evidence references validated.' : 'Response complete.';
+        storedTurns = saveStoredHistory(storage, [...storedTurns, { requestId: currentReply.view.requestId, kind: currentReply.view.kind, completedAt: now() }], now);
+      }
       if (frame.event === 'error') status.textContent = ERROR_LABELS[frame.data.code];
       scroll(follow);
     }
@@ -786,15 +1436,21 @@
         messages.append(question); input.value = '';
       }
       currentReply = createAnswerView(document, isRetry ? currentReply : null, {
+        pageContext: document.defaultView?.location?.hash,
+        mcpEnabled: currentConfig?.capabilities?.mcp,
+        ragEnabled: currentConfig?.capabilities?.rag,
+        remainingTurns: client.session?.remainingTurns,
+        maxTurns: currentConfig?.limits?.maxTurns ?? 8,
+        limits: currentConfig?.limits,
         onDetails: (view, trigger) => details.open(view, trigger),
-        onSuggestion: text => { if (ready && !busy) { input.value = text; form.requestSubmit(); } }
+        onSuggestion: suggestionText => { if (ready && !busy) { input.value = suggestionText; form.requestSubmit(); } }
       });
       if (!isRetry) messages.append(currentReply.element);
       details.update(currentReply.view);
       status.textContent = isRetry ? 'Checking the original request…' : 'Sending your question…'; update(); scroll(true);
       try {
         const receive = frame => { if (ownEpoch === uiEpoch) event(frame); };
-        const sending = isRetry ? client.retry(receive) : client.send(text, receive, document.defaultView?.location.hash);
+        const sending = isRetry ? client.retry(receive) : client.send(text, receive, document.defaultView?.location?.hash);
         if (client.requestId) { currentReply.identify(client.requestId); details.update(currentReply.view); }
         await sending;
       } catch (error) {
@@ -810,8 +1466,8 @@
         }
       }
     }
-    form.addEventListener('submit', event => { event.preventDefault(); void submit(false); });
-    input.addEventListener('keydown', event => { if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) { event.preventDefault(); form.requestSubmit(); } });
+    form.addEventListener('submit', submitEvent => { submitEvent.preventDefault(); void submit(false); });
+    input.addEventListener('keydown', keyEvent => { if (keyEvent.key === 'Enter' && !keyEvent.shiftKey && !keyEvent.isComposing) { keyEvent.preventDefault(); form.requestSubmit(); } });
     stop.addEventListener('click', async () => {
       const ownEpoch = uiEpoch;
       stop.disabled = true;
@@ -823,12 +1479,14 @@
     clear.addEventListener('click', async () => {
       uiEpoch += 1; busy = false; ready = false; update();
       messages.replaceChildren(welcome); welcome.hidden = false; currentReply = null; input.value = ''; status.textContent = 'Clearing the conversation…';
+      storedTurns = []; clearStoredHistory(storage);
       details.clear();
       try { await client.clear(); ready = true; status.textContent = 'Conversation cleared. Your next question starts a new session.'; }
       catch { status.textContent = 'The server could not confirm deletion. Reload before starting another conversation.'; }
       update(); if (ready) input.focus();
     });
     client.initialise().then(config => {
+      currentConfig = config;
       ready = config.available && config.capabilities.chat;
       limit = config.limits.maxMessageBytes;
       if (ready) {
@@ -838,10 +1496,10 @@
       update();
     }).catch(error => {
       status.textContent = error.status === 401 ? 'Private access is required. Sign in above to continue.' : ERROR_LABELS[error.code] || ERROR_LABELS.unavailable;
-      const access = document.querySelector('[data-chat-access]'); if (access) access.hidden = false;
+      const access = document.querySelector?.('[data-chat-access]'); if (access) access.hidden = false;
       update();
     });
-    return Object.freeze({ client, element: shell });
+    return Object.freeze({ client, element: shell, details });
   }
   function mountDrawer(trigger, options = {}) {
     const document = trigger.ownerDocument;
@@ -854,7 +1512,7 @@
         mounted = mount(dialog, options);
         dialog.addEventListener('close', () => trigger.focus());
       }
-      dialog.showModal(); mounted.element.querySelector('textarea')?.focus();
+      dialog.showModal(); mounted.element.querySelector?.('textarea')?.focus();
     });
   }
   function boot(document) {
@@ -872,5 +1530,34 @@
       } catch { status.textContent = 'Access was not granted. Check the private token and try again.'; button.disabled = false; field.focus(); }
     });
   }
-  return Object.freeze({ VERSION, validateEvidence, validateTraceData, validateConversation, createEventValidator, readEventStream, createClient, createRequestTimeline, createAnswerView, createRequestSelection, createDetailsPanel, renderBlock, renderSources, mount, mountDrawer, boot });
+  return Object.freeze({
+    VERSION,
+    MAX_STORED_TURNS,
+    HISTORY_TTL_MS,
+    TAB_NAMES,
+    TRACE_STAGES,
+    TRACE_LABELS,
+    sanitizeHref,
+    validatePayload,
+    loadStoredHistory,
+    saveStoredHistory,
+    clearStoredHistory,
+    validateEvidence,
+    validateTraceData,
+    validateConversation,
+    createEventValidator,
+    readEventStream,
+    createClient,
+    createRequestTimeline,
+    createAnswerView,
+    createRequestSelection,
+    createDetailsPanel,
+    renderBlock,
+    renderSources,
+    renderToolsView,
+    renderContextView,
+    mount,
+    mountDrawer,
+    boot
+  });
 });
