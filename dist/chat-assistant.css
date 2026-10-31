@@ -475,14 +475,21 @@
   font-size: 11px;
 }
 
-.chat-voice-btn--live.is-active {
-  background: linear-gradient(135deg, #dc2626, #991b1b);
-  border-color: #fca5a5;
-}
-
 .chat-voice-btn:hover {
   border-color: #2dd4bf;
   background: rgba(15, 23, 42, 0.98);
+}
+
+.chat-voice-btn--live:hover {
+  background: linear-gradient(135deg, rgba(20, 184, 166, 0.98), rgba(37, 99, 235, 0.98));
+  border-color: #5eead4;
+}
+
+.chat-voice-btn--live.is-active,
+.chat-voice-btn--live.is-active:hover {
+  background: linear-gradient(135deg, #dc2626, #991b1b);
+  border-color: #fca5a5;
+  color: #ffffff;
 }
 
 .chat-voice-btn[aria-pressed="true"]:not(.chat-voice-btn--live) {

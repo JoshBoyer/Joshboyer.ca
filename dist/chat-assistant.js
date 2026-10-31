@@ -1562,15 +1562,64 @@
     let currentAudio = null;
     let currentObjectUrl = null;
     let currentSpeakBtn = null;
+    let ttsAbortController = null;
     let rafId = null;
     let audioCtx = null;
     let activeSocket = null;
     let micStream = null;
+    let micSourceNode = null;
+    let micProcessorNode = null;
+    let micMuteGainNode = null;
+    let liveKeepaliveTimer = null;
+    let lastMicChunkAt = 0;
     let mediaRecorder = null;
     let speechRec = null;
     let isRecordingMic = false;
     let isLiveCall = false;
-    let nextLivePlayTime = 0;
+    let isLiveSpeaking = false;
+
+    function cleanStageTags(rawText) {
+      return String(rawText || '').replace(/\[[^\]]{1,32}\]\s*/g, '').replace(/\s+/g, ' ').trim();
+    }
+
+    function downsampleTo16k(float32Input, inputSampleRate) {
+      const rate = Number(inputSampleRate) || 16000;
+      if (rate === 16000) {
+        const out = new Int16Array(float32Input.length);
+        for (let i = 0; i < float32Input.length; i += 1) {
+          const s = Math.max(-1, Math.min(1, float32Input[i]));
+          out[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+        }
+        return out;
+      }
+      const ratio = rate / 16000;
+      const newLength = Math.max(1, Math.round(float32Input.length / ratio));
+      const out = new Int16Array(newLength);
+      let offsetResult = 0;
+      let offsetBuffer = 0;
+      while (offsetResult < newLength) {
+        const nextOffsetBuffer = Math.min(float32Input.length, Math.round((offsetResult + 1) * ratio));
+        let accum = 0;
+        let count = 0;
+        for (let i = offsetBuffer; i < nextOffsetBuffer; i += 1) {
+          accum += float32Input[i];
+          count += 1;
+        }
+        const sample = count > 0 ? accum / count : 0;
+        const clamped = Math.max(-1, Math.min(1, sample));
+        out[offsetResult] = clamped < 0 ? clamped * 0x8000 : clamped * 0x7FFF;
+        offsetResult += 1;
+        offsetBuffer = nextOffsetBuffer;
+      }
+      return out;
+    }
+
+    function encodePcm16Base64(pcm16) {
+      const bytes = new Uint8Array(pcm16.buffer);
+      let binary = '';
+      for (let i = 0; i < bytes.byteLength; i += 1) binary += String.fromCharCode(bytes[i]);
+      return win.btoa(binary);
+    }
 
     function setEnergy(value) {
       const clamped = Math.max(0, Math.min(1, Number(value) || 0));
@@ -1599,6 +1648,11 @@
     }
 
     function stopCurrentAudio() {
+      if (ttsAbortController) {
+        try { ttsAbortController.abort(); } catch { /* ignore */ }
+        ttsAbortController = null;
+      }
+      isLiveSpeaking = false;
       if (rafId && win?.cancelAnimationFrame) {
         win.cancelAnimationFrame(rafId);
         rafId = null;
@@ -1639,13 +1693,14 @@
       rafId = win.requestAnimationFrame(tick);
     }
 
-    async function playAudioBlob(blob, { turnButton = null, isIntro = false, label = 'Speaking · Josh (ElevenLabs)' } = {}) {
+    async function playAudioBlob(blob, { turnButton = null, isIntro = false, isLiveTurn = false, label = 'Speaking · Josh (ElevenLabs)' } = {}) {
       stopCurrentAudio();
       if (!win?.Audio || !win?.URL?.createObjectURL) return false;
       const url = win.URL.createObjectURL(blob);
       currentObjectUrl = url;
       const audio = new win.Audio(url);
       currentAudio = audio;
+      isLiveSpeaking = Boolean(isLiveTurn || isLiveCall);
       if (turnButton) {
         currentSpeakBtn = turnButton;
         turnButton.setAttribute('aria-pressed', 'true');
@@ -1655,14 +1710,22 @@
         introBtn.setAttribute('aria-pressed', 'true');
         introBtn.textContent = '⏹ Stop Intro';
       }
-      setAvatarState('speaking', label);
+      setAvatarState(isLiveCall ? 'live' : 'speaking', label);
       audio.addEventListener('ended', () => {
         stopCurrentAudio();
-        if (!isLiveCall) setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+        if (isLiveCall) {
+          setAvatarState('live', 'Live Voice Active · Listening…');
+        } else {
+          setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+        }
       }, { once: true });
       audio.addEventListener('error', () => {
         stopCurrentAudio();
-        if (!isLiveCall) setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+        if (isLiveCall) {
+          setAvatarState('live', 'Live Voice Active · Listening…');
+        } else {
+          setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+        }
       }, { once: true });
       try {
         await audio.play();
@@ -1670,26 +1733,34 @@
         return true;
       } catch {
         stopCurrentAudio();
-        if (!isLiveCall) setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+        if (isLiveCall) {
+          setAvatarState('live', 'Live Voice Active · Listening…');
+        } else {
+          setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+        }
         return false;
       }
     }
 
-    async function speakText(rawText, { turnButton = null, isIntro = false, fallbackUrl = null } = {}) {
+    async function speakText(rawText, { turnButton = null, isIntro = false, isLiveTurn = false, fallbackUrl = null } = {}) {
       if (turnButton && currentSpeakBtn === turnButton && currentAudio && !currentAudio.paused) {
         stopCurrentAudio();
-        setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+        setAvatarState(isLiveCall ? 'live' : 'idle', isLiveCall ? 'Live Voice Active · Listening…' : 'ElevenLabs Voice Ready · Josh');
         return;
       }
       if (isIntro && currentAudio && !currentAudio.paused) {
         stopCurrentAudio();
-        setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+        setAvatarState(isLiveCall ? 'live' : 'idle', isLiveCall ? 'Live Voice Active · Listening…' : 'ElevenLabs Voice Ready · Josh');
         return;
       }
-      const spoken = extractSpokenSummary(rawText);
+      const cleaned = cleanStageTags(rawText);
+      const spoken = isLiveTurn ? cleaned.slice(0, 600) : extractSpokenSummary(cleaned);
       if (!spoken && !fallbackUrl) return;
       stopCurrentAudio();
-      setAvatarState('thinking', 'Synthesizing Josh voice (ElevenLabs)…');
+      const abortCtrl = typeof AbortController === 'function' ? new AbortController() : null;
+      ttsAbortController = abortCtrl;
+      isLiveSpeaking = Boolean(isLiveTurn || isLiveCall);
+      setAvatarState(isLiveCall ? 'live' : 'thinking', isLiveCall ? 'Josh Speaking (Live ElevenLabs)…' : 'Synthesizing Josh voice (ElevenLabs)…');
       if (turnButton) {
         currentSpeakBtn = turnButton;
         turnButton.setAttribute('aria-pressed', 'true');
@@ -1702,38 +1773,67 @@
             credentials: 'same-origin',
             cache: 'no-store',
             headers: { 'Content-Type': 'application/json', Accept: 'audio/mpeg' },
-            body: JSON.stringify({ text: spoken, voiceId: JOSH_VOICE_ID })
+            body: JSON.stringify({ text: spoken, voiceId: JOSH_VOICE_ID }),
+            ...(abortCtrl ? { signal: abortCtrl.signal } : {})
           });
+          if (abortCtrl?.signal?.aborted) return;
           if (response.ok && /^audio\//i.test(response.headers.get('Content-Type') || '')) {
             const blob = await response.blob();
+            if (abortCtrl?.signal?.aborted) return;
             if (blob.size > 0) {
-              await playAudioBlob(blob, { turnButton, isIntro, label: 'Speaking · Josh (ElevenLabs)' });
+              await playAudioBlob(blob, {
+                turnButton,
+                isIntro,
+                isLiveTurn,
+                label: isLiveCall ? 'Josh Speaking (Live ElevenLabs)…' : 'Speaking · Josh (ElevenLabs)'
+              });
               return;
             }
           }
-        } catch { /* fallback below */ }
+        } catch {
+          if (abortCtrl?.signal?.aborted) return;
+        }
       }
-      if (fallbackUrl && fetcher) {
+      if (fallbackUrl && fetcher && !abortCtrl?.signal?.aborted) {
         try {
           const fallbackRes = await fetcher(fallbackUrl, { credentials: 'same-origin' });
           if (fallbackRes.ok) {
             const blob = await fallbackRes.blob();
             if (blob.size > 0) {
-              await playAudioBlob(blob, { turnButton, isIntro, label: 'Speaking · Josh Intro' });
+              await playAudioBlob(blob, { turnButton, isIntro, isLiveTurn, label: 'Speaking · Josh Intro' });
               return;
             }
           }
         } catch { /* ignore */ }
       }
       stopCurrentAudio();
-      setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+      setAvatarState(isLiveCall ? 'live' : 'idle', isLiveCall ? 'Live Voice Active · Listening…' : 'ElevenLabs Voice Ready · Josh');
     }
 
     function stopLiveCall() {
       isLiveCall = false;
+      isLiveSpeaking = false;
+      if (liveKeepaliveTimer) {
+        clearInterval(liveKeepaliveTimer);
+        liveKeepaliveTimer = null;
+      }
+      stopCurrentAudio();
+      if (micProcessorNode) {
+        try { micProcessorNode.onaudioprocess = null; micProcessorNode.disconnect(); } catch { /* ignore */ }
+        micProcessorNode = null;
+      }
+      if (micSourceNode) {
+        try { micSourceNode.disconnect(); } catch { /* ignore */ }
+        micSourceNode = null;
+      }
+      if (micMuteGainNode) {
+        try { micMuteGainNode.disconnect(); } catch { /* ignore */ }
+        micMuteGainNode = null;
+      }
       if (activeSocket) {
-        try { activeSocket.close(); } catch { /* ignore */ }
+        const ws = activeSocket;
         activeSocket = null;
+        try { ws.close(); } catch { /* ignore */ }
       }
       if (micStream) {
         try { micStream.getTracks().forEach(track => track.stop()); } catch { /* ignore */ }
@@ -1745,47 +1845,6 @@
         liveBtn.classList.remove('is-active');
       }
       setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
-    }
-
-    function playPcm16Base64(base64Audio, sampleRate = 16000) {
-      if (!win) return;
-      const AudioContextCtor = win.AudioContext || win.webkitAudioContext;
-      if (!AudioContextCtor || typeof win.atob !== 'function') return;
-      try {
-        if (!audioCtx) audioCtx = new AudioContextCtor({ sampleRate });
-        if (audioCtx.state === 'suspended') void audioCtx.resume();
-        const binary = win.atob(base64Audio);
-        const sampleCount = Math.floor(binary.length / 2);
-        if (sampleCount <= 0) return;
-        const float32 = new Float32Array(sampleCount);
-        let sumSq = 0;
-        for (let i = 0; i < sampleCount; i += 1) {
-          const lo = binary.charCodeAt(i * 2);
-          const hi = binary.charCodeAt(i * 2 + 1);
-          let val = (hi << 8) | lo;
-          if (val >= 0x8000) val -= 0x10000;
-          const norm = val / 32768;
-          float32[i] = norm;
-          sumSq += norm * norm;
-        }
-        const rms = Math.min(1, Math.sqrt(sumSq / sampleCount) * 3.2);
-        setEnergy(rms);
-        setAvatarState('live', 'Josh Speaking (Live ElevenLabs)…');
-        const buffer = audioCtx.createBuffer(1, sampleCount, sampleRate);
-        buffer.getChannelData(0).set(float32);
-        const source = audioCtx.createBufferSource();
-        source.buffer = buffer;
-        source.connect(audioCtx.destination);
-        const startAt = Math.max(audioCtx.currentTime, nextLivePlayTime);
-        source.start(startAt);
-        nextLivePlayTime = startAt + buffer.duration;
-        source.onended = () => {
-          if (audioCtx && audioCtx.currentTime >= nextLivePlayTime - 0.05 && isLiveCall) {
-            setEnergy(0.08);
-            setAvatarState('live', 'Live Voice Active · Listening…');
-          }
-        };
-      } catch { /* ignore PCM decode errors */ }
     }
 
     async function toggleLiveCall() {
@@ -1814,72 +1873,90 @@
         const ws = new win.WebSocket(data.signedUrl);
         activeSocket = ws;
         isLiveCall = true;
-        nextLivePlayTime = 0;
         if (liveBtn) {
           liveBtn.textContent = '🔴 End Live Voice';
           liveBtn.classList.add('is-active');
         }
         ws.addEventListener('open', async () => {
-          setAvatarState('live', 'Live Voice Connected · Say hello');
+          if (!isLiveCall || activeSocket !== ws) return;
+          setAvatarState('live', 'Live Voice Connected · Listening…');
           ws.send(JSON.stringify({
-            type: 'conversation_initiation_client_data',
-            conversation_config_override: {
-              tts: { voice_id: JOSH_VOICE_ID }
-            }
+            type: 'conversation_initiation_client_data'
           }));
+          lastMicChunkAt = Date.now();
+          const keepaliveSilence = encodePcm16Base64(new Int16Array(1600));
+          liveKeepaliveTimer = setInterval(() => {
+            if (!isLiveCall || activeSocket !== ws || ws.readyState !== win.WebSocket.OPEN) return;
+            if (Date.now() - lastMicChunkAt >= 220) {
+              lastMicChunkAt = Date.now();
+              try { ws.send(JSON.stringify({ user_audio_chunk: keepaliveSilence })); } catch { /* ignore */ }
+            }
+          }, 250);
           if (win.navigator?.mediaDevices?.getUserMedia) {
             try {
               micStream = await win.navigator.mediaDevices.getUserMedia({
-                audio: { sampleRate: 16000, channelCount: 1, echoCancellation: true, noiseSuppression: true }
+                audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true, autoGainControl: true }
               });
+              if (!isLiveCall || activeSocket !== ws) {
+                micStream.getTracks().forEach(t => t.stop());
+                return;
+              }
               const AudioContextCtor = win.AudioContext || win.webkitAudioContext;
               if (AudioContextCtor) {
-                if (!audioCtx) audioCtx = new AudioContextCtor({ sampleRate: 16000 });
+                if (!audioCtx) audioCtx = new AudioContextCtor();
+                if (audioCtx.state === 'suspended') void audioCtx.resume();
                 const source = audioCtx.createMediaStreamSource(micStream);
                 const processor = audioCtx.createScriptProcessor(4096, 1, 1);
+                const muteGain = audioCtx.createGain();
+                muteGain.gain.value = 0;
+                micSourceNode = source;
+                micProcessorNode = processor;
+                micMuteGainNode = muteGain;
                 source.connect(processor);
-                processor.connect(audioCtx.destination);
+                processor.connect(muteGain);
+                muteGain.connect(audioCtx.destination);
                 processor.onaudioprocess = evt => {
-                  if (!isLiveCall || ws.readyState !== win.WebSocket.OPEN) return;
+                  if (!isLiveCall || activeSocket !== ws || ws.readyState !== win.WebSocket.OPEN) return;
+                  lastMicChunkAt = Date.now();
                   const inputData = evt.inputBuffer.getChannelData(0);
-                  const pcm16 = new Int16Array(inputData.length);
-                  for (let i = 0; i < inputData.length; i += 1) {
-                    const s = Math.max(-1, Math.min(1, inputData[i]));
-                    pcm16[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+                  if (isLiveSpeaking) {
+                    const silentLen = Math.max(1, Math.round(inputData.length / ((audioCtx.sampleRate || 48000) / 16000)));
+                    const silence = new Int16Array(silentLen);
+                    ws.send(JSON.stringify({ user_audio_chunk: encodePcm16Base64(silence) }));
+                    return;
                   }
-                  const bytes = new Uint8Array(pcm16.buffer);
-                  let binary = '';
-                  for (let i = 0; i < bytes.byteLength; i += 1) binary += String.fromCharCode(bytes[i]);
-                  ws.send(JSON.stringify({ user_audio_chunk: win.btoa(binary) }));
+                  const pcm16 = downsampleTo16k(inputData, audioCtx.sampleRate || 48000);
+                  ws.send(JSON.stringify({ user_audio_chunk: encodePcm16Base64(pcm16) }));
                 };
               }
             } catch {
-              setAvatarState('live', 'Live Voice Connected (Mic permission needed)');
+              if (isLiveCall) setAvatarState('live', 'Live Voice Connected (Allow Mic to speak)');
             }
           }
         });
         ws.addEventListener('message', evt => {
+          if (!isLiveCall || activeSocket !== ws) return;
           try {
             const msg = JSON.parse(String(evt.data || '{}'));
-            if (msg.type === 'ping' && msg.ping_event?.event_id) {
+            if (msg.type === 'ping' && msg.ping_event?.event_id !== undefined) {
               ws.send(JSON.stringify({ type: 'pong', event_id: msg.ping_event.event_id }));
-            } else if (msg.type === 'audio' && msg.audio_event?.audio_base_64) {
-              playPcm16Base64(msg.audio_event.audio_base_64, 16000);
             } else if (msg.type === 'user_transcript' && msg.user_transcription_event?.user_transcript) {
-              options.onLiveTranscript?.('user', String(msg.user_transcription_event.user_transcript));
+              const userText = cleanStageTags(msg.user_transcription_event.user_transcript);
+              if (userText) options.onLiveTranscript?.('user', userText);
             } else if (msg.type === 'agent_response' && msg.agent_response_event?.agent_response) {
-              options.onLiveTranscript?.('assistant', String(msg.agent_response_event.agent_response));
-            } else if (msg.type === 'interruption') {
-              nextLivePlayTime = audioCtx ? audioCtx.currentTime : 0;
-              setEnergy(0);
+              const assistantText = cleanStageTags(msg.agent_response_event.agent_response);
+              if (assistantText) {
+                options.onLiveTranscript?.('assistant', assistantText);
+                void speakText(assistantText, { isLiveTurn: true });
+              }
             }
           } catch { /* ignore malformed frame */ }
         });
         ws.addEventListener('close', () => {
-          if (isLiveCall) stopLiveCall();
+          if (isLiveCall && activeSocket === ws) stopLiveCall();
         });
         ws.addEventListener('error', () => {
-          if (isLiveCall) stopLiveCall();
+          if (isLiveCall && activeSocket === ws) stopLiveCall();
         });
       } catch {
         stopLiveCall();
