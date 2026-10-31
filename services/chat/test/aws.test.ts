@@ -81,7 +81,7 @@ test('createAwsPhase4Clients returns empty dependencies when Phase 4 config is a
   const wired = createPhase4!({
     config: phase4Config,
     secrets: dependencies.secrets,
-    credentials: { accessKeyId: 'AKIAIOSFODNN7EXAMPLE', secretAccessKey: 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY' },
+    credentials: { accessKeyId: 'TESTACCESSKEYID12345', secretAccessKey: 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY' },
     fetchImpl: async (url: string | URL | Request) => {
       const target = String(url);
       urls.push(target);

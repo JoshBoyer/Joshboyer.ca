@@ -70,7 +70,7 @@ test('Phase4 handler wires RAG and MCP capabilities when Phase 4 environment var
     const fn = createHandler!({
       secrets: dependencies.secrets,
       nonces: dependencies.nonces,
-      credentials: { accessKeyId: 'AKIAIOSFODNN7EXAMPLE', secretAccessKey: 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY' }
+      credentials: { accessKeyId: 'TESTACCESSKEYID12345', secretAccessKey: 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY' }
     });
 
     const chunks: Buffer[] = [];

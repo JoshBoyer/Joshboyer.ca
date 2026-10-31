@@ -1030,7 +1030,7 @@ test('Phase 4 end-to-end integration with real DynamoDB AwsChatState, real Retri
 
   try {
     const sigV4Creds = {
-      accessKeyId: 'AKIAIOSFODNN7EXAMPLE',
+      accessKeyId: 'TESTACCESSKEYID12345',
       secretAccessKey: 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY'
     };
     const mcpServer = createMcpServer({
