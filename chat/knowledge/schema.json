@@ -82,6 +82,92 @@
         "sources": { "type": "array", "minItems": 1, "maxItems": 64, "items": { "$ref": "#/$defs/source" } },
         "qualifications": { "type": "array", "maxItems": 64, "items": { "$ref": "#/$defs/qualification" } }, "boundaries": { "$ref": "#/$defs/texts" }, "contentSha256": { "$ref": "#/$defs/hash" }
       }
+    },
+    "deliveryStatus": {
+      "enum": ["production", "implemented_supported", "approved_design_interim", "independent_capstone", "historical_personal"]
+    },
+    "indexVersion": {
+      "type": "string", "pattern": "^idx-[a-f0-9]{16}$"
+    },
+    "lexicalToken": {
+      "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-z0-9.][a-z0-9+#.&/' -]{0,63}$"
+    },
+    "caseStudySource": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "url", "revision"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "url": { "type": "string", "pattern": "^https://joshboyer\\.ca/#projects/[a-z][a-z0-9-]{0,95}$" },
+        "revision": { "$ref": "#/$defs/text" }
+      }
+    },
+    "chunkManifestEntry": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "claimId", "kind", "projectId", "roleId", "title", "period", "confidence", "tags", "deliveryStatus", "decision", "process", "technicalGuidance", "outcome", "resumeText", "qualificationNotes", "sourceIds", "sourceUrls", "embeddingText", "lexicalTokens", "contentSha256"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "claimId": { "$ref": "#/$defs/id" },
+        "kind": { "enum": ["experience", "project"] },
+        "projectId": { "$ref": "#/$defs/id" },
+        "roleId": { "$ref": "#/$defs/id" },
+        "title": { "$ref": "#/$defs/text" },
+        "period": { "$ref": "#/$defs/text" },
+        "confidence": { "const": "approved-public-account" },
+        "tags": { "$ref": "#/$defs/ids" },
+        "deliveryStatus": { "$ref": "#/$defs/deliveryStatus" },
+        "decision": { "$ref": "#/$defs/text" },
+        "process": { "type": "array", "minItems": 1, "maxItems": 32, "items": { "$ref": "#/$defs/text" } },
+        "technicalGuidance": { "$ref": "#/$defs/text" },
+        "outcome": { "$ref": "#/$defs/text" },
+        "resumeText": { "$ref": "#/$defs/text" },
+        "qualificationNotes": { "$ref": "#/$defs/texts" },
+        "sourceIds": { "$ref": "#/$defs/ids" },
+        "sourceUrls": { "type": "array", "minItems": 1, "maxItems": 32, "uniqueItems": true, "items": { "type": "string", "pattern": "^https://joshboyer\\.ca/#projects/[a-z][a-z0-9-]{0,95}$" } },
+        "embeddingText": { "type": "string", "minLength": 1, "maxLength": 4096, "pattern": "\\S" },
+        "lexicalTokens": { "type": "array", "minItems": 1, "maxItems": 256, "uniqueItems": true, "items": { "$ref": "#/$defs/lexicalToken" } },
+        "contentSha256": { "$ref": "#/$defs/hash" }
+      }
+    },
+    "caseStudyEntry": {
+      "type": "object", "additionalProperties": false,
+      "required": ["projectId", "chunkId", "claimId", "chunkIds", "claimIds", "roleId", "employer", "roleTitle", "roleScope", "title", "period", "deliveryStatus", "deliveryStatuses", "text", "decision", "process", "technicalGuidance", "outcome", "tags", "qualificationNotes", "sources"],
+      "properties": {
+        "projectId": { "$ref": "#/$defs/id" },
+        "chunkId": { "$ref": "#/$defs/id" },
+        "claimId": { "$ref": "#/$defs/id" },
+        "chunkIds": { "$ref": "#/$defs/ids" },
+        "claimIds": { "$ref": "#/$defs/ids" },
+        "roleId": { "$ref": "#/$defs/id" },
+        "employer": { "$ref": "#/$defs/text" },
+        "roleTitle": { "$ref": "#/$defs/text" },
+        "roleScope": { "$ref": "#/$defs/text" },
+        "title": { "$ref": "#/$defs/text" },
+        "period": { "$ref": "#/$defs/text" },
+        "deliveryStatus": { "$ref": "#/$defs/deliveryStatus" },
+        "deliveryStatuses": { "type": "array", "minItems": 1, "maxItems": 8, "uniqueItems": true, "items": { "$ref": "#/$defs/deliveryStatus" } },
+        "text": { "$ref": "#/$defs/text" },
+        "decision": { "$ref": "#/$defs/text" },
+        "process": { "type": "array", "minItems": 1, "maxItems": 16, "items": { "$ref": "#/$defs/text" } },
+        "technicalGuidance": { "$ref": "#/$defs/text" },
+        "outcome": { "$ref": "#/$defs/text" },
+        "tags": { "$ref": "#/$defs/ids" },
+        "qualificationNotes": { "$ref": "#/$defs/texts" },
+        "sources": { "type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true, "items": { "$ref": "#/$defs/caseStudySource" } }
+      }
+    },
+    "chunksManifest": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "corpusVersion", "indexVersion", "embeddingModel", "dimensions", "chunks", "caseStudies", "manifestSha256"],
+      "properties": {
+        "schemaVersion": { "const": "1.0.0" },
+        "corpusVersion": { "$ref": "#/$defs/version" },
+        "indexVersion": { "$ref": "#/$defs/indexVersion" },
+        "embeddingModel": { "const": "text-embedding-3-small" },
+        "dimensions": { "const": 1536 },
+        "chunks": { "type": "array", "minItems": 1, "maxItems": 512, "items": { "$ref": "#/$defs/chunkManifestEntry" } },
+        "caseStudies": { "type": "array", "minItems": 1, "maxItems": 128, "items": { "$ref": "#/$defs/caseStudyEntry" } },
+        "manifestSha256": { "$ref": "#/$defs/hash" }
+      }
     }
   }
 }

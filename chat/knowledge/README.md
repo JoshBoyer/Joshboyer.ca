@@ -4,19 +4,19 @@ Version: 1.0 | Date: 2026-10-31 | Status: Local export and validation
 
 The chat assistant gets a prepared evidence pack, like a folder of approved quotations. It cannot expand that folder by following links. This directory is outside the website's public root.
 
-`corpus.json` holds the approved material for later **Retrieval-Augmented Generation (RAG)**: finding relevant evidence before answering. `cag-context.json` is a smaller, stable pack for **Cache-Augmented Generation (CAG)**. This phase prepares the pack; it does not call a model, create embeddings, populate a search index or establish a provider cache hit.
+`corpus.json` holds the approved material for **Retrieval-Augmented Generation (RAG)**: finding relevant evidence before answering. `cag-context.json` is a smaller, stable pack for **Cache-Augmented Generation (CAG)**. `chunks-manifest.json` prepares the 14 active canonical chunks and 13 project case studies with deterministic `indexVersion` (`idx-<hash16>`), pinned embedding configuration (`text-embedding-3-small`, `1536` dimensions), explicit `deliveryStatus`, bounded qualification-preserving `embeddingText` (`<= 4,096` UTF-8 bytes), and normalized `lexicalTokens` for S3/S3 Vectors ingestion, hybrid retrieval and read-only MCP tools. This build step prepares the deterministic artifacts; it does not call a model, create embeddings, populate a search index or establish a provider cache hit.
 
 ```text
 Approved public JSON
         |
         v
 Validated export
-     |       |
-     v       v
-  Corpus   CAG pack
+  |        |             |
+  v        v             v
+Corpus   CAG pack   Chunks manifest
 ```
 
-Run `node tools/build-chat-knowledge.cjs` to regenerate both files. Run the same command with `--check` to reject missing or stale output without changing it. The CLI accepts no input/output path overrides. The optional `root` argument on the exported JavaScript functions exists for isolated build tests, not visitor input.
+Run `node tools/build-chat-knowledge.cjs` to regenerate all three files. Run the same command with `--check` to reject missing or stale output without changing it. The CLI accepts no input/output path overrides. The optional `root` argument on the exported JavaScript functions exists for isolated build tests, not visitor input.
 
 ## Evidence boundary
 
@@ -26,7 +26,7 @@ Only chunks with `active === true` are exported. Each produces one **canonical c
 
 Referenced roles and sources are retained; unused sources are omitted. Inactive qualifications are omitted. The independent-role description still explains that LOWKEY is archived, but its inactive evidence chunk and source are not exported. Provider integration has two evidence records pointing to one public case: these are not independent corroboration or two separate deliveries.
 
-There is no inferred delivery-status field. Publication eligibility does not mean production delivery. Preserve the source's distinction between live interim reporting, approved design and the unconfirmed permanent extract. The current reusable JSON deliberately omits numerical renewal rates; adding them requires a reviewed change to that approved input.
+Publication eligibility does not mean production delivery. `chunks-manifest.json` derives an explicit canonical `deliveryStatus` (`production`, `implemented_supported`, `approved_design_interim`, `independent_capstone`, `historical_personal`) from the approved chunk and qualifications while keeping `corpus.json` and `cag-context.json` unchanged. Preserve the source's distinction between live interim reporting, approved design and the unconfirmed permanent extract. The current reusable JSON deliberately omits numerical renewal rates; adding them requires a reviewed change to that approved input.
 
 ## Version and integrity
 
