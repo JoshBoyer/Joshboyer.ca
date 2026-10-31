@@ -4,22 +4,37 @@ import { credential } from './config.js';
 import type { SecretReader } from './aws.js';
 import { ServiceError, record } from './errors.js';
 import { assertContract, buildUserContext, CAG_CLAIM_IDS, CAG_VERSION, frameBuilder, validateMessage, validateSavedAnswer, validateSavedReply,
-  renderSelection, type ConversationReply, type MessageRequest, type RenderedAnswer } from './cag.js';
+  renderSafetyRefusal, renderSelection, type ConversationReply, type DegradedNoticeCode, type McpToolResultContext,
+  type MessageRequest, type RenderedAnswer, type RetrievedChunkContext } from './cag.js';
 import { callChatProvider, providerBody, type ChatProviderResult } from './chat-provider.js';
-import { PRICE_VERSION, reserveCosts, usageAllowance } from './chat-pricing.js';
+import { PHASE4_PRICE_VERSION, PRICE_VERSION, planTurnReservation, reserveCosts, settleTurnCharges, usageAllowance,
+  type ProviderAttemptSettlementInput, type TurnReservationPlan } from './budget-policy.js';
 import type { Fetch } from './provider.js';
+import type { RetrievalEngine } from './retrieval/index.js';
+import { planTurnRoute, type TurnRouteInput, type TurnRoutePlan } from './routing/index.js';
 import type { ChatStateStore, Identity, Session, Turn } from './state.js';
 import { TraceRecorder, validateSettlement, validateTrace, type SettlementSummary, type TracePoint } from './trace.js';
+import type { PortfolioMcpClientInterface, ToolInputMap } from '../../portfolio-mcp/src/index.js';
 
 export interface VerifiedChatRequest {
   method: string; path: string; bodyBytes: Uint8Array; visitorId: string; sessionToken?: string;
 }
-export interface ChatSettings { primaryProvider: Provider; fallbackEnabled: boolean; turnDeadlineMs: number }
+export interface ChatSettings {
+  primaryProvider: Provider;
+  fallbackEnabled: boolean;
+  turnDeadlineMs: number;
+  enablePhase4Traces?: boolean;
+  priceVersion?: string;
+}
 export const DEFAULT_CHAT_SETTINGS: ChatSettings = { primaryProvider: 'openai', fallbackEnabled: true, turnDeadlineMs: 50000 };
 export interface ChatDependencies {
   state: ChatStateStore; secrets: SecretReader; fetchImpl?: Fetch; settings?: ChatSettings;
   receipt?: (value: ChatReceipt) => void;
   now?: () => number;
+  retrieval?: Pick<RetrievalEngine, 'retrieve'>;
+  mcpClient?: Pick<PortfolioMcpClientInterface, 'callTool'>;
+  routePlanner?: (input: TurnRouteInput) => TurnRoutePlan & { isSafetyRefusal?: boolean; mode?: string };
+  enablePhase4?: boolean;
 }
 export interface ChatReceipt {
   requestId: string; provider: Provider; model: string; priceVersion: string; allowanceMicros: number;
@@ -32,6 +47,74 @@ type SavedResult = ({ kind: 'answer'; answer: RenderedAnswer; reply?: Conversati
   { trace?: TracePoint[]; settlement?: SettlementSummary };
 const publicErrors = new Set<PublicErrorCode>(['unavailable', 'invalid_request', 'session_expired', 'rate_limited', 'budget_exhausted',
   'deadline_exceeded', 'upstream_failure', 'validation_failed', 'request_conflict']);
+const PRE_TURN_SAFETY_REFUSAL_PATTERN =
+  /\b(?:write\s+(?:ransomware|malware|keylogger|trojan|rootkit|exploit\s+payload)|build\s+(?:a\s+bomb|explosives|bioweapon|ransomware)|synthesize\s+(?:fentanyl|sarin|ricin|methamphetamine)|how\s+to\s+(?:kill\s+myself|commit\s+suicide)|child\s+sexual\s+exploitation)\b/i;
+
+interface ResolvedRoutePlan extends TurnRoutePlan {
+  isSafetyRefusal: boolean;
+}
+
+function resolvePhase4Mode(config: Config, dependencies: ChatDependencies, settings: ChatSettings): {
+  ragAvailable: boolean;
+  mcpAvailable: boolean;
+  isPhase4: boolean;
+} {
+  const ragConfigured = Boolean(config.evidenceBucket && config.vectorBucket && config.vectorIndex);
+  const mcpConfigured = Boolean(config.mcpEndpoint);
+  const ragAvailable = Boolean(dependencies.retrieval || ragConfigured);
+  const mcpAvailable = Boolean(dependencies.mcpClient || mcpConfigured);
+  const isPhase4 = Boolean(
+    ragAvailable ||
+    mcpAvailable ||
+    settings.enablePhase4Traces ||
+    dependencies.enablePhase4 ||
+    dependencies.routePlanner
+  );
+  return { ragAvailable, mcpAvailable, isPhase4 };
+}
+
+function resolveRoutePlan(
+  message: MessageRequest,
+  history: Session['history'],
+  ragAvailable: boolean,
+  mcpAvailable: boolean,
+  routePlanner?: ChatDependencies['routePlanner']
+): ResolvedRoutePlan {
+  if (PRE_TURN_SAFETY_REFUSAL_PATTERN.test(message.text)) {
+    return {
+      routingMode: 'cag_only',
+      traceRoutingMode: 'general',
+      needsRetrieval: false,
+      requestedTools: [],
+      requestedToolNames: [],
+      traceData: { routingMode: 'general', needsRetrieval: false },
+      isSafetyRefusal: true
+    };
+  }
+  const historyEntries = history.slice(-4).map(entry => ({ role: 'user', text: entry.text }));
+  const plan = (routePlanner ?? planTurnRoute)({
+    message: message.text,
+    history: historyEntries,
+    enableRag: ragAvailable,
+    enableMcp: mcpAvailable
+  });
+  const isSafetyRefusal = Boolean(
+    (plan as { isSafetyRefusal?: boolean }).isSafetyRefusal ||
+    (plan as { mode?: string }).mode === 'safety_refusal'
+  );
+  if (isSafetyRefusal) {
+    return {
+      routingMode: 'cag_only',
+      traceRoutingMode: 'general',
+      needsRetrieval: false,
+      requestedTools: [],
+      requestedToolNames: [],
+      traceData: { routingMode: 'general', needsRetrieval: false },
+      isSafetyRefusal: true
+    };
+  }
+  return { ...plan, isSafetyRefusal: false };
+}
 
 export function publicChatError(error: unknown): { code: PublicErrorCode; retryable: boolean; statusCode: number } {
   const code = error instanceof ServiceError ? error.code : '';
@@ -116,8 +199,10 @@ async function* runTurn(input: {
   identity: Identity; turn: Turn; session: Session; message: MessageRequest; userContext: string;
   providers: Provider[]; keys: Record<Provider, string>; gatewayKey: string; config: Config;
   dependencies: ChatDependencies; outerSignal: AbortSignal; settings: ChatSettings; trace: TraceRecorder;
+  isPhase4: boolean; ragAvailable: boolean; mcpAvailable: boolean; routePlan?: ResolvedRoutePlan;
+  reservationPlan: TurnReservationPlan;
 }): AsyncGenerator<string> {
-  const { turn, identity, dependencies, outerSignal, settings, trace } = input;
+  const { turn, identity, dependencies, outerSignal, settings, trace, isPhase4, ragAvailable, mcpAvailable, routePlan, reservationPlan } = input;
   const frame = frameBuilder(turn.requestId, turn.generation);
   const controller = new AbortController();
   const abort = () => controller.abort();
@@ -133,6 +218,15 @@ async function* runTurn(input: {
     }).catch(abort).finally(() => { polling = false; });
   }, 1000);
   const costs = { openai: 0, anthropic: 0 };
+  const providerAttempts: ProviderAttemptSettlementInput[] = [];
+  let embeddingDispatched = false;
+  let embeddingUsage: { status: 'known' | 'unknown'; inputTokens?: number | null; totalTokens?: number | null } | null = null;
+  let retrievalMatched = 0;
+  let mcpCallsCount = 0;
+  const degradedNotices: DegradedNoticeCode[] = [];
+  const retrievedChunks: RetrievedChunkContext[] = [];
+  const mcpResults: McpToolResultContext[] = [];
+  let effectiveUserContext = input.userContext;
   let result: SavedResult | undefined;
   let settlementPoint: TracePoint | undefined;
   const emitTrace = async (point: TracePoint) => {
@@ -149,68 +243,244 @@ async function* runTurn(input: {
     yield frame('status', { code: 'accepted' });
     for (const point of trace.snapshot()) yield await emitTrace(point);
     yield frame('status', { code: 'thinking' });
-    let lastError: unknown;
-    for (const [index, provider] of input.providers.entries()) {
+
+    if (isPhase4 && routePlan) {
       controller.signal.throwIfAborted();
-      if (await dependencies.state.isCancelled(turn, controller.signal)) { cancelled = true; break; }
-      const details = { attempt: index + 1, provider, model: input.config.models[provider] };
-      let providerStarted = trace.timestamp();
-      yield await emitTrace(trace.add({ stage: 'provider', state: 'started', ...details, reservedMicros: turn.reservations[provider] }));
-      controller.signal.throwIfAborted();
-      providerStarted = trace.timestamp();
-      // Once dispatch is attempted, the whole reservation remains charged unless
-      // bounded, validated usage proves a lower amount. Transport failure is ambiguous.
-      costs[provider] = turn.reservations[provider];
-      let providerCompleted = false;
-      try {
-        const response = await callChatProvider({ provider, config: input.config, providerKey: input.keys[provider],
-          gatewayKey: input.gatewayKey, userContext: input.userContext, signal: controller.signal, fetchImpl: dependencies.fetchImpl });
-        providerCompleted = true;
-        costs[provider] = usageAllowance(response.usage);
-        const usageCount = (value: number | null) => value !== null && Number.isSafeInteger(value) && value >= 0 && value <= 1_000_000 ? value : null;
-        yield await emitTrace(trace.add({ stage: 'provider', state: 'completed', ...details, durationMs: trace.duration(providerStarted),
-          usageStatus: response.usage.status, inputTokens: usageCount(response.usage.inputTokens), outputTokens: usageCount(response.usage.outputTokens),
-          cacheReadInputTokens: usageCount(response.usage.cacheReadInputTokens), cacheWriteInputTokens: usageCount(response.usage.cacheWriteInputTokens),
-          reasoningOutputTokens: usageCount(response.usage.reasoningOutputTokens), chargedMicros: costs[provider],
-          ...(response.providerRequestId ? { providerRequestId: response.providerRequestId } : {}),
-          ...(response.gatewayRequestId ? { gatewayRequestId: response.gatewayRequestId } : {}) }));
-        let validationStarted = trace.timestamp();
-        yield await emitTrace(trace.add({ stage: 'validation', state: 'started', ...details }));
-        validationStarted = trace.timestamp();
-        let validationCompleted = false;
-        try {
-          const rendered = renderSelection(response.text);
-          result = { kind: 'answer', answer: rendered.answer, reply: rendered.reply };
-          validationCompleted = true;
-          yield await emitTrace(trace.add({ stage: 'validation', state: 'completed', ...details,
-            durationMs: trace.duration(validationStarted), corpusVersion: CAG_VERSION,
-            claimCount: result.answer.blocks.filter(block => block.kind === 'claim').length }));
-          dependencies.receipt?.({ requestId: turn.requestId, provider, model: response.model, priceVersion: PRICE_VERSION,
-            allowanceMicros: costs[provider], usage: response.usage, outcome: 'completed',
-            providerRequestId: response.providerRequestId, gatewayRequestId: response.gatewayRequestId });
-          break;
-        } catch (error) {
-          if (!validationCompleted) {
-            cancelled ||= outerSignal.aborted || await dependencies.state.isCancelled(turn, AbortSignal.timeout(3000)).catch(() => false);
-            yield await emitTrace(trace.add({ stage: 'validation', state: cancelled ? 'cancelled' : 'failed', ...details,
-              durationMs: trace.duration(validationStarted), ...(cancelled ? {} : { code: publicChatError(error).code }) }));
+      if (!routePlan.needsRetrieval || !ragAvailable || routePlan.isSafetyRefusal) {
+        yield await emitTrace(trace.add({
+          stage: 'retrieval',
+          state: 'completed',
+          retrievalMode: 'skipped',
+          matchedCount: 0,
+          corpusVersion: CAG_VERSION
+        }));
+      } else {
+        let retrievalStarted = trace.timestamp();
+        yield await emitTrace(trace.add({
+          stage: 'retrieval',
+          state: 'started',
+          retrievalMode: 'hybrid',
+          embeddingModel: 'text-embedding-3-small'
+        }));
+        retrievalStarted = trace.timestamp();
+        if (!dependencies.retrieval) {
+          degradedNotices.push('retrieval_degraded');
+          yield await emitTrace(trace.add({
+            stage: 'retrieval',
+            state: 'failed',
+            durationMs: trace.duration(retrievalStarted),
+            retrievalMode: 'degraded',
+            embeddingModel: 'text-embedding-3-small',
+            code: 'unavailable'
+          }));
+        } else {
+          try {
+            const ragResult = await dependencies.retrieval.retrieve({
+              query: input.message.text,
+              topK: 4,
+              mcpActive: Boolean(routePlan.requestedTools.length > 0 && mcpAvailable),
+              signal: controller.signal
+            });
+            embeddingDispatched = Boolean(ragResult.embeddingUsage?.dispatched);
+            if (embeddingDispatched) {
+              embeddingUsage = {
+                status: ragResult.embeddingUsage.status === 'known' ? 'known' : 'unknown',
+                inputTokens: ragResult.embeddingUsage.inputTokens,
+                totalTokens: ragResult.embeddingUsage.totalTokens
+              };
+            }
+            if (ragResult.degraded) {
+              if (!degradedNotices.includes('retrieval_degraded')) degradedNotices.push('retrieval_degraded');
+            }
+            for (const chunk of ragResult.chunks) retrievedChunks.push(chunk);
+            retrievalMatched = ragResult.chunkCount;
+            yield await emitTrace(trace.add({
+              stage: 'retrieval',
+              state: 'completed',
+              durationMs: trace.duration(retrievalStarted),
+              retrievalMode: ragResult.degraded ? 'degraded' : ragResult.retrievalMode,
+              matchedCount: ragResult.chunkCount,
+              corpusVersion: ragResult.corpusVersion || CAG_VERSION,
+              indexVersion: ragResult.indexVersion || 'idx-default',
+              embeddingModel: 'text-embedding-3-small'
+            }));
+          } catch (ragErr) {
+            if (!degradedNotices.includes('retrieval_degraded')) degradedNotices.push('retrieval_degraded');
+            const code = publicChatError(deadline ? new ServiceError('CHAT_DEADLINE', 504) : ragErr).code;
+            yield await emitTrace(trace.add({
+              stage: 'retrieval',
+              state: 'failed',
+              durationMs: trace.duration(retrievalStarted),
+              retrievalMode: 'degraded',
+              embeddingModel: 'text-embedding-3-small',
+              code
+            }));
           }
-          dependencies.receipt?.({ requestId: turn.requestId, provider, model: response.model, priceVersion: PRICE_VERSION,
-            allowanceMicros: costs[provider], usage: response.usage, outcome: 'failed',
-            providerRequestId: response.providerRequestId, gatewayRequestId: response.gatewayRequestId });
-          throw error;
-        }
-      } catch (error) {
-        lastError = error;
-        if (!providerCompleted) {
-          cancelled ||= outerSignal.aborted || await dependencies.state.isCancelled(turn, AbortSignal.timeout(3000)).catch(() => false);
-          yield await emitTrace(trace.add({ stage: 'provider', state: cancelled ? 'cancelled' : 'failed', ...details,
-            durationMs: trace.duration(providerStarted), usageStatus: 'unknown', chargedMicros: costs[provider],
-            ...(cancelled ? {} : { code: publicChatError(deadline ? new ServiceError('CHAT_DEADLINE', 504) : error).code }) }));
         }
       }
+
+      if (routePlan.requestedTools.length > 0 && mcpAvailable && !routePlan.isSafetyRefusal) {
+        const cleanReqPrefix = turn.requestId.replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 12) || 'req';
+        for (const [toolIdx, toolCall] of routePlan.requestedTools.slice(0, 2).entries()) {
+          controller.signal.throwIfAborted();
+          const attemptNum = (toolIdx + 1) as 1 | 2;
+          const toolCallId = `tool-${cleanReqPrefix}-${attemptNum}`;
+          let mcpStarted = trace.timestamp();
+          yield await emitTrace(trace.add({
+            stage: 'mcp',
+            state: 'started',
+            attempt: attemptNum,
+            mcpMethod: 'tools/call',
+            toolName: toolCall.name,
+            toolCallId
+          }));
+          mcpStarted = trace.timestamp();
+          mcpCallsCount += 1;
+          if (!dependencies.mcpClient) {
+            if (!degradedNotices.includes('tools_unavailable')) degradedNotices.push('tools_unavailable');
+            yield await emitTrace(trace.add({
+              stage: 'mcp',
+              state: 'failed',
+              attempt: attemptNum,
+              durationMs: trace.duration(mcpStarted),
+              mcpMethod: 'tools/call',
+              toolName: toolCall.name,
+              toolCallId,
+              toolOutcome: 'error',
+              code: 'unavailable'
+            }));
+          } else {
+            try {
+              const toolRes = await dependencies.mcpClient.callTool(
+                toolCall.name,
+                toolCall.arguments as unknown as ToolInputMap[typeof toolCall.name],
+                { toolCallId, signal: controller.signal }
+              );
+              mcpResults.push({
+                name: toolCall.name,
+                toolCallId,
+                output: toolRes.output
+              });
+              yield await emitTrace(trace.add({
+                stage: 'mcp',
+                state: 'completed',
+                attempt: attemptNum,
+                durationMs: trace.duration(mcpStarted),
+                mcpMethod: 'tools/call',
+                toolName: toolCall.name,
+                toolCallId,
+                toolOutcome: 'completed'
+              }));
+            } catch (mcpErr) {
+              if (!degradedNotices.includes('tools_unavailable')) degradedNotices.push('tools_unavailable');
+              const errCode = (mcpErr as { code?: string })?.code;
+              const isTimeout = errCode === 'MCP_TIMEOUT' || deadline || controller.signal.aborted;
+              const traceCode = isTimeout ? 'deadline_exceeded' : 'upstream_failure';
+              yield await emitTrace(trace.add({
+                stage: 'mcp',
+                state: 'failed',
+                attempt: attemptNum,
+                durationMs: trace.duration(mcpStarted),
+                mcpMethod: 'tools/call',
+                toolName: toolCall.name,
+                toolCallId,
+                toolOutcome: isTimeout ? 'timeout' : 'error',
+                code: traceCode
+              }));
+            }
+          }
+        }
+      }
+
+      const contextStarted = trace.timestamp();
+      effectiveUserContext = buildUserContext(input.message, input.session.history, {
+        retrievedChunks,
+        mcpResults,
+        degradedNotices
+      });
+      input.providers.forEach(provider => providerBody(provider, input.config, effectiveUserContext));
+      yield await emitTrace(trace.add({
+        stage: 'context',
+        state: 'completed',
+        durationMs: trace.duration(contextStarted),
+        corpusVersion: CAG_VERSION,
+        claimCount: CAG_CLAIM_IDS.length + retrievedChunks.length
+      }));
     }
-    if (!result) throw lastError ?? new ServiceError('CHAT_CANCELLED', 409);
+
+    if (isPhase4 && routePlan?.isSafetyRefusal) {
+      const rendered = renderSafetyRefusal(degradedNotices);
+      result = { kind: 'answer', answer: rendered.answer, reply: rendered.reply };
+    } else {
+      let lastError: unknown;
+      for (const [index, provider] of input.providers.entries()) {
+        controller.signal.throwIfAborted();
+        if (await dependencies.state.isCancelled(turn, controller.signal)) { cancelled = true; break; }
+        const details = { attempt: index + 1, provider, model: input.config.models[provider] };
+        const providerReservedMicros = isPhase4
+          ? reservationPlan.reservationComponents[provider === 'openai' ? 'openaiGenerationMicros' : 'anthropicGenerationMicros']
+          : turn.reservations[provider];
+        let providerStarted = trace.timestamp();
+        yield await emitTrace(trace.add({ stage: 'provider', state: 'started', ...details, reservedMicros: providerReservedMicros }));
+        controller.signal.throwIfAborted();
+        providerStarted = trace.timestamp();
+        // Once dispatch is attempted, the whole reservation remains charged unless
+        // bounded, validated usage proves a lower amount. Transport failure is ambiguous.
+        costs[provider] = providerReservedMicros;
+        const attemptRecord: ProviderAttemptSettlementInput = { provider, dispatched: true, usage: null };
+        providerAttempts.push(attemptRecord);
+        let providerCompleted = false;
+        try {
+          const response = await callChatProvider({ provider, config: input.config, providerKey: input.keys[provider],
+            gatewayKey: input.gatewayKey, userContext: effectiveUserContext, signal: controller.signal, fetchImpl: dependencies.fetchImpl });
+          providerCompleted = true;
+          attemptRecord.usage = response.usage;
+          costs[provider] = usageAllowance(response.usage);
+          const usageCount = (value: number | null) => value !== null && Number.isSafeInteger(value) && value >= 0 && value <= 1_000_000 ? value : null;
+          yield await emitTrace(trace.add({ stage: 'provider', state: 'completed', ...details, durationMs: trace.duration(providerStarted),
+            usageStatus: response.usage.status, inputTokens: usageCount(response.usage.inputTokens), outputTokens: usageCount(response.usage.outputTokens),
+            cacheReadInputTokens: usageCount(response.usage.cacheReadInputTokens), cacheWriteInputTokens: usageCount(response.usage.cacheWriteInputTokens),
+            reasoningOutputTokens: usageCount(response.usage.reasoningOutputTokens), chargedMicros: costs[provider],
+            ...(response.providerRequestId ? { providerRequestId: response.providerRequestId } : {}),
+            ...(response.gatewayRequestId ? { gatewayRequestId: response.gatewayRequestId } : {}) }));
+          let validationStarted = trace.timestamp();
+          yield await emitTrace(trace.add({ stage: 'validation', state: 'started', ...details }));
+          validationStarted = trace.timestamp();
+          let validationCompleted = false;
+          try {
+            const rendered = renderSelection(response.text, { additionalNotices: degradedNotices });
+            result = { kind: 'answer', answer: rendered.answer, reply: rendered.reply };
+            validationCompleted = true;
+            yield await emitTrace(trace.add({ stage: 'validation', state: 'completed', ...details,
+              durationMs: trace.duration(validationStarted), corpusVersion: CAG_VERSION,
+              claimCount: result.answer.blocks.filter(block => block.kind === 'claim').length }));
+            dependencies.receipt?.({ requestId: turn.requestId, provider, model: response.model, priceVersion: reservationPlan.priceVersion,
+              allowanceMicros: costs[provider], usage: response.usage, outcome: 'completed',
+              providerRequestId: response.providerRequestId, gatewayRequestId: response.gatewayRequestId });
+            break;
+          } catch (error) {
+            if (!validationCompleted) {
+              cancelled ||= outerSignal.aborted || await dependencies.state.isCancelled(turn, AbortSignal.timeout(3000)).catch(() => false);
+              yield await emitTrace(trace.add({ stage: 'validation', state: cancelled ? 'cancelled' : 'failed', ...details,
+                durationMs: trace.duration(validationStarted), ...(cancelled ? {} : { code: publicChatError(error).code }) }));
+            }
+            dependencies.receipt?.({ requestId: turn.requestId, provider, model: response.model, priceVersion: reservationPlan.priceVersion,
+              allowanceMicros: costs[provider], usage: response.usage, outcome: 'failed',
+              providerRequestId: response.providerRequestId, gatewayRequestId: response.gatewayRequestId });
+            throw error;
+          }
+        } catch (error) {
+          lastError = error;
+          if (!providerCompleted) {
+            cancelled ||= outerSignal.aborted || await dependencies.state.isCancelled(turn, AbortSignal.timeout(3000)).catch(() => false);
+            yield await emitTrace(trace.add({ stage: 'provider', state: cancelled ? 'cancelled' : 'failed', ...details,
+              durationMs: trace.duration(providerStarted), usageStatus: 'unknown', chargedMicros: costs[provider],
+              ...(cancelled ? {} : { code: publicChatError(deadline ? new ServiceError('CHAT_DEADLINE', 504) : error).code }) }));
+          }
+        }
+      }
+      if (!result) throw lastError ?? new ServiceError('CHAT_CANCELLED', 409);
+    }
     controller.signal.throwIfAborted();
     if (await dependencies.state.isCancelled(turn, controller.signal)) { cancelled = true; throw new ServiceError('CHAT_CANCELLED', 409); }
     yield frame('status', { code: 'validating' });
@@ -226,13 +496,31 @@ async function* runTurn(input: {
     // Settlement must survive browser disconnection and request cancellation.
     // Failure leaves the conservative reservation in the durable ledger.
     if (!result) result = { kind: 'error', code: 'unavailable', retryable: true };
-    const settlement = { reservedMicros: turn.reservations.openai + turn.reservations.anthropic,
-      chargedMicros: costs.openai + costs.anthropic, priceVersion: PRICE_VERSION };
+    const settled = isPhase4
+      ? settleTurnCharges({
+          plan: reservationPlan,
+          embeddingDispatched,
+          embeddingUsage,
+          attempts: providerAttempts,
+          mcpCalls: mcpCallsCount,
+          retrievalMatched
+        })
+      : undefined;
+    const actualCosts = settled ? settled.actualCosts : costs;
+    const settlement = settled
+      ? settled.settlement
+      : { reservedMicros: turn.reservations.openai + turn.reservations.anthropic,
+          chargedMicros: costs.openai + costs.anthropic, priceVersion: PRICE_VERSION };
     result = { ...result, trace: trace.snapshot(), settlement };
     const settlementStarted = trace.timestamp();
     try {
-      const completion = await dependencies.state.completeTurn({ turn, actualCosts: costs, result,
-        ...(result.kind === 'answer' ? { historyEntry: { text: input.message.text, result } } : {}) }, AbortSignal.timeout(5000));
+      const completion = await dependencies.state.completeTurn({
+        turn,
+        actualCosts,
+        ...(settled ? { chargeComponents: settled.chargeComponents } : {}),
+        result,
+        ...(result.kind === 'answer' ? { historyEntry: { text: input.message.text, result } } : {})
+      }, AbortSignal.timeout(5000));
       if (!completion.published) result = { kind: 'cancelled' };
       else settlementPoint = trace.add({ stage: 'settlement', state: 'completed', durationMs: trace.duration(settlementStarted), ...settlement });
     } catch {
@@ -253,9 +541,14 @@ export async function prepareChat(request: VerifiedChatRequest, config: Config, 
   const settings = dependencies.settings ?? DEFAULT_CHAT_SETTINGS;
   if (!['openai', 'anthropic'].includes(settings.primaryProvider) || typeof settings.fallbackEnabled !== 'boolean' ||
       !Number.isInteger(settings.turnDeadlineMs) || settings.turnDeadlineMs < 100 || settings.turnDeadlineMs > 50000) throw new ServiceError('CONFIGURATION_UNAVAILABLE', 503);
+  const { ragAvailable, mcpAvailable, isPhase4 } = resolvePhase4Mode(config, dependencies, settings);
   if (request.method === 'GET' && request.path === '/api/chat/config') {
-    const body = { schemaVersion: '1.0.0', available: true, capabilities: { chat: true, cag: true, rag: false, mcp: false, voice: false },
-      limits: { maxMessageBytes: 8192, maxTurns: 8, maxToolsPerTurn: 0, turnDeadlineMs: settings.turnDeadlineMs } };
+    const body = {
+      schemaVersion: '1.0.0',
+      available: true,
+      capabilities: { chat: true, cag: true, rag: ragAvailable, mcp: mcpAvailable, voice: false },
+      limits: { maxMessageBytes: 8192, maxTurns: 8, maxToolsPerTurn: mcpAvailable ? 2 : 0, turnDeadlineMs: settings.turnDeadlineMs }
+    };
     assertContract('configResponse', body);
     return { statusCode: 200, body };
   }
@@ -292,20 +585,56 @@ export async function prepareChat(request: VerifiedChatRequest, config: Config, 
   // All size and credential checks precede reservation; no unavailable provider
   // can silently switch to Cloudflare billing or to a direct provider endpoint.
   providers.forEach(provider => providerBody(provider, config, userContext));
-  trace.add({ stage: 'context', state: 'completed', durationMs: trace.duration(contextStarted), corpusVersion: CAG_VERSION, claimCount: CAG_CLAIM_IDS.length });
+
+  let routePlan: ResolvedRoutePlan | undefined;
+  if (isPhase4) {
+    const routeStarted = trace.timestamp();
+    routePlan = resolveRoutePlan(message, session.history, ragAvailable, mcpAvailable, dependencies.routePlanner);
+    trace.add({
+      stage: 'routing',
+      state: 'completed',
+      durationMs: trace.duration(routeStarted),
+      routingMode: routePlan.traceData.routingMode,
+      needsRetrieval: Boolean(routePlan.needsRetrieval && ragAvailable && !routePlan.isSafetyRefusal),
+      ...(routePlan.traceData.requestedTools && routePlan.traceData.requestedTools.length > 0 && mcpAvailable && !routePlan.isSafetyRefusal
+        ? { requestedTools: routePlan.traceData.requestedTools }
+        : {})
+    });
+  } else {
+    trace.add({ stage: 'context', state: 'completed', durationMs: trace.duration(contextStarted), corpusVersion: CAG_VERSION, claimCount: CAG_CLAIM_IDS.length });
+  }
+
   const keys: Record<Provider, string> = { openai: '', anthropic: '' };
   const gatewayKey = credential(await dependencies.secrets.read(config.gatewaySecretArn, signal));
   await Promise.all(providers.map(async provider => { keys[provider] = credential(await dependencies.secrets.read(config.providerSecretArns[provider], signal)); }));
   const budgetStarted = trace.timestamp();
-  const start = await dependencies.state.beginTurn({ identity, requestId: message.requestId, digest,
-    reservations: reserveCosts(providers), priceVersion: PRICE_VERSION, text: message.text }, signal);
+  const needsEmbedding = Boolean(isPhase4 && routePlan?.needsRetrieval && ragAvailable && !routePlan.isSafetyRefusal);
+  const reservationPlan = planTurnReservation({
+    providers,
+    needsEmbedding,
+    priceVersion: isPhase4 ? (settings.priceVersion ?? PHASE4_PRICE_VERSION) : PRICE_VERSION
+  });
+  const start = await dependencies.state.beginTurn({
+    identity,
+    requestId: message.requestId,
+    digest,
+    reservations: isPhase4 ? reservationPlan.reservations : reserveCosts(providers),
+    ...(isPhase4 ? { reservationComponents: reservationPlan.reservationComponents } : {}),
+    priceVersion: reservationPlan.priceVersion,
+    text: message.text
+  }, signal);
   if (start.kind === 'running') return { statusCode: 202, body: { schemaVersion: '1.0.0', requestId: message.requestId, generation: start.turn.generation, status: 'running' } };
   if (start.kind === 'finished') {
     return { statusCode: 200, events: resultFrames(savedResult(start.turn.result), start.turn, identity, dependencies.state,
       frameBuilder(message.requestId, start.turn.generation)) };
   }
-  trace.add({ stage: 'budget', state: 'completed', durationMs: trace.duration(budgetStarted),
-    reservedMicros: start.turn.reservations.openai + start.turn.reservations.anthropic, priceVersion: PRICE_VERSION });
+  trace.add({
+    stage: 'budget',
+    state: 'completed',
+    durationMs: trace.duration(budgetStarted),
+    reservedMicros: start.turn.reservations.openai + start.turn.reservations.anthropic,
+    priceVersion: reservationPlan.priceVersion
+  });
   // A prior turn can finish between the initial read and lock acquisition.
   // Use the committed history returned with our new lock, never the stale copy.
   const committedContext = buildUserContext(message, start.session.history);
@@ -317,5 +646,6 @@ export async function prepareChat(request: VerifiedChatRequest, config: Config, 
     throw error;
   }
   return { statusCode: 200, events: runTurn({ identity, turn: start.turn, session: start.session, message, userContext: committedContext,
-    providers, keys, gatewayKey, config, dependencies, outerSignal: signal, settings, trace }) };
+    providers, keys, gatewayKey, config, dependencies, outerSignal: signal, settings, trace,
+    isPhase4, ragAvailable, mcpAvailable, ...(routePlan ? { routePlan } : {}), reservationPlan }) };
 }
