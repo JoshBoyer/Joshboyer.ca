@@ -7,7 +7,17 @@ const os = require('node:os');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 const { buildArtifacts, checkArtifacts, writeArtifacts } = require('../tools/build-chat-knowledge.cjs');
-const { validateCorpus, validateArtifacts, digest, sha256 } = require('../chat/knowledge/validate.cjs');
+const { clientEvidence } = require('../tools/build-chat-client.cjs');
+const {
+  validateCorpus,
+  validateArtifacts,
+  validateChunksManifest,
+  createChunksManifest,
+  deriveDeliveryStatus,
+  digest,
+  sha256
+} = require('../chat/knowledge/validate.cjs');
+const { assertToolOutput } = require('../chat/contracts/index.cjs');
 const policy = require('../chat/knowledge/policy.json');
 
 const ROOT = path.resolve(__dirname, '..');
@@ -253,4 +263,293 @@ test('CLI accepts only its fixed input and optional check mode', () => {
   const result = spawnSync(process.execPath, ['tools/build-chat-knowledge.cjs', '--input', 'knowledge/private.md'], { cwd: ROOT, encoding: 'utf8' });
   assert.equal(result.status, 1);
   assert.match(result.stderr, /Usage:/);
+});
+
+test('chunks-manifest.json is built deterministically with pinned embedding config, delivery status, bounded embedding text and lexical tokens', () => {
+  const { corpus, cag, chunksManifest } = buildArtifacts();
+  assert.ok(chunksManifest && typeof chunksManifest === 'object');
+  assert.equal(chunksManifest.schemaVersion, '1.0.0');
+  assert.equal(chunksManifest.corpusVersion, corpus.corpusVersion);
+  assert.equal(chunksManifest.indexVersion, `idx-${corpus.corpusVersion.slice(7, 23)}`);
+  assert.match(chunksManifest.indexVersion, /^[A-Za-z0-9._:-]{1,96}$/);
+  assert.equal(chunksManifest.embeddingModel, 'text-embedding-3-small');
+  assert.equal(chunksManifest.dimensions, 1536);
+  assert.equal(chunksManifest.chunks.length, 14);
+  assert.deepEqual(
+    chunksManifest.chunks.map(chunk => chunk.id),
+    [...chunksManifest.chunks.map(chunk => chunk.id)].sort()
+  );
+
+  const sourcesById = new Map(corpus.sources.map(source => [source.id, source]));
+  for (const entry of chunksManifest.chunks) {
+    const sourceChunk = corpus.chunks.find(item => item.id === entry.id);
+    assert.ok(sourceChunk, `Expected source chunk for ${entry.id}`);
+    assert.equal(entry.claimId, `claim-${entry.id}`);
+    assert.equal(entry.kind, sourceChunk.kind);
+    assert.equal(entry.projectId, sourceChunk.projectId);
+    assert.equal(entry.roleId, sourceChunk.roleId);
+    assert.equal(entry.title, sourceChunk.title);
+    assert.equal(entry.period, sourceChunk.period);
+    assert.equal(entry.confidence, 'approved-public-account');
+    assert.deepEqual(entry.tags, sourceChunk.tags);
+    assert.equal(entry.decision, sourceChunk.decision);
+    assert.deepEqual(entry.process, sourceChunk.process);
+    assert.equal(entry.technicalGuidance, sourceChunk.technicalGuidance);
+    assert.equal(entry.outcome, sourceChunk.outcome);
+    assert.equal(entry.resumeText, sourceChunk.resumeText);
+    assert.deepEqual(entry.qualificationNotes, sourceChunk.qualificationNotes);
+    assert.deepEqual(entry.sourceIds, sourceChunk.sourceRefs);
+    assert.deepEqual(
+      entry.sourceUrls,
+      [...new Set(sourceChunk.sourceRefs.map(id => sourcesById.get(id).url))]
+    );
+    assert.ok(
+      ['production', 'implemented_supported', 'approved_design_interim', 'independent_capstone', 'historical_personal'].includes(entry.deliveryStatus)
+    );
+    assert.ok(Buffer.byteLength(entry.embeddingText, 'utf8') > 0);
+    assert.ok(Buffer.byteLength(entry.embeddingText, 'utf8') <= 4096);
+    assert.ok(entry.embeddingText.includes(entry.title));
+    assert.ok(entry.embeddingText.includes(entry.period));
+    assert.ok(entry.embeddingText.includes(entry.resumeText));
+    assert.ok(entry.embeddingText.includes(entry.decision));
+    assert.ok(entry.embeddingText.includes(entry.technicalGuidance));
+    assert.ok(entry.embeddingText.includes(entry.outcome));
+    assert.ok(entry.embeddingText.includes('Qualification boundaries:'));
+    for (const note of entry.qualificationNotes) {
+      assert.ok(entry.embeddingText.includes(note), `Missing qualification note in embeddingText for ${entry.id}`);
+    }
+    assert.ok(Array.isArray(entry.lexicalTokens) && entry.lexicalTokens.length >= 10);
+    assert.deepEqual(entry.lexicalTokens, [...new Set(entry.lexicalTokens)].sort());
+    for (const token of entry.lexicalTokens) {
+      assert.equal(token, token.toLowerCase());
+    }
+    const { contentSha256, ...chunkPayload } = entry;
+    assert.equal(contentSha256, digest(chunkPayload));
+  }
+
+  const { manifestSha256, ...manifestPayload } = chunksManifest;
+  assert.equal(manifestSha256, digest(manifestPayload));
+  assert.deepEqual(chunksManifest, createChunksManifest(corpus));
+  assert.equal(validateChunksManifest(chunksManifest, corpus), true);
+  assert.equal(validateArtifacts({ corpus, cag, chunksManifest }), true);
+  assert.ok(fs.existsSync(path.join(ROOT, 'chat/knowledge/chunks-manifest.json')));
+});
+
+test('chunks-manifest.json caseStudies index all 13 active projects and satisfy get_case_study_output contract', () => {
+  const { chunksManifest } = buildArtifacts();
+  assert.equal(chunksManifest.caseStudies.length, 13);
+  assert.deepEqual(
+    chunksManifest.caseStudies.map(item => item.projectId),
+    [...chunksManifest.caseStudies.map(item => item.projectId)].sort()
+  );
+
+  const claimsStudy = chunksManifest.caseStudies.find(item => item.projectId === 'claims');
+  assert.ok(claimsStudy);
+  assert.deepEqual(claimsStudy.chunkIds, ['experience-claims', 'experience-provider-sync-review']);
+  assert.deepEqual(claimsStudy.claimIds, ['claim-experience-claims', 'claim-experience-provider-sync-review']);
+  assert.equal(claimsStudy.sources.length, 2);
+
+  for (const cs of chunksManifest.caseStudies) {
+    const toolOutput = {
+      schemaVersion: '1.0.0',
+      corpusVersion: chunksManifest.corpusVersion,
+      projectId: cs.projectId,
+      chunkId: cs.chunkId,
+      claimId: cs.claimId,
+      title: cs.title,
+      period: cs.period,
+      text: cs.text,
+      decision: cs.decision,
+      process: cs.process,
+      technicalGuidance: cs.technicalGuidance,
+      outcome: cs.outcome,
+      tags: cs.tags,
+      qualificationNotes: cs.qualificationNotes,
+      sources: cs.sources
+    };
+    assert.deepEqual(assertToolOutput('get_case_study', toolOutput), toolOutput);
+  }
+});
+
+test('all 7 AGENTS.md career accuracy rules and delivery statuses are explicitly preserved in chunks-manifest.json', () => {
+  const { corpus, chunksManifest } = buildArtifacts();
+  const byId = new Map(chunksManifest.chunks.map(chunk => [chunk.id, chunk]));
+
+  // 1. Dell starts September 2006
+  const dell = byId.get('experience-dell');
+  assert.equal(dell.period, '2006–2007');
+  assert.equal(dell.deliveryStatus, 'production');
+  assert.ok(dell.qualificationNotes.includes('September 2006 start confirmed; broad subsequent chronology.'));
+  assert.ok(dell.lexicalTokens.includes('september'));
+  assert.ok(dell.lexicalTokens.includes('2006'));
+
+  // 2. Grenville tenure 2009-2022; formal analyst transition unresolved between 2014 and 2016; no formal Architect title
+  const grenvilleChunks = chunksManifest.chunks.filter(chunk => chunk.roleId === 'role-grenville');
+  assert.equal(grenvilleChunks.length, 6);
+  for (const chunk of grenvilleChunks) {
+    assert.equal(chunk.deliveryStatus, 'production');
+    assert.ok(
+      chunk.qualificationNotes.includes(
+        'This is a responsibility summary, not a single formal job title. The exact analyst transition year is unresolved (2014 versus 2016 in prior accounts).'
+      )
+    );
+    assert.match(chunk.embeddingText, /2014 versus 2016/);
+  }
+
+  // 3. Renewal automation rates absent from reusable dataset per boundary rule
+  const renewals = byId.get('experience-renewals');
+  assert.equal(renewals.deliveryStatus, 'production');
+  assert.doesNotMatch(renewals.resumeText, /(?:80|60|40)\s*%/);
+  assert.doesNotMatch(renewals.embeddingText, /(?:80|60|40)\s*%/);
+  assert.ok(
+    corpus.boundaries.includes(
+      'Do not add numerical renewal rates from another source. Those rates are absent from this approved reusable dataset.'
+    )
+  );
+
+  // 4. Medavie provider integration: scheduled table-backed sync + REST consumer, live with continuing support, not Kafka
+  for (const id of ['experience-claims', 'experience-provider-sync-review']) {
+    const provider = byId.get(id);
+    assert.equal(provider.deliveryStatus, 'implemented_supported');
+    assert.ok(provider.process.includes('Scheduled table-backed synchronization with REST retrieval'));
+    assert.ok(provider.qualificationNotes.includes('Integrations are live by Josh’s account, with continuing testing and production support.'));
+    assert.ok(provider.qualificationNotes.includes('Requirements, mappings and support do not imply sole service development or a Kafka implementation.'));
+    assert.ok(provider.lexicalTokens.includes('kafka'));
+    assert.ok(provider.lexicalTokens.includes('message broker'));
+  }
+
+  // 5. Takeover tooling: production Excel VBA add-in designed and built by Josh; backend changes guided with developers
+  const takeover = byId.get('experience-takeover');
+  assert.equal(takeover.deliveryStatus, 'production');
+  assert.match(takeover.resumeText, /Designed and built a production Excel VBA add-in/);
+  assert.ok(takeover.qualificationNotes.includes('Josh designed and built the production Excel VBA add-in; backend and schema changes were guided with developers.'));
+  assert.ok(takeover.lexicalTokens.includes('vba'));
+  assert.ok(takeover.lexicalTokens.includes('excel'));
+
+  // 6. Reporting continuity (approved design + operational interim SQL; permanent extract unconfirmed live; replacement proposed) & SQL financial reconciliation (adopted by payment team)
+  const continuity = byId.get('experience-continuity');
+  assert.equal(continuity.deliveryStatus, 'approved_design_interim');
+  assert.match(continuity.resumeText, /approved compatibility design and delivered operational interim SQL reports/);
+  assert.match(continuity.resumeText, /permanent extract remains unconfirmed live/);
+  assert.ok(continuity.process.includes('Permanent extract not confirmed live; simpler replacement remained proposed'));
+
+  const sql = byId.get('experience-sql');
+  assert.equal(sql.deliveryStatus, 'production');
+  assert.match(sql.resumeText, /adopted in the payment team’s production process/);
+
+  // 7. NEXUS independent capstone; LOWKEY/Workshop42 historical/personal
+  const nexus = byId.get('experience-nexus');
+  assert.equal(nexus.deliveryStatus, 'independent_capstone');
+  assert.ok(nexus.qualificationNotes.includes('Independent project, not employer experience.'));
+  assert.ok(nexus.qualificationNotes.includes('No employer delivery or production maturity is inferred from personal projects.'));
+  assert.ok(!byId.has('experience-lowkey'));
+  assert.equal(
+    deriveDeliveryStatus({
+      id: 'experience-lowkey',
+      kind: 'project',
+      projectId: 'lowkey',
+      roleId: 'role-independent',
+      outcome: 'Implemented local decoding workflows',
+      resumeText: 'Archived independent project',
+      technicalGuidance: 'Independent application',
+      qualificationNotes: ['Independent project, not employer experience.']
+    }),
+    'historical_personal'
+  );
+});
+
+test('chunks-manifest validation rejects tampered digests, wrong indexVersion, wrong embedding config, missing qualification notes, and oversized embedding text', t => {
+  const rehashManifest = (manifest) => {
+    manifest.chunks = manifest.chunks.map(chunk => {
+      const { contentSha256: _old, ...rest } = chunk;
+      return { ...rest, contentSha256: digest(rest) };
+    });
+    const { manifestSha256: _oldManifest, ...restManifest } = manifest;
+    manifest.manifestSha256 = digest(restManifest);
+  };
+
+  for (const mutate of [
+    artifacts => { artifacts.chunksManifest.manifestSha256 = '0'.repeat(64); },
+    artifacts => { artifacts.chunksManifest.chunks[0].contentSha256 = '0'.repeat(64); },
+    artifacts => { artifacts.chunksManifest.corpusVersion = `sha256:${'0'.repeat(64)}`; },
+    artifacts => {
+      artifacts.chunksManifest.indexVersion = 'idx-0000000000000000';
+      rehashManifest(artifacts.chunksManifest);
+    },
+    artifacts => {
+      artifacts.chunksManifest.embeddingModel = 'text-embedding-ada-002';
+      rehashManifest(artifacts.chunksManifest);
+    },
+    artifacts => {
+      artifacts.chunksManifest.dimensions = 3072;
+      rehashManifest(artifacts.chunksManifest);
+    },
+    artifacts => {
+      artifacts.chunksManifest.chunks[0].deliveryStatus = 'production';
+      rehashManifest(artifacts.chunksManifest);
+    },
+    artifacts => {
+      artifacts.chunksManifest.chunks[0].embeddingText = 'Title: Tampered without qualifications';
+      rehashManifest(artifacts.chunksManifest);
+    },
+    artifacts => {
+      artifacts.chunksManifest.chunks[0].embeddingText = `${artifacts.chunksManifest.chunks[0].embeddingText}\n${'x'.repeat(4096)}`;
+      rehashManifest(artifacts.chunksManifest);
+    },
+    artifacts => {
+      artifacts.chunksManifest.chunks[0].lexicalTokens = ['z-token', 'a-token'];
+      rehashManifest(artifacts.chunksManifest);
+    },
+    artifacts => {
+      artifacts.chunksManifest.caseStudies[0].title = 'Tampered case study title';
+      rehashManifest(artifacts.chunksManifest);
+    }
+  ]) {
+    const artifacts = clonedArtifacts();
+    mutate(artifacts);
+    assert.throws(() => validateArtifacts(artifacts));
+  }
+
+  const root = fixture(t);
+  writeArtifacts({ root });
+  const manifestPath = path.join(root, 'chat/knowledge/chunks-manifest.json');
+  assert.ok(fs.existsSync(manifestPath));
+  fs.writeFileSync(manifestPath, `${fs.readFileSync(manifestPath, 'utf8')}\n`);
+  assert.throws(() => checkArtifacts({ root }), /Stale or missing knowledge artifact: chat\/knowledge\/chunks-manifest\.json/);
+});
+
+test('adversarial canaries, oversized inputs and symlinked manifest paths fail closed without leaking', t => {
+  const root = fixture(t);
+  const canaryA07 = 'CANARY-A07-SECRET-f09d12a4';
+  const canaryPrivate = 'CANARY-PRIVATE-CORPUS-9f4a2c81';
+  fs.mkdirSync(path.join(root, 'knowledge'), { recursive: true });
+  fs.writeFileSync(path.join(root, 'knowledge', 'secret-notes.md'), `${canaryA07}\n${canaryPrivate}`);
+  fs.writeFileSync(path.join(root, 'JOSH-BOYER-PORTFOLIO-CORPUS.md'), `${canaryA07}\n${canaryPrivate}`);
+  fs.appendFileSync(path.join(root, 'dist/index.html'), `<!-- ${canaryA07} ${canaryPrivate} -->`);
+  changeInput(root, data => {
+    data.untrustedCanary = canaryA07;
+    data.person.privateCanary = canaryPrivate;
+    const inactive = data.chunks.find(chunk => chunk.active === false);
+    inactive.resumeText = `${canaryA07} ${canaryPrivate}`;
+    inactive.decision = canaryA07;
+  });
+
+  const written = writeArtifacts({ root });
+  const serializedAll = JSON.stringify({
+    ...written,
+    clientEvidence: clientEvidence(written.corpus)
+  });
+  assert.ok(!serializedAll.includes(canaryA07));
+  assert.ok(!serializedAll.includes(canaryPrivate));
+
+  for (const rel of ['chat/knowledge/corpus.json', 'chat/knowledge/cag-context.json', 'chat/knowledge/chunks-manifest.json']) {
+    const diskText = fs.readFileSync(path.join(root, rel), 'utf8');
+    assert.ok(!diskText.includes(canaryA07), `Canary leaked into ${rel}`);
+    assert.ok(!diskText.includes(canaryPrivate), `Private canary leaked into ${rel}`);
+  }
+
+  // Oversized input (> 1 MiB) rejected before parsing
+  const oversizedRoot = fixture(t);
+  fs.writeFileSync(path.join(oversizedRoot, INPUT), 'x'.repeat(1024 * 1024 + 1));
+  assert.throws(() => buildArtifacts({ root: oversizedRoot }), /Knowledge input exceeds byte limit/);
 });

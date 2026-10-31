@@ -3,13 +3,17 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const policy = require('../chat/knowledge/policy.json');
-const { sha256, digest, validateArtifacts, createCag } = require('../chat/knowledge/validate.cjs');
-const { assertCorpusCompatible } = require('../chat/contracts/index.cjs');
+const { sha256, digest, validateArtifacts, createCag, createChunksManifest } = require('../chat/knowledge/validate.cjs');
+const { assertCorpusCompatible, assertToolOutput } = require('../chat/contracts/index.cjs');
 
 const ROOT = path.resolve(__dirname, '..');
 const INPUT = 'dist/career-evidence.v3.json';
 const ANCHORS = 'dist/index.html';
-const OUTPUTS = Object.freeze({ corpus: 'chat/knowledge/corpus.json', cag: 'chat/knowledge/cag-context.json' });
+const OUTPUTS = Object.freeze({
+  corpus: 'chat/knowledge/corpus.json',
+  cag: 'chat/knowledge/cag-context.json',
+  chunksManifest: 'chat/knowledge/chunks-manifest.json'
+});
 const CHUNK_FIELDS = ['id', 'kind', 'projectId', 'roleId', 'title', 'period', 'tags', 'decision', 'process', 'technicalGuidance', 'outcome', 'resumeText', 'sourceRefs', 'confidence', 'qualificationNotes'];
 const ROLE_FIELDS = ['id', 'employer', 'title', 'period', 'scope', 'qualificationNotes'];
 
@@ -124,9 +128,31 @@ function buildArtifacts({ root = ROOT } = {}) {
     boundaries: policy.boundaries
   };
   const corpus = { schemaVersion: content.schemaVersion, corpusVersion: `sha256:${digest(content)}`, ...content };
-  const artifacts = { corpus, cag: createCag(corpus) };
-  validateArtifacts(artifacts);
+  const cag = createCag(corpus);
+  validateArtifacts({ corpus, cag });
   assertCorpusCompatible(corpus);
+  const chunksManifest = createChunksManifest(corpus);
+  const artifacts = { corpus, cag, chunksManifest };
+  validateArtifacts(artifacts);
+  for (const cs of artifacts.chunksManifest.caseStudies) {
+    assertToolOutput('get_case_study', {
+      schemaVersion: policy.schemaVersion,
+      corpusVersion: corpus.corpusVersion,
+      projectId: cs.projectId,
+      chunkId: cs.chunkId,
+      claimId: cs.claimId,
+      title: cs.title,
+      period: cs.period,
+      text: cs.text,
+      decision: cs.decision,
+      process: cs.process,
+      technicalGuidance: cs.technicalGuidance,
+      outcome: cs.outcome,
+      tags: cs.tags,
+      qualificationNotes: cs.qualificationNotes,
+      sources: cs.sources
+    });
+  }
   return artifacts;
 }
 
