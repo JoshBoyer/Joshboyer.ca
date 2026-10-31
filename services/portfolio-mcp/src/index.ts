@@ -29,6 +29,7 @@ export {
   type McpClientErrorCode
 } from './client.js';
 export { createMcpLambdaHandler, handler } from './handler.js';
+export * from './tools/index.js';
 
 export interface McpHttpRequest {
   readonly method: string;

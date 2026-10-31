@@ -379,6 +379,14 @@ export function verifySigV4Request(
 }
 
 function loadDefaultToolRegistry(): ToolRegistry {
+  try {
+    const mod = require('./tools/index.js') as Record<string, unknown>;
+    if (mod && typeof mod === 'object' && mod.defaultToolRegistry && typeof mod.defaultToolRegistry === 'object') {
+      return mod.defaultToolRegistry as ToolRegistry;
+    }
+  } catch {
+    // Fallback to dynamic discovery in unbundled TS environments
+  }
   for (const candidate of ['./tools/index.js', './tools/index.ts']) {
     try {
       const mod = require(candidate) as Record<string, unknown>;

@@ -1,7 +1,11 @@
 'use strict';
 const { build } = require('esbuild');
 build({
-  entryPoints: ['src/handler.ts', 'src/authorizer.ts'],
+  entryPoints: {
+    handler: 'src/handler.ts',
+    authorizer: 'src/authorizer.ts',
+    mcp: '../portfolio-mcp/src/handler.ts'
+  },
   bundle: true,
   platform: 'node',
   target: 'node24',
