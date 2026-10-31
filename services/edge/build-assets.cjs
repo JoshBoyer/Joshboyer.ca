@@ -6,8 +6,9 @@ const root = path.resolve(__dirname, '../..');
 execFileSync(process.execPath, [path.join(root, 'tools/build-chat-client.cjs'), '--check'], { stdio: 'inherit' });
 // Copy an explicit public asset allowlist. The repository and private corpus
 // must never become a Workers asset directory.
-const assets = ['chat-assistant.js', 'chat-assistant.css', 'chat-evidence.json',
-  'assets/fonts/manrope-latin.woff2', 'assets/fonts/plus-jakarta-sans-latin.woff2', 'assets/fonts/ibm-plex-mono-400-latin.woff2'];
+const assets = ['chat-assistant.js', 'chat-request-details.js', 'chat-assistant.css', 'chat-evidence.json',
+  'assets/fonts/manrope-latin.woff2', 'assets/fonts/plus-jakarta-sans-latin.woff2', 'assets/fonts/ibm-plex-mono-400-latin.woff2',
+  'assets/personal/josh-portrait-smiling.jpg', 'assets/optimized-extra/personal/josh-portrait-vest-640.webp'];
 for (const relative of assets) {
   const target = path.join(__dirname, 'build/assets', relative);
   fs.mkdirSync(path.dirname(target), { recursive: true });
