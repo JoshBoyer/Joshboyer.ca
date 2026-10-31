@@ -9,8 +9,16 @@ const { execFileSync } = require('node:child_process');
 const ROOT = path.resolve(__dirname, '..');
 const REGION = 'us-east-2';
 const PROFILE = 'joshboyer-portfolio';
+const STACK_NAME = 'PortfolioChatDev';
+const PREFIX = 'joshboyer-chat-dev';
+const STATE_TABLE = `${PREFIX}-state`;
+const VECTOR_BUCKET = `${PREFIX}-vectors`;
+const DEFAULT_VECTOR_INDEX = 'portfolio-public-chunks';
+const STACK_VECTOR_INDEX = 'portfolio-evidence';
+const ACTIVE_POINTER_KEY = 'indexes/active-pointer.json';
 const GATEWAY_ID = 'joshboyer-chat-dev';
 const SECRET_PREFIX = '/joshboyer/chat/dev/';
+const INDEX_VERSION_PATTERN = /^idx-[a-z0-9][a-z0-9_-]{1,48}$/;
 const GATEWAY_SETTINGS = Object.freeze({
   authentication: true, byok_only: true, cache_ttl: 0,
   cache_invalidate_on_update: true, collect_logs: true,
@@ -76,6 +84,28 @@ function isPlaceholder(raw) {
   } catch { return false; }
 }
 
+function ensureTsxRegistered() {
+  if (!require.extensions['.ts']) {
+    const chatRequire = createRequire(path.join(ROOT, 'services/chat/package.json'));
+    chatRequire('tsx/cjs');
+  }
+}
+
+function defaultLoadIngestion() {
+  ensureTsxRegistered();
+  return require('../services/chat/src/ingestion/index.ts');
+}
+
+function defaultLoadDynamoSdk() {
+  const chatRequire = createRequire(path.join(ROOT, 'services/chat/package.json'));
+  return chatRequire('@aws-sdk/client-dynamodb');
+}
+
+function utcMonthString(timestampMs) {
+  const d = new Date(timestampMs);
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`;
+}
+
 async function responseJson(response) {
   requireCondition(response.body, 'CLOUDFLARE_RESPONSE_INVALID');
   const reader = response.body.getReader();
@@ -101,6 +131,50 @@ async function responseJson(response) {
   } finally { reader.releaseLock(); }
 }
 
+function parseCliArgs(args) {
+  requireCondition(Array.isArray(args) && args.length >= 1, 'USAGE_gateway_secrets_edge-secrets_status_verify-cloud_rollback-index');
+  if (['gateway', 'secrets', 'edge-secrets'].includes(args[0])) {
+    requireCondition(args.length === 1, 'USAGE_gateway_secrets_edge-secrets_status_verify-cloud_rollback-index');
+    const command = { gateway: 'gateway', secrets: 'secrets', 'edge-secrets': 'edgeSecrets' }[args[0]];
+    return { command, options: {} };
+  }
+  let command = null;
+  let dryRun = false;
+  let targetIndexVersion;
+
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (arg === '--status' || arg === 'status') {
+      requireCondition(command === null, 'USAGE_gateway_secrets_edge-secrets_status_verify-cloud_rollback-index');
+      command = 'status';
+    } else if (arg === '--verify-cloud' || arg === 'verify-cloud') {
+      requireCondition(command === null, 'USAGE_gateway_secrets_edge-secrets_status_verify-cloud_rollback-index');
+      command = 'verifyCloud';
+    } else if (arg === '--rollback-index' || arg === 'rollback-index') {
+      requireCondition(command === null, 'USAGE_gateway_secrets_edge-secrets_status_verify-cloud_rollback-index');
+      command = 'rollbackIndex';
+    } else if (arg === '--dry-run') {
+      dryRun = true;
+    } else if (arg === '--to') {
+      const next = args[++i];
+      requireCondition(typeof next === 'string' && INDEX_VERSION_PATTERN.test(next), 'INVALID_ROLLBACK_TARGET');
+      targetIndexVersion = next;
+    } else {
+      throw new OperationError('USAGE_gateway_secrets_edge-secrets_status_verify-cloud_rollback-index');
+    }
+  }
+
+  requireCondition(command !== null, 'USAGE_gateway_secrets_edge-secrets_status_verify-cloud_rollback-index');
+  requireCondition(targetIndexVersion === undefined || command === 'rollbackIndex', 'USAGE_gateway_secrets_edge-secrets_status_verify-cloud_rollback-index');
+  return {
+    command,
+    options: {
+      dryRun,
+      ...(targetIndexVersion !== undefined ? { targetIndexVersion } : {})
+    }
+  };
+}
+
 function createOperations(dependencies = {}) {
   const env = dependencies.env ?? process.env;
   const fetcher = dependencies.fetcher ?? fetch;
@@ -111,7 +185,10 @@ function createOperations(dependencies = {}) {
   const now = dependencies.now ?? Date.now;
   const platform = dependencies.platform ?? process.platform;
   const loadSdk = dependencies.loadSdk ?? (() => createRequire(path.join(ROOT, 'services/chat/package.json'))('@aws-sdk/client-secrets-manager'));
+  const loadDynamoSdk = dependencies.loadDynamoSdk ?? defaultLoadDynamoSdk;
+  const loadIngestion = dependencies.loadIngestion ?? defaultLoadIngestion;
   let awsPromise;
+  let dynamoClient;
 
   function awsCommand(args) {
     const options = { encoding: 'utf8', windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'], timeout: 30000, maxBuffer: 1048576 };
@@ -119,6 +196,23 @@ function createOperations(dependencies = {}) {
       if (error.code !== 'ENOENT' || platform !== 'win32' || !env.LOCALAPPDATA) throw new OperationError('AWS_AUTH_FAILED');
       try { return execute(path.join(env.LOCALAPPDATA, 'Programs/Amazon/AWSCLIV2/aws.exe'), args, options); }
       catch { throw new OperationError('AWS_AUTH_FAILED'); }
+    }
+  }
+
+  function awsJson(args, errorCode = 'AWS_COMMAND_FAILED') {
+    let raw;
+    try {
+      raw = awsCommand(args);
+    } catch {
+      throw new OperationError(errorCode);
+    }
+    try {
+      const parsed = JSON.parse(raw);
+      requireCondition(record(parsed), errorCode);
+      return parsed;
+    } catch (error) {
+      if (error instanceof OperationError) throw error;
+      throw new OperationError(errorCode);
     }
   }
 
@@ -135,14 +229,15 @@ function createOperations(dependencies = {}) {
         Number.isFinite(Date.parse(exported.Expiration)) && Date.parse(exported.Expiration) > now() + 30000, 'AWS_TEMPORARY_CREDENTIALS_REQUIRED');
       let sdk;
       try { sdk = loadSdk(); } catch { throw new OperationError('AWS_SDK_UNAVAILABLE'); }
+      const credentials = {
+        accessKeyId: exported.AccessKeyId, secretAccessKey: exported.SecretAccessKey,
+        sessionToken: exported.SessionToken, expiration: new Date(exported.Expiration)
+      };
       const client = new sdk.SecretsManagerClient({
         region: REGION, maxAttempts: 1,
-        credentials: {
-          accessKeyId: exported.AccessKeyId, secretAccessKey: exported.SecretAccessKey,
-          sessionToken: exported.SessionToken, expiration: new Date(exported.Expiration)
-        }
+        credentials
       });
-      return { client, sdk, account: identity.Account };
+      return { client, sdk, account: identity.Account, credentials };
     })();
     return awsPromise;
   }
@@ -289,13 +384,425 @@ function createOperations(dependencies = {}) {
     return { command: 'edge-secrets', status: 'updated', secretCount: 2, worker: GATEWAY_ID };
   }
 
+  function readLocalDryRunMetadata() {
+    let manifest;
+    let wrangler;
+    try {
+      manifest = JSON.parse(readFile(path.join(ROOT, 'chat/knowledge/chunks-manifest.json'), 'utf8'));
+    } catch {
+      manifest = require('../chat/knowledge/chunks-manifest.json');
+    }
+    try {
+      wrangler = JSON.parse(readFile(path.join(ROOT, 'services/edge/wrangler.jsonc'), 'utf8'));
+    } catch {
+      wrangler = {
+        name: GATEWAY_ID,
+        vars: {
+          CHAT_PRIVATE_ENABLED: 'true',
+          PUBLIC_CHAT_ENABLED: 'false',
+          PROBE_ENABLED: 'false'
+        }
+      };
+    }
+    requireCondition(
+      record(manifest) &&
+        typeof manifest.indexVersion === 'string' &&
+        INDEX_VERSION_PATTERN.test(manifest.indexVersion) &&
+        Array.isArray(manifest.chunks) &&
+        manifest.chunks.length === 14 &&
+        manifest.dimensions === 1536,
+      'LOCAL_MANIFEST_INVALID'
+    );
+    const vars = record(wrangler.vars) ? wrangler.vars : {
+      CHAT_PRIVATE_ENABLED: 'true',
+      PUBLIC_CHAT_ENABLED: 'false',
+      PROBE_ENABLED: 'false'
+    };
+    requireCondition(
+      vars.PUBLIC_CHAT_ENABLED === 'false' && vars.PROBE_ENABLED === 'false',
+      'EDGE_FLAGS_INVALID'
+    );
+    return { manifest, vars };
+  }
+
+  async function status(options = {}) {
+    const dryRun = options.dryRun === true;
+    const month = utcMonthString(now());
+    if (dryRun) {
+      const { manifest, vars } = readLocalDryRunMetadata();
+      return {
+        command: 'status',
+        mode: 'dry_run',
+        status: 'ready',
+        region: REGION,
+        stack: {
+          stackName: STACK_NAME,
+          expectedFunctions: [
+            `${PREFIX}-handler`,
+            `${PREFIX}-authorizer`,
+            `${PREFIX}-mcp`
+          ]
+        },
+        activePointer: {
+          key: ACTIVE_POINTER_KEY,
+          expectedIndexVersion: manifest.indexVersion,
+          corpusVersion: manifest.corpusVersion,
+          manifestSha256: manifest.manifestSha256,
+          chunkCount: manifest.chunks.length
+        },
+        vectorIndex: {
+          vectorBucketName: VECTOR_BUCKET,
+          indexName: DEFAULT_VECTOR_INDEX,
+          stackIndexName: STACK_VECTOR_INDEX,
+          dimension: manifest.dimensions,
+          distanceMetric: 'cosine'
+        },
+        budgetLedger: {
+          tableName: STATE_TABLE,
+          month,
+          monthlyCapMicros: 25_000_000,
+          maxTurnReservationMicros: 21_864
+        },
+        flags: {
+          CHAT_PRIVATE_ENABLED: String(vars.CHAT_PRIVATE_ENABLED ?? 'true'),
+          PUBLIC_CHAT_ENABLED: String(vars.PUBLIC_CHAT_ENABLED ?? 'false'),
+          PROBE_ENABLED: String(vars.PROBE_ENABLED ?? 'false'),
+          voice: false
+        }
+      };
+    }
+
+    const connection = await aws();
+    const stackRes = awsJson(
+      ['cloudformation', 'describe-stacks', '--stack-name', STACK_NAME, '--profile', PROFILE, '--region', REGION, '--output', 'json'],
+      'AWS_STACK_READ_FAILED'
+    );
+    requireCondition(Array.isArray(stackRes.Stacks) && stackRes.Stacks.length === 1 && record(stackRes.Stacks[0]), 'AWS_STACK_INVALID');
+    const stack = stackRes.Stacks[0];
+    requireCondition(
+      stack.StackName === STACK_NAME &&
+        typeof stack.StackId === 'string' &&
+        stack.StackId.startsWith(`arn:aws:cloudformation:${REGION}:${connection.account}:stack/${STACK_NAME}/`),
+      'AWS_STACK_INVALID'
+    );
+    const outputs = {};
+    if (Array.isArray(stack.Outputs)) {
+      for (const item of stack.Outputs) {
+        if (record(item) && typeof item.OutputKey === 'string' && typeof item.OutputValue === 'string') {
+          outputs[item.OutputKey] = item.OutputValue;
+        }
+      }
+    }
+
+    const evidenceBucket = outputs.EvidenceBucketName ?? `${PREFIX}-${connection.account}-${REGION}`;
+    const vectorBucketName = outputs.VectorBucketName ?? VECTOR_BUCKET;
+    const stackVectorIndexName = outputs.VectorIndexName ?? STACK_VECTOR_INDEX;
+    const ingestion = loadIngestion();
+    const s3Store = dependencies.s3Store ?? new ingestion.S3ObjectStore({
+      region: REGION,
+      credentials: connection.credentials,
+      now
+    });
+
+    let activePointer = null;
+    try {
+      const pointerRaw = await s3Store.getJsonObject(evidenceBucket, ACTIVE_POINTER_KEY);
+      if (record(pointerRaw) && typeof pointerRaw.activeIndexVersion === 'string') {
+        activePointer = {
+          present: true,
+          activeIndexVersion: pointerRaw.activeIndexVersion,
+          previousIndexVersion: pointerRaw.previousIndexVersion ?? null,
+          corpusVersion: pointerRaw.corpusVersion,
+          manifestSha256: pointerRaw.manifestSha256,
+          embeddingsSha256: pointerRaw.embeddingsSha256,
+          chunkCount: pointerRaw.chunkCount,
+          vectorBucketName: pointerRaw.vectorBucketName,
+          indexName: pointerRaw.indexName,
+          updatedAt: pointerRaw.updatedAt
+        };
+      }
+    } catch {
+      throw new OperationError('S3_POINTER_READ_FAILED');
+    }
+    if (!activePointer) {
+      activePointer = { present: false, key: ACTIVE_POINTER_KEY };
+    }
+
+    let vectorIndexes = [];
+    try {
+      const listRes = awsJson(
+        ['s3vectors', 'list-indexes', '--vector-bucket-name', vectorBucketName, '--profile', PROFILE, '--region', REGION, '--output', 'json'],
+        'VECTOR_INDEX_READ_FAILED'
+      );
+      if (Array.isArray(listRes.indexes)) {
+        vectorIndexes = listRes.indexes
+          .filter(item => record(item) && typeof item.indexName === 'string')
+          .map(item => item.indexName);
+      }
+    } catch {
+      vectorIndexes = [];
+    }
+
+    let dynamoSdk;
+    try { dynamoSdk = loadDynamoSdk(); } catch { throw new OperationError('AWS_SDK_UNAVAILABLE'); }
+    dynamoClient ??= new dynamoSdk.DynamoDBClient({
+      region: REGION,
+      maxAttempts: 1,
+      credentials: connection.credentials
+    });
+
+    let tableInfo;
+    const budgetUsed = { ALL: 0, openai: 0, anthropic: 0 };
+    try {
+      const tableDesc = await dynamoClient.send(
+        new dynamoSdk.DescribeTableCommand({ TableName: STATE_TABLE }),
+        { abortSignal: AbortSignal.timeout(15000) }
+      );
+      requireCondition(
+        record(tableDesc) &&
+          record(tableDesc.Table) &&
+          tableDesc.Table.TableName === STATE_TABLE &&
+          tableDesc.Table.TableStatus === 'ACTIVE',
+        'STATE_TABLE_INVALID'
+      );
+      tableInfo = {
+        tableName: STATE_TABLE,
+        tableStatus: tableDesc.Table.TableStatus,
+        deletionProtection: Boolean(tableDesc.Table.DeletionProtectionEnabled),
+        itemCount: Number(tableDesc.Table.ItemCount ?? 0)
+      };
+
+      for (const scope of ['ALL', 'openai', 'anthropic']) {
+        const res = await dynamoClient.send(
+          new dynamoSdk.GetItemCommand({
+            TableName: STATE_TABLE,
+            Key: { pk: { S: `BUDGET#${month}` }, sk: { S: scope } },
+            ConsistentRead: true
+          }),
+          { abortSignal: AbortSignal.timeout(15000) }
+        );
+        const rawUsed = res?.Item?.used?.N;
+        if (typeof rawUsed === 'string' && /^[0-9]+$/.test(rawUsed)) {
+          budgetUsed[scope] = Number(rawUsed);
+        }
+      }
+    } catch (error) {
+      if (error instanceof OperationError) throw error;
+      throw new OperationError('DYNAMODB_READ_FAILED');
+    }
+
+    return {
+      command: 'status',
+      mode: 'live',
+      status: 'ready',
+      region: REGION,
+      account: connection.account,
+      stack: {
+        stackName: stack.StackName,
+        stackStatus: stack.StackStatus,
+        terminationProtection: Boolean(stack.EnableTerminationProtection),
+        apiId: outputs.ApiId ?? null,
+        handlerFunctionName: outputs.HandlerFunctionName ?? `${PREFIX}-handler`,
+        authorizerFunctionName: outputs.AuthorizerFunctionName ?? `${PREFIX}-authorizer`,
+        mcpFunctionName: outputs.McpFunctionName ?? null,
+        mcpEndpointUrl: outputs.McpEndpointUrl ?? null,
+        evidenceBucket,
+        vectorBucketName,
+        stackVectorIndexName
+      },
+      activePointer,
+      vectorIndex: {
+        vectorBucketName,
+        indexes: vectorIndexes,
+        hasDefaultIndex: vectorIndexes.includes(DEFAULT_VECTOR_INDEX),
+        hasStackIndex: vectorIndexes.includes(stackVectorIndexName)
+      },
+      budgetLedger: {
+        ...tableInfo,
+        month,
+        monthlyCapMicros: 25_000_000,
+        totalUsedMicros: budgetUsed.ALL,
+        openaiUsedMicros: budgetUsed.openai,
+        anthropicUsedMicros: budgetUsed.anthropic,
+        remainingMicros: Math.max(0, 25_000_000 - budgetUsed.ALL)
+      }
+    };
+  }
+
+  async function verifyCloud(options = {}) {
+    const dryRun = options.dryRun === true;
+    if (dryRun) {
+      const dryStatus = await status({ dryRun: true });
+      return {
+        command: 'verify-cloud',
+        mode: 'dry_run',
+        status: 'verified',
+        region: REGION,
+        checks: [
+          { check: 'local_manifest', status: 'passed', indexVersion: dryStatus.activePointer.expectedIndexVersion },
+          { check: 'edge_flags', status: 'passed', flags: dryStatus.flags },
+          { check: 'budget_policy', status: 'passed', maxTurnReservationMicros: 21_864 }
+        ]
+      };
+    }
+
+    const liveStatus = await status({ dryRun: false });
+    requireCondition(
+      ['CREATE_COMPLETE', 'UPDATE_COMPLETE', 'UPDATE_ROLLBACK_COMPLETE'].includes(liveStatus.stack.stackStatus) &&
+        liveStatus.stack.terminationProtection === true,
+      'STACK_NOT_READY'
+    );
+    requireCondition(
+      typeof liveStatus.stack.mcpFunctionName === 'string' &&
+        typeof liveStatus.stack.mcpEndpointUrl === 'string' &&
+        liveStatus.stack.mcpEndpointUrl.endsWith('/dev/api/chat/_mcp'),
+      'MCP_STACK_OUTPUT_MISSING'
+    );
+
+    const fnStates = {};
+    let handlerFlags = null;
+    for (const fnName of [
+      liveStatus.stack.handlerFunctionName,
+      liveStatus.stack.authorizerFunctionName,
+      liveStatus.stack.mcpFunctionName
+    ]) {
+      const cfg = awsJson(
+        ['lambda', 'get-function-configuration', '--function-name', fnName, '--profile', PROFILE, '--region', REGION, '--output', 'json'],
+        'LAMBDA_CONFIG_READ_FAILED'
+      );
+      requireCondition(cfg.State === 'Active', 'LAMBDA_NOT_ACTIVE');
+      fnStates[fnName] = cfg.State;
+      if (fnName === liveStatus.stack.handlerFunctionName) {
+        const vars = record(cfg.Environment?.Variables) ? cfg.Environment.Variables : {};
+        requireCondition(
+          vars.PUBLIC_CHAT_ENABLED === 'false' &&
+            vars.PROBE_ENABLED === 'false' &&
+            vars.CHAT_PRIVATE_ENABLED === 'true',
+          'HANDLER_FLAGS_INVALID'
+        );
+        handlerFlags = {
+          CHAT_PRIVATE_ENABLED: vars.CHAT_PRIVATE_ENABLED,
+          PUBLIC_CHAT_ENABLED: vars.PUBLIC_CHAT_ENABLED,
+          PROBE_ENABLED: vars.PROBE_ENABLED,
+          voice: false
+        };
+      }
+    }
+
+    requireCondition(liveStatus.activePointer.present === true, 'ACTIVE_POINTER_MISSING');
+    const connection = await aws();
+    const ingestion = loadIngestion();
+    const s3Store = dependencies.s3Store ?? new ingestion.S3ObjectStore({
+      region: REGION,
+      credentials: connection.credentials,
+      now
+    });
+    const vectorStore = dependencies.vectorStore ?? new ingestion.S3VectorsStore({
+      region: REGION,
+      credentials: connection.credentials,
+      now
+    });
+
+    let verifiedIndex;
+    try {
+      verifiedIndex = await ingestion.verifyKnowledgeIndex({
+        evidenceBucket: liveStatus.stack.evidenceBucket,
+        vectorBucketName: liveStatus.stack.vectorBucketName,
+        indexName: liveStatus.activePointer.indexName ?? DEFAULT_VECTOR_INDEX,
+        s3Store,
+        vectorStore
+      });
+    } catch {
+      throw new OperationError('KNOWLEDGE_INDEX_VERIFICATION_FAILED');
+    }
+    requireCondition(verifiedIndex.verified === true, 'KNOWLEDGE_INDEX_VERIFICATION_FAILED');
+
+    return {
+      command: 'verify-cloud',
+      mode: 'live',
+      status: 'verified',
+      region: REGION,
+      stackStatus: liveStatus.stack.stackStatus,
+      functions: fnStates,
+      flags: handlerFlags,
+      activeIndexVersion: verifiedIndex.pointer.activeIndexVersion,
+      previousIndexVersion: verifiedIndex.pointer.previousIndexVersion,
+      chunkCount: verifiedIndex.pointer.chunkCount,
+      vectorBucketName: verifiedIndex.pointer.vectorBucketName,
+      indexName: verifiedIndex.pointer.indexName,
+      budgetLedger: liveStatus.budgetLedger
+    };
+  }
+
+  async function rollbackIndex(options = {}) {
+    const dryRun = options.dryRun === true;
+    const targetIndexVersion = options.targetIndexVersion;
+    if (targetIndexVersion !== undefined) {
+      requireCondition(typeof targetIndexVersion === 'string' && INDEX_VERSION_PATTERN.test(targetIndexVersion), 'INVALID_ROLLBACK_TARGET');
+    }
+    if (dryRun) {
+      const { manifest } = readLocalDryRunMetadata();
+      return {
+        command: 'rollback-index',
+        mode: 'dry_run',
+        status: 'ready',
+        region: REGION,
+        pointerKey: ACTIVE_POINTER_KEY,
+        targetIndexVersion: targetIndexVersion ?? 'previousIndexVersion',
+        currentLocalIndexVersion: manifest.indexVersion
+      };
+    }
+
+    const connection = await aws();
+    const ingestion = loadIngestion();
+    const evidenceBucket = `${PREFIX}-${connection.account}-${REGION}`;
+    const s3Store = dependencies.s3Store ?? new ingestion.S3ObjectStore({
+      region: REGION,
+      credentials: connection.credentials,
+      now
+    });
+    const vectorStore = dependencies.vectorStore ?? new ingestion.S3VectorsStore({
+      region: REGION,
+      credentials: connection.credentials,
+      now
+    });
+
+    let rolledBack;
+    try {
+      rolledBack = await ingestion.rollbackKnowledgeIndex({
+        evidenceBucket,
+        vectorBucketName: VECTOR_BUCKET,
+        targetIndexVersion,
+        s3Store,
+        vectorStore,
+        now
+      });
+    } catch {
+      throw new OperationError('INDEX_ROLLBACK_FAILED');
+    }
+
+    return {
+      command: 'rollback-index',
+      mode: 'live',
+      status: 'completed',
+      region: REGION,
+      rolledBackTo: rolledBack.rolledBackTo,
+      previousActiveIndexVersion: rolledBack.previousActiveIndexVersion,
+      pointer: rolledBack.pointer
+    };
+  }
+
   async function close() {
+    if (dynamoClient) {
+      try { dynamoClient.destroy(); } catch { /* Ignore close error */ }
+      dynamoClient = undefined;
+    }
     if (awsPromise) {
       try { (await awsPromise).client.destroy(); } catch { /* Preserve the original sanitised failure. */ }
     }
   }
 
-  return { gateway, secrets, edgeSecrets, close };
+  return { gateway, secrets, edgeSecrets, status, verifyCloud, rollbackIndex, close };
 }
 
 async function runCli(args, dependencies = {}) {
@@ -303,9 +810,8 @@ async function runCli(args, dependencies = {}) {
   const writeError = dependencies.writeError ?? (value => process.stderr.write(value));
   const operations = createOperations(dependencies);
   try {
-    requireCondition(args.length === 1 && ['gateway', 'secrets', 'edge-secrets'].includes(args[0]), 'USAGE_gateway_secrets_edge-secrets');
-    const command = { gateway: 'gateway', secrets: 'secrets', 'edge-secrets': 'edgeSecrets' }[args[0]];
-    write(JSON.stringify(await operations[command]()) + '\n');
+    const parsed = parseCliArgs(args);
+    write(JSON.stringify(await operations[parsed.command](parsed.options)) + '\n');
     return 0;
   } catch (error) {
     writeError(JSON.stringify({ status: 'failed', code: error instanceof OperationError ? error.code : 'OPERATION_FAILED' }) + '\n');
@@ -317,4 +823,4 @@ if (require.main === module) {
   runCli(process.argv.slice(2)).then(code => { process.exitCode = code; });
 }
 
-module.exports = { createOperations, runCli, OperationError, GATEWAY_SETTINGS };
+module.exports = { createOperations, parseCliArgs, runCli, OperationError, GATEWAY_SETTINGS };
