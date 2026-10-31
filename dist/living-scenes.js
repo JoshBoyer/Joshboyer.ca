@@ -306,7 +306,7 @@ function mount(){
   const figures=[...document.querySelectorAll('[data-living-scene]')].filter(figure=>{const legacy=figure.closest('#hero-journey');return !legacy||window.getComputedStyle(legacy).display!=='none';});if(!figures.length)return null;
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)'),mobile=window.matchMedia('(max-width: 767px)');
   const saveData=Boolean(navigator.connection&&navigator.connection.saveData),master=document.getElementById('motion-master');
-  const image=new Image();image.decoding='async';let loaded=false,globalPaused=false,timer=0,active=null,clock=0;
+  const image=new Image();image.decoding='async';let globalPaused=false,timer=0,active=null,clock=0;
   const scenes=figures.map(figure=>{
     const spec=getSpec(figure.dataset.livingScene),canvas=figure.querySelector('canvas'),play=figure.querySelector('[data-living-play]'),compare=figure.querySelector('[data-living-compare]'),status=figure.querySelector('[data-living-status]');
     const ctx=canvas.getContext('2d',{alpha:false});
@@ -368,7 +368,7 @@ function mount(){
     if(active&&allowed(active))requestAnimationFrame(tick);
     updateUi();
   }
-  image.onload=()=>{loaded=true;scenes.forEach(s=>{s.loaded=true;renderStill(s);});sync();};
+  image.onload=()=>{scenes.forEach(s=>{s.loaded=true;renderStill(s);});sync();};
   image.src=IMAGE_SRC;
   master?.addEventListener('click',()=>{globalPaused=!globalPaused;if(globalPaused)scenes.forEach(s=>{s.manual=false;});sync();});
   window.addEventListener('scroll',sync,{passive:true});window.addEventListener('resize',sync);
