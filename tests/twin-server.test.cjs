@@ -120,7 +120,7 @@ test('2. Anonymous Session Isolation (No Login): Visitor A vs Visitor B cookies,
 
   // Tampered sessionToken must be rejected and start at 0
   const tamperedToken = resA2.body.sessionToken.slice(0, -4) + 'AAAA';
-  const tamperedStatus = coldCore.getStatus({
+  coldCore.getStatus({
     cookieHeader: cookieA,
     clientSessionToken: tamperedToken
   });
