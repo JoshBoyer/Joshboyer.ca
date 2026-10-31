@@ -809,9 +809,33 @@
     });
   }
 
+  function resolveStageItemStatus(item) {
+    const explicitStatus = safeGet(item, 'status');
+    if (typeof explicitStatus === 'string') {
+      return normalizeStageStatus(explicitStatus);
+    }
+    const retrievalMode = safeGet(item, 'retrievalMode');
+    const toolOutcome = safeGet(item, 'toolOutcome');
+    if (retrievalMode === 'skipped' || toolOutcome === 'skipped') {
+      return 'skipped';
+    }
+    if (retrievalMode === 'degraded' || toolOutcome === 'error' || toolOutcome === 'timeout') {
+      return 'degraded';
+    }
+    return normalizeStageStatus(safeGet(item, 'state'));
+  }
+
   function extractStageMap(turn) {
     const traceObj = safeGet(turn, 'trace');
-    const rawStages = safeGet(traceObj, 'stages') ?? safeGet(turn, 'stages');
+    const tracePoints = safeGet(turn, 'tracePoints');
+    const rawStages = Array.isArray(traceObj)
+      ? traceObj
+      : (
+        safeGet(traceObj, 'stages') ??
+        safeGet(turn, 'stages') ??
+        (Array.isArray(safeGet(traceObj, 'tracePoints')) ? safeGet(traceObj, 'tracePoints') : undefined) ??
+        (Array.isArray(tracePoints) ? tracePoints : undefined)
+      );
     const stageMap = new Map();
 
     if (Array.isArray(rawStages)) {
@@ -823,14 +847,15 @@
           null
         );
         if (!stageName) continue;
-        const status = normalizeStageStatus(safeGet(item, 'status') ?? safeGet(item, 'state'));
+        const previous = stageMap.get(stageName);
+        const status = resolveStageItemStatus(item);
         const rawDuration = safeGet(item, 'durationMs');
         const durationMs = typeof rawDuration === 'number' && Number.isFinite(rawDuration) && rawDuration >= 0
           ? Math.min(60000, Math.round(rawDuration))
-          : 0;
+          : (previous ? previous.durationMs : 0);
         const detail = cleanText(
           safeGet(item, 'detail') ?? safeGet(item, 'summary') ?? safeGet(item, 'explanation'),
-          TRACE_STAGES[stageName].explanation,
+          previous ? previous.detail : TRACE_STAGES[stageName].explanation,
           512
         );
         stageMap.set(stageName, { stage: stageName, status, durationMs, detail });
@@ -839,7 +864,7 @@
       for (const stageName of CANONICAL_STAGE_ORDER) {
         const item = safeGet(rawStages, stageName);
         if (!record(item)) continue;
-        const status = normalizeStageStatus(safeGet(item, 'status') ?? safeGet(item, 'state'));
+        const status = resolveStageItemStatus(item);
         const rawDuration = safeGet(item, 'durationMs');
         const durationMs = typeof rawDuration === 'number' && Number.isFinite(rawDuration) && rawDuration >= 0
           ? Math.min(60000, Math.round(rawDuration))
@@ -894,9 +919,13 @@
     }
 
     const timelineObj = safeGet(turn, 'timeline');
+    const timelineElement = safeGet(timelineObj, 'element');
+    const canAdoptTimelineElement = Boolean(timelineElement && !timelineElement.parentNode);
     const traceObj = safeGet(turn, 'trace');
     const hasStagesInput = Boolean(
-      (record(traceObj) && safeGet(traceObj, 'stages') !== undefined) ||
+      Array.isArray(traceObj) ||
+      Array.isArray(safeGet(turn, 'tracePoints')) ||
+      (record(traceObj) && (safeGet(traceObj, 'stages') !== undefined || Array.isArray(safeGet(traceObj, 'tracePoints')))) ||
       safeGet(turn, 'stages') !== undefined
     );
 
@@ -907,7 +936,7 @@
       return wrapper;
     }
 
-    if (hasStagesInput || !timelineObj?.element) {
+    if (hasStagesInput || !canAdoptTimelineElement) {
       const stageMap = extractStageMap(turn);
       const list = element(document, 'ol', 'chat-trace-stages chat-trace-list');
       setAttr(list, 'data-trace-stages', '');
@@ -946,8 +975,8 @@
       wrapper.append(list);
     }
 
-    if (timelineObj?.element) {
-      wrapper.append(timelineObj.element);
+    if (canAdoptTimelineElement) {
+      wrapper.append(timelineElement);
     }
 
     return wrapper;
@@ -972,7 +1001,7 @@
     }
 
     const retrievalObj = safeGet(turn, 'retrieval') ?? safeGet(safeGet(turn, 'trace'), 'retrieval') ?? safeGet(turn, 'contextData');
-    const rawCitations = safeGet(turn, 'citations');
+    const rawCitations = safeGet(turn, 'citations') ?? safeGet(turn, 'claims');
     const citations = Array.isArray(rawCitations) ? rawCitations.filter(record) : [];
 
     const mode = cleanEnum(
@@ -1057,7 +1086,7 @@
         list.append(card);
       }
       wrapper.append(list);
-    } else if (legacyEvidenceNode && typeof legacyEvidenceNode === 'object' && Array.isArray(legacyEvidenceNode.children)) {
+    } else if (legacyEvidenceNode && typeof legacyEvidenceNode === 'object' && Array.isArray(legacyEvidenceNode.children) && !legacyEvidenceNode.parentNode) {
       wrapper.append(legacyEvidenceNode);
       const claims = safeGet(turn, 'claims');
       if (!Array.isArray(claims) || claims.length === 0) {
@@ -1162,7 +1191,10 @@
     setAttr(wrapper, 'data-context-view', '');
 
     const traceObj = safeGet(turn, 'trace');
-    const contextObj = safeGet(turn, 'context') ?? safeGet(turn, 'contextData');
+    const rawContext = safeGet(turn, 'context');
+    const contextObj = (record(rawContext) && !Array.isArray(rawContext.children))
+      ? rawContext
+      : safeGet(turn, 'contextData');
     const limitsObj = safeGet(turn, 'limits') ?? safeGet(contextObj, 'limits') ?? contextObj;
 
     const contextPackVersion = cleanId(
@@ -1181,22 +1213,31 @@
       'unassigned'
     );
     const providerUsed = cleanEnum(
-      safeGet(turn, 'providerUsed') ?? safeGet(traceObj, 'providerUsed') ?? safeGet(turn, 'provider'),
+      safeGet(turn, 'providerUsed') ??
+      safeGet(traceObj, 'providerUsed') ??
+      safeGet(turn, 'provider') ??
+      safeGet(contextObj, 'provider'),
       ['openai', 'anthropic', 'none'],
       'none'
     );
     const modelUsed = cleanEnum(
-      safeGet(turn, 'modelUsed') ?? safeGet(traceObj, 'modelUsed') ?? safeGet(turn, 'model'),
+      safeGet(turn, 'modelUsed') ??
+      safeGet(traceObj, 'modelUsed') ??
+      safeGet(turn, 'model') ??
+      safeGet(contextObj, 'completedModel') ??
+      safeGet(contextObj, 'model'),
       ['gpt-6-luna', 'claude-haiku-5-5', 'none'],
       'none'
     );
     const fallbackUsed = Boolean(
-      safeGet(turn, 'fallbackUsed') ?? safeGet(traceObj, 'fallbackUsed') ?? false
+      safeGet(turn, 'fallbackUsed') ??
+      safeGet(traceObj, 'fallbackUsed') ??
+      ((safeGet(contextObj, 'completedAttempt') ?? safeGet(contextObj, 'attempt') ?? 1) > 1)
     );
 
-    const rawRemaining = safeGet(limitsObj, 'remainingTurns');
+    const rawRemaining = safeGet(limitsObj, 'remainingTurns') ?? safeGet(contextObj, 'remainingTurns');
     const remainingTurns = integer(rawRemaining, 0, 1000) ? String(rawRemaining) : '—';
-    const rawLimit = safeGet(limitsObj, 'sessionTurnLimit') ?? safeGet(limitsObj, 'maxTurns');
+    const rawLimit = safeGet(limitsObj, 'sessionTurnLimit') ?? safeGet(limitsObj, 'maxTurns') ?? safeGet(contextObj, 'maxTurns');
     const sessionTurnLimit = integer(rawLimit, 1, 1000) ? String(rawLimit) : '—';
     const rawCooldown = safeGet(limitsObj, 'cooldownSeconds');
     const cooldownSeconds = integer(rawCooldown, 0, 86400) ? `${rawCooldown}s` : '0s';
@@ -1234,6 +1275,13 @@
 
   function resolveCreateOptions(firstArg, secondArg) {
     // Support createDetailsPanel(document, options), createDetailsPanel(container, options), and createDetailsPanel(options)
+    if (record(firstArg) && safeGet(firstArg, 'document') && typeof safeGet(firstArg, 'document').createElement === 'function') {
+      return {
+        ...firstArg,
+        ...(record(secondArg) ? secondArg : {}),
+        document: safeGet(firstArg, 'document')
+      };
+    }
     if (firstArg && typeof firstArg.createElement === 'function') {
       return {
         document: firstArg,
@@ -1250,6 +1298,7 @@
     if (record(firstArg)) {
       const doc = safeGet(firstArg, 'document') ||
         safeGet(firstArg, 'container')?.ownerDocument ||
+        safeGet(firstArg, 'desktopRoot')?.ownerDocument ||
         safeGet(firstArg, 'mobileContainer')?.ownerDocument ||
         globalThis.document;
       return {
@@ -1267,6 +1316,7 @@
       throw new Error('createDetailsPanel requires a valid document');
     }
 
+    const isBridgeFallback = Boolean(options._internalFallback);
     const selection = createRequestSelection();
     const initialTab = TABS.includes(options.defaultTab) ? options.defaultTab : 'trace';
     let activeTab = initialTab;
@@ -1274,15 +1324,17 @@
     let currentState = {};
     let returnFocus = null;
 
-    const desktop = options.container
-      ? enhanceNode(options.container)
+    const containerTarget = options.container || (!isBridgeFallback ? options.desktopRoot : null);
+    const desktop = containerTarget
+      ? enhanceNode(containerTarget)
       : element(document, 'aside', 'chat-details-panel');
     if (!desktop.className) desktop.className = 'chat-details-panel';
     setAttr(desktop, 'aria-label', 'Request details');
     setAttr(desktop, 'data-chat-details', '');
 
-    const existingDrawer = options.drawerDialog ||
-      (document.body ? queryNodes(document.body, '[data-chat-drawer]')[0] : null);
+    const existingDrawer = !isBridgeFallback
+      ? (options.drawerDialog || options.mobileDialog || (document.body ? queryNodes(document.body, '[data-chat-drawer]')[0] : null))
+      : null;
     const dialog = existingDrawer
       ? enhanceNode(existingDrawer)
       : element(document, 'dialog', 'chat-details-dialog chat-drawer');
@@ -1290,8 +1342,9 @@
     setAttr(dialog, 'data-chat-drawer', '');
     setAttr(dialog, 'aria-labelledby', 'chat-details-title');
 
-    const externalMobileContainer = options.mobileContainer ||
-      (existingDrawer ? queryNodes(existingDrawer, '[data-chat-mobile-details]')[0] : null);
+    const externalMobileContainer = !isBridgeFallback
+      ? (options.mobileContainer || (existingDrawer ? queryNodes(existingDrawer, '[data-chat-mobile-details]')[0] : null))
+      : null;
 
     function isMobileViewport() {
       return Boolean(
@@ -1405,7 +1458,7 @@
           btn.addEventListener('click', () => closeDrawer());
         }
       }
-    } else if (document.body && !dialog.parentNode) {
+    } else if (!isBridgeFallback && document.body && !dialog.parentNode) {
       document.body.append(dialog);
     }
 
