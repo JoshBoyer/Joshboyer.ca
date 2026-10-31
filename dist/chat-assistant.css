@@ -1067,8 +1067,14 @@
   font-weight: 600;
 }
 
+.chat-pin-banner-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .chat-details-pin-banner button,
 .chat-pin-banner button,
+.chat-pin-return,
 [data-follow-latest] {
   min-height: 44px;
   min-width: 44px;
@@ -1079,6 +1085,30 @@
   color: #78350f;
   font-size: 11px;
   font-weight: 700;
+  cursor: pointer;
+}
+
+.chat-degraded-banner {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 9px;
+  background: #fffbeb;
+  border: 1px solid #f59e0b;
+  color: #78350f;
+  font-size: 11px;
+}
+
+.chat-degraded-label {
+  margin: 0;
+  font-weight: 700;
+}
+
+.chat-degraded-code {
+  margin: 0;
+  font: 600 10px/1.5 var(--font-mono, "IBM Plex Mono", monospace);
 }
 
 /* 4-Tab Bar (Trace, Evidence, Tools, Context) */
@@ -1239,9 +1269,15 @@
   padding-left: 15px;
 }
 
-.chat-trace-content {
+.chat-trace-content,
+.chat-request-trace-view {
   border-top: 1px solid #e3eaf6;
   padding: 6px 14px 14px;
+}
+
+.chat-request-trace-view {
+  border-top: 0;
+  padding: 0;
 }
 
 .chat-trace-waiting {
@@ -1250,13 +1286,15 @@
   margin: 10px 0;
 }
 
-.chat-trace-stages {
+.chat-trace-stages,
+.chat-trace-list {
   list-style: none;
   padding: 0;
   margin: 2px 0 10px;
 }
 
-.chat-trace-stage {
+.chat-trace-stage,
+.chat-trace-detail {
   position: relative;
   border-bottom: 1px solid #e3eaf6;
 }
@@ -1478,17 +1516,40 @@
 }
 
 .chat-evidence-blocks,
-.chat-evidence-sources {
+.chat-evidence-sources,
+.chat-citations-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.chat-evidence-intro {
+.chat-evidence-intro,
+.chat-evidence-distinction {
   color: var(--chat-muted-strong);
   font-size: 11px;
   line-height: 1.75;
   margin: 0 0 4px;
+}
+
+.chat-retrieval-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #dce5f3;
+  background: #f8faff;
+  font-size: 10px;
+  font-family: var(--font-mono, "IBM Plex Mono", monospace);
+  color: var(--chat-muted-strong);
+}
+
+.chat-retrieval-mode,
+.chat-retrieval-index,
+.chat-retrieval-chunks {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .chat-request-evidence .chat-answer-block,
@@ -1504,7 +1565,8 @@
 }
 
 .chat-answer-block h3,
-.chat-evidence-card h3 {
+.chat-evidence-card h3,
+.chat-citation-title {
   font: 700 15px/1.35 var(--font-display, "Plus Jakarta Sans", sans-serif);
   letter-spacing: -0.02em;
   margin: 4px 0 8px;
@@ -1512,9 +1574,36 @@
 }
 
 .chat-answer-block p,
-.chat-evidence-card p {
+.chat-evidence-card p,
+.chat-answer-claim,
+.chat-citation-excerpt {
   margin: 8px 0;
   white-space: pre-wrap;
+}
+
+.chat-citation-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  margin-bottom: 6px;
+  font: 600 10px/1.4 var(--font-mono, "IBM Plex Mono", monospace);
+  color: var(--chat-muted-strong);
+}
+
+.chat-citation-id,
+.chat-citation-tier,
+.chat-citation-source-path {
+  display: inline-flex;
+  align-items: center;
+}
+
+.chat-citation-link {
+  color: var(--chat-blue);
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .chat-answer-period {
@@ -1583,6 +1672,15 @@
 /* ==========================================================================
    9. Tab 3 & Tab 4: MCP Tools & Request Context Cards
    ========================================================================== */
+.chat-tools-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
 .chat-tool-card,
 .chat-context-card {
   margin: 0 0 12px;
@@ -1593,11 +1691,41 @@
   font-size: 11px;
 }
 
+.chat-tool-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 10px;
+  margin-bottom: 6px;
+}
+
 .chat-tool-method {
   display: inline-block;
   font: 700 11px/1.4 var(--font-mono, "IBM Plex Mono", monospace);
   color: var(--chat-ink);
   margin-bottom: 4px;
+}
+
+.chat-tool-duration {
+  font: 600 10px/1.4 var(--font-mono, "IBM Plex Mono", monospace);
+  color: var(--chat-muted-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+.chat-tool-summary {
+  margin: 4px 0 0;
+  color: var(--chat-muted-strong);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.chat-tool-facts {
+  display: grid;
+  grid-template-columns: minmax(90px, 0.8fr) minmax(0, 1.2fr);
+  gap: 4px 10px;
+  margin: 8px 0 0;
+  font-size: 10px;
 }
 
 .chat-tool-outcome {
@@ -1719,7 +1847,8 @@
   display: none;
 }
 
-.chat-details-dialog {
+.chat-details-dialog,
+.chat-drawer {
   position: fixed;
   inset: 0 0 0 auto;
   width: min(440px, 100vw);
@@ -1731,28 +1860,50 @@
   padding: 0 0 env(safe-area-inset-bottom, 0px);
   background: #fbfcff;
   box-shadow: -12px 0 55px rgba(7, 23, 45, 0.22);
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
-.chat-details-dialog[open] {
+.chat-details-dialog[open],
+.chat-drawer[open] {
   display: flex;
+  flex-direction: column;
+  max-width: 100vw;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
-.chat-details-dialog:not([open]) {
+.chat-details-dialog:not([open]),
+.chat-drawer:not([open]) {
   display: none;
 }
 
-.chat-details-dialog::backdrop {
+.chat-mobile-details-root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.chat-details-dialog::backdrop,
+.chat-drawer::backdrop {
   background: rgba(8, 27, 60, 0.48);
   backdrop-filter: blur(6px);
 }
 
-.chat-details-dialog .chat-details-close {
+.chat-details-dialog .chat-details-close,
+.chat-drawer .chat-details-close {
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
-.chat-details-dialog .chat-details-heading {
+.chat-details-dialog .chat-details-heading,
+.chat-drawer .chat-details-heading {
   padding-top: 16px;
 }
 
@@ -1897,12 +2048,16 @@
   .chat-heading h1 {
     font-size: 20px;
   }
-  .chat-details-dialog {
+  .chat-details-dialog,
+  .chat-drawer {
     inset: auto 0 0 0;
     width: 100vw;
+    max-width: 100vw;
     height: auto;
     max-height: 85dvh;
     border-radius: 18px 18px 0 0;
+    box-sizing: border-box;
+    overflow-x: hidden;
   }
 }
 
