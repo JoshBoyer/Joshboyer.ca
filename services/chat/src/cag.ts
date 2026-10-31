@@ -37,9 +37,36 @@ contracts.assertCorpusCompatible(corpus);
 export const CAG_CLAIM_IDS = Object.freeze(cag.claims.map(claim => claim.id));
 export const CAG_VERSION = cag.corpusVersion;
 export const MAX_PROVIDER_REQUEST_BYTES = 49152;
+export const MAX_USER_CONTEXT_BYTES = 24576;
 export const MAX_OUTPUT_TOKENS = 1536;
 export const MAX_SELECTION_BYTES = 49152;
 export const INPUT_TOKEN_ALLOWANCE = MAX_PROVIDER_REQUEST_BYTES + 1024;
+export const CANONICAL_REFUSAL_TEXT = 'I cannot help with that request, as it conflicts with safety boundaries. I am happy to discuss safe technical topics or Josh’s portfolio instead.';
+
+export type DegradedNoticeCode = 'retrieval_degraded' | 'tools_unavailable';
+export interface RetrievedChunkContext {
+  id: string;
+  claimId: string;
+  title: string;
+  period: string;
+  deliveryStatus?: string;
+  resumeText?: string;
+  text?: string;
+  decision?: string;
+  outcome?: string;
+  qualificationNotes?: string[];
+  sourceIds?: string[];
+}
+export interface McpToolResultContext {
+  name: string;
+  toolCallId: string;
+  output: unknown;
+}
+export interface UserContextOptions {
+  retrievedChunks?: ReadonlyArray<RetrievedChunkContext>;
+  mcpResults?: ReadonlyArray<McpToolResultContext>;
+  degradedNotices?: ReadonlyArray<DegradedNoticeCode>;
+}
 
 // Provider-side schema is deliberately simple; the authoritative application
 // contract also checks counts, uniqueness, corpus identity and canonical text.
@@ -86,7 +113,7 @@ function truncateUtf8(text: string, limit: number): string {
   return out;
 }
 
-export function buildUserContext(message: MessageRequest, history: HistoryEntry[]): string {
+export function buildUserContext(message: MessageRequest, history: HistoryEntry[], options?: UserContextOptions): string {
   const summaries = history.slice(-4).map(entry => {
     const result = record(entry.result) && record(entry.result.answer) ? entry.result.answer : undefined;
     const blocks = result && Array.isArray(result.blocks) ? result.blocks : [];
@@ -97,7 +124,67 @@ export function buildUserContext(message: MessageRequest, history: HistoryEntry[
       selectedClaimIds: blocks.flatMap(block => record(block) && block.kind === 'claim' && typeof block.claimId === 'string' && CAG_CLAIM_IDS.includes(block.claimId) ? [block.claimId] : [])
     };
   });
-  return JSON.stringify({ untrusted_conversation: summaries, untrusted_question: message.text, pageContext: message.pageContext ?? null });
+  const boundedChunks = (options?.retrievedChunks ?? []).slice(0, 6).map(chunk => ({
+    id: truncateUtf8(String(chunk.id ?? ''), 128),
+    claimId: truncateUtf8(String(chunk.claimId ?? ''), 128),
+    title: truncateUtf8(String(chunk.title ?? ''), 256),
+    period: truncateUtf8(String(chunk.period ?? ''), 128),
+    ...(chunk.deliveryStatus ? { deliveryStatus: truncateUtf8(String(chunk.deliveryStatus), 64) } : {}),
+    summary: truncateUtf8(String(chunk.resumeText ?? chunk.text ?? ''), 768),
+    ...(chunk.decision ? { decision: truncateUtf8(String(chunk.decision), 512) } : {}),
+    ...(chunk.outcome ? { outcome: truncateUtf8(String(chunk.outcome), 512) } : {}),
+    qualificationNotes: Array.isArray(chunk.qualificationNotes)
+      ? chunk.qualificationNotes.slice(0, 6).map(note => truncateUtf8(String(note), 512))
+      : [],
+    sourceIds: Array.isArray(chunk.sourceIds)
+      ? chunk.sourceIds.slice(0, 8).map(id => truncateUtf8(String(id), 128))
+      : []
+  }));
+  const boundedMcp = (options?.mcpResults ?? []).slice(0, 2).map(item => {
+    const serialized = JSON.stringify(item.output ?? null);
+    const output: unknown = Buffer.byteLength(serialized, 'utf8') <= 4096
+      ? item.output
+      : { truncated: truncateUtf8(serialized, 4000) };
+    return {
+      name: truncateUtf8(String(item.name ?? ''), 64),
+      toolCallId: truncateUtf8(String(item.toolCallId ?? ''), 64),
+      output
+    };
+  });
+  const boundedNotices = (options?.degradedNotices ?? []).filter(
+    (code): code is DegradedNoticeCode => code === 'retrieval_degraded' || code === 'tools_unavailable'
+  );
+  const payload: Record<string, unknown> = {
+    untrusted_conversation: summaries,
+    untrusted_question: message.text,
+    pageContext: message.pageContext ?? null,
+    ...(boundedChunks.length > 0 ? { approved_retrieved_chunks: boundedChunks } : {}),
+    ...(boundedMcp.length > 0 ? { approved_mcp_results: boundedMcp } : {}),
+    ...(boundedNotices.length > 0 ? { system_degraded_notices: boundedNotices } : {})
+  };
+  let encoded = JSON.stringify(payload);
+  while (Buffer.byteLength(encoded, 'utf8') > MAX_USER_CONTEXT_BYTES && boundedChunks.length > 1) {
+    boundedChunks.pop();
+    payload.approved_retrieved_chunks = boundedChunks;
+    encoded = JSON.stringify(payload);
+  }
+  if (Buffer.byteLength(encoded, 'utf8') > MAX_USER_CONTEXT_BYTES && boundedMcp.length > 0) {
+    payload.approved_mcp_results = boundedMcp.map(item => ({
+      name: item.name,
+      toolCallId: item.toolCallId,
+      output: { truncated: truncateUtf8(JSON.stringify(item.output), 1024) }
+    }));
+    encoded = JSON.stringify(payload);
+  }
+  if (Buffer.byteLength(encoded, 'utf8') > MAX_USER_CONTEXT_BYTES) {
+    delete payload.approved_retrieved_chunks;
+    encoded = JSON.stringify(payload);
+  }
+  if (Buffer.byteLength(encoded, 'utf8') > MAX_USER_CONTEXT_BYTES) {
+    delete payload.approved_mcp_results;
+    encoded = JSON.stringify(payload);
+  }
+  return encoded;
 }
 
 export function validateMessage(value: unknown): MessageRequest {
@@ -110,7 +197,7 @@ export function assertContract(name: string, value: unknown): void {
   catch { throw new ServiceError('INVALID_REQUEST', 400); }
 }
 
-export function renderSelection(text: string): RenderedConversation {
+export function renderSelection(text: string, options?: { additionalNotices?: ReadonlyArray<string> }): RenderedConversation {
   try {
     if (Buffer.byteLength(text, 'utf8') > MAX_SELECTION_BYTES) throw new Error();
     const selected = JSON.parse(text) as Selection;
@@ -123,10 +210,28 @@ export function renderSelection(text: string): RenderedConversation {
       const requiredNotice = selected.kind === 'portfolio' ? 'unsupported_evidence' : 'general_knowledge';
       if (!noticeCodes.includes(requiredNotice)) noticeCodes.push(requiredNotice);
     }
+    for (const extra of options?.additionalNotices ?? []) {
+      if (['retrieval_degraded', 'tools_unavailable', 'limited_evidence', 'unsupported_evidence', 'general_knowledge'].includes(extra) &&
+          !noticeCodes.includes(extra) && noticeCodes.length < 3) {
+        noticeCodes.push(extra);
+      }
+    }
     const answer = contracts.renderAnswer({ schemaVersion: selected.schemaVersion, corpusVersion: selected.corpusVersion,
       claimIds: selected.claimIds, noticeCodes }, corpus);
     return { reply, answer };
   } catch { throw new ServiceError('ANSWER_VALIDATION_FAILED', 502, 'unknown'); }
+}
+
+export function renderSafetyRefusal(additionalNotices?: ReadonlyArray<string>): RenderedConversation {
+  return renderSelection(JSON.stringify({
+    schemaVersion: '1.0.0',
+    corpusVersion: CAG_VERSION,
+    kind: 'refusal',
+    text: CANONICAL_REFUSAL_TEXT,
+    suggestions: [],
+    claimIds: [],
+    noticeCodes: []
+  }), { additionalNotices });
 }
 
 export function validateSavedReply(value: unknown): ConversationReply {
