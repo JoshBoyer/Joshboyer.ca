@@ -26,6 +26,19 @@ Open <http://127.0.0.1:4183/#home>. The server serves only `dist/`; local knowle
 - `knowledge/import-manifest.json`: provenance and exact imported-file fingerprints.
 - `tools/`: import, extraction and preservation scripts.
 
+## Chat development
+
+The chat foundation is under `chat/`, outside the web root. It contains validated contracts and a deterministic export of approved public evidence. It does not enable a public assistant or call a model. AWS hosting, Cloudflare AI Gateway, retrieval and Model Context Protocol (MCP) execution follow the [implementation plan](docs/architecture/chat-implementation-plan.md); voice comes later.
+
+```powershell
+npm run build:chat-knowledge
+npm run check:chat-knowledge
+npm test
+npm run build
+```
+
+`build:chat-knowledge` regenerates the approved export; `check:chat-knowledge` fails if checked-in artifacts are stale. The normal build checks freshness rather than silently rewriting evidence. See the [chat foundation guide](chat/README.md) for boundaries and integration details.
+
 The imported site has 16 case templates. LOWKEY and Workshop42 templates remain in its history; current featured placement uses NEXUS as the sole independent capstone.
 
 The original source README and historical status documents are preserved under `knowledge/source-documents/`. Some contain superseded status statements; the current files and dated corrections take precedence.

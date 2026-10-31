@@ -1,0 +1,229 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://joshboyer.ca/contracts/chat/v1",
+  "title": "Portfolio chat v1 contracts",
+  "$defs": {
+    "version": { "const": "1.0.0" },
+    "uuid": { "type": "string", "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$" },
+    "corpusVersion": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "identifier": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-z][a-z0-9-]*$" },
+    "claimId": { "type": "string", "minLength": 7, "maxLength": 128, "pattern": "^claim-[a-z0-9-]+$" },
+    "projectId": { "enum": ["dell", "foundations", "headquarters", "inquiry", "workflows", "newbusiness", "renewals", "upload", "claims", "takeover", "continuity", "sql", "nexus"] },
+    "facet": { "enum": ["insurance", "standards", "rules", "integrations", "mapping", "claims", "sql", "validation", "analysis", "guidance", "infrastructure", "application", "execution", "speech", "soap", "rest", "xml", "reconciliation", "pubsub", "automation"] },
+    "pageContext": { "enum": ["#home", "#career", "#skills", "#projects", "#projects/dell", "#projects/foundations", "#projects/headquarters", "#projects/inquiry", "#projects/workflows", "#projects/newbusiness", "#projects/renewals", "#projects/upload", "#projects/claims", "#projects/takeover", "#projects/continuity", "#projects/sql", "#projects/nexus"] },
+    "toolName": { "enum": ["search_public_evidence", "get_case_study", "compare_job_requirements"] },
+    "toolCallId": { "type": "string", "pattern": "^tool-[a-zA-Z0-9_-]{1,64}$" },
+    "noticeCode": { "enum": ["unsupported_evidence", "limited_evidence", "tools_unavailable", "retrieval_degraded"] },
+    "sourceIds": { "type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true, "items": { "$ref": "#/$defs/identifier" } },
+    "source": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "url", "revision"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "url": { "type": "string", "maxLength": 256, "pattern": "^https://joshboyer\\.ca/(?:index\\.html)?#projects/(?:dell|foundations|headquarters|inquiry|workflows|newbusiness|renewals|upload|claims|takeover|continuity|sql|nexus)$" },
+        "revision": { "type": "string", "minLength": 1, "maxLength": 128 }
+      }
+    },
+    "claimRecord": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "chunkId", "projectId", "title", "period", "text", "sourceIds", "qualificationNotes"],
+      "properties": {
+        "id": { "$ref": "#/$defs/claimId" },
+        "chunkId": { "$ref": "#/$defs/identifier" },
+        "projectId": { "$ref": "#/$defs/projectId" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "period": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "text": { "type": "string", "minLength": 1, "maxLength": 4096 },
+        "sourceIds": { "$ref": "#/$defs/sourceIds" },
+        "qualificationNotes": { "type": "array", "maxItems": 16, "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 2048 } }
+      }
+    },
+    "claimBlock": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "claimId", "title", "period", "text", "qualificationNotes", "sourceIds"],
+      "properties": {
+        "kind": { "const": "claim" },
+        "claimId": { "$ref": "#/$defs/claimId" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "period": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "text": { "type": "string", "minLength": 1, "maxLength": 4096 },
+        "qualificationNotes": { "type": "array", "maxItems": 16, "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 2048 } },
+        "sourceIds": { "$ref": "#/$defs/sourceIds" }
+      }
+    },
+    "noticeBlock": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "code", "text"],
+      "properties": {
+        "kind": { "const": "notice" },
+        "code": { "$ref": "#/$defs/noticeCode" },
+        "text": { "type": "string", "minLength": 1, "maxLength": 512 }
+      }
+    },
+    "answerBlock": { "oneOf": [{ "$ref": "#/$defs/claimBlock" }, { "$ref": "#/$defs/noticeBlock" }] },
+    "answerSelection": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "corpusVersion", "claimIds", "noticeCodes"],
+      "properties": {
+        "schemaVersion": { "$ref": "#/$defs/version" },
+        "corpusVersion": { "$ref": "#/$defs/corpusVersion" },
+        "claimIds": { "type": "array", "maxItems": 8, "uniqueItems": true, "items": { "$ref": "#/$defs/claimId" } },
+        "noticeCodes": { "type": "array", "maxItems": 3, "uniqueItems": true, "items": { "$ref": "#/$defs/noticeCode" } }
+      },
+      "anyOf": [
+        { "properties": { "claimIds": { "type": "array", "minItems": 1 } } },
+        { "properties": { "noticeCodes": { "type": "array", "minItems": 1 } } }
+      ]
+    },
+    "renderedAnswer": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "corpusVersion", "blocks", "sources"],
+      "properties": {
+        "schemaVersion": { "$ref": "#/$defs/version" },
+        "corpusVersion": { "$ref": "#/$defs/corpusVersion" },
+        "blocks": { "type": "array", "minItems": 1, "maxItems": 11, "items": { "$ref": "#/$defs/answerBlock" } },
+        "sources": { "type": "array", "maxItems": 16, "uniqueItems": true, "items": { "$ref": "#/$defs/source" } }
+      }
+    },
+    "emptyRequest": { "type": "object", "additionalProperties": false, "maxProperties": 0 },
+    "messageRequest": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "requestId", "text"],
+      "properties": {
+        "schemaVersion": { "$ref": "#/$defs/version" },
+        "requestId": { "$ref": "#/$defs/uuid" },
+        "text": { "type": "string", "minLength": 1, "maxLength": 8192, "pattern": "\\S" },
+        "pageContext": { "$ref": "#/$defs/pageContext" }
+      }
+    },
+    "cancelRequest": {
+      "type": "object", "additionalProperties": false,
+      "required": ["requestId"],
+      "properties": { "requestId": { "$ref": "#/$defs/uuid" } }
+    },
+    "configResponse": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "available", "capabilities", "limits"],
+      "properties": {
+        "schemaVersion": { "$ref": "#/$defs/version" },
+        "available": { "type": "boolean" },
+        "capabilities": {
+          "type": "object", "additionalProperties": false,
+          "required": ["chat", "cag", "rag", "mcp", "voice"],
+          "properties": { "chat": { "type": "boolean" }, "cag": { "type": "boolean" }, "rag": { "type": "boolean" }, "mcp": { "type": "boolean" }, "voice": { "const": false } }
+        },
+        "limits": {
+          "type": "object", "additionalProperties": false,
+          "required": ["maxMessageBytes", "maxTurns", "maxToolsPerTurn", "turnDeadlineMs"],
+          "properties": {
+            "maxMessageBytes": { "type": "integer", "minimum": 1, "maximum": 8192 },
+            "maxTurns": { "type": "integer", "minimum": 1, "maximum": 8 },
+            "maxToolsPerTurn": { "type": "integer", "minimum": 0, "maximum": 4 },
+            "turnDeadlineMs": { "type": "integer", "minimum": 1, "maximum": 60000 }
+          }
+        }
+      }
+    },
+    "sessionResponse": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "generation", "expiresAt", "remainingTurns"],
+      "properties": {
+        "schemaVersion": { "$ref": "#/$defs/version" },
+        "generation": { "$ref": "#/$defs/uuid" },
+        "expiresAt": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "remainingTurns": { "type": "integer", "minimum": 0, "maximum": 8 }
+      }
+    },
+    "cancelResponse": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "requestId", "status"],
+      "properties": {
+        "schemaVersion": { "$ref": "#/$defs/version" },
+        "requestId": { "$ref": "#/$defs/uuid" },
+        "status": { "enum": ["requested", "already_finished"] }
+      }
+    },
+    "clearResponse": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "cleared"],
+      "properties": { "schemaVersion": { "$ref": "#/$defs/version" }, "cleared": { "const": true } }
+    },
+    "search_public_evidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["query"],
+      "properties": {
+        "query": { "type": "string", "minLength": 1, "maxLength": 1024, "pattern": "\\S" },
+        "limit": { "type": "integer", "minimum": 1, "maximum": 6 },
+        "filters": {
+          "type": "object", "additionalProperties": false,
+          "required": ["facets"],
+          "properties": { "facets": { "type": "array", "minItems": 1, "maxItems": 5, "uniqueItems": true, "items": { "$ref": "#/$defs/facet" } } }
+        }
+      }
+    },
+    "get_case_study": {
+      "type": "object", "additionalProperties": false,
+      "required": ["projectId"],
+      "properties": { "projectId": { "$ref": "#/$defs/projectId" } }
+    },
+    "compare_job_requirements": {
+      "type": "object", "additionalProperties": false,
+      "required": ["jobText"],
+      "properties": { "jobText": { "type": "string", "minLength": 1, "maxLength": 8192, "pattern": "\\S" } }
+    },
+    "statusData": {
+      "type": "object", "additionalProperties": false,
+      "required": ["code"],
+      "properties": { "code": { "enum": ["accepted", "retrieving", "thinking", "validating"] } }
+    },
+    "toolStartData": {
+      "type": "object", "additionalProperties": false,
+      "required": ["toolCallId", "name"],
+      "properties": { "toolCallId": { "$ref": "#/$defs/toolCallId" }, "name": { "$ref": "#/$defs/toolName" } }
+    },
+    "toolEndData": {
+      "type": "object", "additionalProperties": false,
+      "required": ["toolCallId", "name", "outcome"],
+      "properties": { "toolCallId": { "$ref": "#/$defs/toolCallId" }, "name": { "$ref": "#/$defs/toolName" }, "outcome": { "enum": ["completed", "error", "timeout"] } }
+    },
+    "sourcesData": {
+      "type": "object", "additionalProperties": false,
+      "required": ["corpusVersion", "sources"],
+      "properties": {
+        "corpusVersion": { "$ref": "#/$defs/corpusVersion" },
+        "sources": { "type": "array", "maxItems": 16, "uniqueItems": true, "items": { "$ref": "#/$defs/source" } }
+      }
+    },
+    "doneData": {
+      "type": "object", "additionalProperties": false,
+      "required": ["outcome"],
+      "properties": { "outcome": { "enum": ["completed", "limited", "cancelled"] } }
+    },
+    "errorData": {
+      "type": "object", "additionalProperties": false,
+      "required": ["code", "retryable"],
+      "properties": { "code": { "enum": ["unavailable", "invalid_request", "session_expired", "rate_limited", "budget_exhausted", "deadline_exceeded", "upstream_failure", "validation_failed", "request_conflict"] }, "retryable": { "type": "boolean" } }
+    },
+    "streamEvent": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "requestId", "generation", "seq", "event", "data"],
+      "properties": {
+        "schemaVersion": { "$ref": "#/$defs/version" },
+        "requestId": { "$ref": "#/$defs/uuid" },
+        "generation": { "$ref": "#/$defs/uuid" },
+        "seq": { "type": "integer", "minimum": 1, "maximum": 96 },
+        "event": { "enum": ["status", "tool_start", "tool_end", "answer_block", "sources", "done", "error"] },
+        "data": { "type": "object" }
+      },
+      "oneOf": [
+        { "properties": { "event": { "const": "status" }, "data": { "$ref": "#/$defs/statusData" } } },
+        { "properties": { "event": { "const": "tool_start" }, "data": { "$ref": "#/$defs/toolStartData" } } },
+        { "properties": { "event": { "const": "tool_end" }, "data": { "$ref": "#/$defs/toolEndData" } } },
+        { "properties": { "event": { "const": "answer_block" }, "data": { "$ref": "#/$defs/answerBlock" } } },
+        { "properties": { "event": { "const": "sources" }, "data": { "$ref": "#/$defs/sourcesData" } } },
+        { "properties": { "event": { "const": "done" }, "data": { "$ref": "#/$defs/doneData" } } },
+        { "properties": { "event": { "const": "error" }, "data": { "$ref": "#/$defs/errorData" } } }
+      ]
+    }
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://joshboyer.ca/schemas/chat-knowledge-1.json",
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,95}$" },
+    "text": { "type": "string", "minLength": 1, "maxLength": 8192, "pattern": "\\S" },
+    "texts": { "type": "array", "maxItems": 32, "uniqueItems": true, "items": { "$ref": "#/$defs/text" } },
+    "ids": { "type": "array", "minItems": 1, "maxItems": 32, "uniqueItems": true, "items": { "$ref": "#/$defs/id" } },
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "version": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "person": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "positioning", "summary"],
+      "properties": { "name": { "$ref": "#/$defs/text" }, "positioning": { "$ref": "#/$defs/text" }, "summary": { "$ref": "#/$defs/text" } }
+    },
+    "role": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "employer", "title", "period", "scope", "qualificationNotes"],
+      "properties": { "id": { "$ref": "#/$defs/id" }, "employer": { "$ref": "#/$defs/text" }, "title": { "$ref": "#/$defs/text" }, "period": { "$ref": "#/$defs/text" }, "scope": { "$ref": "#/$defs/text" }, "qualificationNotes": { "$ref": "#/$defs/texts" } }
+    },
+    "source": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "url", "revision", "kind", "confidence", "note"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "url": { "type": "string", "pattern": "^https://joshboyer\\.ca/#projects/[a-z][a-z0-9-]{0,95}$" },
+        "revision": { "$ref": "#/$defs/text" },
+        "kind": { "enum": ["approved-public-portfolio", "approved-firsthand-public-summary"] },
+        "confidence": { "const": "approved-public-account" },
+        "note": { "$ref": "#/$defs/text" }
+      }
+    },
+    "qualification": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "label", "aliases", "note"],
+      "properties": { "id": { "$ref": "#/$defs/id" }, "label": { "$ref": "#/$defs/text" }, "aliases": { "$ref": "#/$defs/texts" }, "note": { "$ref": "#/$defs/text" } }
+    },
+    "claim": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "chunkId", "projectId", "title", "period", "text", "sourceIds", "qualificationNotes"],
+      "properties": { "id": { "$ref": "#/$defs/id" }, "chunkId": { "$ref": "#/$defs/id" }, "projectId": { "$ref": "#/$defs/id" }, "title": { "$ref": "#/$defs/text" }, "period": { "$ref": "#/$defs/text" }, "text": { "$ref": "#/$defs/text" }, "sourceIds": { "$ref": "#/$defs/ids" }, "qualificationNotes": { "$ref": "#/$defs/texts" } }
+    },
+    "chunk": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "kind", "projectId", "roleId", "title", "period", "tags", "decision", "process", "technicalGuidance", "outcome", "resumeText", "sourceRefs", "confidence", "qualificationNotes", "claimIds", "active", "contentSha256"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "kind": { "enum": ["experience", "project"] }, "projectId": { "$ref": "#/$defs/id" }, "roleId": { "$ref": "#/$defs/id" },
+        "title": { "$ref": "#/$defs/text" }, "period": { "$ref": "#/$defs/text" }, "tags": { "$ref": "#/$defs/ids" }, "decision": { "$ref": "#/$defs/text" },
+        "process": { "type": "array", "minItems": 1, "maxItems": 32, "items": { "$ref": "#/$defs/text" } },
+        "technicalGuidance": { "$ref": "#/$defs/text" }, "outcome": { "$ref": "#/$defs/text" }, "resumeText": { "$ref": "#/$defs/text" },
+        "sourceRefs": { "$ref": "#/$defs/ids" }, "confidence": { "const": "approved-public-account" }, "qualificationNotes": { "$ref": "#/$defs/texts" }, "claimIds": { "$ref": "#/$defs/ids" }, "active": { "const": true }, "contentSha256": { "$ref": "#/$defs/hash" }
+      }
+    },
+    "provenance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["inputPath", "inputSha256", "datasetVersion", "sourceSchemaVersion", "reviewedSourceCommit", "scope", "editorialRevision", "extractionVersion", "policySha256"],
+      "properties": {
+        "inputPath": { "const": "dist/career-evidence.v3.json" }, "inputSha256": { "$ref": "#/$defs/hash" }, "datasetVersion": { "$ref": "#/$defs/text" }, "sourceSchemaVersion": { "const": "1.0.0" },
+        "reviewedSourceCommit": { "type": "string", "pattern": "^[a-f0-9]{40}$" }, "scope": { "$ref": "#/$defs/text" }, "editorialRevision": { "$ref": "#/$defs/text" },
+        "extractionVersion": { "const": "1" }, "policySha256": { "$ref": "#/$defs/hash" }
+      }
+    },
+    "corpus": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "corpusVersion", "provenance", "person", "roles", "sources", "claims", "chunks", "qualifications", "boundaries"],
+      "properties": {
+        "schemaVersion": { "const": "1.0.0" }, "corpusVersion": { "$ref": "#/$defs/version" }, "provenance": { "$ref": "#/$defs/provenance" }, "person": { "$ref": "#/$defs/person" },
+        "roles": { "type": "array", "minItems": 1, "maxItems": 64, "items": { "$ref": "#/$defs/role" } },
+        "sources": { "type": "array", "minItems": 1, "maxItems": 512, "items": { "$ref": "#/$defs/source" } },
+        "claims": { "type": "array", "minItems": 1, "maxItems": 512, "items": { "$ref": "#/$defs/claim" } },
+        "chunks": { "type": "array", "minItems": 1, "maxItems": 512, "items": { "$ref": "#/$defs/chunk" } },
+        "qualifications": { "type": "array", "maxItems": 64, "items": { "$ref": "#/$defs/qualification" } }, "boundaries": { "$ref": "#/$defs/texts" }
+      }
+    },
+    "cag": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "corpusVersion", "person", "roles", "claims", "sources", "qualifications", "boundaries", "contentSha256"],
+      "properties": {
+        "schemaVersion": { "const": "1.0.0" }, "corpusVersion": { "$ref": "#/$defs/version" }, "person": { "$ref": "#/$defs/person" },
+        "roles": { "type": "array", "minItems": 1, "maxItems": 64, "items": { "$ref": "#/$defs/role" } },
+        "claims": { "type": "array", "minItems": 1, "maxItems": 32, "items": { "$ref": "#/$defs/claim" } },
+        "sources": { "type": "array", "minItems": 1, "maxItems": 64, "items": { "$ref": "#/$defs/source" } },
+        "qualifications": { "type": "array", "maxItems": 64, "items": { "$ref": "#/$defs/qualification" } }, "boundaries": { "$ref": "#/$defs/texts" }, "contentSha256": { "$ref": "#/$defs/hash" }
+      }
+    }
+  }
+}

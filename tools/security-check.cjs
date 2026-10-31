@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const assert = require('node:assert/strict');
 const root = path.resolve(__dirname, '..');
-const forbidden = /(^|\/)(?:\.[^/]+|knowledge|node_modules|tests|corpus)(?:\/|$)|(?:^|\/)(?:AGENTS\.md|JOSH-BOYER-PORTFOLIO-CORPUS\.md)$|\.map$/i;
+const forbidden = /(^|\/)(?:\.[^/]+|chat|knowledge|node_modules|tests|corpus)(?:\/|$)|(?:^|\/)(?:AGENTS\.md|JOSH-BOYER-PORTFOLIO-CORPUS\.md)$|\.map$/i;
 const credentials = /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|\bsk-(?:proj-|live_)?[A-Za-z0-9_-]{32,}\b|\bAKIA[A-Z0-9]{16}\b|\bgh[pousr]_[A-Za-z0-9]{30,}\b/;
 let scanned = 0;
 function walk(dir, rel = '') {
@@ -18,7 +18,7 @@ function walk(dir, rel = '') {
     }
   }
 }
-for (const folder of ['dist','functions','lib','legacy']) walk(path.join(root,folder));
+for (const folder of ['dist','functions','lib','legacy','chat']) walk(path.join(root,folder));
 assert.ok(!credentials.test(fs.readFileSync(path.join(root,'worker.mjs'),'utf8')), 'Possible credential in Worker');
 const html = fs.readFileSync(path.join(root,'dist/index.html'),'utf8');
 assert.doesNotMatch(html, /<script[^>]+src=["'][^"']*(?:twin-drawer|twin-voice|josh-3d-avatar|career-guide-ui)\.js/i);
