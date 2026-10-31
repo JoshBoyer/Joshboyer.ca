@@ -898,3 +898,171 @@ test('RL-03 & RL-05: standalone renderTurn(container, turn, state), clear(), obj
   assert.match(container.querySelector('[data-details-panel="tools"]').textContent, /No MCP tools were invoked for this request\./);
 });
 
+test('D-02 regression: turn.trace passed as an array of { stage, state: "completed", durationMs } points (or turn.tracePoints) renders stages as ok, degraded, or skipped truthfully', () => {
+  const doc = createSimDocument(1440);
+  const container = doc.createElement('aside');
+  doc.body.append(container);
+  const panel = PortfolioChatDetails.createDetailsPanel({ document: doc, container });
+
+  const sseTraceArrayTurn = buildPhase4Turn({
+    trace: [
+      { stage: 'routing', state: 'completed', elapsedMs: 2, durationMs: 2, routingMode: 'portfolio_mcp', needsRetrieval: true },
+      { stage: 'retrieval', state: 'started', elapsedMs: 3, retrievalMode: 'hybrid' },
+      { stage: 'retrieval', state: 'completed', elapsedMs: 17, durationMs: 14, retrievalMode: 'hybrid', matchedCount: 2 },
+      { stage: 'mcp', state: 'started', elapsedMs: 18, mcpMethod: 'tools/call', toolName: 'get_case_study', toolCallId: 'tool-1' },
+      { stage: 'mcp', state: 'completed', elapsedMs: 50, durationMs: 32, mcpMethod: 'tools/call', toolName: 'get_case_study', toolCallId: 'tool-1', toolOutcome: 'completed' },
+      { stage: 'context', state: 'completed', elapsedMs: 52, durationMs: 2, claimCount: 14 },
+      { stage: 'budget', state: 'completed', elapsedMs: 55, durationMs: 3, reservedMicros: 3200, priceVersion: 'prices-v1' },
+      { stage: 'provider', state: 'started', elapsedMs: 56, attempt: 1, provider: 'openai', model: 'gpt-6-luna' },
+      { stage: 'provider', state: 'completed', elapsedMs: 256, durationMs: 200, attempt: 1, provider: 'openai', model: 'gpt-6-luna' },
+      { stage: 'validation', state: 'completed', elapsedMs: 259, durationMs: 3, attempt: 1, claimCount: 1 },
+      { stage: 'settlement', state: 'completed', elapsedMs: 264, durationMs: 5, reservedMicros: 3200, chargedMicros: 450, priceVersion: 'prices-v1' }
+    ]
+  });
+
+  panel.renderTurn(sseTraceArrayTurn);
+
+  const traceItems = container.querySelectorAll('.chat-trace-item');
+  assert.equal(traceItems.length, 8);
+  for (const item of traceItems) {
+    const stageName = item.getAttribute('data-trace-stage');
+    assert.equal(item.getAttribute('data-trace-status'), 'ok', `Stage ${stageName} must be ok when state is completed`);
+    assert.ok(item.querySelector('.chat-trace-badge--ok'), `Expected .chat-trace-badge--ok on stage ${stageName}`);
+  }
+  assert.equal(
+    container.querySelector('[data-trace-stage="provider"] [data-stage-duration]').textContent,
+    '200 ms'
+  );
+  assert.equal(
+    container.querySelector('[data-trace-stage="mcp"] [data-stage-duration]').textContent,
+    '32 ms'
+  );
+
+  // Also verify retrievalMode: 'degraded' and toolOutcome: 'skipped' inside tracePoints array
+  const mixedTracePointsTurn = buildPhase4Turn({
+    trace: undefined,
+    tracePoints: [
+      { stage: 'routing', state: 'completed', elapsedMs: 1, durationMs: 1, routingMode: 'portfolio_rag', needsRetrieval: true },
+      { stage: 'retrieval', state: 'completed', elapsedMs: 9, durationMs: 8, retrievalMode: 'degraded', matchedCount: 1 },
+      { stage: 'mcp', state: 'completed', elapsedMs: 10, durationMs: 0, mcpMethod: 'tools/list', toolOutcome: 'skipped' },
+      { stage: 'context', state: 'completed', elapsedMs: 11, durationMs: 1, claimCount: 14 },
+      { stage: 'budget', state: 'completed', elapsedMs: 13, durationMs: 2, reservedMicros: 3200, priceVersion: 'prices-v1' },
+      { stage: 'provider', state: 'completed', elapsedMs: 113, durationMs: 100, attempt: 1, provider: 'openai', model: 'gpt-6-luna' },
+      { stage: 'validation', state: 'completed', elapsedMs: 115, durationMs: 2, attempt: 1, claimCount: 1 },
+      { stage: 'settlement', state: 'completed', elapsedMs: 118, durationMs: 3, reservedMicros: 3200, chargedMicros: 410, priceVersion: 'prices-v1' }
+    ]
+  });
+
+  panel.update(mixedTracePointsTurn);
+  assert.equal(
+    container.querySelector('[data-trace-stage="retrieval"]').getAttribute('data-trace-status'),
+    'degraded'
+  );
+  assert.equal(
+    container.querySelector('[data-trace-stage="mcp"]').getAttribute('data-trace-status'),
+    'skipped'
+  );
+  assert.equal(
+    container.querySelector('[data-trace-stage="provider"]').getAttribute('data-trace-status'),
+    'ok'
+  );
+});
+
+test('D-01 regression: update(view) and chat-assistant bridge never steal mounted view.timeline.element or view.evidence or duplicate mobile details content', () => {
+  const doc = createSimDocument(1440);
+  const externalTraceHost = doc.createElement('div');
+  externalTraceHost.id = 'chat-trace-panel';
+  const externalEvidenceHost = doc.createElement('div');
+  externalEvidenceHost.id = 'chat-evidence-panel';
+  const panelContainer = doc.createElement('aside');
+  doc.body.append(externalTraceHost, externalEvidenceHost, panelContainer);
+
+  const timelineEl = doc.createElement('details');
+  timelineEl.className = 'chat-request-trace';
+  const stageRow = doc.createElement('li');
+  stageRow.className = 'chat-trace-stage is-completed';
+  stageRow.textContent = 'Request routing Completed';
+  timelineEl.append(stageRow);
+  externalTraceHost.append(timelineEl);
+
+  const evidenceEl = doc.createElement('div');
+  evidenceEl.className = 'chat-evidence-view';
+  evidenceEl.textContent = 'Selected public portfolio evidence.';
+  externalEvidenceHost.append(evidenceEl);
+
+  const panel = PortfolioChatDetails.createDetailsPanel({ document: doc, container: panelContainer });
+  const liveView = {
+    requestId: '11111111-1111-4111-8111-111111111111',
+    timeline: { element: timelineEl },
+    evidence: evidenceEl,
+    tracePoints: [
+      { stage: 'routing', state: 'completed', elapsedMs: 2, durationMs: 2, routingMode: 'general', needsRetrieval: false }
+    ],
+    claims: [],
+    toolCalls: [],
+    contextData: { routingMode: 'general' }
+  };
+
+  panel.update(liveView);
+  assert.equal(timelineEl.parentNode, externalTraceHost, 'update(view) must never steal timeline.element from its existing parentNode');
+  assert.equal(externalTraceHost.children.includes(timelineEl), true);
+  assert.equal(evidenceEl.parentNode, externalEvidenceHost, 'update(view) must never steal view.evidence from its existing parentNode');
+  assert.equal(externalEvidenceHost.children.includes(evidenceEl), true);
+
+  // Also verify real bridge integration with dist/chat-assistant.js on desktop (1280px) and mobile (390px)
+  const chatAssistant = require('../dist/chat-assistant.js');
+  const corpus = require('../chat/knowledge/corpus.json');
+  const reqId = '11111111-1111-4111-8111-111111111111';
+  const genId = '22222222-2222-4222-8222-222222222222';
+
+  for (const width of [1280, 390]) {
+    const bridgeDoc = createSimDocument(width);
+    const assistantDetails = chatAssistant.createDetailsPanel(bridgeDoc, { detailsModule: PortfolioChatDetails });
+    bridgeDoc.body.append(assistantDetails.element);
+
+    const reply = chatAssistant.createAnswerView(bridgeDoc, null, {
+      onDetails: (v, trigger) => assistantDetails.open(v, trigger)
+    });
+    const frames = [
+      { event: 'trace', data: { stage: 'routing', state: 'completed', elapsedMs: 2, durationMs: 2, routingMode: 'general', needsRetrieval: false } },
+      { event: 'trace', data: { stage: 'retrieval', state: 'completed', elapsedMs: 3, durationMs: 1, retrievalMode: 'skipped', matchedCount: 0, corpusVersion: corpus.corpusVersion } },
+      { event: 'trace', data: { stage: 'context', state: 'completed', elapsedMs: 4, durationMs: 1, corpusVersion: corpus.corpusVersion, claimCount: corpus.claims.length } },
+      { event: 'trace', data: { stage: 'budget', state: 'completed', elapsedMs: 6, durationMs: 2, reservedMicros: 3200, priceVersion: 'prices-v1' } },
+      { event: 'trace', data: { stage: 'provider', state: 'started', elapsedMs: 7, attempt: 1, provider: 'openai', model: 'gpt-6-luna' } },
+      { event: 'trace', data: { stage: 'provider', state: 'completed', elapsedMs: 107, durationMs: 100, attempt: 1, provider: 'openai', model: 'gpt-6-luna', usageStatus: 'known', inputTokens: 500, outputTokens: 40 } },
+      { event: 'trace', data: { stage: 'validation', state: 'started', elapsedMs: 108, attempt: 1 } },
+      { event: 'trace', data: { stage: 'validation', state: 'completed', elapsedMs: 110, durationMs: 2, attempt: 1, claimCount: 0 } },
+      { event: 'trace', data: { stage: 'settlement', state: 'completed', elapsedMs: 114, durationMs: 4, reservedMicros: 3200, chargedMicros: 310, priceVersion: 'prices-v1', usageStatus: 'known' } },
+      { event: 'conversation', data: { kind: 'general', text: 'Here is a general explanation.', suggestions: [] } },
+      { event: 'sources', data: { corpusVersion: corpus.corpusVersion, sources: [] } },
+      { event: 'done', data: { outcome: 'completed' } }
+    ].map((f, idx) => ({ schemaVersion: '1.0.0', requestId: reqId, generation: genId, seq: idx + 1, ...f }));
+
+    for (const frame of frames) {
+      reply.accept(frame);
+      assistantDetails.update(reply.view);
+    }
+
+    const trigger = reply.view.detailsButton;
+    bridgeDoc.body.append(trigger);
+    assistantDetails.open(reply.view, trigger);
+
+    const activeSurface = width <= 900 ? assistantDetails.dialog : assistantDetails.element;
+    const tracePanel = activeSurface.querySelector('#chat-trace-panel');
+    assert.ok(tracePanel, `Expected #chat-trace-panel in active surface at width=${width}`);
+    assert.equal(
+      reply.view.timeline.element.parentNode,
+      tracePanel,
+      `reply.view.timeline.element must remain mounted in #chat-trace-panel at width=${width}`
+    );
+    assert.ok(
+      tracePanel.querySelectorAll('.chat-trace-stage').length >= 7,
+      `#chat-trace-panel must retain rendered trace stage rows at width=${width}`
+    );
+
+    if (width <= 900) {
+      const dialogContents = assistantDetails.dialog.querySelectorAll('.chat-details-content');
+      assert.equal(dialogContents.length, 1, 'Mobile dialog must contain only a single .chat-details-content surface');
+    }
+  }
+});
