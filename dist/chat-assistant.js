@@ -715,7 +715,7 @@
     summary.append(summaryLabel, summaryState);
     const content = element(document, 'div', 'chat-trace-content');
     const waiting = element(document, 'p', 'chat-trace-waiting', 'Waiting for the server to report this request’s stages.');
-    const rows = element(document, 'ol', 'chat-trace-stages');
+    const rows = element(document, 'ol', 'chat-trace-stages chat-trace-list');
     const footer = element(document, 'dl', 'chat-trace-request');
     const requestLabel = element(document, 'dt', '', 'Request ID');
     const requestValue = element(document, 'dd', 'chat-trace-id', 'Not assigned yet');
@@ -1131,12 +1131,19 @@
       corpusVersion: contextData.corpusVersion || null,
       degraded: Boolean(view.degraded || contextData.retrievalMode === 'degraded')
     };
+    const stages = Array.isArray(view.tracePoints)
+      ? view.tracePoints.map(pt => ({
+        ...copy(pt),
+        status: pt.status || (pt.state === 'completed' ? 'ok' : pt.state === 'failed' ? 'degraded' : pt.state)
+      }))
+      : [];
     return {
       turnId: view.turnId || view.requestId || null,
       requestId: view.requestId || null,
       kind: view.kind || null,
       reply: view.replyText || '',
-      trace: Array.isArray(view.tracePoints) ? copy(view.tracePoints) : [],
+      trace: stages,
+      stages,
       citations: Array.isArray(view.claims) ? copy(view.claims) : [],
       claims: Array.isArray(view.claims) ? copy(view.claims) : [],
       sources: Array.isArray(view.sourcesList) ? copy(view.sourcesList) : [],
@@ -1160,6 +1167,7 @@
     const heading = element(document, 'header', 'chat-details-heading');
     const title = element(document, 'h2', '', 'Request details'); title.id = 'chat-details-title';
     const close = element(document, 'button', 'chat-details-close', 'Close details'); close.type = 'button';
+    close.setAttribute('data-chat-drawer-close', '');
     heading.append(title, close);
     const identity = element(document, 'p', 'chat-details-identity', 'Choose a response to inspect its evidence and activity.');
     identity.setAttribute('data-chat-selected-turn', '');
@@ -1182,7 +1190,6 @@
     dialog.setAttribute('data-chat-drawer', '');
     const mobileRoot = element(document, 'div', 'chat-mobile-details-root');
     mobileRoot.setAttribute('data-chat-mobile-details', '');
-    dialog.append(mobileRoot);
     const mobile = () => options.modalOnly || document.defaultView?.matchMedia?.('(max-width: 900px)').matches === true;
 
     function registerView(view) {
@@ -1283,16 +1290,18 @@
     function notifyExternal() {
       const view = selection.selected;
       if (!externalController || !view) return;
+      const turnRecord = toTurnRecord(view);
+      const idx = knownViews.indexOf(view);
+      const meta = {
+        isPinned: selection.pinned,
+        turnOrder: idx === -1 ? knownViews.length : idx + 1,
+        latestTurnId: selection.latest?.requestId || selection.latest?.turnId || null
+      };
       if (typeof externalController.renderTurn === 'function') {
-        const idx = knownViews.indexOf(view);
-        externalController.renderTurn(toTurnRecord(view), {
-          isPinned: selection.pinned,
-          turnOrder: idx === -1 ? knownViews.length : idx + 1,
-          latestTurnId: selection.latest?.requestId || selection.latest?.turnId || null
-        });
+        externalController.renderTurn(turnRecord, meta);
       }
       if (typeof externalController.update === 'function') {
-        externalController.update(view);
+        externalController.update(turnRecord, meta);
       }
     }
 

@@ -61,6 +61,8 @@ class TestNode {
   replaceChildren(...nodes) { for (const node of this.children) node.parentNode = null; this.children = []; this.append(...nodes); }
   remove() { if (this.parentNode) this.parentNode.children = this.parentNode.children.filter(child => child !== this); this.parentNode = null; }
   setAttribute(name, value) { this.attributes[name] = value; }
+  hasAttribute(name) { return Object.hasOwn(this.attributes, name); }
+  removeAttribute(name) { delete this.attributes[name]; }
   addEventListener(name, callback) { (this.events[name] ||= []).push(callback); }
   dispatch(name, event = {}) { for (const callback of this.events[name] || []) callback({ preventDefault() {}, ...event }); }
   focus() { this.ownerDocument.activeElement = this; }
@@ -915,5 +917,47 @@ test('canary and XSS payloads in assistant reply, citation title and tool summar
       secondOutcome = `ERR:${err.code}`;
     }
     assert.equal(firstOutcome, secondOutcome, `fuzz iteration ${i} (seed=0x20261031) must be deterministic`);
+  }
+});
+
+test('real PortfolioChatDetails integration preserves desktop #chat-trace-panel DOM, single 4-tab mobile drawer, and [data-chat-drawer-close]', () => {
+  const realDetailsModule = require('../dist/chat-request-details.js');
+  const previousGlobal = globalThis.PortfolioChatDetails;
+  globalThis.PortfolioChatDetails = realDetailsModule;
+  try {
+    // 1. Desktop (D-01): #chat-trace-panel inside [data-chat-details] keeps its child .chat-trace-list after details.update(view)
+    const desktopDoc = testDocument(false);
+    const desktopDetails = chat.createDetailsPanel(desktopDoc);
+    const turnDesktop = chat.createAnswerView(desktopDoc, null, { onDetails: (view, trigger) => desktopDetails.open(view, trigger) });
+    for (const frame of traceFrames()) turnDesktop.accept(frame);
+    desktopDetails.update(turnDesktop.view);
+
+    const desktopNodes = descendants(desktopDetails.element);
+    const tracePanel = desktopNodes.find(node => node.id === 'chat-trace-panel');
+    assert.ok(tracePanel, '#chat-trace-panel must exist inside [data-chat-details]');
+    assert.ok(tracePanel.children.length > 0, '#chat-trace-panel must keep its timeline child after details.update(view)');
+    const traceLists = descendants(tracePanel).filter(node => String(node.className || '').includes('chat-trace-list'));
+    assert.ok(traceLists.length > 0, '#chat-trace-panel must contain .chat-trace-list');
+    assert.match(nodeText(tracePanel), /Approved context|Spending reservation|Usage settlement/);
+
+    // 2. Mobile drawer (D-02 & D-03): opening mobile drawer renders exactly 4 [role="tab"] buttons (no duplicate 8-tab surface) and close button has [data-chat-drawer-close]
+    const mobileDoc = testDocument(true);
+    const mobileDetails = chat.createDetailsPanel(mobileDoc);
+    const turnMobile = chat.createAnswerView(mobileDoc, null, { onDetails: (view, trigger) => mobileDetails.open(view, trigger) });
+    for (const frame of traceFrames()) turnMobile.accept(frame);
+    mobileDetails.open(turnMobile.view, turnMobile.view.detailsButton);
+
+    assert.equal(mobileDetails.dialog.open, true);
+    const dialogNodes = descendants(mobileDetails.dialog);
+    const dialogTabs = dialogNodes.filter(node => node.getAttribute?.('role') === 'tab');
+    assert.equal(dialogTabs.length, 4, 'mobile drawer must contain exactly 4 [role="tab"] buttons');
+    const closeBtn = dialogNodes.find(node => String(node.className || '').includes('chat-details-close'));
+    assert.ok(closeBtn, 'mobile drawer must contain .chat-details-close button');
+    assert.equal(closeBtn.getAttribute('data-chat-drawer-close'), '');
+    const mobileTracePanel = dialogNodes.find(node => node.id === 'chat-trace-panel');
+    assert.ok(mobileTracePanel && mobileTracePanel.children.length > 0, 'mobile #chat-trace-panel must remain populated');
+  } finally {
+    if (previousGlobal === undefined) delete globalThis.PortfolioChatDetails;
+    else globalThis.PortfolioChatDetails = previousGlobal;
   }
 });
