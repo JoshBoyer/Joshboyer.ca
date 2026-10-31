@@ -1156,6 +1156,43 @@
       contextData: copy(contextData)
     };
   }
+  const TECH_STACK_ITEMS = Object.freeze([
+    { id: 'aws', glyph: 'AWS', name: 'AWS us-east-2', role: 'Cloud & IAM SigV4' },
+    { id: 'lambda', glyph: 'λ', name: 'AWS Lambda', role: 'Handler · Auth · MCP' },
+    { id: 's3', glyph: 'S3', name: 'S3 & S3 Vectors', role: '1536-d Vector Index' },
+    { id: 'dynamodb', glyph: 'DB', name: 'Amazon DynamoDB', role: 'Sessions & $25 Ledger' },
+    { id: 'apigw', glyph: 'API', name: 'API Gateway', role: 'REST + AWS_IAM Route' },
+    { id: 'secrets', glyph: 'IAM', name: 'Secrets & SSM', role: 'Keyring & Pointers' },
+    { id: 'cloudflare', glyph: 'CF', name: 'Cloudflare Edge', role: 'Worker & AI Gateway' },
+    { id: 'mcp', glyph: 'MCP', name: 'Portfolio MCP', role: 'JSON-RPC · 3 Tools' },
+    { id: 'openai', glyph: 'AI', name: 'OpenAI Primary', role: 'Luna + 1536-d Embed' },
+    { id: 'anthropic', glyph: 'CL', name: 'Anthropic Guard', role: 'Haiku 5.5 Fallback' }
+  ]);
+  function createTechStackFooter(document) {
+    const section = element(document, 'section', 'chat-tech-stack');
+    section.setAttribute('aria-label', 'Solution architecture and cloud stack');
+    section.setAttribute('data-chat-tech-stack', '');
+    const header = element(document, 'div', 'chat-tech-stack-header');
+    const title = element(document, 'span', 'chat-tech-stack-title', 'Solution stack');
+    const badge = element(document, 'span', 'chat-tech-stack-region', 'AWS us-east-2 · Cloudflare · MCP');
+    header.append(title, badge);
+    const grid = element(document, 'ul', 'chat-tech-stack-grid');
+    for (const item of TECH_STACK_ITEMS) {
+      const li = element(document, 'li', 'chat-tech-stack-item');
+      li.setAttribute('data-tech-service', item.id);
+      const iconWrap = element(document, 'span', `chat-tech-icon is-${item.id}`, item.glyph);
+      iconWrap.setAttribute('aria-hidden', 'true');
+      const copyWrap = element(document, 'div', 'chat-tech-copy');
+      copyWrap.append(
+        element(document, 'span', 'chat-tech-name', item.name),
+        element(document, 'span', 'chat-tech-role', item.role)
+      );
+      li.append(iconWrap, copyWrap);
+      grid.append(li);
+    }
+    section.append(header, grid);
+    return section;
+  }
   function createDetailsPanel(document, options = {}) {
     const selection = createRequestSelection();
     const knownViews = [];
@@ -1242,7 +1279,8 @@
       panels[name] = panel;
       tabs.append(button);
     });
-    content.append(heading, identity, pinBanner, tabs, ...tabList.map(name => panels[name]));
+    const techStack = createTechStackFooter(document);
+    content.append(heading, identity, pinBanner, tabs, ...tabList.map(name => panels[name]), techStack);
     desktop.append(content);
     document.body.append(dialog);
 

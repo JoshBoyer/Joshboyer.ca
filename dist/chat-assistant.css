@@ -2123,6 +2123,166 @@
 }
 
 /* ==========================================================================
+   11b. Solution Stack · Bottom-Right Live Architecture Card
+   ========================================================================== */
+.chat-tech-stack {
+  flex-shrink: 0;
+  margin-top: auto;
+  border-top: 1px solid #dce5f3;
+  background: linear-gradient(180deg, #f7faff 0%, #f0f5fc 100%);
+  padding: 11px 14px 13px;
+}
+
+.chat-tech-stack-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.chat-tech-stack-title {
+  font: 700 10px/1.2 var(--font-mono, "IBM Plex Mono", monospace);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #1e2f4d;
+}
+
+.chat-tech-stack-region {
+  font: 600 9.5px/1.2 var(--font-mono, "IBM Plex Mono", monospace);
+  color: #134aa8;
+  background: #e6efff;
+  border: 1px solid #c5d9fc;
+  border-radius: 999px;
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+
+.chat-tech-stack-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.chat-tech-stack-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 7px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid #dde6f4;
+  box-shadow: 0 1px 2px rgba(15, 28, 53, 0.04);
+  min-width: 0;
+}
+
+.chat-tech-icon {
+  flex-shrink: 0;
+  width: 26px;
+  height: 24px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: 800 8.5px/1 var(--font-mono, "IBM Plex Mono", monospace);
+  letter-spacing: -0.02em;
+}
+
+.chat-tech-icon.is-aws {
+  background-color: #fff3e0;
+  color: #b85600;
+  border: 1px solid #ffd599;
+}
+
+.chat-tech-icon.is-lambda {
+  background-color: #fff0e5;
+  color: #c24b00;
+  border: 1px solid #ffc9a3;
+  font-size: 13px;
+}
+
+.chat-tech-icon.is-s3 {
+  background-color: #eaf7ec;
+  color: #1f6b29;
+  border: 1px solid #b8e3bf;
+}
+
+.chat-tech-icon.is-dynamodb {
+  background-color: #e8f1fc;
+  color: #15549a;
+  border: 1px solid #b9d5f7;
+}
+
+.chat-tech-icon.is-apigw {
+  background-color: #f2ecff;
+  color: #5e2ca5;
+  border: 1px solid #d5c2fc;
+}
+
+.chat-tech-icon.is-secrets {
+  background-color: #fdecee;
+  color: #a81c2e;
+  border: 1px solid #f7bfc7;
+}
+
+.chat-tech-icon.is-cloudflare {
+  background-color: #fff2e6;
+  color: #b54d00;
+  border: 1px solid #ffd0a6;
+}
+
+.chat-tech-icon.is-mcp {
+  background-color: #e6f7f5;
+  color: #0b6b61;
+  border: 1px solid #b2e6df;
+}
+
+.chat-tech-icon.is-openai {
+  background-color: #eef0ff;
+  color: #3730a3;
+  border: 1px solid #c7d2fe;
+}
+
+.chat-tech-icon.is-anthropic {
+  background-color: #faf0e6;
+  color: #8a3c0e;
+  border: 1px solid #f0ceb0;
+}
+
+.chat-tech-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.15;
+}
+
+.chat-tech-name {
+  font-size: 10px;
+  font-weight: 700;
+  color: #14223b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chat-tech-role {
+  font-size: 8.5px;
+  color: #4a5b78;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 1180px) {
+  .chat-tech-stack-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ==========================================================================
    12. Reduced Motion
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {

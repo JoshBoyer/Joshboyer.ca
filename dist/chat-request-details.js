@@ -1431,6 +1431,42 @@
         closeDrawer();
       });
 
+      const techStack = element(document, 'section', 'chat-tech-stack');
+      setAttr(techStack, 'aria-label', 'Solution architecture and cloud stack');
+      setAttr(techStack, 'data-chat-tech-stack', '');
+      const techHeader = element(document, 'div', 'chat-tech-stack-header');
+      techHeader.append(
+        element(document, 'span', 'chat-tech-stack-title', 'Solution stack'),
+        element(document, 'span', 'chat-tech-stack-region', 'AWS us-east-2 · Cloudflare · MCP')
+      );
+      const techGrid = element(document, 'ul', 'chat-tech-stack-grid');
+      const stackSpecs = [
+        { id: 'aws', glyph: 'AWS', name: 'AWS us-east-2', role: 'Cloud & IAM SigV4' },
+        { id: 'lambda', glyph: 'λ', name: 'AWS Lambda', role: 'Handler · Auth · MCP' },
+        { id: 's3', glyph: 'S3', name: 'S3 & S3 Vectors', role: '1536-d Vector Index' },
+        { id: 'dynamodb', glyph: 'DB', name: 'Amazon DynamoDB', role: 'Sessions & $25 Ledger' },
+        { id: 'apigw', glyph: 'API', name: 'API Gateway', role: 'REST + AWS_IAM Route' },
+        { id: 'secrets', glyph: 'IAM', name: 'Secrets & SSM', role: 'Keyring & Pointers' },
+        { id: 'cloudflare', glyph: 'CF', name: 'Cloudflare Edge', role: 'Worker & AI Gateway' },
+        { id: 'mcp', glyph: 'MCP', name: 'Portfolio MCP', role: 'JSON-RPC · 3 Tools' },
+        { id: 'openai', glyph: 'AI', name: 'OpenAI Primary', role: 'Luna + 1536-d Embed' },
+        { id: 'anthropic', glyph: 'CL', name: 'Anthropic Guard', role: 'Haiku 5.5 Fallback' }
+      ];
+      for (const spec of stackSpecs) {
+        const li = element(document, 'li', 'chat-tech-stack-item');
+        setAttr(li, 'data-tech-service', spec.id);
+        const iconWrap = element(document, 'span', `chat-tech-icon is-${spec.id}`, spec.glyph);
+        setAttr(iconWrap, 'aria-hidden', 'true');
+        const copyWrap = element(document, 'div', 'chat-tech-copy');
+        copyWrap.append(
+          element(document, 'span', 'chat-tech-name', spec.name),
+          element(document, 'span', 'chat-tech-role', spec.role)
+        );
+        li.append(iconWrap, copyWrap);
+        techGrid.append(li);
+      }
+      techStack.append(techHeader, techGrid);
+
       content.append(
         heading,
         identity,
@@ -1438,7 +1474,8 @@
         panels.trace,
         panels.evidence,
         panels.tools,
-        panels.context
+        panels.context,
+        techStack
       );
 
       return { content, identity, tablist, buttons, panels, close };
