@@ -1,6 +1,6 @@
 # Chat contracts
 
-Version: 1.0 | Date: 2026-10-31 | Status: Local contracts and validation; no hosted chat
+Version: 1.1 | Date: 2026-10-31 | Status: Deployed private chat; additive request-trace contract
 
 These contracts define what the future chat service may accept and display. The model selects approved facts; the application supplies the actual words and their qualifications.
 
@@ -67,7 +67,11 @@ Messages allow a UUID request ID, nonblank text and an optional page identifier 
 
 ## Stream contract and lifecycle
 
-**Server-Sent Events (SSE)** deliver one-way updates. Each parsed frame has `schemaVersion`, `requestId`, `generation`, `seq`, `event` and `data`. Sequence numbers begin at 1 and increase by exactly 1. Event types are `status`, `tool_start`, `tool_end`, `answer_block`, `sources`, `done` and `error`.
+**Server-Sent Events (SSE)** deliver one-way updates. Each parsed frame has `schemaVersion`, `requestId`, `generation`, `seq`, `event` and `data`. Sequence numbers begin at 1 and increase by exactly 1. Event types are `status`, `trace`, `tool_start`, `tool_end`, `answer_block`, `sources`, `done` and `error`.
+
+`trace` is an additive private-client extension to the `1.0.0` wire contract. Deploy the updated client before the producer; older saved answers without trace data remain valid. A trace records actual application stages: approved context, budget reservation, provider attempts, answer validation and settlement. Each point has a closed stage/state, bounded relative timing and optional allowlisted usage/accounting identifiers. No prompt text, headers, credentials, arbitrary URLs or private reasoning are permitted. The Gateway/provider duration is one observed HTTP round trip; internal timings are not inferred.
+
+At most 24 trace points may precede the answer. Numeric elapsed times must be monotonic, stage starts and outcomes must pair, and validation is tracked separately for each provider attempt. A completed settlement is emitted only after its durable commit. Replays use the saved original trace and accounting receipt; an unrecorded settlement time is `null` with `replayed: true`, rather than a fabricated duration.
 
 `createEventValidator({requestId, generation, corpus})` returns `accept(event)`, `revoke()` and a read-only state snapshot. It verifies canonical blocks and source receipts as well as the event schema. Tool calls must pair correctly, stay inside the three-tool catalogue and not exceed four calls. Answer blocks follow completed tools, source receipts follow the complete answer, and successful completion requires the receipt. Cancellation or error may terminate an unfinished stream. Terminal and revoked streams reject every later frame. The in-memory state resets for each request; it is not a session or budget store.
 

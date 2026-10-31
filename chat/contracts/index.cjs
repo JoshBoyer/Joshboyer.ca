@@ -185,6 +185,9 @@ function createEventValidator({ requestId, generation, corpus }) {
   const claimIds = new Set();
   const noticeCodes = new Set();
   const sourceIds = new Set();
+  const traceStages = new Map();
+  let traceCount = 0;
+  let lastTraceTime = 0;
 
   function accept(event) {
     assertValid('streamEvent', event);
@@ -197,6 +200,26 @@ function createEventValidator({ requestId, generation, corpus }) {
 
     // Commit state only after the event is fully checked, allowing a caller to reject bad frames.
     switch (event.event) {
+      case 'trace': {
+        if (answerStarted || receiptSent || traceCount >= 24 ||
+            (data.elapsedMs !== null && data.elapsedMs < lastTraceTime) ||
+            (data.durationMs !== undefined && data.elapsedMs !== null && data.durationMs > data.elapsedMs) ||
+            (data.chargedMicros !== undefined && data.reservedMicros !== undefined && data.chargedMicros > data.reservedMicros) ||
+            (data.provider === 'openai' && data.model !== 'gpt-6-luna') ||
+            (data.provider === 'anthropic' && data.model !== 'claude-haiku-5-5')) {
+          streamError('Trace is late, oversized or has invalid timing.');
+        }
+        const key = ['provider', 'validation'].includes(data.stage) ? `${data.stage}-${data.attempt ?? 1}` : data.stage;
+        const previous = traceStages.get(key);
+        if (previous && previous !== 'started' || previous === 'started' && data.state === 'started' ||
+            !previous && ['provider', 'validation'].includes(data.stage) && data.state !== 'started') {
+          streamError('Trace stage transition is invalid.');
+        }
+        if (data.elapsedMs !== null) lastTraceTime = data.elapsedMs;
+        traceStages.set(key, data.state);
+        traceCount += 1;
+        break;
+      }
       case 'status':
         if (answerStarted || receiptSent) streamError('Progress cannot follow answer output.');
         break;
@@ -215,7 +238,7 @@ function createEventValidator({ requestId, generation, corpus }) {
         pendingTools.delete(data.toolCallId);
         break;
       case 'answer_block': {
-        if (receiptSent || pendingTools.size) streamError('Answer is late or tools are still pending.');
+        if (receiptSent || pendingTools.size || [...traceStages.values()].includes('started')) streamError('Answer is late or a tool or trace stage is still pending.');
         const canonical = data.kind === 'claim' ? indexed.claims.get(data.claimId) : noticeBlock(data.code);
         if (!canonical || !isDeepStrictEqual(canonical, data)) {
           streamError('Answer block does not match approved canonical text.');
@@ -245,7 +268,7 @@ function createEventValidator({ requestId, generation, corpus }) {
         break;
       }
       case 'done':
-        if (data.outcome !== 'cancelled' && (!answerStarted || !receiptSent || pendingTools.size)) {
+        if (data.outcome !== 'cancelled' && (!answerStarted || !receiptSent || pendingTools.size || [...traceStages.values()].includes('started'))) {
           streamError('Completed answer is missing blocks, a source receipt or tool completion.');
         }
         terminal = true;

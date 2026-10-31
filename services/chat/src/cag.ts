@@ -14,7 +14,7 @@ export interface RenderedAnswer {
 export interface MessageRequest { schemaVersion: '1.0.0'; requestId: string; text: string; pageContext?: string }
 export interface StreamFrame {
   schemaVersion: '1.0.0'; requestId: string; generation: string; seq: number;
-  event: 'status' | 'answer_block' | 'sources' | 'done' | 'error'; data: unknown;
+  event: 'status' | 'trace' | 'answer_block' | 'sources' | 'done' | 'error'; data: unknown;
 }
 interface Corpus { corpusVersion: string; claims: { id: string }[] }
 interface Cag { corpusVersion: string; claims: { id: string }[] }

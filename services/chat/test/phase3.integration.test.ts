@@ -11,6 +11,19 @@ import { CAG_CLAIM_IDS, CAG_VERSION } from '../src/cag.js';
 import { MAX_PROVIDER_RESERVATION_MICROS } from '../src/chat-pricing.js';
 import { CONFIG, KEYRING, fixtures } from './fixtures.js';
 import type { RequestEvent } from '../src/envelope.js';
+import type { TracePoint } from '../src/trace.js';
+
+const { createEventValidator } = require('../../../chat/contracts/index.cjs') as {
+  createEventValidator(input: { requestId: string; generation: string; corpus: unknown }): { accept(value: unknown): void }
+};
+const corpus = require('../../../chat/knowledge/corpus.json');
+
+function observedTraces(stream: string, requestId: string, generation: string): TracePoint[] {
+  const validator = createEventValidator({ requestId, generation, corpus });
+  const frames = stream.trim().split('\n\n').map(part => JSON.parse(part.split('\ndata: ')[1]!));
+  frames.forEach(frame => validator.accept(frame));
+  return frames.filter(frame => frame.event === 'trace').map(frame => frame.data as TracePoint);
+}
 
 const endpoint = process.env.CHAT_TEST_DYNAMODB_ENDPOINT;
 if (endpoint && !/^http:\/\/127\.0\.0\.1:\d{2,5}$/.test(endpoint)) throw new Error('CHAT_TEST_DYNAMODB_ENDPOINT must be loopback HTTP.');
@@ -129,12 +142,24 @@ integration('private HTTP path uses real signed edge authentication and DynamoDB
     const stream = await reply.text();
     assert.match(stream, /event: answer_block/); assert.match(stream, /event: sources/); assert.match(stream, /event: done/);
     assert.ok(stream.includes(opened.generation));
+    const traces = observedTraces(stream, message.requestId, opened.generation);
+    assert.equal(traces.find(point => point.stage === 'provider' && point.state === 'completed')?.inputTokens, 100);
+    assert.equal(traces.at(-1)?.stage, 'settlement');
+    assert.equal(traces.at(-1)?.state, 'completed');
     const replay = await runtime.send('POST', '/api/chat/messages', message);
-    assert.match(await replay.text(), /event: answer_block/);
+    const replayedStream = await replay.text();
+    assert.match(replayedStream, /event: answer_block/);
+    const replayedTraces = observedTraces(replayedStream, message.requestId, opened.generation);
+    assert.deepEqual(replayedTraces.slice(0, -1), traces.slice(0, -1));
+    assert.equal(replayedTraces.at(-1)?.elapsedMs, null);
+    assert.equal(replayedTraces.at(-1)?.replayed, true);
     assert.deepEqual(runtime.calls, ['openai']);
     let rows = await runtime.rows();
     assert.equal(rows.find(row => row.sk?.S === 'ALL')?.used?.N, '25');
     assert.equal(rows.filter(row => row.pk?.S?.startsWith('REQUEST#')).length, 1);
+    const saved = JSON.parse(rows.find(row => row.pk?.S?.startsWith('REQUEST#'))!.result!.S!);
+    assert.deepEqual(saved.trace, traces.slice(0, -1));
+    assert.equal(saved.settlement.chargedMicros, 25);
     const conflict = await runtime.send('POST', '/api/chat/messages', { ...message, text: 'Different text' });
     assert.equal(conflict.status, 409); await conflict.text();
     const oldCookie = [...runtime.cookies].map(([name, value]) => `${name}=${value}`).join('; ');
@@ -179,9 +204,14 @@ integration('zero budget rejects the real HTTP path before provider dispatch or 
 
 integration('unknown provider usage stays fully charged through the signed HTTP path', async () => {
   await fixture(async runtime => {
-    await loginAndOpen(runtime);
-    const response = await runtime.send('POST', '/api/chat/messages', { schemaVersion: '1.0.0', requestId: randomUUID(), text: 'Dell?' });
-    assert.match(await response.text(), /event: done/);
+    const opened = await loginAndOpen(runtime);
+    const requestId = randomUUID();
+    const response = await runtime.send('POST', '/api/chat/messages', { schemaVersion: '1.0.0', requestId, text: 'Dell?' });
+    const text = await response.text();
+    assert.match(text, /event: done/);
+    const trace = observedTraces(text, requestId, opened.generation);
+    assert.equal(trace.find(point => point.stage === 'provider' && point.state === 'completed')?.usageStatus, 'unknown');
+    assert.equal(trace.at(-1)?.chargedMicros, MAX_PROVIDER_RESERVATION_MICROS);
     const rows = await runtime.rows();
     assert.equal(Number(rows.find(row => row.sk?.S === 'ALL')?.used?.N), MAX_PROVIDER_RESERVATION_MICROS);
     assert.deepEqual(runtime.calls, ['openai']);
@@ -190,9 +220,14 @@ integration('unknown provider usage stays fully charged through the signed HTTP 
 
 integration('fallback retains ambiguous primary charge and reconciles the second provider in DynamoDB', async () => {
   await fixture(async runtime => {
-    await loginAndOpen(runtime);
-    const response = await runtime.send('POST', '/api/chat/messages', { schemaVersion: '1.0.0', requestId: randomUUID(), text: 'Dell?' });
-    assert.match(await response.text(), /event: done/);
+    const opened = await loginAndOpen(runtime);
+    const requestId = randomUUID();
+    const response = await runtime.send('POST', '/api/chat/messages', { schemaVersion: '1.0.0', requestId, text: 'Dell?' });
+    const text = await response.text();
+    assert.match(text, /event: done/);
+    const trace = observedTraces(text, requestId, opened.generation);
+    assert.deepEqual(trace.filter(point => point.stage === 'provider').map(point => [point.attempt, point.provider, point.state]),
+      [[1, 'openai', 'started'], [1, 'openai', 'failed'], [2, 'anthropic', 'started'], [2, 'anthropic', 'completed']]);
     const rows = await runtime.rows();
     assert.equal(Number(rows.find(row => row.sk?.S === 'ALL')?.used?.N), MAX_PROVIDER_RESERVATION_MICROS + 25);
     assert.equal(Number(rows.find(row => row.pk?.S?.startsWith('BUDGET#') && row.sk?.S === 'openai')?.used?.N), MAX_PROVIDER_RESERVATION_MICROS);

@@ -7,6 +7,7 @@ import { prepareChat, type ChatDependencies, type VerifiedChatRequest, type Chat
 import { ServiceError } from '../src/errors.js';
 import type { BeginTurnInput, ChatStateStore, CompleteTurnInput, Identity, Session, Turn } from '../src/state.js';
 import { normaliseUsage } from '../src/provider.js';
+import { validateTrace, TraceRecorder } from '../src/trace.js';
 import { CONFIG, fixtures } from './fixtures.js';
 
 const REQUEST_ID = '11111111-1111-4111-8111-111111111111';
@@ -63,7 +64,8 @@ function providerResponse(selection: unknown, provider = 'openai') {
     model: CONFIG.models.openai, status: 'completed', output: [{ type: 'message', content: [{ type: 'output_text', text }] }],
     usage: { input_tokens: 100, output_tokens: 10, total_tokens: 110, input_tokens_details: { cached_tokens: 0 }, output_tokens_details: { reasoning_tokens: 0 } }
   } : { model: CONFIG.models.anthropic, stop_reason: 'end_turn', content: [{ type: 'text', text }],
-    usage: { input_tokens: 100, output_tokens: 10, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 } });
+    usage: { input_tokens: 100, output_tokens: 10, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 } },
+  { headers: { 'x-request-id': 'openai-request-test', 'request-id': 'anthropic-request-test', 'cf-aig-log-id': 'gateway-log-test' } });
 }
 function setup() {
   const state = new MemoryState(), receipts: ChatReceipt[] = [], urls: string[] = [], bodies: Record<string, unknown>[] = [];
@@ -110,8 +112,8 @@ test('spending allowances reserve both providers and retain maximum for unknown 
 test('chat emits validated typed stream, persists canonical answer and replays without another inference', async () => {
   const { state, deps, urls, receipts } = setup();
   const values = await frames(await prepareChat(request(), CONFIG, deps, new AbortController().signal));
-  assert.deepEqual(values.map(value => value.event), ['status', 'status', 'status', 'answer_block', 'sources', 'done']);
-  assert.deepEqual(values.map(value => value.seq), [1, 2, 3, 4, 5, 6]);
+  assert.deepEqual(values.filter(value => value.event !== 'trace').map(value => value.event), ['status', 'status', 'status', 'answer_block', 'sources', 'done']);
+  assert.deepEqual(values.map(value => value.seq), values.map((_value, index) => index + 1));
   assert.ok(values.every(value => value.generation === GENERATION && value.requestId === REQUEST_ID));
   assert.equal(state.completed.length, 1);
   assert.equal(state.completed[0]?.actualCosts.openai, 25);
@@ -120,7 +122,7 @@ test('chat emits validated typed stream, persists canonical answer and replays w
   assert.equal(receipts.length, 1);
   assert.ok(!JSON.stringify(receipts).includes('Tell me'));
   const replay = await frames(await prepareChat(request(), CONFIG, deps, new AbortController().signal));
-  assert.deepEqual(replay.map(value => value.event), ['answer_block', 'sources', 'done']);
+  assert.deepEqual(replay.filter(value => value.event !== 'trace').map(value => value.event), ['answer_block', 'sources', 'done']);
   assert.equal(urls.length, 1);
   assert.equal(state.begins, 1);
   await assert.rejects(prepareChat(request('Different content'), CONFIG, deps, new AbortController().signal), /REQUEST_CONFLICT/);
@@ -153,7 +155,7 @@ test('completed retries replay without provider credentials or rebuilding expand
   state.session.history = Array.from({ length: 8 }, () => ({ text: '\u0000'.repeat(8192), result: {} }));
   deps.secrets = { async read() { throw new ServiceError('CREDENTIAL_UNAVAILABLE', 503); } };
   const replay = await frames(await prepareChat(request(), CONFIG, deps, new AbortController().signal));
-  assert.equal(replay[0]?.event, 'answer_block');
+  assert.equal(replay.find(value => value.event === 'answer_block')?.event, 'answer_block');
   assert.equal(replay.at(-1)?.event, 'done');
   assert.equal(urls.length, 1);
 });
@@ -208,7 +210,9 @@ test('clear during inference discards late answer but settles provider cost inde
   const { deps, state } = setup();
   deps.fetchImpl = async () => { await state.clear(); return providerResponse(selected()); };
   const values = await frames(await prepareChat(request(), CONFIG, deps, new AbortController().signal));
-  assert.deepEqual(values.map(value => value.event), ['status', 'status']);
+  assert.deepEqual(values.filter(value => value.event !== 'trace').map(value => value.event), ['status', 'status']);
+  assert.ok(values.filter(value => value.event === 'trace').every(value => (value.data as { state: string }).state !== 'completed' ||
+    ['context', 'budget'].includes((value.data as { stage: string }).stage)));
   assert.equal(state.completed[0]?.actualCosts.openai, 25);
   assert.equal(state.session.history.length, 0);
 });
@@ -277,4 +281,137 @@ test('refused, oversized and mismatched model responses cannot become answers', 
     Response.json({ status: 'completed', output: [{ type: 'message', content: [{ type: 'refusal', refusal: 'no' }] }] }),
     new Response('x'.repeat(65537))
   ]) await assert.rejects(callChatProvider({ ...options, fetchImpl: async () => response }));
+});
+
+test('observable traces precede canonical answers and preserve actual usage, context, reservations and provider receipts', async () => {
+  const { deps, state } = setup();
+  const values = await frames(await prepareChat(request(), CONFIG, deps, new AbortController().signal));
+  const traces = values.filter(value => value.event === 'trace').map(value => value.data) as import('../src/trace.js').TracePoint[];
+  assert.deepEqual(traces.map(point => `${point.stage}:${point.state}`), [
+    'context:completed', 'budget:completed', 'provider:started', 'provider:completed',
+    'validation:started', 'validation:completed', 'settlement:completed'
+  ]);
+  const firstAnswer = values.findIndex(value => value.event === 'answer_block');
+  assert.ok(values.every((value, index) => value.event !== 'trace' || index < firstAnswer));
+  assert.ok(traces.every((point, index) => index === 0 || point.elapsedMs! >= traces[index - 1]!.elapsedMs!));
+  assert.ok(traces.every(point => point.elapsedMs! >= (point.durationMs ?? 0)));
+  assert.equal(traces[0]?.corpusVersion, CAG_VERSION);
+  assert.equal(traces[0]?.claimCount, CAG_CLAIM_IDS.length);
+  assert.equal(traces[1]?.reservedMicros, MAX_PROVIDER_RESERVATION_MICROS * 2);
+  assert.deepEqual({ provider: traces[3]?.provider, model: traces[3]?.model, attempt: traces[3]?.attempt,
+    input: traces[3]?.inputTokens, output: traces[3]?.outputTokens, cache: traces[3]?.cacheReadInputTokens,
+    providerId: traces[3]?.providerRequestId, gatewayId: traces[3]?.gatewayRequestId },
+  { provider: 'openai', model: CONFIG.models.openai, attempt: 1, input: 100, output: 10, cache: 0,
+    providerId: 'openai-request-test', gatewayId: 'gateway-log-test' });
+  assert.equal(traces[6]?.chargedMicros, 25);
+  const saved = state.completed[0]?.result as { trace: unknown[]; settlement: unknown };
+  assert.deepEqual(saved.trace, traces.slice(0, -1));
+  assert.deepEqual(saved.settlement, { reservedMicros: MAX_PROVIDER_RESERVATION_MICROS * 2, chargedMicros: 25, priceVersion: PRICE_VERSION });
+  assert.ok(!JSON.stringify(traces).includes('Tell me'));
+  assert.ok(!JSON.stringify(traces).includes('test-key'));
+});
+
+test('retries replay original traces without new inference and label unrecorded settlement timing', async () => {
+  const { deps, urls } = setup();
+  const original = await frames(await prepareChat(request(), CONFIG, deps, new AbortController().signal));
+  const repeated = await frames(await prepareChat(request(), CONFIG, deps, new AbortController().signal));
+  const firstTrace = original.filter(value => value.event === 'trace').map(value => value.data);
+  const retryTrace = repeated.filter(value => value.event === 'trace').map(value => value.data) as import('../src/trace.js').TracePoint[];
+  assert.deepEqual(retryTrace.slice(0, -1), firstTrace.slice(0, -1));
+  assert.equal(retryTrace.at(-1)?.stage, 'settlement');
+  assert.equal(retryTrace.at(-1)?.elapsedMs, null);
+  assert.equal(retryTrace.at(-1)?.durationMs, undefined);
+  assert.equal(retryTrace.at(-1)?.replayed, true);
+  assert.equal(urls.length, 1);
+});
+
+test('fallback traces show each actual provider attempt and independent validation result', async () => {
+  const { deps } = setup(); let calls = 0;
+  deps.fetchImpl = async () => ++calls === 1 ? providerResponse({ ...selected(), injected: 'invented prose' }) : providerResponse(selected(), 'anthropic');
+  const values = await frames(await prepareChat(request(), CONFIG, deps, new AbortController().signal));
+  const traces = values.filter(value => value.event === 'trace').map(value => value.data) as import('../src/trace.js').TracePoint[];
+  assert.deepEqual(traces.filter(point => point.stage === 'provider').map(point => [point.attempt, point.provider, point.state]),
+    [[1, 'openai', 'started'], [1, 'openai', 'completed'], [2, 'anthropic', 'started'], [2, 'anthropic', 'completed']]);
+  assert.deepEqual(traces.filter(point => point.stage === 'validation').map(point => [point.attempt, point.state]),
+    [[1, 'started'], [1, 'failed'], [2, 'started'], [2, 'completed']]);
+  assert.equal(calls, 2);
+  assert.equal(values.at(-1)?.event, 'done');
+  assert.ok(!JSON.stringify(traces).includes('invented prose'));
+});
+
+test('failed provider trace retains uncertain allowance and failure code without exception text', async () => {
+  const { deps } = setup();
+  deps.settings!.fallbackEnabled = false;
+  deps.fetchImpl = async () => { throw new Error('provider-secret-must-never-display'); };
+  const values = await frames(await prepareChat(request(), CONFIG, deps, new AbortController().signal));
+  const traces = values.filter(value => value.event === 'trace').map(value => value.data) as import('../src/trace.js').TracePoint[];
+  const failed = traces.find(point => point.stage === 'provider' && point.state === 'failed');
+  assert.equal(failed?.usageStatus, 'unknown');
+  assert.equal(failed?.chargedMicros, MAX_PROVIDER_RESERVATION_MICROS);
+  assert.equal(failed?.code, 'upstream_failure');
+  assert.ok(!JSON.stringify(values).includes('provider-secret'));
+});
+
+test('failed durable settlement never emits a completed settlement or answer', async () => {
+  const { deps, state } = setup();
+  state.completeTurn = async () => { throw new ServiceError('STATE_UNAVAILABLE', 503); };
+  const values = await frames(await prepareChat(request(), CONFIG, deps, new AbortController().signal));
+  const traces = values.filter(value => value.event === 'trace').map(value => value.data) as import('../src/trace.js').TracePoint[];
+  assert.ok(!traces.some(point => point.stage === 'settlement' && point.state === 'completed'));
+  assert.equal(traces.at(-1)?.stage, 'settlement');
+  assert.equal(traces.at(-1)?.state, 'failed');
+  assert.ok(values.every(value => value.event !== 'answer_block'));
+  assert.equal(values.at(-1)?.event, 'error');
+});
+
+test('older saved results replay without traces while tampered traces fail closed', async () => {
+  const { deps, state, urls } = setup();
+  await frames(await prepareChat(request(), CONFIG, deps, new AbortController().signal));
+  const saved = state.turn!.result as { trace?: unknown[]; settlement?: unknown };
+  delete saved.trace; delete saved.settlement;
+  const old = await frames(await prepareChat(request(), CONFIG, deps, new AbortController().signal));
+  assert.deepEqual(old.map(value => value.event), ['answer_block', 'sources', 'done']);
+  saved.trace = [{ stage: 'context', state: 'completed', elapsedMs: 0, corpusVersion: CAG_VERSION, claimCount: 7, prompt: 'must not display' }];
+  await assert.rejects(prepareChat(request(), CONFIG, deps, new AbortController().signal), /ANSWER_VALIDATION_FAILED/);
+  assert.equal(urls.length, 1);
+});
+
+test('trace validation rejects excessive payloads and non-monotonic timing', () => {
+  const valid = { stage: 'budget', state: 'completed', elapsedMs: 10, reservedMicros: 20, priceVersion: PRICE_VERSION };
+  assert.throws(() => validateTrace(Array.from({ length: 25 }, () => valid)), /ANSWER_VALIDATION_FAILED/);
+  assert.throws(() => validateTrace([valid, { ...valid, elapsedMs: 9 }]), /ANSWER_VALIDATION_FAILED/);
+  let clock = 100;
+  const recorder = new TraceRecorder(() => clock);
+  recorder.add({ stage: 'budget', state: 'completed', reservedMicros: 20, priceVersion: PRICE_VERSION });
+  clock = 99;
+  assert.equal(recorder.add({ stage: 'context', state: 'completed', corpusVersion: CAG_VERSION, claimCount: 7 }).elapsedMs, 0);
+  assert.throws(() => validateTrace([{ stage: 'provider', state: 'completed', elapsedMs: 1, provider: 'openai', model: CONFIG.models.openai, attempt: 1 }]), /ANSWER_VALIDATION_FAILED/);
+  assert.throws(() => validateTrace([{ ...valid, durationMs: 20 }]), /ANSWER_VALIDATION_FAILED/);
+});
+
+test('cancellation and clear suppress late trace replay', async () => {
+  const { deps, state } = setup();
+  deps.settings!.fallbackEnabled = false;
+  deps.fetchImpl = async () => { state.cancelled = true; throw new Error('cancelled'); };
+  const original = await frames(await prepareChat(request(), CONFIG, deps, new AbortController().signal));
+  assert.equal(original.at(-1)?.event, 'done');
+  const replay = await frames(await prepareChat(request(), CONFIG, deps, new AbortController().signal));
+  assert.deepEqual(replay.map(value => value.event), ['done']);
+  await state.clear();
+  await assert.rejects(prepareChat(request(), CONFIG, deps, new AbortController().signal), /SESSION_EXPIRED/);
+});
+
+test('trace authority-check failure aborts the turn without spending a fallback invocation', async () => {
+  const { deps, state } = setup();
+  let failNextRead = false, calls = 0;
+  const requireSession = state.requireSession.bind(state);
+  state.requireSession = async identity => {
+    if (failNextRead) { failNextRead = false; throw new ServiceError('STATE_UNAVAILABLE', 503); }
+    return requireSession(identity);
+  };
+  deps.fetchImpl = async () => { calls++; failNextRead = true; return providerResponse(selected()); };
+  const values = await frames(await prepareChat(request(), CONFIG, deps, new AbortController().signal));
+  assert.equal(calls, 1);
+  assert.equal(state.completed[0]?.actualCosts.anthropic, 0);
+  assert.ok(values.every(value => value.event !== 'answer_block'));
 });

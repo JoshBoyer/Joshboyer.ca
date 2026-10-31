@@ -57,6 +57,40 @@
 .chat-sources{display:flex;flex-wrap:wrap;gap:6px 14px;border-top:1px solid var(--chat-line);padding-top:12px;font-size:11px}
 .chat-sources .chat-small-label{flex-basis:100%;margin-bottom:0;font-size:9px}
 .chat-receipt{font:9px/1.6 var(--font-mono,"IBM Plex Mono",monospace);color:#66768f;margin:12px 0 0}
+.chat-request-trace{margin:0 0 22px;border:1px solid #dce5f3;background:#f8faff;border-radius:10px;font-size:11px;overflow:hidden}
+.chat-trace-summary{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px;padding:11px 13px;cursor:pointer;list-style:none;color:var(--chat-ink)}
+.chat-trace-summary::-webkit-details-marker,.chat-trace-stage-summary::-webkit-details-marker{display:none}
+.chat-trace-title{display:flex;align-items:center;gap:7px;white-space:nowrap;font-weight:700}
+.chat-trace-title::before{content:'›';display:inline-block;color:var(--chat-blue);font-size:18px;line-height:1;transform:rotate(0)}
+.chat-request-trace[open]>.chat-trace-summary .chat-trace-title::before{transform:rotate(90deg)}
+.chat-trace-summary-state{color:var(--chat-muted);font-size:10px;text-align:right;overflow-wrap:anywhere}
+.chat-trace-content{border-top:1px solid #e3eaf6;padding:4px 12px 12px}
+.chat-trace-waiting{font-size:11px;color:var(--chat-muted);margin:10px 0}
+.chat-trace-stages{list-style:none;padding:0;margin:2px 0 10px}
+.chat-trace-stage{position:relative;border-bottom:1px solid #e3eaf6}
+.chat-trace-stage:last-child{border-bottom:0}
+.chat-trace-stage-summary{display:grid;grid-template-columns:20px minmax(0,1fr) auto;align-items:center;gap:3px 8px;min-height:49px;padding:7px 0;cursor:pointer;list-style:none}
+.chat-trace-ordinal{grid-column:1;grid-row:1/3;align-self:start;margin-top:2px;display:flex;align-items:center;justify-content:center;width:20px;height:20px;border:1px solid #b7cdf8;border-radius:50%;color:var(--chat-blue);font:9px/1 var(--font-mono,"IBM Plex Mono",monospace);background:#fff}
+.chat-trace-stage-name{grid-column:2;grid-row:1;font-size:11px;font-weight:700;color:var(--chat-ink)}
+.chat-trace-stage-name::after{content:' +';color:#6481b6;font:12px/1 var(--font-mono,"IBM Plex Mono",monospace)}
+.chat-trace-stage-detail[open]>.chat-trace-stage-summary .chat-trace-stage-name::after{content:' −'}
+.chat-trace-stage-state{grid-column:2;grid-row:2;font-size:10px;color:var(--chat-muted)}
+.chat-trace-stage-time{grid-column:3;grid-row:1/3;text-align:right;max-width:98px;color:#5e7392;font:9px/1.5 var(--font-mono,"IBM Plex Mono",monospace)}
+.chat-trace-stage.is-started .chat-trace-ordinal{background:var(--chat-blue);border-color:var(--chat-blue);color:white;box-shadow:0 0 0 3px #e0eaff}
+.chat-trace-stage.is-completed .chat-trace-ordinal{background:#e7efff;border-color:#b7cdf8;color:#134aa8}
+.chat-trace-stage.is-failed .chat-trace-ordinal{background:#fff1dd;border-color:#e5bd83;color:#85500c}
+.chat-trace-stage.is-cancelled .chat-trace-ordinal{background:#ecf0f6;border-color:#c6d0df;color:#5f6d82}
+.chat-trace-stage-body{padding:0 2px 12px 28px}
+.chat-trace-explanation{margin:0 0 10px;font-size:11px;color:var(--chat-muted)}
+.chat-trace-facts,.chat-trace-request{display:grid;grid-template-columns:minmax(95px,.8fr) minmax(0,1.2fr);gap:5px 12px;margin:0;font-size:10px;line-height:1.6}
+.chat-trace-facts dt,.chat-trace-request dt{color:var(--chat-muted)}
+.chat-trace-facts dd,.chat-trace-request dd{margin:0;color:var(--chat-ink);overflow-wrap:anywhere}
+.chat-trace-id{font-family:var(--font-mono,"IBM Plex Mono",monospace);font-size:9px;word-break:break-word}
+.chat-trace-request{padding-top:10px;border-top:1px solid #e3eaf6}
+.chat-trace-points{list-style:none;padding:8px 0 0;margin:10px 0 0;border-top:1px solid #e3eaf6;color:var(--chat-muted);font:9px/1.7 var(--font-mono,"IBM Plex Mono",monospace)}
+.chat-trace-points li::before{content:'·';margin-right:7px;color:var(--chat-blue)}
+.chat-trace-note,.chat-trace-ledger-note{font-size:10px;color:var(--chat-muted);line-height:1.6;margin:10px 0 0}
+@media(max-width:480px){.chat-trace-summary{align-items:flex-start;flex-direction:column;gap:3px}.chat-trace-summary-state{padding-left:15px;text-align:left}.chat-trace-facts,.chat-trace-request{grid-template-columns:1fr;gap:1px}.chat-trace-facts dd,.chat-trace-request dd{margin-bottom:7px}.chat-trace-stage-time{max-width:75px;font-size:8px}.chat-trace-stage-body{padding-left:28px}}
 .chat-status{margin:0;min-height:44px;padding:8px 28px;color:var(--chat-muted);font-size:11px;border-top:1px solid #edf1f7;overflow-wrap:anywhere}
 .chat-compose{margin:0;padding:17px 22px 20px;background:var(--chat-wash);border-top:1px solid #e5ebf5}
 .chat-compose label{display:block;font-size:9px;margin:0 0 7px}

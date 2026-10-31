@@ -22,6 +22,7 @@ Private preview + HttpOnly cookies
 
 - Chat with the approved **cache-augmented generation (CAG)** fact pack. The model selects claim identifiers; the server renders approved wording and qualifications. The browser checks it against the same public corpus before display.
 - Streaming progress, validated answers and source links, bounded conversation history, explicit retry, cancellation and clear.
+- An expandable request timeline shows actual context, reservation, provider, validation and settlement events. Provider details include the model, measured round-trip time, token/cache usage and trace identifiers. Reopening a trace or checking an existing request does not start another model call.
 - OpenAI `gpt-6-luna` primary and one Anthropic `claude-haiku-5-5` fallback. The browser cannot select a model or provide history, system messages or tool output.
 - A private sign-in screen and one-hour access cookie. Chat session cookies are separate, opaque, Secure, HttpOnly and SameSite=Strict. Chat sessions expire after 24 hours; expiry is checked in application code.
 

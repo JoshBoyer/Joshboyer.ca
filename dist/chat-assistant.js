@@ -19,6 +19,19 @@
   const NOTICE_CODES = ['unsupported_evidence', 'limited_evidence', 'tools_unavailable', 'retrieval_degraded'];
   const ERROR_CODES = ['unavailable', 'invalid_request', 'session_expired', 'rate_limited', 'budget_exhausted', 'deadline_exceeded', 'upstream_failure', 'validation_failed', 'request_conflict'];
   const STATUS_LABELS = { accepted: 'Question received', retrieving: 'Finding approved evidence', thinking: 'Choosing relevant evidence', validating: 'Checking the answer against its sources' };
+  const TRACE_STAGES = Object.freeze({
+    context: { label: 'Approved context', explanation: 'The versioned public evidence supplied with this question.' },
+    budget: { label: 'Spending reservation', explanation: 'An allowance is held before a paid model request can start.' },
+    provider: { label: 'Model request', explanation: 'Provider activity reported by the backend. Timing covers the Gateway and model together.' },
+    validation: { label: 'Answer validation', explanation: 'The selected claims are checked against the approved public evidence.' },
+    settlement: { label: 'Usage settlement', explanation: 'Reported usage is reconciled with the reserved allowance.' }
+  });
+  const TRACE_STATES = Object.freeze({ started: 'Started', completed: 'Completed', failed: 'Failed', cancelled: 'Cancelled' });
+  const TRACE_FIELDS = ['stage', 'state', 'elapsedMs', 'durationMs', 'attempt', 'provider', 'model', 'corpusVersion', 'claimCount',
+    'reservedMicros', 'chargedMicros', 'priceVersion', 'usageStatus', 'inputTokens', 'outputTokens', 'cacheReadInputTokens',
+    'cacheWriteInputTokens', 'reasoningOutputTokens', 'providerRequestId', 'gatewayRequestId', 'code', 'replayed'];
+  const TOKEN_FIELDS = Object.freeze({ inputTokens: 'Input tokens', outputTokens: 'Output tokens', cacheReadInputTokens: 'Cache read tokens',
+    cacheWriteInputTokens: 'Cache write tokens', reasoningOutputTokens: 'Reasoning tokens' });
   const ERROR_LABELS = {
     unavailable: 'Chat is unavailable. Try again later.',
     invalid_request: 'Check your question and try again.',
@@ -82,6 +95,37 @@
     if (value.pageContexts.some(context => typeof context !== 'string' || !/^#(?:home|career|skills|projects(?:\/(?:dell|foundations|headquarters|inquiry|workflows|newbusiness|renewals|upload|claims|takeover|continuity|sql|nexus))?)$/.test(context))) fail();
     return copy(value);
   }
+  function validateTraceData(value) {
+    if (!record(value) || Object.keys(value).some(key => !TRACE_FIELDS.includes(key)) ||
+        !Object.hasOwn(value, 'elapsedMs') || !Object.hasOwn(TRACE_STAGES, value.stage) || !Object.hasOwn(TRACE_STATES, value.state) ||
+        (value.elapsedMs !== null && !integer(value.elapsedMs, 0, 60000))) fail();
+    for (const [field, maximum] of [['durationMs', 60000], ['claimCount', 512], ['reservedMicros', 25000000], ['chargedMicros', 25000000]]) {
+      if (Object.hasOwn(value, field) && !integer(value[field], 0, maximum)) fail();
+    }
+    if (Object.hasOwn(value, 'attempt') && !integer(value.attempt, 1, 2)) fail();
+    for (const field of Object.keys(TOKEN_FIELDS)) {
+      if (Object.hasOwn(value, field) && value[field] !== null && !integer(value[field], 0, 1000000)) fail();
+    }
+    if (Object.hasOwn(value, 'provider') && !['openai', 'anthropic'].includes(value.provider)) fail();
+    if (Object.hasOwn(value, 'model') && !['gpt-6-luna', 'claude-haiku-5-5'].includes(value.model)) fail();
+    if (value.provider && value.model && (value.provider === 'openai') !== (value.model === 'gpt-6-luna')) fail();
+    if (Object.hasOwn(value, 'corpusVersion') && (typeof value.corpusVersion !== 'string' || !/^sha256:[0-9a-f]{64}$/.test(value.corpusVersion))) fail();
+    for (const field of ['priceVersion', 'providerRequestId', 'gatewayRequestId']) {
+      if (Object.hasOwn(value, field) && (typeof value[field] !== 'string' || !/^[A-Za-z0-9._:-]{1,128}$/.test(value[field]))) fail();
+    }
+    if (Object.hasOwn(value, 'usageStatus') && !['known', 'unknown'].includes(value.usageStatus)) fail();
+    if (Object.hasOwn(value, 'code') && !ERROR_CODES.includes(value.code)) fail();
+    if (Object.hasOwn(value, 'replayed') && typeof value.replayed !== 'boolean') fail();
+    if (value.elapsedMs === null && value.replayed !== true) fail();
+    if (value.durationMs !== undefined && value.elapsedMs !== null && value.durationMs > value.elapsedMs) fail();
+    if (value.chargedMicros !== undefined && value.reservedMicros !== undefined && value.chargedMicros > value.reservedMicros) fail();
+    const required = value.stage === 'provider' ? ['attempt', 'provider', 'model']
+      : value.stage === 'context' ? ['corpusVersion', 'claimCount']
+      : value.stage === 'budget' ? ['reservedMicros', 'priceVersion']
+      : value.stage === 'settlement' && value.state === 'completed' ? ['reservedMicros', 'chargedMicros', 'priceVersion'] : [];
+    if (required.some(key => !Object.hasOwn(value, key))) fail();
+    return copy(value);
+  }
   function createEventValidator({ requestId, generation, evidence, allowTools = false }) {
     if (!UUID.test(requestId) || !UUID.test(generation)) fail();
     const approved = validateEvidence(evidence);
@@ -90,7 +134,8 @@
     const sources = new Map(approved.sources.map(source => [source.id, source]));
     const selectedClaims = new Set(), selectedNotices = new Set(), selectedSources = new Set();
     const tools = new Map(), pendingTools = new Set();
-    let sequence = 1, terminal = false, revoked = false, receipt = false, answer = false;
+    const traceStages = new Map();
+    let sequence = 1, terminal = false, revoked = false, receipt = false, answer = false, traceCount = 0, traceElapsed = 0;
     return Object.freeze({
       accept(frame) {
         if (revoked || terminal || !exact(frame, ['schemaVersion', 'requestId', 'generation', 'seq', 'event', 'data']) ||
@@ -101,6 +146,19 @@
           case 'status':
             if (answer || receipt || !exact(data, ['code']) || !Object.hasOwn(STATUS_LABELS, data.code)) fail();
             break;
+          case 'trace': {
+            const trace = validateTraceData(data);
+            if (answer || receipt || traceCount >= 24 || (trace.elapsedMs !== null && trace.elapsedMs < traceElapsed) ||
+                (trace.corpusVersion && trace.corpusVersion !== approved.corpusVersion)) fail();
+            const key = ['provider', 'validation'].includes(trace.stage) ? `${trace.stage}-${trace.attempt ?? 1}` : trace.stage;
+            const previous = traceStages.get(key);
+            if ((previous && previous !== 'started') || (previous === 'started' && trace.state === 'started') ||
+                (!previous && ['provider', 'validation'].includes(trace.stage) && trace.state !== 'started')) fail();
+            traceCount += 1;
+            if (trace.elapsedMs !== null) traceElapsed = trace.elapsedMs;
+            traceStages.set(key, trace.state);
+            break;
+          }
           case 'tool_start':
             if (!allowTools || answer || receipt || !exact(data, ['toolCallId', 'name']) ||
                 !/^tool-[a-zA-Z0-9_-]{1,64}$/.test(data.toolCallId) || tools.has(data.toolCallId) || tools.size >= 4 ||
@@ -113,7 +171,7 @@
             pendingTools.delete(data.toolCallId);
             break;
           case 'answer_block': {
-            if (receipt || pendingTools.size) fail();
+            if (receipt || pendingTools.size || [...traceStages.values()].includes('started')) fail();
             const canonical = data.kind === 'claim' ? claims.get(data.claimId) : notices.get(data.code);
             if (!canonical || !equal(data, canonical)) fail();
             if (data.kind === 'claim') {
@@ -133,7 +191,7 @@
             break;
           case 'done':
             if (!exact(data, ['outcome']) || !['completed', 'limited', 'cancelled'].includes(data.outcome) ||
-                (data.outcome !== 'cancelled' && (!answer || !receipt || pendingTools.size))) fail();
+                (data.outcome !== 'cancelled' && (!answer || !receipt || pendingTools.size || [...traceStages.values()].includes('started')))) fail();
             terminal = true;
             break;
           case 'error':
@@ -338,6 +396,7 @@
         if (!exact(result, ['schemaVersion', 'cleared']) || result.schemaVersion !== VERSION || result.cleared !== true) fail();
       },
       get session() { return session ? copy(session) : null; },
+      get requestId() { return active?.request.requestId || lastRequest?.requestId || null; },
       get canRetry() { return !!lastRequest && !active; }
     });
   }
@@ -369,6 +428,156 @@
       link.href = source.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; section.append(link);
     });
     return section;
+  }
+  function formatTraceTime(milliseconds) {
+    return milliseconds < 1000 ? `${milliseconds} ms` : `${(milliseconds / 1000).toLocaleString('en-CA', { maximumFractionDigits: 3 })} s`;
+  }
+  function formatAllowance(micros) {
+    return (micros / 1000000).toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 6 });
+  }
+  function createRequestTimeline(document) {
+    const panel = element(document, 'details', 'chat-request-trace'); panel.open = true; panel.setAttribute('aria-live', 'off');
+    const summary = element(document, 'summary', 'chat-trace-summary');
+    const summaryLabel = element(document, 'span', 'chat-trace-title', 'Request activity');
+    const summaryState = element(document, 'span', 'chat-trace-summary-state', 'Waiting for server');
+    summary.append(summaryLabel, summaryState);
+    const content = element(document, 'div', 'chat-trace-content');
+    const waiting = element(document, 'p', 'chat-trace-waiting', 'Waiting for the server to report this request’s stages.');
+    const rows = element(document, 'ol', 'chat-trace-stages');
+    const footer = element(document, 'dl', 'chat-trace-request');
+    const requestLabel = element(document, 'dt', '', 'Request ID');
+    const requestValue = element(document, 'dd', 'chat-trace-id', 'Not assigned yet');
+    const note = element(document, 'p', 'chat-trace-note', 'Only reported activity appears here. Retrieval and tools are not enabled in this preview.');
+    footer.append(requestLabel, requestValue); content.append(waiting, rows, footer, note); panel.append(summary, content);
+    const groups = new Map();
+    let count = 0, elapsed = 0, requestId, finished = false, corpusValue, replayed = false, finalOutcome;
+    function identify(id) {
+      if (!UUID.test(id) || (requestId && requestId !== id)) fail();
+      requestId = id; requestValue.textContent = id;
+    }
+    function addFact(list, label, value, monospace = false) {
+      list.append(element(document, 'dt', '', label), element(document, 'dd', monospace ? 'chat-trace-id' : '', value));
+    }
+    function updateGroup(group) {
+      const value = group.latest;
+      group.row.className = `chat-trace-stage is-${value.state}`;
+      group.state.textContent = TRACE_STATES[value.state];
+      group.time.textContent = value.elapsedMs === null
+        ? (value.replayed ? 'Original request' : 'Timing not recorded')
+        : value.durationMs !== undefined ? formatTraceTime(value.durationMs) : `at ${formatTraceTime(value.elapsedMs)}`;
+      const facts = element(document, 'dl', 'chat-trace-facts');
+      if (value.provider) addFact(facts, 'Provider', value.provider === 'openai' ? 'OpenAI' : 'Anthropic');
+      if (value.model) addFact(facts, 'Model', value.model, true);
+      if (value.attempt !== undefined) addFact(facts, 'Attempt', String(value.attempt));
+      if (value.elapsedMs !== null) addFact(facts, 'Reported at', `${formatTraceTime(value.elapsedMs)} from request start`);
+      else addFact(facts, 'Timing', value.replayed ? 'Recorded on original request' : 'Not recorded');
+      if (value.durationMs !== undefined) addFact(facts, value.stage === 'provider' ? 'Gateway + model duration' : 'Stage duration', formatTraceTime(value.durationMs));
+      if (value.corpusVersion) addFact(facts, 'Evidence version', value.corpusVersion, true);
+      if (value.claimCount !== undefined) addFact(facts, 'Approved claims', value.claimCount.toLocaleString('en-CA'));
+      if (value.reservedMicros !== undefined) addFact(facts, 'Reserved allowance (USD)', formatAllowance(value.reservedMicros));
+      if (value.chargedMicros !== undefined) {
+        const allowanceLabel = value.stage === 'settlement' && value.state === 'completed' ? 'Settled allowance (USD)' : 'Estimated usage allowance (USD)';
+        addFact(facts, allowanceLabel, formatAllowance(value.chargedMicros));
+      }
+      if (value.priceVersion) addFact(facts, 'Price version', value.priceVersion, true);
+      if (value.usageStatus) addFact(facts, 'Usage', value.usageStatus === 'known' ? 'Reported by provider' : 'Not reported; reservation remains counted');
+      for (const [key, label] of Object.entries(TOKEN_FIELDS)) {
+        if (Object.hasOwn(value, key) || value.usageStatus) addFact(facts, label, value[key] === null || value[key] === undefined ? 'Not reported' : value[key].toLocaleString('en-CA'));
+      }
+      if (value.providerRequestId) addFact(facts, 'Provider request ID', value.providerRequestId, true);
+      if (value.gatewayRequestId) addFact(facts, 'Gateway request ID', value.gatewayRequestId, true);
+      if (value.code) addFact(facts, 'Outcome', ERROR_LABELS[value.code]);
+      if (value.replayed) addFact(facts, 'Record', 'Replayed from the original request');
+      const points = element(document, 'ol', 'chat-trace-points');
+      for (const point of group.points) {
+        const at = point.elapsedMs === null ? (point.replayed ? 'recorded on original request' : 'timing not recorded') : `at ${formatTraceTime(point.elapsedMs)}`;
+        points.append(element(document, 'li', '', `${TRACE_STATES[point.state]} · ${at}`));
+      }
+      group.body.replaceChildren(element(document, 'p', 'chat-trace-explanation', TRACE_STAGES[value.stage].explanation), facts, points);
+      if (value.reservedMicros !== undefined || value.chargedMicros !== undefined) {
+        group.body.append(element(document, 'p', 'chat-trace-ledger-note', 'Amounts are application ledger estimates, not provider invoices.'));
+      }
+    }
+    return Object.freeze({
+      element: panel,
+      identify,
+      accept(frame) {
+        if (finished || frame.event !== 'trace') fail();
+        identify(frame.requestId);
+        const value = validateTraceData(frame.data);
+        if (count >= 24 || (value.elapsedMs !== null && value.elapsedMs < elapsed)) fail();
+        count += 1;
+        if (value.elapsedMs !== null) elapsed = value.elapsedMs;
+        if (value.corpusVersion) corpusValue = value.corpusVersion;
+        if (value.replayed) replayed = true;
+        waiting.hidden = true;
+        const key = ['provider', 'validation'].includes(value.stage) ? `${value.stage}-${value.attempt ?? 1}` : value.stage;
+        let group = groups.get(key);
+        if (!group) {
+          const row = element(document, 'li', 'chat-trace-stage');
+          const detail = element(document, 'details', 'chat-trace-stage-detail');
+          const rowSummary = element(document, 'summary', 'chat-trace-stage-summary');
+          const ordinal = element(document, 'span', 'chat-trace-ordinal', String(groups.size + 1).padStart(2, '0'));
+          const label = element(document, 'span', 'chat-trace-stage-name', `${TRACE_STAGES[value.stage].label}${value.attempt ? ` · attempt ${value.attempt}` : ''}`);
+          const state = element(document, 'span', 'chat-trace-stage-state');
+          const time = element(document, 'span', 'chat-trace-stage-time');
+          const body = element(document, 'div', 'chat-trace-stage-body');
+          rowSummary.append(ordinal, label, state, time); detail.append(rowSummary, body); row.append(detail); rows.append(row);
+          group = { row, body, state, time, latest: {}, points: [] }; groups.set(key, group);
+        }
+        group.latest = { ...group.latest, ...value }; group.points.push(value); updateGroup(group);
+        summaryState.textContent = `${TRACE_STAGES[value.stage].label} · ${TRACE_STATES[value.state].toLowerCase()}${replayed ? ' · recorded run' : ''}`;
+      },
+      finish(outcome, { retained = false } = {}) {
+        finished = true;
+        finalOutcome = outcome;
+        summaryState.textContent = outcome === 'completed' || outcome === 'limited' ? 'Complete' : outcome === 'cancelled' ? 'Stopped' : 'Interrupted';
+        if (replayed) summaryState.textContent += ' · recorded run';
+        if (retained && count) {
+          summaryState.textContent += ' · last reported activity';
+          note.textContent = 'This check returned no additional stage details. The last reported activity is preserved here; it does not indicate that work is still running.';
+        }
+        if (!count) {
+          waiting.textContent = 'No stage details were recorded for this request.';
+          summaryState.textContent = 'No trace recorded'; panel.open = false;
+        }
+        if (corpusValue) {
+          addFact(footer, 'Evidence version', corpusValue, true);
+          corpusValue = undefined;
+        }
+      },
+      get outcome() { return finalOutcome; }
+    });
+  }
+  function createAnswerView(document, previous) {
+    const card = element(document, 'article', 'chat-message chat-answer');
+    const timeline = createRequestTimeline(document);
+    card.append(element(document, 'p', 'chat-small-label', 'Portfolio assistant'), timeline.element);
+    const candidate = { element: card, timeline };
+    let current = previous?.view || candidate;
+    return Object.freeze({
+      get view() { return current; },
+      get element() { return current.element; },
+      identify(id) { timeline.identify(id); },
+      accept(frame) {
+        // An empty cancellation receipt must not replace details already seen.
+        // A real replay starts a fresh view instead of appending duplicate points.
+        if (frame.event === 'trace' || frame.event === 'answer_block') current = candidate;
+        if (frame.event === 'trace') current.timeline.accept(frame);
+        else current.timeline.identify(frame.requestId);
+        if (frame.event === 'answer_block') current.element.append(renderBlock(document, frame.data));
+        if (frame.event === 'sources') {
+          current.element.append(renderSources(document, frame.data.sources),
+            element(document, 'p', 'chat-receipt', `Approved evidence · ${frame.data.corpusVersion.slice(7, 19)}`));
+        }
+        if (frame.event === 'done') current.timeline.finish(frame.data.outcome, { retained: current !== candidate });
+        if (frame.event === 'error') current.timeline.finish('interrupted', { retained: current !== candidate });
+      },
+      fail(outcome) {
+        const retained = current !== candidate;
+        current.timeline.finish(retained ? current.timeline.outcome || outcome : outcome, { retained });
+      }
+    });
   }
   function mount(host, options = {}) {
     if (host.dataset.chatMounted === 'true') return;
@@ -404,23 +613,23 @@
     const send = element(document, 'button', 'chat-send', 'Send question ↗'); send.type = 'submit'; send.disabled = true;
     actions.append(stop, retry, send); footer.append(hint, actions); form.append(label, input, footer);
     panel.append(heading, scope, messages, status, form); host.append(panel);
-    let ready = false, busy = false, currentAnswer, uiEpoch = 0, limit = 8192;
+    let ready = false, busy = false, currentReply, uiEpoch = 0, limit = 8192;
     function update() {
       input.disabled = !ready || busy; send.disabled = !ready || busy;
       clear.disabled = !ready; stop.hidden = !busy; retry.hidden = busy || !client.canRetry;
       for (const button of starters.children) button.disabled = !ready || busy;
     }
-    function scroll() { messages.scrollTop = messages.scrollHeight; }
+    function nearBottom() { return messages.scrollHeight - messages.clientHeight - messages.scrollTop < 100; }
+    function scroll(follow) { if (follow) messages.scrollTop = messages.scrollHeight; }
     function event(frame) {
+      const follow = nearBottom();
       if (frame.event === 'status') status.textContent = STATUS_LABELS[frame.data.code];
-      if (frame.event === 'answer_block') currentAnswer.append(renderBlock(document, frame.data));
-      if (frame.event === 'sources') {
-        currentAnswer.append(renderSources(document, frame.data.sources));
-        const version = element(document, 'p', 'chat-receipt', `Approved evidence · ${frame.data.corpusVersion.slice(7, 19)}`); currentAnswer.append(version);
-      }
+      const previousCard = currentReply.element;
+      currentReply.accept(frame);
+      if (previousCard !== currentReply.element) previousCard.replaceWith(currentReply.element);
       if (frame.event === 'done') status.textContent = frame.data.outcome === 'cancelled' ? 'Stopped.' : 'Answer checked against approved evidence.';
       if (frame.event === 'error') status.textContent = ERROR_LABELS[frame.data.code];
-      scroll();
+      scroll(follow);
     }
     async function submit(isRetry) {
       if (!ready || busy) return;
@@ -433,17 +642,25 @@
       if (!isRetry) {
         const question = element(document, 'article', 'chat-message chat-question'); question.append(element(document, 'p', 'chat-small-label', 'You'), element(document, 'p', '', text));
         messages.append(question); input.value = '';
-      } else currentAnswer?.remove();
-      currentAnswer = element(document, 'article', 'chat-message chat-answer'); currentAnswer.append(element(document, 'p', 'chat-small-label', 'Portfolio assistant'));
-      messages.append(currentAnswer); status.textContent = isRetry ? 'Checking the original request…' : 'Sending your question…'; update(); scroll();
+      }
+      currentReply = createAnswerView(document, isRetry ? currentReply : null);
+      if (!isRetry) messages.append(currentReply.element);
+      status.textContent = isRetry ? 'Checking the original request…' : 'Sending your question…'; update(); scroll(true);
       try {
         const receive = frame => { if (ownEpoch === uiEpoch) event(frame); };
-        if (isRetry) await client.retry(receive);
-        else await client.send(text, receive, document.defaultView?.location.hash);
+        const sending = isRetry ? client.retry(receive) : client.send(text, receive, document.defaultView?.location.hash);
+        if (client.requestId) currentReply.identify(client.requestId);
+        await sending;
       } catch (error) {
-        if (ownEpoch === uiEpoch) status.textContent = error.name === 'AbortError' ? 'Stopped. The server may still be settling this request.' : ERROR_LABELS[error.code] || ERROR_LABELS.unavailable;
+        if (ownEpoch === uiEpoch) {
+          currentReply.fail(error.name === 'AbortError' ? 'cancelled' : 'interrupted');
+          status.textContent = error.name === 'AbortError' ? 'Stopped. The server may still be settling this request.' : ERROR_LABELS[error.code] || ERROR_LABELS.unavailable;
+        }
       } finally {
-        if (ownEpoch === uiEpoch) { busy = false; update(); if (!document.hidden) input.focus(); }
+        if (ownEpoch === uiEpoch) {
+          busy = false; update();
+          if (!document.hidden && !document.activeElement?.closest?.('.chat-request-trace')) input.focus();
+        }
       }
     }
     form.addEventListener('submit', event => { event.preventDefault(); void submit(false); });
@@ -458,7 +675,7 @@
     retry.addEventListener('click', () => { void submit(true); });
     clear.addEventListener('click', async () => {
       uiEpoch += 1; busy = false; ready = false; update();
-      messages.replaceChildren(welcome); welcome.hidden = false; currentAnswer = null; input.value = ''; status.textContent = 'Clearing the conversation…';
+      messages.replaceChildren(welcome); welcome.hidden = false; currentReply = null; input.value = ''; status.textContent = 'Clearing the conversation…';
       try { await client.clear(); ready = true; status.textContent = 'Conversation cleared. Your next question starts a new session.'; }
       catch { status.textContent = 'The server could not confirm deletion. Reload before starting another conversation.'; }
       update(); if (ready) input.focus();
@@ -507,5 +724,5 @@
       } catch { status.textContent = 'Access was not granted. Check the private token and try again.'; button.disabled = false; field.focus(); }
     });
   }
-  return Object.freeze({ VERSION, validateEvidence, createEventValidator, readEventStream, createClient, renderBlock, renderSources, mount, mountDrawer, boot });
+  return Object.freeze({ VERSION, validateEvidence, validateTraceData, createEventValidator, readEventStream, createClient, createRequestTimeline, createAnswerView, renderBlock, renderSources, mount, mountDrawer, boot });
 });

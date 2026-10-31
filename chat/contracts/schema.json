@@ -171,6 +171,41 @@
       "required": ["jobText"],
       "properties": { "jobText": { "type": "string", "minLength": 1, "maxLength": 8192, "pattern": "\\S" } }
     },
+    "traceData": {
+      "type": "object", "additionalProperties": false,
+      "required": ["stage", "state", "elapsedMs"],
+      "properties": {
+        "stage": { "enum": ["context", "budget", "provider", "validation", "settlement"] },
+        "state": { "enum": ["started", "completed", "failed", "cancelled"] },
+        "elapsedMs": { "type": ["integer", "null"], "minimum": 0, "maximum": 60000 },
+        "durationMs": { "type": "integer", "minimum": 0, "maximum": 60000 },
+        "replayed": { "type": "boolean" },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 2 },
+        "provider": { "enum": ["openai", "anthropic"] },
+        "model": { "enum": ["gpt-6-luna", "claude-haiku-5-5"] },
+        "corpusVersion": { "$ref": "#/$defs/corpusVersion" },
+        "claimCount": { "type": "integer", "minimum": 0, "maximum": 512 },
+        "reservedMicros": { "type": "integer", "minimum": 0, "maximum": 25000000 },
+        "chargedMicros": { "type": "integer", "minimum": 0, "maximum": 25000000 },
+        "priceVersion": { "type": "string", "pattern": "^[A-Za-z0-9._:-]{1,128}$" },
+        "usageStatus": { "enum": ["known", "unknown"] },
+        "inputTokens": { "type": ["integer", "null"], "minimum": 0, "maximum": 1000000 },
+        "outputTokens": { "type": ["integer", "null"], "minimum": 0, "maximum": 1000000 },
+        "cacheReadInputTokens": { "type": ["integer", "null"], "minimum": 0, "maximum": 1000000 },
+        "cacheWriteInputTokens": { "type": ["integer", "null"], "minimum": 0, "maximum": 1000000 },
+        "reasoningOutputTokens": { "type": ["integer", "null"], "minimum": 0, "maximum": 1000000 },
+        "providerRequestId": { "type": "string", "pattern": "^[A-Za-z0-9._:-]{1,128}$" },
+        "gatewayRequestId": { "type": "string", "pattern": "^[A-Za-z0-9._:-]{1,128}$" },
+        "code": { "enum": ["unavailable", "invalid_request", "session_expired", "rate_limited", "budget_exhausted", "deadline_exceeded", "upstream_failure", "validation_failed", "request_conflict"] }
+      },
+      "allOf": [
+        { "if": { "properties": { "elapsedMs": { "const": null } } }, "then": { "required": ["replayed"], "properties": { "replayed": { "const": true } } } },
+        { "if": { "properties": { "stage": { "const": "provider" } } }, "then": { "required": ["attempt", "provider", "model"], "properties": { "attempt": {}, "provider": {}, "model": {} } } },
+        { "if": { "properties": { "stage": { "const": "context" } } }, "then": { "required": ["corpusVersion", "claimCount"], "properties": { "corpusVersion": {}, "claimCount": {} } } },
+        { "if": { "properties": { "stage": { "const": "budget" } } }, "then": { "required": ["reservedMicros", "priceVersion"], "properties": { "reservedMicros": {}, "priceVersion": {} } } },
+        { "if": { "properties": { "stage": { "const": "settlement" }, "state": { "const": "completed" } } }, "then": { "required": ["reservedMicros", "chargedMicros", "priceVersion"], "properties": { "reservedMicros": {}, "chargedMicros": {}, "priceVersion": {} } } }
+      ]
+    },
     "statusData": {
       "type": "object", "additionalProperties": false,
       "required": ["code"],
@@ -212,11 +247,12 @@
         "requestId": { "$ref": "#/$defs/uuid" },
         "generation": { "$ref": "#/$defs/uuid" },
         "seq": { "type": "integer", "minimum": 1, "maximum": 96 },
-        "event": { "enum": ["status", "tool_start", "tool_end", "answer_block", "sources", "done", "error"] },
+        "event": { "enum": ["status", "trace", "tool_start", "tool_end", "answer_block", "sources", "done", "error"] },
         "data": { "type": "object" }
       },
       "oneOf": [
         { "properties": { "event": { "const": "status" }, "data": { "$ref": "#/$defs/statusData" } } },
+        { "properties": { "event": { "const": "trace" }, "data": { "$ref": "#/$defs/traceData" } } },
         { "properties": { "event": { "const": "tool_start" }, "data": { "$ref": "#/$defs/toolStartData" } } },
         { "properties": { "event": { "const": "tool_end" }, "data": { "$ref": "#/$defs/toolEndData" } } },
         { "properties": { "event": { "const": "answer_block" }, "data": { "$ref": "#/$defs/answerBlock" } } },
