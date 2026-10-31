@@ -34,25 +34,23 @@ import {
 } from '../ingestion/index.js';
 import type { Fetch } from '../provider.js';
 
-const requireFromHere = createRequire(path.resolve(__dirname, '../../package.json'));
-
-const { canonicalJson, digest } = requireFromHere(
-  '../../chat/knowledge/validate.cjs',
+const { canonicalJson, digest } = require(
+  '../../../../chat/knowledge/validate.cjs',
 ) as {
   canonicalJson(value: unknown): string;
   digest(value: unknown): string;
 };
 
-const defaultCorpus = requireFromHere('../../chat/knowledge/corpus.json') as Record<
+const defaultCorpus = require('../../../../chat/knowledge/corpus.json') as Record<
   string,
   unknown
 >;
-const defaultPolicy = requireFromHere('../../chat/knowledge/policy.json') as Record<
+const defaultPolicy = require('../../../../chat/knowledge/policy.json') as Record<
   string,
   unknown
 >;
-const defaultChunksManifest = requireFromHere(
-  '../../chat/knowledge/chunks-manifest.json',
+const defaultChunksManifest = require(
+  '../../../../chat/knowledge/chunks-manifest.json',
 ) as KnowledgeChunksManifest;
 
 export const DEFAULT_RETRIEVAL_TOP_K = 4;
