@@ -7,6 +7,9 @@ export interface Env {
   CHAT_PRIVATE_ENABLED?: string;
   PROBE_ENABLED?: string;
   PUBLIC_CHAT_ENABLED?: string;
+  ELEVENLABS_API_KEY?: string;
+  ELEVENLABS_VOICE_ID?: string;
+  ELEVENLABS_AGENT_ID?: string;
   CHAT_ASSETS?: { fetch(request: Request): Promise<Response> };
   ASSETS?: { fetch(request: Request): Promise<Response> };
 }

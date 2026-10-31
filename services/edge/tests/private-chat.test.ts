@@ -157,6 +157,7 @@ test('allowlisted static assets require operator cookie and preserve binary port
   assert.equal(assetCalls, 3);
   assert.equal(originCalls, 0);
 });
+
 test('internal routes /api/chat/_mcp and /api/chat/_probe are strictly denied at private edge with and without operator cookie', async () => {
   let originCalls = 0;
   const worker = createWorker({ fetcher: async () => { originCalls++; return Response.json({ ok: true }); } });
@@ -177,6 +178,7 @@ test('internal routes /api/chat/_mcp and /api/chat/_probe are strictly denied at
   }
   assert.equal(originCalls, 0);
 });
+
 test('access cookie enforces exact 3-point millisecond expiry boundary (expiresAt - 1, expiresAt, expiresAt + 1)', async () => {
   let now = 1_800_000_000_000;
   let originCalls = 0;
@@ -301,4 +303,86 @@ test('hostile path, header and cookie inputs and seeded fuzz inputs fail closed 
     assert.ok(!JSON.stringify([...res1.headers]).includes(canary));
   }
   assert.equal(originCalls, 0);
+});
+
+test('ElevenLabs Josh voice routes (2ccxXaT9cMefjPlK2Pwn) require operator cookie, stream TTS/STT/Live session, and never leak API keys or canaries', async () => {
+  const voiceCanary = 'CANARY-11LABS-SECRET-882';
+  const calls: Array<{ url: string; method: string; headers: Headers; body: string }> = [];
+  const worker = createWorker({
+    fetcher: async (input, init) => {
+      const url = typeof input === 'string' ? input : input instanceof URL ? input.toString() : input.url;
+      const headers = new Headers(init?.headers);
+      let bodyText = '';
+      if (typeof init?.body === 'string') bodyText = init.body;
+      calls.push({ url, method: init?.method || 'GET', headers, body: bodyText });
+      if (url.includes('/v1/text-to-speech/2ccxXaT9cMefjPlK2Pwn/stream')) {
+        return new Response(new Uint8Array([0xff, 0xfb, 0x90, 0x64]), {
+          status: 200,
+          headers: { 'Content-Type': 'audio/mpeg' }
+        });
+      }
+      if (url.includes('/v1/convai/conversation/get_signed_url')) {
+        return new Response(JSON.stringify({ signed_url: 'wss://api.elevenlabs.io/v1/convai/conversation?agent_id=agent_1' }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+      return new Response(voiceCanary, { status: 502 });
+    }
+  });
+
+  const voiceEnv = {
+    ...env,
+    ELEVENLABS_API_KEY: voiceCanary,
+    ELEVENLABS_VOICE_ID: '2ccxXaT9cMefjPlK2Pwn',
+    ELEVENLABS_AGENT_ID: 'agent_6001k8gbbfvffr9b2k2772k61ef2'
+  };
+
+  // 1. Unauthenticated requests fail closed with 401
+  const unauthStatus = await worker.fetch(request('/api/chat/voice/status', 'GET'), voiceEnv);
+  assert.equal(unauthStatus.status, 401);
+  const unauthTts = await worker.fetch(request('/api/chat/voice/tts', 'POST', { text: 'Hello' }), voiceEnv);
+  assert.equal(unauthTts.status, 401);
+  assert.equal(calls.length, 0);
+
+  // 2. Authenticated GET /api/chat/voice/status
+  const cookies = await login(worker);
+  const statusRes = await worker.fetch(request('/api/chat/voice/status', 'GET', undefined, cookies), voiceEnv);
+  assert.equal(statusRes.status, 200);
+  const statusJson = await statusRes.json() as Record<string, unknown>;
+  assert.equal(statusJson.voiceId, '2ccxXaT9cMefjPlK2Pwn');
+  assert.equal(statusJson.ttsModel, 'eleven_flash_v2_5');
+  assert.equal(statusJson.tts, true);
+  assert.equal(statusJson.liveConversationalAi, true);
+  assert.ok(!JSON.stringify(statusJson).includes(voiceCanary));
+
+  // 3. Authenticated POST /api/chat/voice/tts uses Josh voice ID 2ccxXaT9cMefjPlK2Pwn & eleven_flash_v2_5
+  const ttsRes = await worker.fetch(
+    request('/api/chat/voice/tts', 'POST', { text: 'Josh built the Guidewire Excel VBA add-in.' }, cookies),
+    voiceEnv
+  );
+  assert.equal(ttsRes.status, 200);
+  assert.equal(ttsRes.headers.get('Content-Type'), 'audio/mpeg');
+  const audioBytes = new Uint8Array(await ttsRes.arrayBuffer());
+  assert.deepEqual([...audioBytes], [0xff, 0xfb, 0x90, 0x64]);
+  assert.equal(calls.length, 1);
+  assert.ok(calls[0]!.url.includes('/v1/text-to-speech/2ccxXaT9cMefjPlK2Pwn/stream'));
+  assert.equal(calls[0]!.headers.get('xi-api-key'), voiceCanary);
+  assert.equal(JSON.parse(calls[0]!.body).model_id, 'eleven_flash_v2_5');
+
+  // 4. Authenticated POST /api/chat/voice/live-session returns signed WebSocket URL
+  const liveRes = await worker.fetch(request('/api/chat/voice/live-session', 'POST', {}, cookies), voiceEnv);
+  assert.equal(liveRes.status, 200);
+  const liveJson = await liveRes.json() as Record<string, unknown>;
+  assert.equal(liveJson.voiceId, '2ccxXaT9cMefjPlK2Pwn');
+  assert.ok(String(liveJson.signedUrl).startsWith('wss://api.elevenlabs.io/v1/convai/conversation'));
+  assert.ok(!JSON.stringify(liveJson).includes(voiceCanary));
+
+  // 5. Hostile TTS inputs (empty text, NUL byte, oversized text) fail closed with 400
+  for (const badBody of [{ text: '' }, { text: 'Hello\u0000world' }, { text: 'a'.repeat(1601) }, { text: 'Hi', voiceId: '../bad' }]) {
+    const badRes = await worker.fetch(request('/api/chat/voice/tts', 'POST', badBody, cookies), voiceEnv);
+    assert.equal(badRes.status, 400);
+    const errText = await badRes.text();
+    assert.ok(!errText.includes(voiceCanary));
+  }
 });

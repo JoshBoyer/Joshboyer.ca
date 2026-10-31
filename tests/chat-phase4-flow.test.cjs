@@ -70,6 +70,14 @@ const STATIC_ASSETS = Object.freeze({
     file: path.join(DIST_ROOT, 'assets/personal/josh-portrait-smiling.jpg'),
     type: 'image/jpeg'
   },
+  '/assets/personal/josh-avatar-idle.mp4': {
+    file: path.join(DIST_ROOT, 'assets/personal/josh-avatar-idle.mp4'),
+    type: 'video/mp4'
+  },
+  '/assets/personal/josh-intro-voice.mp3': {
+    file: path.join(DIST_ROOT, 'assets/personal/josh-intro-voice.mp3'),
+    type: 'audio/mpeg'
+  },
   '/assets/optimized-extra/personal/josh-portrait-vest-640.webp': {
     file: path.join(DIST_ROOT, 'assets/optimized-extra/personal/josh-portrait-vest-640.webp'),
     type: 'image/webp'

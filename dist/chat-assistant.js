@@ -859,12 +859,21 @@
     const suggestions = element(document, 'div', 'chat-suggestions');
     const actions = element(document, 'div', 'chat-response-actions');
     const badgeRow = element(document, 'div', 'chat-evidence-refs');
+    let speakButton = null;
+    if (typeof options.onSpeak === 'function') {
+      speakButton = element(document, 'button', 'chat-speak-turn', '🔊 Listen');
+      speakButton.type = 'button';
+      speakButton.setAttribute('aria-label', 'Listen in Josh’s ElevenLabs voice');
+      speakButton.setAttribute('data-speak-turn', '');
+      speakButton.setAttribute('aria-pressed', 'false');
+    }
     const detailsButton = element(document, 'button', 'chat-view-details', 'View details'); detailsButton.type = 'button';
     detailsButton.setAttribute('aria-label', 'View request evidence and trace');
     detailsButton.setAttribute('data-turn-select', '');
     detailsButton.setAttribute('data-inspect-request', '');
     detailsButton.setAttribute('aria-pressed', 'false');
-    actions.append(badgeRow, detailsButton);
+    if (speakButton) actions.append(badgeRow, speakButton, detailsButton);
+    else actions.append(badgeRow, detailsButton);
     card.append(element(document, 'p', 'chat-small-label', 'Assistant'), body, suggestions, actions);
     const evidence = element(document, 'section', 'chat-request-evidence');
     const evidenceIntro = element(document, 'p', 'chat-evidence-intro', 'Evidence references will appear here if this response uses the public portfolio.');
@@ -880,6 +889,7 @@
       tools,
       context,
       body,
+      speakButton,
       detailsButton,
       requestId: null,
       turnId: null,
@@ -903,6 +913,7 @@
     };
     renderToolsInto(document, tools, candidate);
     renderContextInto(document, context, candidate);
+    if (speakButton) speakButton.addEventListener('click', () => options.onSpeak?.(current, speakButton));
     detailsButton.addEventListener('click', () => options.onDetails?.(candidate, detailsButton));
     let current = previous?.view || candidate;
     function updateSummaryBadges() {
@@ -1240,19 +1251,19 @@
     {
       id: 'openai',
       glyph: 'AI',
-      name: 'OpenAI Primary',
-      role: 'Luna + 1536-d Embed',
+      name: 'AI Gateway LLMs',
+      role: 'Luna · Haiku 5.5',
       paths: [
         { d: 'M12 3L14.2 9.8L21 12L14.2 14.2L12 21L9.8 14.2L3 12L9.8 9.8L12 3Z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.8', strokeLinejoin: 'round' }
       ]
     },
     {
-      id: 'anthropic',
-      glyph: 'CL',
-      name: 'Anthropic Guard',
-      role: 'Haiku 5.5 Fallback',
+      id: 'elevenlabs',
+      glyph: '11L',
+      name: 'ElevenLabs Voice',
+      role: 'Josh 2ccxXaT9 · Live',
       paths: [
-        { d: 'M8.5 18.5L12 5.5L15.5 18.5M6.2 18.5L9.8 5.5M14.2 5.5L17.8 18.5M7.8 14.5H16.2', fill: 'none', stroke: 'currentColor', strokeWidth: '1.8', strokeLinecap: 'round', strokeLinejoin: 'round' }
+        { d: 'M4 10V14M8 7V17M12 4V20M16 7V17M20 10V14', fill: 'none', stroke: 'currentColor', strokeWidth: '2', strokeLinecap: 'round' }
       ]
     }
   ]);
@@ -1288,7 +1299,7 @@
     section.setAttribute('data-chat-tech-stack', '');
     const header = element(document, 'div', 'chat-tech-stack-header');
     const title = element(document, 'span', 'chat-tech-stack-title', 'Solution stack');
-    const badge = element(document, 'span', 'chat-tech-stack-region', 'AWS us-east-2 · Cloudflare · MCP');
+    const badge = element(document, 'span', 'chat-tech-stack-region', 'AWS us-east-2 · CF · 11Labs');
     header.append(title, badge);
     const grid = element(document, 'ul', 'chat-tech-stack-grid');
     for (const item of TECH_STACK_ITEMS) {
@@ -1518,6 +1529,540 @@
       get activeTab() { return activeTab; }
     });
   }
+  const JOSH_VOICE_ID = '2ccxXaT9cMefjPlK2Pwn';
+  function extractSpokenSummary(rawText, maxChars = 420) {
+    if (typeof rawText !== 'string') return '';
+    const cleaned = rawText.replace(/\s+/g, ' ').trim();
+    if (!cleaned) return '';
+    if (cleaned.length <= maxChars) return cleaned;
+    const sentences = cleaned.match(/[^.!?]+[.!?]+/g);
+    if (sentences && sentences.length > 0) {
+      let summary = '';
+      for (const sentence of sentences) {
+        const candidate = summary ? `${summary} ${sentence.trim()}` : sentence.trim();
+        if (candidate.length > maxChars) break;
+        summary = candidate;
+      }
+      if (summary.length >= 40) return summary;
+    }
+    return `${cleaned.slice(0, maxChars - 1).trimEnd()}…`;
+  }
+  function createVoiceController(document, options = {}) {
+    const win = document.defaultView;
+    const fetcher = options.fetchImpl || (typeof fetch === 'function' ? fetch : null);
+    const avatarStage = document.querySelector?.('[data-avatar-stage]') || null;
+    const avatarVideo = document.querySelector?.('[data-avatar-video]') || null;
+    const avatarStatusText = document.querySelector?.('[data-avatar-status-text]') || null;
+    const liveBtn = document.querySelector?.('[data-voice-live-btn]') || null;
+    const autoSpeakBtn = document.querySelector?.('[data-voice-autospeak-btn]') || null;
+    const introBtn = document.querySelector?.('[data-voice-intro-btn]') || null;
+
+    let autoSpeak = true;
+    let voiceServiceReady = false;
+    let currentAudio = null;
+    let currentObjectUrl = null;
+    let currentSpeakBtn = null;
+    let rafId = null;
+    let audioCtx = null;
+    let activeSocket = null;
+    let micStream = null;
+    let mediaRecorder = null;
+    let speechRec = null;
+    let isRecordingMic = false;
+    let isLiveCall = false;
+    let nextLivePlayTime = 0;
+
+    function setEnergy(value) {
+      const clamped = Math.max(0, Math.min(1, Number(value) || 0));
+      if (avatarStage?.style?.setProperty) {
+        avatarStage.style.setProperty('--voice-energy', clamped.toFixed(3));
+      }
+    }
+
+    function setAvatarState(mode, statusText) {
+      if (avatarStage?.setAttribute) {
+        avatarStage.setAttribute('data-avatar-mode', mode);
+      }
+      if (avatarStatusText && typeof statusText === 'string') {
+        avatarStatusText.textContent = statusText;
+      }
+      if (avatarVideo && typeof avatarVideo.play === 'function') {
+        try {
+          avatarVideo.playbackRate = mode === 'speaking' || mode === 'live' ? 1.24
+            : mode === 'thinking' ? 1.12
+            : mode === 'listening' ? 1.04 : 0.94;
+          const playPromise = avatarVideo.play();
+          if (playPromise && typeof playPromise.catch === 'function') playPromise.catch(() => {});
+        } catch { /* ignore media errors */ }
+      }
+      if (mode !== 'speaking' && mode !== 'live') setEnergy(0);
+    }
+
+    function stopCurrentAudio() {
+      if (rafId && win?.cancelAnimationFrame) {
+        win.cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+      if (currentAudio) {
+        try { currentAudio.pause(); currentAudio.src = ''; } catch { /* ignore */ }
+        currentAudio = null;
+      }
+      if (currentObjectUrl && win?.URL?.revokeObjectURL) {
+        try { win.URL.revokeObjectURL(currentObjectUrl); } catch { /* ignore */ }
+        currentObjectUrl = null;
+      }
+      if (currentSpeakBtn) {
+        currentSpeakBtn.setAttribute('aria-pressed', 'false');
+        currentSpeakBtn.textContent = '🔊 Listen';
+        currentSpeakBtn = null;
+      }
+      if (introBtn) {
+        introBtn.setAttribute('aria-pressed', 'false');
+        introBtn.textContent = '👋 30s Intro';
+      }
+      setEnergy(0);
+    }
+
+    function animateSimulatedEnergy() {
+      if (!win?.requestAnimationFrame) return;
+      const start = Date.now();
+      const tick = () => {
+        if (!currentAudio || currentAudio.paused || currentAudio.ended) {
+          setEnergy(0);
+          return;
+        }
+        const t = (Date.now() - start) / 1000;
+        const wave = 0.25 + 0.35 * Math.abs(Math.sin(t * 7.5)) + 0.25 * Math.abs(Math.cos(t * 13.2));
+        setEnergy(wave);
+        rafId = win.requestAnimationFrame(tick);
+      };
+      rafId = win.requestAnimationFrame(tick);
+    }
+
+    async function playAudioBlob(blob, { turnButton = null, isIntro = false, label = 'Speaking · Josh (ElevenLabs)' } = {}) {
+      stopCurrentAudio();
+      if (!win?.Audio || !win?.URL?.createObjectURL) return false;
+      const url = win.URL.createObjectURL(blob);
+      currentObjectUrl = url;
+      const audio = new win.Audio(url);
+      currentAudio = audio;
+      if (turnButton) {
+        currentSpeakBtn = turnButton;
+        turnButton.setAttribute('aria-pressed', 'true');
+        turnButton.textContent = '⏹ Stop';
+      }
+      if (isIntro && introBtn) {
+        introBtn.setAttribute('aria-pressed', 'true');
+        introBtn.textContent = '⏹ Stop Intro';
+      }
+      setAvatarState('speaking', label);
+      audio.addEventListener('ended', () => {
+        stopCurrentAudio();
+        if (!isLiveCall) setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+      }, { once: true });
+      audio.addEventListener('error', () => {
+        stopCurrentAudio();
+        if (!isLiveCall) setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+      }, { once: true });
+      try {
+        await audio.play();
+        animateSimulatedEnergy();
+        return true;
+      } catch {
+        stopCurrentAudio();
+        if (!isLiveCall) setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+        return false;
+      }
+    }
+
+    async function speakText(rawText, { turnButton = null, isIntro = false, fallbackUrl = null } = {}) {
+      if (turnButton && currentSpeakBtn === turnButton && currentAudio && !currentAudio.paused) {
+        stopCurrentAudio();
+        setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+        return;
+      }
+      if (isIntro && currentAudio && !currentAudio.paused) {
+        stopCurrentAudio();
+        setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+        return;
+      }
+      const spoken = extractSpokenSummary(rawText);
+      if (!spoken && !fallbackUrl) return;
+      stopCurrentAudio();
+      setAvatarState('thinking', 'Synthesizing Josh voice (ElevenLabs)…');
+      if (turnButton) {
+        currentSpeakBtn = turnButton;
+        turnButton.setAttribute('aria-pressed', 'true');
+        turnButton.textContent = '⏳ Voice…';
+      }
+      if (fetcher && spoken) {
+        try {
+          const response = await fetcher('/api/chat/voice/tts', {
+            method: 'POST',
+            credentials: 'same-origin',
+            cache: 'no-store',
+            headers: { 'Content-Type': 'application/json', Accept: 'audio/mpeg' },
+            body: JSON.stringify({ text: spoken, voiceId: JOSH_VOICE_ID })
+          });
+          if (response.ok && /^audio\//i.test(response.headers.get('Content-Type') || '')) {
+            const blob = await response.blob();
+            if (blob.size > 0) {
+              await playAudioBlob(blob, { turnButton, isIntro, label: 'Speaking · Josh (ElevenLabs)' });
+              return;
+            }
+          }
+        } catch { /* fallback below */ }
+      }
+      if (fallbackUrl && fetcher) {
+        try {
+          const fallbackRes = await fetcher(fallbackUrl, { credentials: 'same-origin' });
+          if (fallbackRes.ok) {
+            const blob = await fallbackRes.blob();
+            if (blob.size > 0) {
+              await playAudioBlob(blob, { turnButton, isIntro, label: 'Speaking · Josh Intro' });
+              return;
+            }
+          }
+        } catch { /* ignore */ }
+      }
+      stopCurrentAudio();
+      setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+    }
+
+    function stopLiveCall() {
+      isLiveCall = false;
+      if (activeSocket) {
+        try { activeSocket.close(); } catch { /* ignore */ }
+        activeSocket = null;
+      }
+      if (micStream) {
+        try { micStream.getTracks().forEach(track => track.stop()); } catch { /* ignore */ }
+        micStream = null;
+      }
+      if (liveBtn) {
+        liveBtn.setAttribute('aria-pressed', 'false');
+        liveBtn.textContent = '📞 Live Voice';
+        liveBtn.classList.remove('is-active');
+      }
+      setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+    }
+
+    function playPcm16Base64(base64Audio, sampleRate = 16000) {
+      if (!win) return;
+      const AudioContextCtor = win.AudioContext || win.webkitAudioContext;
+      if (!AudioContextCtor || typeof win.atob !== 'function') return;
+      try {
+        if (!audioCtx) audioCtx = new AudioContextCtor({ sampleRate });
+        if (audioCtx.state === 'suspended') void audioCtx.resume();
+        const binary = win.atob(base64Audio);
+        const sampleCount = Math.floor(binary.length / 2);
+        if (sampleCount <= 0) return;
+        const float32 = new Float32Array(sampleCount);
+        let sumSq = 0;
+        for (let i = 0; i < sampleCount; i += 1) {
+          const lo = binary.charCodeAt(i * 2);
+          const hi = binary.charCodeAt(i * 2 + 1);
+          let val = (hi << 8) | lo;
+          if (val >= 0x8000) val -= 0x10000;
+          const norm = val / 32768;
+          float32[i] = norm;
+          sumSq += norm * norm;
+        }
+        const rms = Math.min(1, Math.sqrt(sumSq / sampleCount) * 3.2);
+        setEnergy(rms);
+        setAvatarState('live', 'Josh Speaking (Live ElevenLabs)…');
+        const buffer = audioCtx.createBuffer(1, sampleCount, sampleRate);
+        buffer.getChannelData(0).set(float32);
+        const source = audioCtx.createBufferSource();
+        source.buffer = buffer;
+        source.connect(audioCtx.destination);
+        const startAt = Math.max(audioCtx.currentTime, nextLivePlayTime);
+        source.start(startAt);
+        nextLivePlayTime = startAt + buffer.duration;
+        source.onended = () => {
+          if (audioCtx && audioCtx.currentTime >= nextLivePlayTime - 0.05 && isLiveCall) {
+            setEnergy(0.08);
+            setAvatarState('live', 'Live Voice Active · Listening…');
+          }
+        };
+      } catch { /* ignore PCM decode errors */ }
+    }
+
+    async function toggleLiveCall() {
+      if (isLiveCall) {
+        stopLiveCall();
+        return;
+      }
+      stopCurrentAudio();
+      if (!fetcher || !win?.WebSocket) return;
+      setAvatarState('thinking', 'Connecting ElevenLabs Live Voice…');
+      if (liveBtn) {
+        liveBtn.setAttribute('aria-pressed', 'true');
+        liveBtn.textContent = '⏳ Connecting…';
+      }
+      try {
+        const res = await fetcher('/api/chat/voice/live-session', {
+          method: 'POST',
+          credentials: 'same-origin',
+          cache: 'no-store',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({})
+        });
+        if (!res.ok) throw new Error('live_unavailable');
+        const data = await res.json();
+        if (!data?.signedUrl) throw new Error('missing_signed_url');
+        const ws = new win.WebSocket(data.signedUrl);
+        activeSocket = ws;
+        isLiveCall = true;
+        nextLivePlayTime = 0;
+        if (liveBtn) {
+          liveBtn.textContent = '🔴 End Live Voice';
+          liveBtn.classList.add('is-active');
+        }
+        ws.addEventListener('open', async () => {
+          setAvatarState('live', 'Live Voice Connected · Say hello');
+          ws.send(JSON.stringify({
+            type: 'conversation_initiation_client_data',
+            conversation_config_override: {
+              tts: { voice_id: JOSH_VOICE_ID }
+            }
+          }));
+          if (win.navigator?.mediaDevices?.getUserMedia) {
+            try {
+              micStream = await win.navigator.mediaDevices.getUserMedia({
+                audio: { sampleRate: 16000, channelCount: 1, echoCancellation: true, noiseSuppression: true }
+              });
+              const AudioContextCtor = win.AudioContext || win.webkitAudioContext;
+              if (AudioContextCtor) {
+                if (!audioCtx) audioCtx = new AudioContextCtor({ sampleRate: 16000 });
+                const source = audioCtx.createMediaStreamSource(micStream);
+                const processor = audioCtx.createScriptProcessor(4096, 1, 1);
+                source.connect(processor);
+                processor.connect(audioCtx.destination);
+                processor.onaudioprocess = evt => {
+                  if (!isLiveCall || ws.readyState !== win.WebSocket.OPEN) return;
+                  const inputData = evt.inputBuffer.getChannelData(0);
+                  const pcm16 = new Int16Array(inputData.length);
+                  for (let i = 0; i < inputData.length; i += 1) {
+                    const s = Math.max(-1, Math.min(1, inputData[i]));
+                    pcm16[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+                  }
+                  const bytes = new Uint8Array(pcm16.buffer);
+                  let binary = '';
+                  for (let i = 0; i < bytes.byteLength; i += 1) binary += String.fromCharCode(bytes[i]);
+                  ws.send(JSON.stringify({ user_audio_chunk: win.btoa(binary) }));
+                };
+              }
+            } catch {
+              setAvatarState('live', 'Live Voice Connected (Mic permission needed)');
+            }
+          }
+        });
+        ws.addEventListener('message', evt => {
+          try {
+            const msg = JSON.parse(String(evt.data || '{}'));
+            if (msg.type === 'ping' && msg.ping_event?.event_id) {
+              ws.send(JSON.stringify({ type: 'pong', event_id: msg.ping_event.event_id }));
+            } else if (msg.type === 'audio' && msg.audio_event?.audio_base_64) {
+              playPcm16Base64(msg.audio_event.audio_base_64, 16000);
+            } else if (msg.type === 'user_transcript' && msg.user_transcription_event?.user_transcript) {
+              options.onLiveTranscript?.('user', String(msg.user_transcription_event.user_transcript));
+            } else if (msg.type === 'agent_response' && msg.agent_response_event?.agent_response) {
+              options.onLiveTranscript?.('assistant', String(msg.agent_response_event.agent_response));
+            } else if (msg.type === 'interruption') {
+              nextLivePlayTime = audioCtx ? audioCtx.currentTime : 0;
+              setEnergy(0);
+            }
+          } catch { /* ignore malformed frame */ }
+        });
+        ws.addEventListener('close', () => {
+          if (isLiveCall) stopLiveCall();
+        });
+        ws.addEventListener('error', () => {
+          if (isLiveCall) stopLiveCall();
+        });
+      } catch {
+        stopLiveCall();
+        void speakText(
+          "Hey, I'm Josh's AI assistant. My ElevenLabs voice is active—ask any question below or click Listen on any response.",
+          { isIntro: true, fallbackUrl: '/assets/personal/josh-intro-voice.mp3' }
+        );
+      }
+    }
+
+    async function toggleMicDictation(micButton) {
+      if (isRecordingMic) {
+        isRecordingMic = false;
+        if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+          try { mediaRecorder.stop(); } catch { /* ignore */ }
+        }
+        if (speechRec) {
+          try { speechRec.stop(); } catch { /* ignore */ }
+        }
+        return;
+      }
+      stopCurrentAudio();
+      if (win?.navigator?.mediaDevices?.getUserMedia && typeof win.MediaRecorder === 'function' && fetcher) {
+        try {
+          const stream = await win.navigator.mediaDevices.getUserMedia({ audio: true });
+          const chunks = [];
+          const recorder = new win.MediaRecorder(stream);
+          mediaRecorder = recorder;
+          isRecordingMic = true;
+          micButton.textContent = '⏹ Stop Mic';
+          micButton.setAttribute('aria-pressed', 'true');
+          setAvatarState('listening', 'Listening… speak your question');
+          recorder.addEventListener('dataavailable', e => {
+            if (e.data && e.data.size > 0) chunks.push(e.data);
+          });
+          recorder.addEventListener('stop', async () => {
+            stream.getTracks().forEach(t => t.stop());
+            isRecordingMic = false;
+            micButton.textContent = '🎙️ Voice';
+            micButton.setAttribute('aria-pressed', 'false');
+            const blob = new Blob(chunks, { type: recorder.mimeType || 'audio/webm' });
+            if (blob.size === 0) {
+              setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+              return;
+            }
+            setAvatarState('thinking', 'Transcribing via ElevenLabs Scribe…');
+            try {
+              const sttRes = await fetcher('/api/chat/voice/stt', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: { 'Content-Type': blob.type || 'audio/webm', Accept: 'application/json' },
+                body: blob
+              });
+              if (sttRes.ok) {
+                const sttJson = await sttRes.json();
+                if (sttJson?.text && typeof sttJson.text === 'string' && sttJson.text.trim()) {
+                  options.onDictationResult?.(sttJson.text.trim());
+                  return;
+                }
+              }
+            } catch { /* ignore */ }
+            setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+          });
+          recorder.start();
+          return;
+        } catch { /* fallback to SpeechRecognition */ }
+      }
+      const SpeechRecognitionCtor = win?.SpeechRecognition || win?.webkitSpeechRecognition;
+      if (SpeechRecognitionCtor) {
+        try {
+          const rec = new SpeechRecognitionCtor();
+          speechRec = rec;
+          rec.lang = 'en-CA';
+          rec.interimResults = false;
+          isRecordingMic = true;
+          micButton.textContent = '⏹ Stop Mic';
+          micButton.setAttribute('aria-pressed', 'true');
+          setAvatarState('listening', 'Listening… speak your question');
+          rec.onresult = evt => {
+            const transcript = evt.results?.[0]?.[0]?.transcript;
+            if (transcript && transcript.trim()) options.onDictationResult?.(transcript.trim());
+          };
+          rec.onend = () => {
+            isRecordingMic = false;
+            micButton.textContent = '🎙️ Voice';
+            micButton.setAttribute('aria-pressed', 'false');
+          };
+          rec.start();
+        } catch {
+          setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+        }
+      }
+    }
+
+    if (autoSpeakBtn) {
+      autoSpeakBtn.addEventListener('click', () => {
+        autoSpeak = !autoSpeak;
+        autoSpeakBtn.setAttribute('aria-pressed', String(autoSpeak));
+        autoSpeakBtn.textContent = autoSpeak ? '🔊 Auto: On' : '🔇 Auto: Off';
+        if (!autoSpeak) stopCurrentAudio();
+      });
+    }
+    if (introBtn) {
+      introBtn.addEventListener('click', () => {
+        void speakText(
+          "Hey, I'm Josh's AI assistant. Ask me about my architecture work, Guidewire integrations, hybrid S3 vector RAG, or MCP tools—or start Live Voice to talk in real time.",
+          { isIntro: true, fallbackUrl: '/assets/personal/josh-intro-voice.mp3' }
+        );
+      });
+    }
+    if (liveBtn) {
+      liveBtn.addEventListener('click', () => {
+        void toggleLiveCall();
+      });
+    }
+
+    return Object.freeze({
+      checkAvailability() {
+        if (!fetcher || !avatarStage) return;
+        fetcher('/api/chat/voice/status', { credentials: 'same-origin', cache: 'no-store' })
+          .then(res => (res.ok ? res.json() : null))
+          .then(info => {
+            if (info && info.available && info.tts) {
+              voiceServiceReady = true;
+              setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+            }
+          })
+          .catch(() => {});
+      },
+      onTurnStart() {
+        stopCurrentAudio();
+        setAvatarState('thinking', 'Routing request…');
+      },
+      onStreamFrame(frame, replyView) {
+        if (frame.event === 'trace') {
+          const pt = frame.data;
+          if (pt.stage === 'routing') {
+            const label = pt.routingMode === 'portfolio_mcp' ? 'Routing → Portfolio MCP tools…'
+              : pt.routingMode === 'portfolio_rag' ? 'Routing → Hybrid S3 Vector RAG…'
+              : pt.routingMode === 'portfolio_cag' ? 'Loading Approved CAG Context…'
+              : 'Routing → AI Gateway…';
+            setAvatarState('thinking', label);
+          } else if (pt.stage === 'retrieval' && pt.state === 'started') {
+            setAvatarState('thinking', 'Searching 1536-d S3 Vectors + BM25…');
+          } else if (pt.stage === 'mcp' && pt.state === 'started') {
+            setAvatarState('thinking', `Running MCP · ${pt.toolName || pt.mcpMethod}…`);
+          } else if (pt.stage === 'context') {
+            setAvatarState('thinking', `Verifying ${pt.claimCount ?? 15} canonical claims…`);
+          } else if (pt.stage === 'provider' && pt.state === 'started') {
+            setAvatarState('thinking', `Generating via ${pt.model || 'AI Gateway'}…`);
+          } else if (pt.stage === 'validation' && pt.state === 'started') {
+            setAvatarState('thinking', 'Validating citations & guardrails…');
+          }
+        } else if (frame.event === 'conversation') {
+          if (autoSpeak && voiceServiceReady && !isLiveCall) {
+            void speakText(frame.data.text, { turnButton: replyView?.speakButton });
+          } else if (!isLiveCall) {
+            setAvatarState('thinking', 'Finalizing citations…');
+          }
+        } else if (frame.event === 'done') {
+          if (!currentAudio && autoSpeak && voiceServiceReady && !isLiveCall && !replyView?.hasConversation && replyView?.replyText) {
+            void speakText(replyView.replyText, { turnButton: replyView?.speakButton });
+          } else if (!currentAudio && !isLiveCall) {
+            setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+          }
+        } else if (frame.event === 'error') {
+          if (!isLiveCall) setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+        }
+      },
+      onTurnError() {
+        if (!isLiveCall) setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+      },
+      speakTurn(view, btn) {
+        if (!view?.replyText) return;
+        void speakText(view.replyText, { turnButton: btn });
+      },
+      toggleMicDictation,
+      stopAll() {
+        stopCurrentAudio();
+        if (isLiveCall) stopLiveCall();
+      }
+    });
+  }
   function mount(host, options = {}) {
     if (host.dataset?.chatMounted === 'true' || host.getAttribute?.('data-chat-mounted') === 'true') return;
     if (host.dataset) host.dataset.chatMounted = 'true';
@@ -1553,14 +2098,62 @@
     const footer = element(document, 'div', 'chat-compose-footer');
     const hint = element(document, 'p', 'chat-hint', 'Enter to send · Shift + Enter for a new line'); hint.id = 'portfolio-chat-hint';
     const actions = element(document, 'div', 'chat-compose-actions');
+    const mic = element(document, 'button', 'chat-secondary chat-mic-btn', '🎙️ Voice'); mic.type = 'button'; mic.disabled = true;
+    mic.setAttribute('data-voice-mic-btn', '');
+    mic.setAttribute('aria-pressed', 'false');
+    mic.setAttribute('aria-label', 'Dictate question with ElevenLabs Scribe');
     const stop = element(document, 'button', 'chat-secondary', 'Stop'); stop.type = 'button'; stop.hidden = true;
     const retry = element(document, 'button', 'chat-secondary', 'Check request again'); retry.type = 'button'; retry.hidden = true;
     const send = element(document, 'button', 'chat-send', 'Send question ↗'); send.type = 'submit'; send.disabled = true;
-    actions.append(stop, retry, send); footer.append(hint, actions); form.append(label, input, footer);
+    actions.append(mic, stop, retry, send); footer.append(hint, actions); form.append(label, input, footer);
     panel.append(heading, scope, messages, status, form); shell.append(panel, details.element); host.append(shell);
     let ready = false, busy = false, currentReply, uiEpoch = 0, limit = 8192, currentConfig;
+    const voice = createVoiceController(document, {
+      fetchImpl: options.fetchImpl,
+      onDictationResult: transcript => {
+        if (!ready || busy) return;
+        input.value = transcript;
+        form.requestSubmit();
+      },
+      onLiveTranscript: (role, text) => {
+        if (!text) return;
+        welcome.hidden = true;
+        if (role === 'user') {
+          const q = element(document, 'article', 'chat-message chat-question');
+          q.append(element(document, 'p', 'chat-small-label', 'You · Live Voice'), element(document, 'p', '', text));
+          messages.append(q);
+        } else {
+          const a = element(document, 'article', 'chat-message chat-answer');
+          const body = element(document, 'div', 'chat-answer-text');
+          renderParagraphs(document, body, text);
+          a.append(element(document, 'p', 'chat-small-label', 'Josh · Live Voice'), body);
+          messages.append(a);
+        }
+        scroll(true);
+      }
+    });
+    mic.addEventListener('click', () => { void voice.toggleMicDictation(mic); });
+    const railChips = document.querySelectorAll ? document.querySelectorAll('.chat-scope-chip, .chat-callout-list li') : [];
+    const chipPrompts = {
+      'CAG + Hybrid RAG': 'How do your CAG and Hybrid S3 Vector RAG work together?',
+      'Read-Only MCP': 'What are the 3 read-only Portfolio MCP tools and how are they secured?',
+      '8-Stage Trace': 'Walk me through the 8 stages in your request trace pipeline.',
+      'Citations Separated': 'Why does your assistant separate conversational prose from canonical citations?'
+    };
+    for (const item of railChips) {
+      item.style && (item.style.cursor = 'pointer');
+      item.addEventListener?.('click', () => {
+        if (!ready || busy) return;
+        const raw = (item.textContent || '').trim();
+        const prompt = chipPrompts[raw] || raw;
+        if (prompt) {
+          input.value = prompt;
+          form.requestSubmit();
+        }
+      });
+    }
     function update() {
-      input.disabled = !ready || busy; send.disabled = !ready || busy;
+      input.disabled = !ready || busy; send.disabled = !ready || busy; mic.disabled = !ready || busy;
       clear.disabled = !ready; stop.hidden = !busy; retry.hidden = busy || !client.canRetry;
       for (const button of starters.children) button.disabled = !ready || busy;
       const suggestionButtons = messages.querySelectorAll ? messages.querySelectorAll('.chat-suggestions button') : [];
@@ -1576,6 +2169,7 @@
       if (previousCard !== currentReply.element) previousCard.replaceWith(currentReply.element);
       if (client.session) currentReply.view.contextData.remainingTurns = client.session.remainingTurns;
       details.update(currentReply.view);
+      voice.onStreamFrame(frame, currentReply.view);
       if (frame.event === 'done') {
         status.textContent = frame.data.outcome === 'cancelled' ? 'Stopped.' : currentReply.view.claims.length ? 'Response complete · evidence references validated.' : 'Response complete.';
         storedTurns = saveStoredHistory(storage, [...storedTurns, { requestId: currentReply.view.requestId, kind: currentReply.view.kind, completedAt: now() }], now);
@@ -1591,6 +2185,7 @@
       }
       const ownEpoch = ++uiEpoch;
       busy = true; retry.hidden = true; welcome.hidden = true;
+      voice.onTurnStart();
       if (!isRetry) {
         const question = element(document, 'article', 'chat-message chat-question'); question.append(element(document, 'p', 'chat-small-label', 'You'), element(document, 'p', '', text));
         messages.append(question); input.value = '';
@@ -1602,6 +2197,7 @@
         remainingTurns: client.session?.remainingTurns,
         maxTurns: currentConfig?.limits?.maxTurns ?? 8,
         limits: currentConfig?.limits,
+        onSpeak: (view, btn) => voice.speakTurn(view, btn),
         onDetails: (view, trigger) => details.open(view, trigger),
         onSuggestion: suggestionText => { if (ready && !busy) { input.value = suggestionText; form.requestSubmit(); } }
       });
@@ -1617,6 +2213,7 @@
         if (ownEpoch === uiEpoch) {
           currentReply.fail(error.name === 'AbortError' ? 'cancelled' : 'interrupted');
           details.update(currentReply.view);
+          voice.onTurnError();
           status.textContent = error.name === 'AbortError' ? 'Stopped. The server may still be settling this request.' : ERROR_LABELS[error.code] || ERROR_LABELS.unavailable;
         }
       } finally {
@@ -1631,6 +2228,7 @@
     stop.addEventListener('click', async () => {
       const ownEpoch = uiEpoch;
       stop.disabled = true;
+      voice.stopAll();
       try { await client.cancel(); if (ownEpoch === uiEpoch) status.textContent = 'Stop requested.'; }
       catch { if (ownEpoch === uiEpoch) status.textContent = 'Stopped here. Server cancellation could not be confirmed. Check this request before trying again.'; }
       finally { stop.disabled = false; }
@@ -1638,6 +2236,7 @@
     retry.addEventListener('click', () => { void submit(true); });
     clear.addEventListener('click', async () => {
       uiEpoch += 1; busy = false; ready = false; update();
+      voice.stopAll();
       messages.replaceChildren(welcome); welcome.hidden = false; currentReply = null; input.value = ''; status.textContent = 'Clearing the conversation…';
       storedTurns = []; clearStoredHistory(storage);
       details.clear();
@@ -1652,6 +2251,7 @@
       if (ready) {
         status.textContent = 'Private chat is ready.';
         scope.textContent = 'General help, with Josh’s public portfolio when it is relevant. Details stay beside the conversation.';
+        voice.checkAvailability();
       } else status.textContent = 'Chat is currently disabled.';
       update();
     }).catch(error => {

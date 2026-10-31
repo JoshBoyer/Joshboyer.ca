@@ -4,6 +4,7 @@ import { authorised, failure, hmacKey, readBody, signedHeaders, streamBody, toBa
 const encoder = new TextEncoder();
 const ACCESS_COOKIE = '__Host-jb_chat_access';
 const SESSION_COOKIE = '__Host-jb_chat';
+export const DEFAULT_JOSH_VOICE_ID = '2ccxXaT9cMefjPlK2Pwn';
 export const ASSET_TYPES: Readonly<Record<string, string>> = Object.freeze(Object.assign(Object.create(null) as Record<string, string>, {
   '/chat-assistant.css': 'text/css; charset=utf-8',
   '/chat-assistant.js': 'text/javascript; charset=utf-8',
@@ -13,10 +14,12 @@ export const ASSET_TYPES: Readonly<Record<string, string>> = Object.freeze(Objec
   '/assets/fonts/plus-jakarta-sans-latin.woff2': 'font/woff2',
   '/assets/fonts/ibm-plex-mono-400-latin.woff2': 'font/woff2',
   '/assets/personal/josh-portrait-smiling.jpg': 'image/jpeg',
-  '/assets/optimized-extra/personal/josh-portrait-vest-640.webp': 'image/webp'
+  '/assets/optimized-extra/personal/josh-portrait-vest-640.webp': 'image/webp',
+  '/assets/personal/josh-avatar-idle.mp4': 'video/mp4',
+  '/assets/personal/josh-intro-voice.mp3': 'audio/mpeg'
 }));
 export const ASSETS = new Set(Object.keys(ASSET_TYPES));
-const CSP = "default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; connect-src 'self'; img-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'";
+const CSP = "default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; connect-src 'self' wss://api.elevenlabs.io; img-src 'self'; media-src 'self' blob:; base-uri 'none'; frame-ancestors 'none'; form-action 'self'";
 
 function cookie(request: Request, name: string): string | undefined {
   const raw = request.headers.get('Cookie') ?? '';
@@ -67,6 +70,171 @@ function login(): Response {
 <main><small>JOSH BOYER / PRIVATE PREVIEW</small><h1>Portfolio chat</h1><p>This preview requires your private access token.</p><form><label for="token">Access token</label><input id="token" type="password" autocomplete="off" required spellcheck="false"><button>Open private preview</button><p id="status" role="status"></p></form></main>
 <script nonce="${nonce}">document.querySelector('form').addEventListener('submit',async event=>{event.preventDefault();const input=document.querySelector('#token');const token=input.value;input.value='';const status=document.querySelector('#status');status.textContent='Checking access…';try{const response=await fetch('/api/chat/access',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token}),credentials:'same-origin'});if(!response.ok)throw new Error();location.reload();}catch{status.textContent='Access could not be verified. Check the token and try again.'}});</script></html>`;
   return secure(new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } }), CSP.replace("script-src 'self'", `script-src 'nonce-${nonce}'`).replace("style-src 'self'", `style-src 'nonce-${nonce}'`));
+}
+
+function voiceRoute(method: string, path: string): boolean {
+  return (method === 'GET' && path === '/api/chat/voice/status') ||
+    (method === 'POST' && (path === '/api/chat/voice/tts' || path === '/api/chat/voice/stt' || path === '/api/chat/voice/live-session'));
+}
+
+async function handleVoiceRoute(request: Request, path: string, env: Env, dependencies: Dependencies): Promise<Response> {
+  const apiKey = (env.ELEVENLABS_API_KEY ?? '').trim();
+  const voiceId = (env.ELEVENLABS_VOICE_ID ?? '').trim() || DEFAULT_JOSH_VOICE_ID;
+  const agentId = (env.ELEVENLABS_AGENT_ID ?? '').trim();
+  const fetcher = dependencies.fetcher ?? fetch;
+
+  if (path === '/api/chat/voice/status') {
+    const isEnabled = Boolean(apiKey);
+    const isLive = Boolean(apiKey && agentId);
+    return secure(new Response(JSON.stringify({
+      schemaVersion: '1.0.0',
+      available: isEnabled,
+      enabled: isEnabled,
+      voiceId,
+      tts: isEnabled,
+      stt: isEnabled,
+      ttsModel: 'eleven_flash_v2_5',
+      sttModel: 'scribe_v1',
+      liveEnabled: isLive,
+      liveConversationalAi: isLive
+    }), { status: 200, headers: { 'Content-Type': 'application/json; charset=utf-8' } }));
+  }
+
+  if (!apiKey) return failure(503, 'VOICE_NOT_CONFIGURED');
+
+  if (path === '/api/chat/voice/tts') {
+    try {
+      const bytes = await readBody(request, AbortSignal.timeout(10000), 4096);
+      const parsed: unknown = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes));
+      if (typeof parsed !== 'object' || !parsed || Array.isArray(parsed)) return failure(400, 'INVALID_REQUEST');
+      const rawText = typeof (parsed as { text?: unknown }).text === 'string' ? (parsed as { text: string }).text : '';
+      if (!rawText || rawText.includes('\u0000') || rawText.length > 1600) return failure(400, 'INVALID_REQUEST');
+      const cleanText = rawText.replace(/\s+/g, ' ').trim().slice(0, 700);
+      if (!cleanText) return failure(400, 'INVALID_REQUEST');
+      const rawVoiceId = (parsed as { voiceId?: unknown }).voiceId;
+      if (rawVoiceId !== undefined && (typeof rawVoiceId !== 'string' || !/^[A-Za-z0-9]{15,32}$/.test(rawVoiceId))) {
+        return failure(400, 'INVALID_REQUEST');
+      }
+      const targetVoiceId = typeof rawVoiceId === 'string' ? rawVoiceId : voiceId;
+      const upstream = await fetcher(
+        `https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(targetVoiceId)}/stream?output_format=mp3_44100_128&optimize_streaming_latency=3`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'xi-api-key': apiKey,
+            Accept: 'audio/mpeg'
+          },
+          body: JSON.stringify({
+            text: cleanText,
+            model_id: 'eleven_flash_v2_5',
+            voice_settings: {
+              stability: 0.52,
+              similarity_boost: 0.80,
+              style: 0.14,
+              use_speaker_boost: true
+            }
+          }),
+          signal: AbortSignal.timeout(15000)
+        }
+      );
+      if (!upstream.ok || !upstream.body) return failure(502, 'VOICE_UPSTREAM_FAILED');
+      return secure(new Response(upstream.body, {
+        status: 200,
+        headers: { 'Content-Type': 'audio/mpeg' }
+      }), CSP, 'audio/mpeg');
+    } catch (error) {
+      return failure(error instanceof RangeError ? 413 : 502, 'VOICE_UPSTREAM_FAILED');
+    }
+  }
+
+  if (path === '/api/chat/voice/stt') {
+    try {
+      const bytes = await readBody(request, AbortSignal.timeout(15000), 1_500_000);
+      if (bytes.byteLength === 0) return failure(400, 'INVALID_REQUEST');
+      const contentType = (request.headers.get('Content-Type') ?? '').toLowerCase();
+      let audioBytes: Uint8Array;
+      let mimeType = 'audio/webm';
+      if (contentType.startsWith('audio/')) {
+        audioBytes = bytes;
+        mimeType = contentType.split(';')[0]!.trim() || 'audio/webm';
+      } else {
+        const parsed: unknown = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes));
+        if (typeof parsed !== 'object' || !parsed || Array.isArray(parsed)) return failure(400, 'INVALID_REQUEST');
+        const audioBase64 = typeof (parsed as { audioBase64?: unknown }).audioBase64 === 'string'
+          ? (parsed as { audioBase64: string }).audioBase64.trim()
+          : '';
+        if (typeof (parsed as { mimeType?: unknown }).mimeType === 'string') {
+          mimeType = (parsed as { mimeType: string }).mimeType;
+        }
+        if (!audioBase64 || audioBase64.length > 1_400_000) return failure(400, 'INVALID_REQUEST');
+        const binaryStr = atob(audioBase64);
+        audioBytes = new Uint8Array(binaryStr.length);
+        for (let i = 0; i < binaryStr.length; i += 1) audioBytes[i] = binaryStr.charCodeAt(i);
+      }
+      const ext = mimeType.includes('wav') ? 'wav' : mimeType.includes('mp4') ? 'mp4' : mimeType.includes('ogg') ? 'ogg' : 'webm';
+      const formData = new FormData();
+      formData.append('file', new Blob([audioBytes], { type: mimeType }), `speech.${ext}`);
+      formData.append('model_id', 'scribe_v1');
+      formData.append('tag_audio_events', 'false');
+      const upstream = await fetcher('https://api.elevenlabs.io/v1/speech-to-text', {
+        method: 'POST',
+        headers: { 'xi-api-key': apiKey },
+        body: formData,
+        signal: AbortSignal.timeout(15000)
+      });
+      if (!upstream.ok) return failure(502, 'VOICE_STT_FAILED');
+      const data = await upstream.json() as { text?: unknown; language_code?: unknown };
+      const text = typeof data?.text === 'string' ? data.text.trim().slice(0, 2000) : '';
+      return secure(new Response(JSON.stringify({
+        schemaVersion: '1.0.0',
+        text,
+        languageCode: typeof data?.language_code === 'string' ? data.language_code : 'en'
+      }), { status: 200, headers: { 'Content-Type': 'application/json; charset=utf-8' } }));
+    } catch (error) {
+      return failure(error instanceof RangeError ? 413 : 502, 'VOICE_STT_FAILED');
+    }
+  }
+
+  if (path === '/api/chat/voice/live-session') {
+    if (!agentId) return failure(503, 'LIVE_AGENT_NOT_CONFIGURED');
+    try {
+      await readBody(request, AbortSignal.timeout(5000), 1024);
+      const upstream = await fetcher(
+        `https://api.elevenlabs.io/v1/convai/conversation/get_signed_url?agent_id=${encodeURIComponent(agentId)}`,
+        {
+          method: 'GET',
+          headers: { 'xi-api-key': apiKey },
+          signal: AbortSignal.timeout(10000)
+        }
+      );
+      if (!upstream.ok) {
+        if (upstream.status === 401 || upstream.status === 403) {
+          return secure(new Response(JSON.stringify({
+            schemaVersion: '1.0.0',
+            signedUrl: `wss://api.elevenlabs.io/v1/convai/conversation?agent_id=${encodeURIComponent(agentId)}`,
+            voiceId,
+            authMode: 'public_agent_fallback'
+          }), { status: 200, headers: { 'Content-Type': 'application/json; charset=utf-8' } }));
+        }
+        return failure(502, 'LIVE_SESSION_FAILED');
+      }
+      const data = await upstream.json() as { signed_url?: unknown };
+      if (typeof data?.signed_url !== 'string' || !data.signed_url.startsWith('wss://api.elevenlabs.io/')) {
+        return failure(502, 'LIVE_SESSION_FAILED');
+      }
+      return secure(new Response(JSON.stringify({
+        schemaVersion: '1.0.0',
+        signedUrl: data.signed_url,
+        voiceId,
+        authMode: 'signed_url'
+      }), { status: 200, headers: { 'Content-Type': 'application/json; charset=utf-8' } }));
+    } catch (error) {
+      return failure(error instanceof RangeError ? 413 : 502, 'LIVE_SESSION_FAILED');
+    }
+  }
+
+  return unavailable();
 }
 
 function route(method: string, path: string): boolean {
@@ -126,6 +294,10 @@ export async function privateChat(request: Request, env: Env, dependencies: Depe
     const assetResponse = await assets.fetch(new Request(url, { method: request.method }));
     if (assetResponse.status === 404) return unavailable();
     return secure(assetResponse, CSP, ASSET_TYPES[url.pathname]);
+  }
+  if (voiceRoute(request.method, url.pathname)) {
+    if (!authenticated) return failure(401, 'UNAUTHORISED');
+    return handleVoiceRoute(request, url.pathname, env, dependencies);
   }
   if (!route(request.method, url.pathname)) return unavailable();
   if (!authenticated) return failure(401, 'UNAUTHORISED');

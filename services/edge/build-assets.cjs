@@ -8,7 +8,8 @@ execFileSync(process.execPath, [path.join(root, 'tools/build-chat-client.cjs'), 
 // must never become a Workers asset directory.
 const assets = ['chat-assistant.js', 'chat-request-details.js', 'chat-assistant.css', 'chat-evidence.json',
   'assets/fonts/manrope-latin.woff2', 'assets/fonts/plus-jakarta-sans-latin.woff2', 'assets/fonts/ibm-plex-mono-400-latin.woff2',
-  'assets/personal/josh-portrait-smiling.jpg', 'assets/optimized-extra/personal/josh-portrait-vest-640.webp'];
+  'assets/personal/josh-portrait-smiling.jpg', 'assets/optimized-extra/personal/josh-portrait-vest-640.webp',
+  'assets/personal/josh-avatar-idle.mp4', 'assets/personal/josh-intro-voice.mp3'];
 for (const relative of assets) {
   const target = path.join(__dirname, 'build/assets', relative);
   fs.mkdirSync(path.dirname(target), { recursive: true });

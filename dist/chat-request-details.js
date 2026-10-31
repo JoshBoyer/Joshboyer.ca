@@ -1437,7 +1437,7 @@
       const techHeader = element(document, 'div', 'chat-tech-stack-header');
       techHeader.append(
         element(document, 'span', 'chat-tech-stack-title', 'Solution stack'),
-        element(document, 'span', 'chat-tech-stack-region', 'AWS us-east-2 · Cloudflare · MCP')
+        element(document, 'span', 'chat-tech-stack-region', 'AWS us-east-2 · CF · 11Labs')
       );
       const techGrid = element(document, 'ul', 'chat-tech-stack-grid');
       const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -1524,19 +1524,19 @@
         {
           id: 'openai',
           glyph: 'AI',
-          name: 'OpenAI Primary',
-          role: 'Luna + 1536-d Embed',
+          name: 'AI Gateway LLMs',
+          role: 'Luna · Haiku 5.5',
           paths: [
             { d: 'M12 3L14.2 9.8L21 12L14.2 14.2L12 21L9.8 14.2L3 12L9.8 9.8L12 3Z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.8', strokeLinejoin: 'round' }
           ]
         },
         {
-          id: 'anthropic',
-          glyph: 'CL',
-          name: 'Anthropic Guard',
-          role: 'Haiku 5.5 Fallback',
+          id: 'elevenlabs',
+          glyph: '11L',
+          name: 'ElevenLabs Voice',
+          role: 'Josh 2ccxXaT9 · Live',
           paths: [
-            { d: 'M8.5 18.5L12 5.5L15.5 18.5M6.2 18.5L9.8 5.5M14.2 5.5L17.8 18.5M7.8 14.5H16.2', fill: 'none', stroke: 'currentColor', strokeWidth: '1.8', strokeLinecap: 'round', strokeLinejoin: 'round' }
+            { d: 'M4 10V14M8 7V17M12 4V20M16 7V17M20 10V14', fill: 'none', stroke: 'currentColor', strokeWidth: '2', strokeLinecap: 'round' }
           ]
         }
       ];
