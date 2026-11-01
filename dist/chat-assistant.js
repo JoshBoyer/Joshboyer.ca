@@ -1572,6 +1572,9 @@
     let micMuteGainNode = null;
     let liveKeepaliveTimer = null;
     let lastMicChunkAt = 0;
+    let lastTranscriptText = '';
+    let lastTranscriptAt = 0;
+    let vocalAnalyser = null;
     let mediaRecorder = null;
     let speechRec = null;
     let isRecordingMic = false;
@@ -1677,13 +1680,91 @@
       setEnergy(0);
     }
 
+    function attachStudioVocalEnhancer(audioElement) {
+      const AudioContextCtor = win?.AudioContext || win?.webkitAudioContext;
+      if (!AudioContextCtor) return;
+      try {
+        if (!audioCtx) audioCtx = new AudioContextCtor();
+        if (audioCtx.state === 'suspended') void audioCtx.resume();
+        const mediaSource = audioCtx.createMediaElementSource(audioElement);
+
+        // 1. High-pass filter at 95Hz to remove low-end room rumble while keeping baritone warmth
+        const highpass = audioCtx.createBiquadFilter();
+        highpass.type = 'highpass';
+        highpass.frequency.value = 95;
+        highpass.Q.value = 0.707;
+
+        // 2. Cut boxy/distant room resonance around 280Hz (-3.5 dB)
+        const deRoom = audioCtx.createBiquadFilter();
+        deRoom.type = 'peaking';
+        deRoom.frequency.value = 280;
+        deRoom.Q.value = 1.5;
+        deRoom.gain.value = -3.5;
+
+        // 3. Close-mic vocal presence boost at 3.2kHz (+4.2 dB) for crisp articulation
+        const presence = audioCtx.createBiquadFilter();
+        presence.type = 'peaking';
+        presence.frequency.value = 3200;
+        presence.Q.value = 1.0;
+        presence.gain.value = 4.2;
+
+        // 4. Studio condenser air shelf at 6.8kHz (+2.8 dB)
+        const air = audioCtx.createBiquadFilter();
+        air.type = 'highshelf';
+        air.frequency.value = 6800;
+        air.gain.value = 2.8;
+
+        // 5. Broadcast vocal compressor + upfront makeup gain (1.55x)
+        const compressor = audioCtx.createDynamicsCompressor();
+        compressor.threshold.value = -22;
+        compressor.knee.value = 10;
+        compressor.ratio.value = 3.5;
+        compressor.attack.value = 0.003;
+        compressor.release.value = 0.16;
+
+        const makeupGain = audioCtx.createGain();
+        makeupGain.gain.value = 1.55;
+
+        const analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 256;
+        analyser.smoothingTimeConstant = 0.72;
+        vocalAnalyser = analyser;
+
+        mediaSource.connect(highpass);
+        highpass.connect(deRoom);
+        deRoom.connect(presence);
+        presence.connect(air);
+        air.connect(compressor);
+        compressor.connect(makeupGain);
+        makeupGain.connect(analyser);
+        analyser.connect(audioCtx.destination);
+      } catch {
+        vocalAnalyser = null;
+      }
+    }
+
     function animateSimulatedEnergy() {
       if (!win?.requestAnimationFrame) return;
       const start = Date.now();
+      const freqBins = vocalAnalyser ? new Uint8Array(vocalAnalyser.frequencyBinCount) : null;
       const tick = () => {
         if (!currentAudio || currentAudio.paused || currentAudio.ended) {
           setEnergy(0);
           return;
+        }
+        if (vocalAnalyser && freqBins) {
+          try {
+            vocalAnalyser.getByteFrequencyData(freqBins);
+            let sum = 0;
+            const count = Math.min(40, freqBins.length);
+            for (let i = 2; i < count; i += 1) sum += freqBins[i];
+            const avg = sum / Math.max(1, count - 2) / 255;
+            if (avg > 0.01) {
+              setEnergy(Math.min(1, avg * 2.1));
+              rafId = win.requestAnimationFrame(tick);
+              return;
+            }
+          } catch { /* fallback to simulated wave */ }
         }
         const t = (Date.now() - start) / 1000;
         const wave = 0.25 + 0.35 * Math.abs(Math.sin(t * 7.5)) + 0.25 * Math.abs(Math.cos(t * 13.2));
@@ -1699,7 +1780,9 @@
       const url = win.URL.createObjectURL(blob);
       currentObjectUrl = url;
       const audio = new win.Audio(url);
+      audio.volume = 1.0;
       currentAudio = audio;
+      attachStudioVocalEnhancer(audio);
       isLiveSpeaking = Boolean(isLiveTurn || isLiveCall);
       if (turnButton) {
         currentSpeakBtn = turnButton;
@@ -1883,6 +1966,11 @@
           ws.send(JSON.stringify({
             type: 'conversation_initiation_client_data'
           }));
+          if (!options.hasExistingTurns?.()) {
+            const greeting = "Hey! Thanks for stopping by my portfolio. I'm listening—what would you like to talk through?";
+            options.onLiveTranscript?.('assistant', greeting);
+            void speakText(greeting, { isLiveTurn: true });
+          }
           lastMicChunkAt = Date.now();
           const keepaliveSilence = encodePcm16Base64(new Int16Array(1600));
           liveKeepaliveTimer = setInterval(() => {
@@ -1942,13 +2030,16 @@
               ws.send(JSON.stringify({ type: 'pong', event_id: msg.ping_event.event_id }));
             } else if (msg.type === 'user_transcript' && msg.user_transcription_event?.user_transcript) {
               const userText = cleanStageTags(msg.user_transcription_event.user_transcript);
-              if (userText) options.onLiveTranscript?.('user', userText);
-            } else if (msg.type === 'agent_response' && msg.agent_response_event?.agent_response) {
-              const assistantText = cleanStageTags(msg.agent_response_event.agent_response);
-              if (assistantText) {
-                options.onLiveTranscript?.('assistant', assistantText);
-                void speakText(assistantText, { isLiveTurn: true });
+              if (!userText || userText.length < 2) return;
+              const nowTs = Date.now();
+              if (userText.toLowerCase() === lastTranscriptText.toLowerCase() && nowTs - lastTranscriptAt < 3500) {
+                return;
               }
+              lastTranscriptText = userText;
+              lastTranscriptAt = nowTs;
+              // Route live spoken turn directly through the main contextual multi-turn assistant (CAG + Hybrid RAG + MCP)
+              // instead of using ElevenLabs' static dashboard prompt, so responses stay contextual, logical, and never repeat.
+              options.onDictationResult?.(userText);
             }
           } catch { /* ignore malformed frame */ }
         });
@@ -2111,23 +2202,23 @@
             setAvatarState('thinking', 'Validating citations & guardrails…');
           }
         } else if (frame.event === 'conversation') {
-          if (autoSpeak && voiceServiceReady && !isLiveCall) {
-            void speakText(frame.data.text, { turnButton: replyView?.speakButton });
+          if ((autoSpeak || isLiveCall) && voiceServiceReady) {
+            void speakText(frame.data.text, { turnButton: replyView?.speakButton, isLiveTurn: isLiveCall });
           } else if (!isLiveCall) {
             setAvatarState('thinking', 'Finalizing citations…');
           }
         } else if (frame.event === 'done') {
-          if (!currentAudio && autoSpeak && voiceServiceReady && !isLiveCall && !replyView?.hasConversation && replyView?.replyText) {
-            void speakText(replyView.replyText, { turnButton: replyView?.speakButton });
-          } else if (!currentAudio && !isLiveCall) {
-            setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+          if (!currentAudio && (autoSpeak || isLiveCall) && voiceServiceReady && !replyView?.hasConversation && replyView?.replyText) {
+            void speakText(replyView.replyText, { turnButton: replyView?.speakButton, isLiveTurn: isLiveCall });
+          } else if (!currentAudio) {
+            setAvatarState(isLiveCall ? 'live' : 'idle', isLiveCall ? 'Live Voice Active · Listening…' : 'ElevenLabs Voice Ready · Josh');
           }
         } else if (frame.event === 'error') {
-          if (!isLiveCall) setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+          setAvatarState(isLiveCall ? 'live' : 'idle', isLiveCall ? 'Live Voice Active · Listening…' : 'ElevenLabs Voice Ready · Josh');
         }
       },
       onTurnError() {
-        if (!isLiveCall) setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+        setAvatarState(isLiveCall ? 'live' : 'idle', isLiveCall ? 'Live Voice Active · Listening…' : 'ElevenLabs Voice Ready · Josh');
       },
       speakTurn(view, btn) {
         if (!view?.replyText) return;
@@ -2184,11 +2275,16 @@
     const send = element(document, 'button', 'chat-send', 'Send question ↗'); send.type = 'submit'; send.disabled = true;
     actions.append(mic, stop, retry, send); footer.append(hint, actions); form.append(label, input, footer);
     panel.append(heading, scope, messages, status, form); shell.append(panel, details.element); host.append(shell);
-    let ready = false, busy = false, currentReply, uiEpoch = 0, limit = 8192, currentConfig;
+    let ready = false, busy = false, currentReply, uiEpoch = 0, limit = 8192, currentConfig, pendingVoiceQuestion = '';
     const voice = createVoiceController(document, {
       fetchImpl: options.fetchImpl,
+      hasExistingTurns: () => Boolean(welcome.hidden),
       onDictationResult: transcript => {
-        if (!ready || busy) return;
+        if (!ready || !transcript) return;
+        if (busy) {
+          pendingVoiceQuestion = transcript;
+          return;
+        }
         input.value = transcript;
         form.requestSubmit();
       },
@@ -2296,7 +2392,14 @@
       } finally {
         if (ownEpoch === uiEpoch) {
           busy = false; update();
-          if (!document.hidden && !document.activeElement?.closest?.('.chat-details-content')) input.focus();
+          if (pendingVoiceQuestion && ready) {
+            const nextVoice = pendingVoiceQuestion;
+            pendingVoiceQuestion = '';
+            input.value = nextVoice;
+            void submit(false);
+          } else if (!document.hidden && !document.activeElement?.closest?.('.chat-details-content')) {
+            input.focus();
+          }
         }
       }
     }
