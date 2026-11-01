@@ -71,8 +71,8 @@ test('specific project slugs and case study deep dives route to rag_and_mcp with
   const cases: Array<[string, string]> = [
     ['Tell me about project-nexus and its architecture.', 'nexus'],
     ['Walk me through the nexus capstone project.', 'nexus'],
-    ['How did the guidewire-policy-takeover Excel VBA add-in work?', 'takeover'],
-    ['Explain the guidewire-renewal-automation eligibility framework.', 'renewals'],
+    ['How did the takeover-history-xml Excel VBA add-in work?', 'takeover'],
+    ['Explain the renewal-eligibility-automation eligibility framework.', 'renewals'],
     ['What was Josh’s role on medavie-claims-Integration and ProviderRegistry?', 'claims'],
     ['Tell me about reporting-data-continuity and the interim SQL reports.', 'continuity'],
     ['How did financial-sql-remediation fix the payment team pipeline?', 'sql'],

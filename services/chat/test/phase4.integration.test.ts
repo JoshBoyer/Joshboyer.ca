@@ -1190,7 +1190,7 @@ test('Phase 4 E2E 2: Portfolio RAG + MCP turn executes 8-stage trace, SigV4 S3/V
     const message = {
       schemaVersion: '1.0.0',
       requestId,
-      text: "Tell me about Josh's Guidewire policy takeover Excel VBA add-in and Medavie provider sync integration."
+      text: "Tell me about Josh's claims-history loading Excel VBA add-in and Medavie provider sync integration."
     };
 
     const res = await harness.send('POST', '/api/chat/messages', message);
@@ -1486,7 +1486,7 @@ test('Phase 4 E2E 5: Process restart survival, request cancellation, and session
     const message = {
       schemaVersion: '1.0.0',
       requestId,
-      text: "Tell me about Josh's Guidewire policy takeover Excel VBA add-in and Medavie provider sync integration."
+      text: "Tell me about Josh's claims-history loading Excel VBA add-in and Medavie provider sync integration."
     };
 
     const firstRes = await harness.send('POST', '/api/chat/messages', message);
@@ -1607,7 +1607,7 @@ test('Phase 4 E2E 6: Three-point boundaries (message byte length 8191/8192/8193 
     const degradedRes = await harness.send('POST', '/api/chat/messages', {
       schemaVersion: '1.0.0',
       requestId: degradedReqId,
-      text: `Tell me about Josh's Guidewire policy takeover Excel VBA add-in and Medavie provider sync. ${CANARY_HOSTILE_INPUT}`
+      text: `Tell me about Josh's claims-history loading Excel VBA add-in and Medavie provider sync. ${CANARY_HOSTILE_INPUT}`
     });
     assert.equal(degradedRes.status, 200);
     const degradedStream = await degradedRes.text();
@@ -1642,7 +1642,7 @@ test('Phase 4 E2E 7: Primary OpenAI failure after embedding dispatch retains unk
       const res = await harness.send('POST', '/api/chat/messages', {
         schemaVersion: '1.0.0',
         requestId,
-        text: "Tell me about Josh's Guidewire policy takeover Excel VBA add-in."
+        text: "Tell me about Josh's claims-history loading Excel VBA add-in."
       });
       assert.equal(res.status, 200);
       const streamText = await res.text();

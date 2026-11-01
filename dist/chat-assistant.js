@@ -2014,7 +2014,7 @@
       title: 'Step 1: Understand your question',
       time: '0.2s',
       desc: 'I classify your intent, topic focus, and whether the turn needs high-level CAG overview or deep RAG + MCP retrieval.',
-      why: 'Your question asks about specific Guidewire experience and project work, so I classified it as a portfolio career query requiring both cached career knowledge and retrieved project details.',
+      why: 'Your question asks about Josh’s insurance systems, rules, and integration experience, so I classified it as a portfolio career query requiring both cached career knowledge and retrieved project details.',
       nextIcon: 'database',
       nextTone: 'emerald',
       nextTitle: 'Career knowledge (cached)',
@@ -2038,7 +2038,7 @@
       title: 'Step 3: Find additional information',
       time: '1.4s',
       desc: 'When needed, I search for specific project details, documentation, or external references to add to your career information.',
-      why: 'Your question is about specific Guidewire experience. I first checked my prepared career knowledge, then retrieved the most relevant project details to provide a complete and accurate answer.',
+      why: 'Your question is about Josh’s insurance systems and integration experience. I first checked my prepared career knowledge, then retrieved the most relevant project details to provide a complete and accurate answer.',
       nextIcon: 'brain',
       nextTone: 'amber',
       nextTitle: 'Generate the answer',
@@ -2118,31 +2118,31 @@
       {
         icon: 'file-text',
         tone: 'emerald',
-        title: 'Guidewire Implementation Project',
+        title: 'P&C Policy Rules & Renewal Automation (IBS / Cognition+)',
         score: '0.92',
-        sub: 'josh_career_corpus.md · Projects',
-        desc: 'Detailed project experience with Guidewire PolicyCenter including integration approach, team size, and outcomes.',
-        url: null,
+        sub: 'josh_career_corpus.md · Grenville 2009–2022',
+        desc: 'Fail-first rating and underwriting rules in IBS (MCCG/Cognition+) achieving ~80% residential, 60% commercial, and 40% farm/agri renewal automation.',
+        url: 'https://joshboyer.ca/#projects/renewals',
         extra: false
       },
       {
         icon: 'file-text',
         tone: 'emerald',
-        title: 'Insurance Systems Architecture',
+        title: 'Commercial Quoting & CSIO/ACORD Broker Integration',
         score: '0.87',
-        sub: 'josh_career_corpus.md · Experience',
-        desc: 'System design and integration work with Guidewire, including data migrations and business analysis.',
-        url: null,
+        sub: 'josh_career_corpus.md · Grenville 2010–2022',
+        desc: 'Two-way CSIO/ACORD XML, SOAP/REST, AL3 flat-file, and eDocs broker integration across BMS vendors and Brovada/WTW.',
+        url: 'https://joshboyer.ca/#projects/workflows',
         extra: false
       },
       {
         icon: 'book',
         tone: 'cyan',
-        title: 'Guidewire Documentation (public)',
-        score: '0.74',
-        sub: 'guidewire.com · Reference',
-        desc: 'Product information to provide accurate context about Guidewire capabilities and terminology.',
-        url: null,
+        title: 'Claims-History Loading & Excel VBA XML Add-In',
+        score: '0.84',
+        sub: 'josh_career_corpus.md · Medavie 2022–Present',
+        desc: 'Designed and built the production Excel VBA add-in for claims-history validation, XML batching, and error reconciliation; guided backend changes with a developer.',
+        url: 'https://joshboyer.ca/#projects/takeover',
         extra: false
       },
       {
@@ -2230,7 +2230,7 @@
       document,
       'p',
       'chat-why-step-text',
-      'Your question is about specific Guidewire experience. I first checked my prepared career knowledge, then retrieved the most relevant project details to provide a complete and accurate answer.'
+      'Your question is about Josh’s insurance systems and integration experience. I first checked my prepared career knowledge, then retrieved the most relevant project details to provide a complete and accurate answer.'
     );
     whyCopy.append(whyTitle, whyText);
     whyCard.append(whyIcon, whyCopy);
@@ -2385,7 +2385,7 @@
     timelineList.setAttribute('data-trace-timeline-list', '');
     const timelineDefs = [
       { id: 'received', step: 1, clock: '10:24:01', tone: 'blue', icon: 'message', title: 'Message received', sub: 'User question' },
-      { id: 'intent', step: 1, clock: '10:24:01', tone: 'emerald', icon: 'compass', title: 'Intent classification', sub: 'Career query → Guidewire' },
+      { id: 'intent', step: 1, clock: '10:24:01', tone: 'emerald', icon: 'compass', title: 'Intent classification', sub: 'Career query → Insurance systems' },
       { id: 'cag', step: 2, clock: '10:24:02', tone: 'cyan', icon: 'database', title: 'CAG search', sub: '7 sections · 0.8s' },
       { id: 'rag', step: 3, clock: '10:24:03', tone: 'purple', icon: 'search-doc', title: 'RAG retrieval', sub: '3 sources · 1.4s' },
       { id: 'context', step: 4, clock: '10:24:04', tone: 'blue', icon: 'layers', title: 'Context assembly', sub: '12.3k tokens · 0.8s' },
@@ -2578,7 +2578,7 @@
       // Update vertical timeline labels from real turn telemetry
       const focusTopic = view.questionText
         ? (view.questionText.length > 22 ? `${view.questionText.slice(0, 22)}…` : view.questionText)
-        : 'Guidewire';
+        : 'Insurance systems';
       if (timelineRowRefs[1]) timelineRowRefs[1].subEl.textContent = `Query → ${focusTopic}`;
       if (timelineRowRefs[2]) timelineRowRefs[2].subEl.textContent = `${claimCount} sections · 0.8s`;
       if (timelineRowRefs[3]) timelineRowRefs[3].subEl.textContent = isCagOnly ? 'Skipped (CAG direct)' : `${matchedCount} sources · 1.4s`;
@@ -2959,7 +2959,7 @@
       wrap.append(sr);
       const list = element(document, 'div', 'chat-mock-trace-list');
       const previewRows = [
-        ['emerald', 'message', 'Intent classification', 'Career query → Guidewire experience', '0.3s'],
+        ['emerald', 'message', 'Intent classification', 'Career query → Insurance systems & rules', '0.3s'],
         ['cyan', 'database', 'CAG — Career corpus search', 'Semantic search across structured career data', '2.1s'],
         ['teal', 'search-doc', 'Hybrid RAG retrieval', 'Personal docs + public sources (if needed)', '1.4s'],
         ['blue', 'layers', 'Context compilation', 'Rank, dedupe, and assemble final context', '0.8s'],
@@ -2989,8 +2989,8 @@
       const intro = element(document, 'p', 'chat-evidence-intro', 'Selected public portfolio evidence (6 verified sources · CAG + Hybrid RAG):');
       const blocks = element(document, 'div', 'chat-evidence-blocks');
       const defaultClaims = [
-        ['2009–2022 · Grenville Mutual', 'Guidewire Policy, Billing & Claims (IBS) Integration', 'Supported Policy, Billing, and Claims modules across P&C operations, including underwriting workbench, endorsements, and renewal automation (80% residential, 60% commercial, 40% farm/agri).'],
-        ['2016–2022 · Grenville Mutual', 'Bulk Group Takeover & Excel VBA Validation Add-In', 'Researched and documented the takeover solution, guided receiving-system changes with developers, and personally designed and built the production Excel VBA add-in for validation, XML batches, and error reconciliation.'],
+        ['2009–2022 · Grenville Mutual', 'P&C Policy Rules, Broker Integration & Renewal Automation (IBS / Cognition+)', 'Designed and implemented fail-first rating and underwriting rules in IBS (MCCG/Cognition+), mapped CSIO/ACORD/AL3/eDocs broker payloads, and automated eligible renewals (~80% residential, 60% commercial, 40% farm/agri, renewal-only).'],
+        ['2022–Present · Medavie Blue Cross', 'Claims-History Loading & Production Excel VBA Add-In', 'Researched and documented the takeover solution, guided receiving-system changes with developers, and personally designed and built the production Excel VBA add-in for validation, XML batches, and error reconciliation.'],
         ['2022–Present · Medavie Blue Cross', 'Provider Registry & Claims REST/Event Integrations', 'Conducted solution review, mapping, and synchronization requirements for provider onboarding and adjudication, followed by support of implemented integrations.']
       ];
       for (const [period, cTitle, cText] of defaultClaims) {
@@ -3012,14 +3012,14 @@
       const card = renderToolsView(document, {
         toolCalls: [
           {
-            toolCallId: 'tool-guidewire-1',
+            toolCallId: 'tool-insurance-1',
             name: 'search_public_evidence',
             toolName: 'search_public_evidence',
             mcpMethod: 'tools/call',
             state: 'completed',
             status: 'completed',
             durationMs: 14,
-            summary: 'Matched 6 canonical Guidewire, IBS, MCCG/AL3, and Bulk Group Takeover evidence records.'
+            summary: 'Matched 6 canonical Grenville IBS/Cognition+, CSIO/ACORD, and Medavie Claims/Takeover evidence records.'
           }
         ]
       });
@@ -3039,7 +3039,7 @@
       }
       if (promptPreview) {
         promptPreview.textContent = view?.questionText
-          || (isClearedState ? 'No active request · Ask a question to inspect live execution.' : 'Can you tell me more about my experience with Guidewire and the type of work I’ve done?');
+          || (isClearedState ? 'No active request · Ask a question to inspect live execution.' : 'Can you tell me about Josh’s insurance systems, integration, and automation experience?');
       }
       if (metaDuration) {
         if (view && Array.isArray(view.tracePoints) && view.tracePoints.length > 0) {
@@ -3461,8 +3461,11 @@
       if (/\b(?:sql|reporting|financial|payment|schema|continuity)\b/i.test(q)) {
         return "On the reporting side at Medavie, Josh designed the continuity architecture when core schemas changed and wrote the corrected financial SQL logic that the payment team adopted right into their pipeline. Have you been dealing with similar data transitions?";
       }
-      if (/\b(?:grenville|guidewire|cognition|ibs|renewal|mutual|underwriting|broker)\b/i.test(q)) {
-        return "Josh spent thirteen years at Grenville Mutual—growing from infrastructure admin into business and systems analysis during their core modernization. He helped drive renewal automation to around eighty percent in residential, sixty percent in commercial, and forty percent in farm! What kind of core systems does your team run?";
+      if (/\b(?:guidewire|policycenter|billingcenter|claimscenter|duck creek|sapiens|fineos)\b/i.test(q)) {
+        return "To be upfront, direct Guidewire platform ownership isn't part of Josh's established experience—at Grenville Mutual his core P&C platform was IBS from MCCG and Cognition+, where he designed rating, underwriting, and renewal rules alongside two-way CSIO/ACORD broker integrations. Does your team use Guidewire, or are you looking for transferable P&C rules and integration experience?";
+      }
+      if (/\b(?:grenville|cognition|ibs|renewal|mutual|underwriting|broker)\b/i.test(q)) {
+        return "Josh spent thirteen years at Grenville Mutual—growing from infrastructure admin into business rules and systems analysis on IBS (MCCG / Cognition+). He designed fail-first renewal rules achieving around eighty percent residential, sixty percent commercial, and forty percent farm renewal automation! What kind of core systems does your team run?";
       }
       if (/\b(?:nexus|rag|mcp|vector|ai|capstone|agent|how does this work)\b/i.test(q)) {
         return "He's really passionate about practical AI engineering—both with NEXUS, his multi-agent capstone, and this live assistant you're talking to right now. It combines hybrid S3 vector search and live MCP tools with strict citation guardrails. Curious how the voice or retrieval pipeline works under the hood?";
@@ -4669,8 +4672,8 @@
 
     const quickPillsBar = element(document, 'div', 'chat-quick-pills');
     const quickPillPrompts = [
-      ['My insurance experience', 'Can you tell me about my experience with Guidewire and the type of work I’ve done?'],
-      ['Key projects', 'What core insurance projects and bulk group takeover solutions has Josh delivered?'],
+      ['My insurance experience', 'Can you tell me about Josh’s insurance systems, integration, and automation experience?'],
+      ['Key projects', 'What core insurance projects and claims-history loading solutions has Josh delivered?'],
       ['Technical skills', 'What are Josh’s technical skills across SQL, integrations, cloud architecture, and AI?'],
       ['SQL & reporting', 'How did Josh handle reporting continuity and financial-report SQL across core insurance system transitions?'],
       ['AI & automation', 'How has Josh applied automation (80% residential, 60% commercial, 40% farm renewal automation) and AI architecture?'],
@@ -4699,7 +4702,7 @@
     const demoUserBubble = element(document, 'div', 'chat-welcome-user-bubble');
     const demoUserTop = element(document, 'div', 'chat-welcome-user-top');
     demoUserTop.append(
-      element(document, 'p', 'chat-welcome-user-text', 'Can you tell me about my experience with Guidewire and the type of work I’ve done?'),
+      element(document, 'p', 'chat-welcome-user-text', 'Can you tell me about Josh’s insurance systems, integration, and automation experience?'),
       element(document, 'span', 'chat-welcome-user-time', '10:24 AM')
     );
     demoUserBubble.append(demoUserTop);
@@ -4710,7 +4713,7 @@
     const demoAssistantAvatar = element(document, 'span', 'chat-welcome-bot-avatar');
     const demoAssistantCard = element(document, 'div', 'chat-welcome-assistant-card');
     const demoCardActions = element(document, 'div', 'chat-welcome-card-actions');
-    const demoLeadParagraphText = 'You have extensive experience with Guidewire, primarily working with Policy, Billing, and Claims administration (IBS) across P&C and Health and Dental insurance. You’ve been involved in system conversions, integrations, renewals, and endorsements, with a strong focus on business analysis, requirements, testing, and training.';
+    const demoLeadParagraphText = 'Across Grenville Mutual Insurance (2009–2022) and Medavie Blue Cross (2022–present), Josh has connected business requirements with P&C rating and underwriting rules in IBS (MCCG / Cognition+), two-way CSIO/ACORD broker integrations, production C#/.NET and Excel VBA tooling, and hands-on SQL reporting continuity.';
     for (const [actIcon, actLabel, actKey] of [
       ['copy', 'Copy response', 'copy'],
       ['thumbs-up', 'Mark helpful', 'up'],
@@ -4760,7 +4763,7 @@
         desc: 'Identify what you’re asking and what kind of information is needed.',
         results: [
           ['blue', 'Topic: Experience'],
-          ['blue', 'Focus: Guidewire'],
+          ['blue', 'Focus: Insurance systems'],
           ['blue', 'Type: Career question']
         ]
       },
@@ -4791,7 +4794,7 @@
         results: [
           ['purple', '3 sources found'],
           ['amber', 'Project documents'],
-          ['purple', 'Guidewire context']
+          ['purple', 'IBS & Medavie context']
         ]
       },
       {
@@ -4898,16 +4901,15 @@
       ),
       demoCardActions
     );
-    const demoSubLead = element(document, 'p', 'chat-welcome-sublead', 'Here are some key highlights from your experience:');
+    const demoSubLead = element(document, 'p', 'chat-welcome-sublead', 'Here are some key highlights from Josh’s verified experience:');
     const demoHighlightsList = element(document, 'div', 'chat-welcome-highlights-list');
     const demoHighlights = [
-      ['IBS (Policy, Billing, Claims):', ' Worked across all three modules, supporting underwriting workbench, renewals, and endorsements.'],
-      ['System conversions:', ' Led and supported large-scale data takeovers, including loading 1,000,000 claim lines and $100,000,000 in payments.'],
-      ['Business analysis:', ' Developed functional and non-functional requirements, created templates and RFI documents, and facilitated approvals.'],
-      ['Integrations:', ' Worked with MCCG and AL3 (flat file), supporting provider onboarding and adjudication.'],
-      ['Renewals:', ' Supported processes with 80% renewals, with a mix of 60% commercial and 40% farm.'],
-      ['Team leadership:', ' Worked across 4–5 teams (10–20 people each), coached BA peers on SQL, and delivered training sessions.'],
-      ['Presentations:', ' Delivered sessions on takeover history, CBQ changes, and AI fundamentals.']
+      ['P&C rules & IBS (MCCG / Cognition+):', ' Designed and implemented residential, farm/agri, and commercial rating and underwriting rules and auto underwriting validation.'],
+      ['Renewal eligibility automation:', ' Built fail-first renewal rules achieving ~80% residential, 60% commercial, and 40% farm/agri renewal automation (user-reported, renewal-only, with underwriter referral for exceptions).'],
+      ['Broker & standards integrations:', ' Mapped two-way CSIO/ACORD XML, SOAP, REST, AL3 flat-file, and eDocs workflows across BMS vendors and Brovada/WTW commercial quoting.'],
+      ['Production C#/.NET & support tooling:', ' Built an authenticated C#/.NET document upload portal into policy records and an internal log-search diagnostic tool.'],
+      ['Takeover-history Excel VBA add-in:', ' Researched Medavie claims-history loading, guided backend schema changes with a developer, and personally built the production Excel VBA add-in for validation, XML batching, and error reconciliation.'],
+      ['Provider sync & SQL continuity:', ' Reviewed and supported live scheduled event-table + REST provider integrations, completed approved Cognos ETL continuity design with interim SQL, and delivered reconciled financial SQL adopted by the payment team.']
     ];
     for (const [bLabel, bBody] of demoHighlights) {
       const hRow = element(document, 'div', 'chat-welcome-highlight-item');
@@ -4930,9 +4932,9 @@
 
     const followupChipsRow = element(document, 'div', 'chat-welcome-followup-chips');
     const followupChipPrompts = [
-      ['Guidewire experience', 'What specific Guidewire PolicyCenter, BillingCenter, and ClaimCenter integrations has Josh led?'],
-      ['Key achievements', 'What are Josh’s biggest measurable achievements across renewal automation and bulk group takeover?'],
-      ['Team and leadership', 'How has Josh led cross-functional teams, coached BAs on SQL, and facilitated stakeholder approvals?'],
+      ['P&C rules & renewals', 'How did Josh’s fail-first underwriting rules and renewal eligibility automation work at Grenville?'],
+      ['Key achievements', 'What are Josh’s key delivered projects across renewal automation and claims-history loading?'],
+      ['Provider & broker integrations', 'How did Josh handle Medavie ProviderRegistry synchronization and Grenville CSIO/ACORD broker integrations?'],
       ['SQL and reporting', 'Tell me about Josh’s reporting continuity design and financial reconciliation SQL work.']
     ];
     for (const [chipLabel, chipPrompt] of followupChipPrompts) {
@@ -5237,15 +5239,15 @@
       {
         tier: 'cag',
         badge: 'Career knowledge (CAG)',
-        title: 'Guidewire Experience Overview (IBS & Cognition+)',
-        snippet: '2009–2022 Grenville Mutual: Policy, Billing, and Claims administration, renewal automation (~80% residential, 60% commercial, 40% farm/agri).',
+        title: 'Renewal Eligibility & P&C Rules (IBS / Cognition+)',
+        snippet: '2009–2022 Grenville Mutual: Policy, Billing, and Claims rules, renewal automation (~80% residential, 60% commercial, 40% farm/agri, renewal-only).',
         relevance: 95,
         href: 'https://joshboyer.ca/#projects/renewals'
       },
       {
         tier: 'rag',
         badge: 'Retrieved source (RAG)',
-        title: 'PolicyCenter & Commercial Quoting Workflows',
+        title: 'Commercial Quoting & CSIO/ACORD Broker Workflows',
         snippet: 'Implementation approach, CSIO/ACORD/AL3/eDocs standards mapping, and underwriting rule validation.',
         relevance: 92,
         href: 'https://joshboyer.ca/#projects/workflows'
@@ -5550,7 +5552,7 @@
     const mobileProcessList = element(document, 'ol', 'chat-mobile-process-list');
     const mobileProcessStepRefs = Object.create(null);
     const mobileStepItems = [
-      [1, '1. Intent classification', 'Career query → Guidewire experience', '0.2s', 'emerald'],
+      [1, '1. Intent classification', 'Career query → Insurance systems & rules', '0.2s', 'emerald'],
       [2, '2. CAG – Career knowledge', 'Found 7 relevant sections (~7,100 tokens)', '0.8s', 'cyan'],
       [3, '3. RAG – Retrieved sources', 'Searching project documents & case studies', '1.4s', 'blue'],
       [4, '4. Context assembly', 'Preparing 12,300 tokens (58% CAG + 26% RAG)', '0.8s', 'purple'],
@@ -5577,7 +5579,7 @@
     const mobileCtxClone = element(document, 'div', 'chat-mobile-ctx-summary');
     mobileCtxClone.append(
       element(document, 'h4', 'chat-mobile-sec-title', 'Context stack (12,300 tokens)'),
-      element(document, 'p', 'chat-mobile-sec-item', 'Career knowledge (CAG): 7,100 tokens (58%) — Guidewire, Grenville, Medavie, LinkedIn, ws42.ca'),
+      element(document, 'p', 'chat-mobile-sec-item', 'Career knowledge (CAG): 7,100 tokens (58%) — Grenville IBS/Cognition+, Medavie, LinkedIn, ws42.ca'),
       element(document, 'p', 'chat-mobile-sec-item', 'Retrieved sources (RAG): 3,200 tokens (26%) — 3 project case-study documents'),
       element(document, 'p', 'chat-mobile-sec-item', 'Conversation & instructions: 1,400 tokens (11%) — Your question and session history'),
       element(document, 'p', 'chat-mobile-sec-item', 'System prompt: 600 tokens (5%) — Citation contract and safety guardrails')
@@ -5787,7 +5789,7 @@
       if (pedestalStepRefs[1]?.resultTextEls) {
         const focusShort = view.questionText
           ? (view.questionText.length > 16 ? `${view.questionText.slice(0, 16)}…` : view.questionText)
-          : 'Guidewire';
+          : 'Insurance systems';
         pedestalStepRefs[1].resultTextEls[0].textContent = `Topic: ${view.isLiveVoice ? 'Live Voice' : 'Experience'}`;
         pedestalStepRefs[1].resultTextEls[1].textContent = `Focus: ${focusShort}`;
         pedestalStepRefs[1].resultTextEls[2].textContent = `Type: ${cd.routingMode === 'general' ? 'General inquiry' : 'Career question'}`;
@@ -5861,12 +5863,12 @@
       'NEXUS Capstone': 'What is NEXUS and how did Josh architect it as his independent AI capstone?',
       'Experience': 'Give me an overview of Josh Boyer’s career journey from Dell (2006) through Grenville Mutual (2009–2022) and Medavie Blue Cross.',
       'Skills': 'What are Josh’s core technical and business architecture skills across SQL, integrations, and AI?',
-      'Insurance Systems': 'Can you tell me more about Josh’s experience with Guidewire, IBS, Cognition+, and insurance integrations?',
-      'Projects': 'What major projects has Josh built, including the Bulk Group Takeover VBA add-in, NEXUS capstone, and Workshop42 (ws42.ca)?',
+      'Insurance Systems': 'Can you tell me more about Josh’s experience with IBS (MCCG / Cognition+), CSIO/ACORD broker integrations, and Medavie claims systems?',
+      'Projects': 'What major projects has Josh built, including the Claims-History Excel VBA add-in, NEXUS capstone, and Workshop42 (ws42.ca)?',
       'Certifications': 'What formal training, industry background, and technical qualifications does Josh bring?',
       'Contact': 'How can I get in touch with Josh Boyer via LinkedIn (linkedin.com/in/josh-boyer-1b770618) or joshboyer.ca regarding Business Architecture or Technical Solutions roles?',
       'NEXUS': 'Tell me about Josh’s NEXUS independent capstone and how it uses structured AI workflows.',
-      'Insurance systems': 'What is Josh’s experience with Guidewire, Cognition+, IBS, and enterprise insurance integrations?',
+      'Insurance systems': 'What is Josh’s experience with IBS (MCCG / Cognition+), CSIO/ACORD broker workflows, and enterprise insurance integrations?',
       'AI & automation': 'How has Josh applied automation (80% residential, 60% commercial, 40% farm renewal automation) and AI architecture?',
       'Projects & portfolio': 'How is this portfolio assistant architected on AWS us-east-2 with CAG, S3 Vectors, MCP tools, and ElevenLabs?',
       'Career opportunities': 'What types of Business Architecture, Systems Analysis, or Technical Solutions roles align best with Josh’s background?'

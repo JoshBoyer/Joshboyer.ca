@@ -97,8 +97,8 @@ const STOPWORDS = new Set([
 
 const PROJECT_ALIASES: ReadonlyArray<{ projectId: string; pattern: RegExp; weight: number }> = Object.freeze([
   { projectId: 'nexus', pattern: /\b(?:project-nexus|nexus|multi-agent|capstone|lowkey|workshop42)\b/i, weight: 85 },
-  { projectId: 'takeover', pattern: /\b(?:guidewire-policy-takeover|policy-takeover|takeover|claims-history|vba|excel|add-in)\b/i, weight: 85 },
-  { projectId: 'renewals', pattern: /\b(?:guidewire-renewal-automation|renewal-automation|renewals?|renewal\s+eligibility)\b/i, weight: 85 },
+  { projectId: 'takeover', pattern: /\b(?:takeover-history-xml|policy-takeover|takeover|claims-history|vba|excel|add-in)\b/i, weight: 85 },
+  { projectId: 'renewals', pattern: /\b(?:renewal-eligibility-automation|renewal-automation|renewals?|renewal\s+eligibility)\b/i, weight: 85 },
   { projectId: 'claims', pattern: /\b(?:medavie-claims-integration|claims-integration|providerregistry|adjudication|provider\s+data|provider\s+sync(?:hronization)?|kafka|message[\s-]+broker)\b/i, weight: 80 },
   { projectId: 'continuity', pattern: /\b(?:reporting-data-continuity|data-continuity|continuity|compatibility\s+extract|interim\s+sql)\b/i, weight: 85 },
   { projectId: 'sql', pattern: /\b(?:financial-sql-remediation|sql-remediation|financial\s+reconciliation|claims\s+sql|oracle\s+sql|payment\s+team)\b/i, weight: 85 },

@@ -366,7 +366,7 @@ function buildPhase4Stream({ requestId, generation, messageText, mode }) {
 
     pushFrame('conversation', {
       kind: 'portfolio',
-      text: 'Josh personally designed and built the production Excel VBA add-in for Guidewire policy takeover validation, XML batch preparation and error reconciliation, and defined provider mappings and scheduled synchronization requirements for Medavie claims adjudication.',
+      text: 'Josh personally designed and built the production Excel VBA add-in for claims-history validation, XML batch preparation and error reconciliation, and defined provider mappings and scheduled synchronization requirements for Medavie claims adjudication.',
       suggestions: ['How does the Excel VBA add-in handle error reconciliation?']
     });
     for (const block of rendered.blocks) {
@@ -875,7 +875,7 @@ test('Phase 4 Browser Flow 1 (Desktop 1440x900): operator login, portrait loadin
     );
 
     // 4. Turn 1: Submit Portfolio RAG + MCP question
-    const turn1Question = "Tell me about Josh's Guidewire policy takeover Excel VBA add-in and Medavie provider sync.";
+    const turn1Question = "Tell me about Josh's claims-history loading Excel VBA add-in and Medavie provider sync.";
     await page.fill('#portfolio-chat-question', turn1Question);
     await page.click('.chat-compose button.chat-send[type="submit"]');
 

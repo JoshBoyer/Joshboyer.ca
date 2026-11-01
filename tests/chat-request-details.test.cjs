@@ -338,9 +338,9 @@ function buildPhase4Turn(overrides = {}) {
     citations: [
       {
         id: 'claim-takeover-vba',
-        title: 'Guidewire Takeover & Excel VBA Validation Add-In',
+        title: 'Claims-History Loading & Excel VBA Validation Add-In',
         tier: 1,
-        sourcePath: '2016–2022 · Grenville Mutual',
+        sourcePath: '2022–Present · Medavie Blue Cross',
         excerpt: 'Josh researched and documented the solution, guided receiving-system changes with developers, and personally designed and built the production Excel VBA add-in.',
         url: 'https://joshboyer.ca/#projects/takeover'
       },
@@ -462,9 +462,9 @@ test('RL-04, RL-05, RL-06, RL-07, RL-08: renders all 4 WAI-ARIA tabs (Trace, Evi
   assert.match(panels[1].textContent, /hybrid/);
   assert.match(panels[1].textContent, /idx-v1-20261031/);
   assert.match(panels[1].textContent, /claim-takeover-vba/);
-  assert.match(panels[1].textContent, /Guidewire Takeover & Excel VBA Validation Add-In/);
+  assert.match(panels[1].textContent, /Claims-History Loading & Excel VBA Validation Add-In/);
   assert.match(panels[1].textContent, /Tier 1/);
-  assert.match(panels[1].textContent, /2016–2022 · Grenville Mutual/);
+  assert.match(panels[1].textContent, /2022–Present · Medavie Blue Cross/);
   const links = panels[1].querySelectorAll('a');
   assert.equal(links.length, 2);
   assert.equal(links[0].href, 'https://joshboyer.ca/#projects/takeover');
@@ -1825,6 +1825,79 @@ test('RL-LAYOUT-01, RL-ICON-01 & RL-IMG-01: Center column is strictly for chat w
   assert.match(previewHtml, /\/assets\/chat\/elevenlabs-alpine-footer\.webp/);
   assert.match(previewHtml, /data-elevenlabs-asset="voice-orb"/);
 });
+
+test('RL-CORPUS-01 & RL-CORPUS-02: Canonical corpus alignment, zero Guidewire experience claims, and exclusion of invalid/private career history', async () => {
+  const doc = createSimDocument(1440);
+  const chat = require('../dist/chat-assistant.js');
+  const evidencePayload = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'dist', 'chat-evidence.json'), 'utf8'));
+
+  const host = doc.createElement('div');
+  doc.body.append(host);
+
+  const mounted = chat.mount(host, {
+    fetchImpl: async url => {
+      if (url === '/api/chat/config') {
+        return new Response(JSON.stringify({
+          schemaVersion: '1.0.0',
+          available: true,
+          capabilities: { chat: true, cag: true, rag: true, mcp: true, voice: true },
+          limits: { maxMessageBytes: 8192, maxTurns: 8, maxToolsPerTurn: 4, turnDeadlineMs: 60000 }
+        }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
+      if (url === '/chat-evidence.json') {
+        return new Response(JSON.stringify(evidencePayload), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
+      return new Response('{}', { status: 404, headers: { 'Content-Type': 'application/json' } });
+    }
+  });
+
+  await new Promise(resolve => setTimeout(resolve, 25));
+  const shell = mounted.element;
+  const fullText = shell.textContent;
+
+  // 1. Guidewire, PolicyCenter, BillingCenter, ClaimCenter must NOT appear anywhere in the rendered UI showcase, pedestals, sources, or default evidence
+  assert.equal(
+    /\b(?:Guidewire|PolicyCenter|BillingCenter|Claims?Center|guidewire\.com)\b/i.test(fullText),
+    false,
+    'Rendered chat interface must not claim Guidewire, PolicyCenter, BillingCenter, or ClaimCenter experience'
+  );
+
+  // 2. Private/unverified scale figures and mockup-contaminated history must NOT appear
+  assert.equal(
+    /1,000,000|\$100,000,000|4[–-]5 teams|10[–-]20 people|CBQ changes|underwriting workbench/i.test(fullText),
+    false,
+    'Rendered chat interface must not contain private scale figures (1,000,000 / $100,000,000), unverified team counts (4–5 teams / 10–20 people), CBQ changes, or fake underwriting workbench'
+  );
+
+  // 3. Canonical v12 Grenville and Medavie facts must be present and accurately attributed
+  assert.match(fullText, /Grenville Mutual/i, 'Must include canonical Grenville Mutual experience');
+  assert.match(fullText, /Cognition\+/i, 'Must include canonical IBS / Cognition+ reference');
+  assert.match(fullText, /CSIO\/ACORD/i, 'Must include canonical CSIO/ACORD broker integration');
+  assert.match(fullText, /80% residential/i, 'Must include canonical ~80% residential renewal automation');
+  assert.match(fullText, /60% commercial/i, 'Must include canonical 60% commercial renewal automation');
+  assert.match(fullText, /40% farm/i, 'Must include canonical 40% farm/agri renewal automation');
+  assert.match(fullText, /Excel VBA add-in/i, 'Must include canonical production Excel VBA add-in');
+
+  // 4. Default evidence preview must attribute Takeover-History & Excel VBA Add-In to Medavie (2022–Present), never Grenville (2016–2022)
+  const evidencePanel = mounted.details.element.querySelector('#chat-evidence-panel');
+  assert.ok(evidencePanel, 'Evidence panel must exist');
+  assert.equal(
+    /2016[–-]2022\s*·\s*Grenville Mutual/i.test(evidencePanel.textContent),
+    false,
+    'Takeover/VBA add-in must not be misattributed to 2016–2022 Grenville Mutual'
+  );
+  assert.match(evidencePanel.textContent, /2022[–-]Present\s*·\s*Medavie Blue Cross/i);
+
+  // 5. Verify CAG_HIGH_LEVEL_CORPUS in services/chat/src/cag.ts contains zero positive Guidewire claims
+  const cagSource = fs.readFileSync(path.join(__dirname, '..', 'services', 'chat', 'src', 'cag.ts'), 'utf8');
+  const highLevelCorpusSection = cagSource.slice(cagSource.indexOf('export const CAG_HIGH_LEVEL_CORPUS'), cagSource.indexOf('export const CAG_BOUNDARIES'));
+  assert.equal(
+    /\bGuidewire\b/i.test(highLevelCorpusSection),
+    false,
+    'CAG_HIGH_LEVEL_CORPUS must not claim Guidewire experience'
+  );
+});
+
 
 
 

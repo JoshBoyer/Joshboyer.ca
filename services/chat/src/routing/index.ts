@@ -64,8 +64,8 @@ const PROJECT_MATCHERS: ReadonlyArray<{
 }> = Object.freeze([
   { projectId: 'nexus', slug: 'project-nexus', pattern: /\b(?:project-nexus|nexus)\b/i },
   { projectId: 'nexus', slug: 'lowkey', pattern: /\b(?:lowkey|workshop\s*42|ws42(?:\.ca)?|makerworld|apex|voyager)\b/i, requiresSecondarySearch: true },
-  { projectId: 'takeover', slug: 'guidewire-policy-takeover', pattern: /\b(?:guidewire-policy-takeover|policy-takeover|takeover|claims-history\s+loading|excel\s+vba\s+add-in)\b/i },
-  { projectId: 'renewals', slug: 'guidewire-renewal-automation', pattern: /\b(?:guidewire-renewal-automation|renewal-automation|renewals|renewal\s+eligibility)\b/i },
+  { projectId: 'takeover', slug: 'takeover-history-xml', pattern: /\b(?:takeover-history-xml|policy-takeover|takeover|claims-history\s+loading|excel\s+vba\s+add-in)\b/i },
+  { projectId: 'renewals', slug: 'renewal-eligibility-automation', pattern: /\b(?:renewal-eligibility-automation|renewal-automation|renewals|renewal\s+eligibility)\b/i },
   { projectId: 'claims', slug: 'medavie-claims-integration', pattern: /\b(?:medavie-claims-integration|claims-integration|providerregistry|claims\s+adjudication|provider\s+sync(?:hronization)?)\b/i },
   { projectId: 'continuity', slug: 'reporting-data-continuity', pattern: /\b(?:reporting-data-continuity|data-continuity|continuity|compatibility\s+extract|interim\s+sql\s+reports?)\b/i },
   { projectId: 'sql', slug: 'financial-sql-remediation', pattern: /\b(?:financial-sql-remediation|sql-remediation|financial\s+reconciliation|claims\s+sql)\b/i },
