@@ -1366,3 +1366,42 @@ test('Horizontal Context Window & CAG Cache Visual Map: renders 6 proportional s
   assert.match(cagOnlyMap.textContent, /RAG skipped · CAG Direct/);
 });
 
+test('Mockup v3 repo assets, data-active-tab tracking, and Sources used (6) interactive sub-tab filtering', () => {
+  const previewHtml = fs.readFileSync(path.join(__dirname, '..', 'services', 'edge', 'chat-preview.html'), 'utf8');
+  assert.match(previewHtml, /\/assets\/jb-mark\.svg/, 'chat-preview.html must use repo brand mark /assets/jb-mark.svg');
+  assert.match(previewHtml, /\/assets\/personal\/josh-portrait-main\.jpg/, 'chat-preview.html must use repo studio portrait /assets/personal/josh-portrait-main.jpg');
+  assert.match(previewHtml, /\/assets\/skills-mountain-horizon-bg\.jpg/, 'chat-preview.html must use repo scenic photo /assets/skills-mountain-horizon-bg.jpg');
+
+  const doc = createSimDocument(1440);
+  const chat = require('../dist/chat-assistant.js');
+  const details = chat.createDetailsPanel(doc);
+  assert.equal(details.element.getAttribute('data-active-tab'), 'trace');
+
+  // Switch tabs via #chat-evidence-tab, #chat-tools-tab, #chat-context-tab, #chat-trace-tab
+  const evidenceTab = details.element.querySelector('#chat-evidence-tab');
+  const toolsTab = details.element.querySelector('#chat-tools-tab');
+  const contextTab = details.element.querySelector('#chat-context-tab');
+  const traceTab = details.element.querySelector('#chat-trace-tab');
+  evidenceTab.click();
+  assert.equal(details.element.getAttribute('data-active-tab'), 'evidence');
+  toolsTab.click();
+  assert.equal(details.element.getAttribute('data-active-tab'), 'tools');
+  contextTab.click();
+  assert.equal(details.element.getAttribute('data-active-tab'), 'context');
+  traceTab.click();
+  assert.equal(details.element.getAttribute('data-active-tab'), 'trace');
+
+  // Interactive Sources used (6) / Career corpus (4) / Web (2) sub-tabs filter rows
+  const srcTabs = details.element.querySelectorAll('.chat-src-tab');
+  assert.equal(srcTabs.length, 3);
+  const allRows = details.element.querySelectorAll('.chat-source-used-row');
+  assert.equal(allRows.length, 6);
+  srcTabs[1].click(); // Career corpus (4)
+  assert.equal(allRows.filter(r => !r.hidden).length, 4);
+  srcTabs[2].click(); // Web (2)
+  assert.equal(allRows.filter(r => !r.hidden).length, 2);
+  srcTabs[0].click(); // Sources used (6)
+  assert.equal(allRows.filter(r => !r.hidden).length, 6);
+});
+
+

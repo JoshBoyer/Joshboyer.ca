@@ -35,17 +35,34 @@
       </form>
       <aside class="chat-preview-rail chat-identity-rail" aria-label="Josh Boyer portfolio identity and guardrails">
         <section class="chat-identity-card" aria-label="Portfolio identity">
+          <div class="chat-sidebar-brand">
+            <img class="chat-sidebar-jb-img" src="/assets/jb-mark.svg" alt="JB" width="42" height="36" loading="eager" decoding="async">
+            <div class="chat-sidebar-brand-copy">
+              <span class="chat-sidebar-brand-name">Josh Boyer</span>
+              <span class="chat-sidebar-brand-role">AI Career Assistant</span>
+              <span class="chat-sidebar-online"><span class="chat-online-dot" aria-hidden="true"></span>Online</span>
+            </div>
+            <span class="chat-sidebar-bot-badge" aria-hidden="true">✦</span>
+          </div>
           <div class="chat-identity-profile">
             <div class="chat-avatar-stage" data-avatar-stage data-avatar-mode="idle">
               <picture class="chat-avatar-ring" data-avatar-ring>
-                <source srcset="/assets/optimized-extra/personal/josh-portrait-vest-640.webp" type="image/webp">
-                <img class="chat-identity-portrait" src="/assets/personal/josh-portrait-smiling.jpg" alt="Josh Boyer" width="96" height="96" loading="eager" decoding="async">
+                <img class="chat-identity-portrait" src="/assets/personal/josh-portrait-main.jpg" alt="Josh Boyer" width="112" height="112" loading="eager" decoding="async">
               </picture>
-              <video class="chat-avatar-video" data-avatar-video src="/assets/personal/josh-avatar-idle.mp4" poster="/assets/personal/josh-portrait-smiling.jpg" autoplay loop muted playsinline preload="auto" aria-hidden="true"></video>
+              <video class="chat-avatar-video" data-avatar-video src="/assets/personal/josh-avatar-idle.mp4" poster="/assets/personal/josh-portrait-main.jpg" autoplay loop muted playsinline preload="auto" aria-hidden="true"></video>
               <span class="chat-avatar-wave-ring" aria-hidden="true"></span>
             </div>
             <div class="chat-identity-meta">
-              <p class="chat-identity-caption"><strong>Josh Boyer</strong><span>Business Architecture, Insurance Systems &amp; AI</span></p>
+              <p class="chat-identity-caption">
+                <strong>Josh Boyer</strong>
+                <span>Business Architecture</span>
+                <span>Insurance Systems &amp; AI</span>
+              </p>
+              <p class="chat-identity-motto" aria-label="Architecture philosophy">
+                <span>GROUNDED IN THE METAL</span>
+                <span>SHAPED BY THE BUSINESS</span>
+                <span>BUILDING IN THE CLOUD.</span>
+              </p>
               <p class="chat-identity-pillars" aria-label="Core pillars">
                 <span class="chat-pillar-tag">People</span>
                 <span class="chat-pillar-tag">Business</span>
@@ -58,8 +75,46 @@
               </div>
             </div>
           </div>
-          <div class="chat-voice-controls" data-voice-controls aria-label="ElevenLabs Live Voice controls">
-            <button type="button" class="chat-voice-btn chat-voice-btn--live" data-voice-live-btn aria-pressed="false">📞 Live Voice</button>
+          <nav class="chat-sidebar-nav" aria-label="Portfolio sections">
+            <button type="button" class="chat-nav-item is-active" data-sidebar-nav="Chat">
+              <span class="chat-nav-icon" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+              <span class="chat-nav-label">Chat</span>
+            </button>
+            <button type="button" class="chat-nav-item" data-sidebar-nav="Experience">
+              <span class="chat-nav-icon" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+              <span class="chat-nav-label">Experience</span>
+            </button>
+            <button type="button" class="chat-nav-item" data-sidebar-nav="Skills">
+              <span class="chat-nav-icon" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></span>
+              <span class="chat-nav-label">Skills</span>
+            </button>
+            <button type="button" class="chat-nav-item" data-sidebar-nav="Insurance Systems">
+              <span class="chat-nav-icon" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="15" rx="2"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="2" y1="12" x2="22" y2="12"/></svg></span>
+              <span class="chat-nav-label">Insurance Systems</span>
+            </button>
+            <button type="button" class="chat-nav-item" data-sidebar-nav="Projects">
+              <span class="chat-nav-icon" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+              <span class="chat-nav-label">Projects</span>
+            </button>
+            <button type="button" class="chat-nav-item" data-sidebar-nav="Certifications">
+              <span class="chat-nav-icon" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg></span>
+              <span class="chat-nav-label">Certifications</span>
+            </button>
+            <button type="button" class="chat-nav-item" data-sidebar-nav="Contact">
+              <span class="chat-nav-icon" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></span>
+              <span class="chat-nav-label">Contact</span>
+            </button>
+          </nav>
+          <div class="chat-voice-card-v3" data-voice-controls aria-label="ElevenLabs Live Voice controls">
+            <button type="button" class="chat-voice-btn chat-voice-btn--live" data-voice-live-btn data-voice-v3="true" aria-pressed="false" aria-label="Start ElevenLabs Live Voice"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg></button>
+            <div class="chat-voice-card-info">
+              <span class="chat-voice-card-title">Live Voice</span>
+              <span class="chat-voice-card-sub">ElevenLabs</span>
+              <span class="chat-voice-card-ready"><span class="chat-voice-ready-dot" aria-hidden="true"></span><span data-voice-ready-text>Ready</span></span>
+            </div>
+            <div class="chat-voice-eq" aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
             <button type="button" class="chat-voice-btn chat-voice-btn--autospeak" data-voice-autospeak-btn aria-pressed="true" title="Automatically speak responses with Josh's ElevenLabs voice">⚡ Auto: On</button>
             <button type="button" class="chat-voice-btn chat-voice-btn--intro" data-voice-intro-btn title="Play 30-second intro in Josh's voice">🔊 30s Intro</button>
           </div>
@@ -85,6 +140,13 @@
             <span class="chat-scope-chip">Medavie Claims REST/Event</span>
             <span class="chat-scope-chip">SQL &amp; Reporting Continuity</span>
             <span class="chat-scope-chip">NEXUS Capstone</span>
+          </div>
+          <div class="chat-sidebar-scenic" aria-label="Location and availability">
+            <img class="chat-scenic-photo" src="/assets/skills-mountain-horizon-bg.jpg" alt="" width="260" height="145" loading="eager" decoding="async" aria-hidden="true">
+            <div class="chat-scenic-meta">
+              <p class="chat-scenic-loc"><span class="chat-scenic-pin" aria-hidden="true">📍</span> OTTAWA, CANADA</p>
+              <p class="chat-scenic-open"><span class="chat-open-dot" aria-hidden="true"></span> OPEN TO OPPORTUNITIES</p>
+            </div>
           </div>
         </section>
         <section class="chat-identity-callout" aria-label="Suggested topics">

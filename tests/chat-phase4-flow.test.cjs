@@ -66,8 +66,24 @@ const STATIC_ASSETS = Object.freeze({
     file: path.join(DIST_ROOT, 'assets/fonts/ibm-plex-mono-400-latin.woff2'),
     type: 'font/woff2'
   },
+  '/assets/jb-mark.svg': {
+    file: path.join(DIST_ROOT, 'assets/jb-mark.svg'),
+    type: 'image/svg+xml'
+  },
+  '/assets/jb-logo-transparent.png': {
+    file: path.join(DIST_ROOT, 'assets/jb-logo-transparent.png'),
+    type: 'image/png'
+  },
+  '/assets/personal/josh-portrait-main.jpg': {
+    file: path.join(DIST_ROOT, 'assets/personal/josh-portrait-main.jpg'),
+    type: 'image/jpeg'
+  },
   '/assets/personal/josh-portrait-smiling.jpg': {
     file: path.join(DIST_ROOT, 'assets/personal/josh-portrait-smiling.jpg'),
+    type: 'image/jpeg'
+  },
+  '/assets/skills-mountain-horizon-bg.jpg': {
+    file: path.join(DIST_ROOT, 'assets/skills-mountain-horizon-bg.jpg'),
     type: 'image/jpeg'
   },
   '/assets/personal/josh-avatar-idle.mp4': {

@@ -13,8 +13,12 @@ export const ASSET_TYPES: Readonly<Record<string, string>> = Object.freeze(Objec
   '/assets/fonts/manrope-latin.woff2': 'font/woff2',
   '/assets/fonts/plus-jakarta-sans-latin.woff2': 'font/woff2',
   '/assets/fonts/ibm-plex-mono-400-latin.woff2': 'font/woff2',
+  '/assets/jb-mark.svg': 'image/svg+xml',
+  '/assets/jb-logo-transparent.png': 'image/png',
+  '/assets/personal/josh-portrait-main.jpg': 'image/jpeg',
   '/assets/personal/josh-portrait-smiling.jpg': 'image/jpeg',
   '/assets/optimized-extra/personal/josh-portrait-vest-640.webp': 'image/webp',
+  '/assets/skills-mountain-horizon-bg.jpg': 'image/jpeg',
   '/assets/personal/josh-avatar-idle.mp4': 'video/mp4',
   '/assets/personal/josh-intro-voice.mp3': 'audio/mpeg'
 }));

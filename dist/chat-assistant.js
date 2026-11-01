@@ -1660,98 +1660,135 @@
     section.setAttribute('aria-label', 'Solution architecture and cloud stack');
     section.setAttribute('data-chat-tech-stack', '');
 
-    const systemsBox = element(document, 'div', 'chat-systems-box');
-    const systemsHeader = element(document, 'div', 'chat-systems-header');
-    const systemsTitle = element(document, 'span', 'chat-systems-title', 'Systems involved');
-    const systemsViewBtn = element(document, 'span', 'chat-systems-view-btn', 'View details');
-    systemsViewBtn.addEventListener?.('click', () => {
-      section.classList?.toggle?.('is-stack-expanded');
+    // Section 2 of Right Column: Context stack (real-time) 3-column flow diagram
+    const rtCard = element(document, 'div', 'chat-rt-stack-card');
+    const rtHeader = element(document, 'div', 'chat-rt-stack-header');
+    const rtTitle = element(document, 'span', 'chat-rt-stack-title', 'Context stack (real-time)');
+    const rtLink = element(document, 'span', 'chat-rt-stack-link', 'What is CAG? ↗');
+    rtLink.addEventListener?.('click', () => {
+      if (typeof onSelectTab === 'function') onSelectTab('context');
     });
-    systemsHeader.append(systemsTitle, systemsViewBtn);
+    rtHeader.append(rtTitle, rtLink);
 
-    const systemsGrid = element(document, 'div', 'chat-systems-grid');
-    const sysCardDefs = [
-      {
-        key: 'decision',
-        icon: '🧠',
-        name: 'JEV',
-        sub: 'Decision runtime',
-        tab: 'trace',
-        rows: [
-          ['Intent:', 'Build / Design', 'intent'],
-          ['Model:', 'Claude Sonnet', 'model'],
-          ['Risk:', 'Low', 'risk'],
-          ['Route:', 'Web Design', 'route']
-        ]
-      },
-      {
-        key: 'cag',
-        icon: '🗄️',
-        name: 'CAG',
-        sub: 'Context & knowledge',
-        tab: 'evidence',
-        rows: [
-          ['Sources:', '12 files + web', 'sources'],
-          ['Strategy:', 'Hybrid RAG', 'strategy'],
-          ['Model:', 'gpt-6-luna', 'cagModel'],
-          ['Tokens:', '~18k', 'tokens']
-        ]
-      },
-      {
-        key: 'skills',
-        icon: '🛠️',
-        name: 'Skills',
-        sub: 'Tool execution',
-        tab: 'tools',
-        list: ['UI/UX Design', 'Image Generation', 'Frontend Patterns', 'Design System']
-      },
-      {
-        key: 'evaluator',
-        icon: '🛡️',
-        name: 'Evaluator',
-        sub: 'Quality & safety',
-        tab: 'context',
-        list: ['Style Match', 'Recruiter Focus', 'Accessibility', 'Content Review']
-      }
+    const rtDiagram = element(document, 'div', 'chat-rt-diagram');
+    const rtLeftCol = element(document, 'div', 'chat-rt-col is-sources');
+    rtLeftCol.append(element(document, 'span', 'chat-rt-col-label', 'Your career corpus'));
+    const corpusSources = [
+      ['👤', 'Experience', 'Structured data'],
+      ['🏷️', 'Skills', 'Tags & taxonomy'],
+      ['📂', 'Projects', 'Descriptions & results'],
+      ['📄', 'Documents', 'Resume, case studies'],
+      ['💬', 'Interviews & notes', 'Past conversations']
     ];
-    const sysRefs = Object.create(null);
-    for (const def of sysCardDefs) {
-      const card = element(document, 'div', `chat-sys-card is-${def.key}`);
-      card.setAttribute('data-sys-card', def.key);
-      const head = element(document, 'div', 'chat-sys-head');
-      const iconNode = element(document, 'span', `chat-sys-icon is-${def.key}`, def.icon);
-      iconNode.setAttribute('aria-hidden', 'true');
-      const titles = element(document, 'div', 'chat-sys-titles');
-      titles.append(
-        element(document, 'span', 'chat-sys-name', def.name),
-        element(document, 'span', 'chat-sys-sub', def.sub)
+    for (const [ic, sTitle, sSub] of corpusSources) {
+      const item = element(document, 'div', 'chat-rt-source-item');
+      const iconEl = element(document, 'span', 'chat-rt-source-icon', ic);
+      const copyEl = element(document, 'div', 'chat-rt-source-copy');
+      copyEl.append(
+        element(document, 'span', 'chat-rt-source-name', sTitle),
+        element(document, 'span', 'chat-rt-source-sub', sSub)
       );
-      const statusBadge = element(document, 'span', 'chat-sys-badge is-active', 'Active');
-      head.append(iconNode, titles, statusBadge);
-      const facts = element(document, 'div', 'chat-sys-facts');
-      const fieldRefs = Object.create(null);
-      if (def.rows) {
-        for (const [k, v, refKey] of def.rows) {
-          const row = element(document, 'div', 'chat-sys-fact');
-          const kEl = element(document, 'span', 'chat-sys-fact-k', k);
-          const vEl = element(document, 'span', `chat-sys-fact-v${refKey === 'risk' ? ' is-low-risk' : ''}`, v);
-          row.append(kEl, vEl);
-          facts.append(row);
-          fieldRefs[refKey] = vEl;
-        }
-      } else if (def.list) {
-        for (const itemText of def.list) {
-          facts.append(element(document, 'div', 'chat-sys-skill-item', itemText));
-        }
-      }
-      card.append(head, facts);
-      if (typeof onSelectTab === 'function') {
-        card.addEventListener('click', () => onSelectTab(def.tab));
-      }
-      sysRefs[def.key] = { card, statusBadge, facts, fieldRefs };
-      systemsGrid.append(card);
+      item.append(iconEl, copyEl);
+      rtLeftCol.append(item);
     }
-    systemsBox.append(systemsHeader, systemsGrid);
+
+    const rtCenterCol = element(document, 'div', 'chat-rt-col is-engines');
+    const cagEngine = element(document, 'div', 'chat-rt-engine is-cag');
+    cagEngine.append(
+      element(document, 'span', 'chat-rt-engine-icon', '❖'),
+      element(document, 'span', 'chat-rt-engine-name', 'CAG'),
+      element(document, 'span', 'chat-rt-engine-sub', 'Context-Aware Graph')
+    );
+    cagEngine.addEventListener?.('click', () => {
+      if (typeof onSelectTab === 'function') onSelectTab('context');
+    });
+    const ragEngine = element(document, 'div', 'chat-rt-engine is-rag');
+    ragEngine.append(
+      element(document, 'span', 'chat-rt-engine-icon', '🗄️'),
+      element(document, 'span', 'chat-rt-engine-name', 'Hybrid RAG'),
+      element(document, 'span', 'chat-rt-engine-sub', 'Vector + keyword')
+    );
+    ragEngine.addEventListener?.('click', () => {
+      if (typeof onSelectTab === 'function') onSelectTab('evidence');
+    });
+    rtCenterCol.append(cagEngine, ragEngine);
+
+    const rtRightCol = element(document, 'div', 'chat-rt-col is-outputs');
+    rtRightCol.append(element(document, 'span', 'chat-rt-col-label', 'Context passed to the model'));
+    const modelOutputs = [
+      ['🔹', 'Top career facts', 'blue'],
+      ['📄', 'Relevant documents', 'teal'],
+      ['🛡️', 'Supporting evidence', 'emerald'],
+      ['💬', 'Conversation context', 'cyan'],
+      ['⚙️', 'System prompt', 'purple']
+    ];
+    for (const [ic, oLabel, oTone] of modelOutputs) {
+      const outItem = element(document, 'div', `chat-rt-output-item is-${oTone}`);
+      outItem.append(
+        element(document, 'span', 'chat-rt-output-icon', ic),
+        element(document, 'span', 'chat-rt-output-name', oLabel)
+      );
+      rtRightCol.append(outItem);
+    }
+
+    rtDiagram.append(rtLeftCol, rtCenterCol, rtRightCol);
+    rtCard.append(rtHeader, rtDiagram);
+
+    // Section 3 of Right Column: Sources used (6) card
+    const sourcesCard = element(document, 'div', 'chat-sources-used-card');
+    const sourcesTabsBar = element(document, 'div', 'chat-sources-tabs-bar');
+    const srcTabAll = element(document, 'span', 'chat-src-tab is-active', 'Sources used (6)');
+    const srcTabCorpus = element(document, 'span', 'chat-src-tab', 'Career corpus (4)');
+    const srcTabWeb = element(document, 'span', 'chat-src-tab', 'Web (2)');
+    const srcViewAll = element(document, 'span', 'chat-src-view-all', 'View all');
+    srcViewAll.addEventListener?.('click', () => {
+      if (typeof onSelectTab === 'function') onSelectTab('evidence');
+    });
+    sourcesTabsBar.append(srcTabAll, srcTabCorpus, srcTabWeb, srcViewAll);
+
+    const sourcesList = element(document, 'div', 'chat-sources-used-list');
+    const defaultSources = [
+      ['1', '📄', 'Guidewire Experience', 'career_corpus.md · Experience', 'CAG', 'emerald', '92%', 'corpus'],
+      ['2', '📄', 'IBS, MCCG, and AL3 Integrations', 'career_corpus.md · Integrations', 'CAG', 'emerald', '87%', 'corpus'],
+      ['3', '📄', 'Takeover Projects and Metrics', 'career_corpus.md · Key Achievements', 'CAG', 'emerald', '86%', 'corpus'],
+      ['4', '📄', 'Team Leadership and Training', 'career_corpus.md · Leadership', 'CAG', 'emerald', '81%', 'corpus'],
+      ['5', '🌐', 'Guidewire Overview (public)', 'guidewire.com · Product information', 'RAG', 'purple', '74%', 'web'],
+      ['6', '🌐', 'P&C Insurance Industry Context', 'ibc.ca · Industry reference', 'RAG', 'purple', '68%', 'web']
+    ];
+    const sourceRowNodes = [];
+    for (const [num, ic, sTitle, sSub, badgeTxt, badgeTone, scoreTxt, kind] of defaultSources) {
+      const sRow = element(document, 'div', 'chat-source-used-row');
+      sRow.setAttribute('data-source-kind', kind);
+      const numEl = element(document, 'span', 'chat-source-num', num);
+      const iconEl = element(document, 'span', `chat-source-doc-icon is-${badgeTone}`, ic);
+      const copyEl = element(document, 'div', 'chat-source-copy');
+      copyEl.append(
+        element(document, 'span', 'chat-source-title', sTitle),
+        element(document, 'span', 'chat-source-sub', sSub)
+      );
+      const tagEl = element(document, 'span', `chat-source-tag is-${badgeTone}`, badgeTxt);
+      const scoreEl = element(document, 'span', 'chat-source-score', scoreTxt);
+      sRow.append(numEl, iconEl, copyEl, tagEl, scoreEl);
+      sRow.addEventListener?.('click', () => {
+        if (typeof onSelectTab === 'function') onSelectTab('evidence');
+      });
+      sourceRowNodes.push({ row: sRow, kind });
+      sourcesList.append(sRow);
+    }
+
+    function filterSources(filterKind, activeTabEl) {
+      for (const tabEl of [srcTabAll, srcTabCorpus, srcTabWeb]) {
+        tabEl.className = tabEl === activeTabEl ? 'chat-src-tab is-active' : 'chat-src-tab';
+      }
+      for (const item of sourceRowNodes) {
+        item.row.hidden = filterKind !== 'all' && item.kind !== filterKind;
+      }
+    }
+    srcTabAll.addEventListener?.('click', () => filterSources('all', srcTabAll));
+    srcTabCorpus.addEventListener?.('click', () => filterSources('corpus', srcTabCorpus));
+    srcTabWeb.addEventListener?.('click', () => filterSources('web', srcTabWeb));
+
+    sourcesCard.append(sourcesTabsBar, sourcesList);
 
     const header = element(document, 'div', 'chat-tech-stack-header');
     const title = element(document, 'span', 'chat-tech-stack-title', 'Solution stack');
@@ -1780,10 +1817,9 @@
       itemMap[item.id] = li;
       grid.append(li);
     }
-    section.append(systemsBox, header, grid);
+    section.append(rtCard, sourcesCard, header, grid);
     section._techBadge = badge;
     section._techItems = itemMap;
-    section._sysRefs = sysRefs;
     return section;
   }
   function createDetailsPanel(document, options = {}) {
@@ -1840,26 +1876,14 @@
     summaryCard.append(heading, promptPreview, tagsRow, metaGrid, pinBanner);
 
     let traceAutoScroll = true;
-    let traceExpandedAll = false;
     const liveTraceHeader = element(document, 'div', 'chat-live-trace-header');
-    const liveTraceTitle = element(document, 'span', 'chat-live-trace-title', 'Live trace');
+    const liveTraceTitle = element(document, 'span', 'chat-live-trace-title', 'Live execution');
     const liveTraceControls = element(document, 'div', 'chat-live-trace-controls');
-    const autoScrollWrap = element(document, 'span', 'chat-autoscroll-toggle', 'Auto-scroll');
-    const autoScrollSwitch = element(document, 'span', 'chat-toggle-switch is-on');
-    autoScrollWrap.append(autoScrollSwitch);
-    autoScrollWrap.addEventListener?.('click', () => {
-      traceAutoScroll = !traceAutoScroll;
-      autoScrollSwitch.className = traceAutoScroll ? 'chat-toggle-switch is-on' : 'chat-toggle-switch';
-    });
-    const viewAllBadge = element(document, 'span', 'chat-trace-view-all', 'View all');
-    viewAllBadge.addEventListener?.('click', () => {
-      traceExpandedAll = !traceExpandedAll;
-      viewAllBadge.textContent = traceExpandedAll ? 'Collapse' : 'View all';
-      const stageDetails = panels.trace?.querySelectorAll?.('details.chat-trace-stage') || [];
-      for (const dNode of stageDetails) {
-        dNode.open = traceExpandedAll;
-      }
-    });
+    const liveExecBadge = element(document, 'span', 'chat-live-exec-badge');
+    const liveExecDot = element(document, 'span', 'chat-live-exec-dot');
+    const liveExecStatus = element(document, 'span', 'chat-live-exec-status', 'Completed');
+    liveExecBadge.append(liveExecDot, liveExecStatus);
+    const liveExecTime = element(document, 'span', 'chat-live-exec-time', '12.4s');
     editBadge.addEventListener?.('click', () => {
       const qInput = document.getElementById?.('portfolio-chat-question');
       if (qInput && promptPreview?.textContent) {
@@ -1867,7 +1891,7 @@
         qInput.focus?.();
       }
     });
-    liveTraceControls.append(autoScrollWrap, viewAllBadge);
+    liveTraceControls.append(liveExecBadge, liveExecTime);
     liveTraceHeader.append(liveTraceTitle, liveTraceControls);
 
     const contextStripSlot = element(document, 'div', 'chat-context-strip-slot');
@@ -1905,6 +1929,7 @@
     function activate(name, focus = false) {
       if (!buttons[name]) return;
       activeTab = name;
+      desktop.setAttribute?.('data-active-tab', name);
       liveTraceHeader.hidden = name !== 'trace';
       contextStripSlot.hidden = name === 'context';
       for (const key of tabList) {
@@ -2155,25 +2180,23 @@
       wrap.append(sr);
       const list = element(document, 'div', 'chat-mock-trace-list');
       const previewRows = [
-        ['10:24:01', 'cyan', '💬', 'Request received', ''],
-        ['10:24:02', 'amber', '🧠', 'JEV decision → Claude Sonnet (build)', ''],
-        ['10:24:03', 'emerald', '🗄️', 'Loaded portfolio corpus (12 files, 2.3 MB)', 'RAG: hybrid · gpt-6-luna'],
-        ['10:24:05', 'emerald', '🌐', 'Retrieved design references (8 sources)', 'Web search · allowed domains'],
-        ['10:24:08', 'amber', '🖼️', 'Generated 3 homepage concepts', 'Image generation · UI design skill'],
-        ['10:24:22', 'emerald', '🛡️', 'Evaluating options', 'Style match · recruiter focus · accessibility'],
-        ['10:24:35', 'blue', '⏳', 'Preparing final result...', '']
+        ['emerald', '💬', 'Intent classification', 'Career query → Guidewire experience', '0.3s'],
+        ['cyan', '❖', 'CAG — Career corpus search', 'Semantic search across structured career data', '2.1s'],
+        ['teal', '🔍', 'Hybrid RAG retrieval', 'Personal docs + public sources (if needed)', '1.4s'],
+        ['blue', '🗂️', 'Context compilation', 'Rank, dedupe, and assemble final context', '0.8s'],
+        ['amber', '✦', 'Claude Sonnet 4', 'Generate response', '0.4s'],
+        ['emerald', '✨', 'Response streaming', 'Stream to chat (342 tokens)', '7.4s']
       ];
-      for (const [timeStr, tone, iconChar, titleTxt, subTxt] of previewRows) {
+      for (const [tone, iconChar, titleTxt, subTxt, durStr] of previewRows) {
         const row = element(document, 'div', `chat-mock-trace-row is-${tone}`);
-        const dot = element(document, 'span', `chat-mock-trace-dot is-${tone}`);
-        const timeEl = element(document, 'span', 'chat-mock-trace-time', timeStr);
         const iconEl = element(document, 'span', `chat-mock-trace-icon is-${tone}`, iconChar);
         const copy = element(document, 'div', 'chat-mock-trace-copy');
-        copy.append(element(document, 'span', 'chat-mock-trace-title', titleTxt));
-        if (subTxt) {
-          copy.append(element(document, 'span', 'chat-mock-trace-sub', subTxt));
-        }
-        row.append(dot, timeEl, iconEl, copy);
+        copy.append(
+          element(document, 'span', 'chat-mock-trace-title', titleTxt),
+          element(document, 'span', 'chat-mock-trace-sub', subTxt)
+        );
+        const timeEl = element(document, 'span', 'chat-mock-trace-time', durStr);
+        row.append(iconEl, copy, timeEl);
         list.append(row);
       }
       wrap.append(list);
@@ -2192,7 +2215,7 @@
       }
       if (promptPreview) {
         promptPreview.textContent = view?.questionText
-          || 'Help me design the homepage for my portfolio site. Focus on the hero, key sections, and how to make it stand out for recruiters.';
+          || 'Can you tell me more about my experience with Guidewire and the type of work I’ve done?';
       }
       if (metaDuration) {
         if (view && Array.isArray(view.tracePoints) && view.tracePoints.length > 0) {
@@ -2200,7 +2223,17 @@
           const doneState = view.timeline?.outcome ? 'completed' : 'in progress';
           metaDuration.textContent = `${formatTraceTime(maxElapsed || 38)} (${doneState})`;
         } else {
-          metaDuration.textContent = '38.3s (in progress)';
+          metaDuration.textContent = '12.4s (completed)';
+        }
+      }
+      if (liveExecStatus && liveExecTime) {
+        if (view && Array.isArray(view.tracePoints) && view.tracePoints.length > 0) {
+          const maxElapsed = view.tracePoints.reduce((acc, pt) => Math.max(acc, Number(pt.elapsedMs) || 0), 0);
+          liveExecStatus.textContent = view.timeline?.outcome ? 'Completed' : 'Running';
+          liveExecTime.textContent = formatTraceTime(maxElapsed || 12);
+        } else {
+          liveExecStatus.textContent = 'Completed';
+          liveExecTime.textContent = '12.4s';
         }
       }
       syncTurnButtons();
@@ -2237,18 +2270,17 @@
         } catch { /* ignore */ }
       }
       if (view) {
-        const uniqueStages = new Set(Array.isArray(view.tracePoints) ? view.tracePoints.map(pt => pt.stage) : []);
-        const stageCount = uniqueStages.size || (view.timeline?.outcome ? 6 : 1);
         const claimCount = Array.isArray(view.claims) ? view.claims.length : 0;
         const toolCount = Array.isArray(view.toolCalls) ? view.toolCalls.length : 0;
-        buttons.trace?.setAttribute?.('data-tab-count', String(stageCount));
-        buttons.evidence?.setAttribute?.('data-tab-count', String(claimCount));
-        buttons.tools?.setAttribute?.('data-tab-count', String(toolCount));
-        buttons.context?.setAttribute?.('data-tab-count', view.isLiveVoice ? 'Live' : 'CAG');
+        buttons.trace?.removeAttribute?.('data-tab-count');
+        buttons.evidence?.setAttribute?.('data-tab-count', String(claimCount || 6));
+        buttons.tools?.setAttribute?.('data-tab-count', String(toolCount || 1));
+        buttons.context?.removeAttribute?.('data-tab-count');
       } else {
-        for (const key of tabList) {
-          buttons[key]?.removeAttribute?.('data-tab-count');
-        }
+        buttons.trace?.removeAttribute?.('data-tab-count');
+        buttons.evidence?.setAttribute?.('data-tab-count', '6');
+        buttons.tools?.setAttribute?.('data-tab-count', '1');
+        buttons.context?.removeAttribute?.('data-tab-count');
       }
       syncTechStack(view);
     }
@@ -2792,7 +2824,10 @@
         avatarStage.setAttribute('data-avatar-mode', mode);
       }
       if (avatarStatusText && typeof statusText === 'string') {
-        avatarStatusText.textContent = statusText;
+        const isV3Voice = liveBtn?.getAttribute?.('data-voice-v3') === 'true';
+        avatarStatusText.textContent = (isV3Voice && statusText === 'ElevenLabs Voice Ready · Josh')
+          ? 'Ready'
+          : statusText;
       }
       if (avatarVideo && typeof avatarVideo.play === 'function') {
         try {
@@ -3202,7 +3237,8 @@
       }
       if (liveBtn) {
         liveBtn.setAttribute('aria-pressed', 'false');
-        liveBtn.textContent = '📞 Live Voice';
+        const isV3Voice = liveBtn.getAttribute?.('data-voice-v3') === 'true';
+        liveBtn.textContent = isV3Voice ? '🎙️' : '📞 Live Voice';
         liveBtn.classList.remove('is-active');
       }
       updateVadMeter(0, false);
@@ -3219,7 +3255,8 @@
       setAvatarState('thinking', 'Connecting ElevenLabs Live Voice…');
       if (liveBtn) {
         liveBtn.setAttribute('aria-pressed', 'true');
-        liveBtn.textContent = '⏳ Connecting…';
+        const isV3Voice = liveBtn.getAttribute?.('data-voice-v3') === 'true';
+        liveBtn.textContent = isV3Voice ? '⏳' : '⏳ Connecting…';
       }
       try {
         const res = await fetcher('/api/chat/voice/live-session', {
@@ -3245,7 +3282,8 @@
         preRollBuffer.length = 0;
         liveSpeechChain = Promise.resolve();
         if (liveBtn) {
-          liveBtn.textContent = '🔴 End Live Voice';
+          const isV3Voice = liveBtn.getAttribute?.('data-voice-v3') === 'true';
+          liveBtn.textContent = isV3Voice ? '⏹' : '🔴 End Live Voice';
           liveBtn.classList.add('is-active');
         }
         ws.addEventListener('open', async () => {
@@ -3693,13 +3731,13 @@
     const heading = element(document, 'header', 'chat-heading');
     const headingCopy = element(document, 'div', 'chat-heading-copy');
     const titleRow = element(document, 'div', 'chat-heading-title-row');
-    titleRow.append(element(document, 'h1', '', 'Josh’s assistant'), element(document, 'span', 'chat-beta-badge', 'BETA'));
-    const scope = element(document, 'p', 'chat-scope', 'General help, with Josh’s public portfolio when it is relevant. I’ll show you what I’m doing and which systems are involved.');
+    titleRow.append(element(document, 'h1', '', 'Ask me about my experience, background, or anything else'), element(document, 'span', 'chat-beta-badge', 'BETA'));
+    const scope = element(document, 'p', 'chat-scope', 'I’ll draw from my career corpus and show you how I find and use information.');
     headingCopy.append(element(document, 'p', 'chat-small-label', 'Private preview'), titleRow, scope);
 
     const headingControls = element(document, 'div', 'chat-heading-controls');
     const modeSwitcher = element(document, 'div', 'chat-mode-switcher');
-    for (const [mLabel, isDefault] of [['◎ Concise', false], ['Detailed', true], ['✦ ELI5', false]]) {
+    for (const [mLabel, isDefault] of [['◎ Simple', false], ['Detailed', true], ['🖧 Engineer', false]]) {
       const mBtn = element(document, 'button', `chat-mode-pill${isDefault ? ' is-active' : ''}`, mLabel);
       mBtn.type = 'button';
       mBtn.addEventListener('click', () => {
@@ -3708,9 +3746,35 @@
       });
       modeSwitcher.append(mBtn);
     }
+    const moreBtn = element(document, 'button', 'chat-heading-more-btn', '⋯');
+    moreBtn.type = 'button';
+    moreBtn.setAttribute('aria-label', 'More options');
     const clear = element(document, 'button', 'chat-text-button', 'Clear chat'); clear.type = 'button'; clear.disabled = true;
-    headingControls.append(modeSwitcher, clear);
+    moreBtn.addEventListener?.('click', () => {
+      if (!clear.disabled) clear.click?.();
+      else input.focus?.();
+    });
+    headingControls.append(modeSwitcher, moreBtn, clear);
     heading.append(headingCopy, headingControls);
+
+    const quickPillsBar = element(document, 'div', 'chat-quick-pills');
+    const quickPillPrompts = [
+      ['My experience with Guidewire', 'Can you tell me more about my experience with Guidewire and the type of work I’ve done?'],
+      ['Insurance projects', 'What core insurance projects and bulk group takeover solutions has Josh delivered?'],
+      ['Technical skills', 'What are Josh’s technical skills across SQL, integrations, cloud architecture, and AI?'],
+      ['AI & automation', 'How has Josh applied automation (80% residential, 60% commercial, 40% farm renewal automation) and AI architecture?'],
+      ['Career story', 'Give me an overview of Josh Boyer’s career journey from Dell (2006) through Grenville Mutual (2009–2022) and Medavie Blue Cross.']
+    ];
+    for (const [pillText, pillPrompt] of quickPillPrompts) {
+      const qBtn = element(document, 'button', 'chat-quick-pill', pillText);
+      qBtn.type = 'button';
+      qBtn.addEventListener?.('click', () => {
+        if (!ready || busy || input.disabled) return;
+        input.value = pillPrompt;
+        form.requestSubmit();
+      });
+      quickPillsBar.append(qBtn);
+    }
 
     const messages = element(document, 'div', 'chat-messages'); messages.setAttribute('aria-label', 'Conversation'); messages.setAttribute('role', 'log'); messages.setAttribute('aria-live', 'polite'); messages.setAttribute('aria-relevant', 'additions'); messages.tabIndex = 0;
     const welcome = element(document, 'div', 'chat-welcome');
@@ -3720,42 +3784,52 @@
     const showcase = element(document, 'div', 'chat-welcome-showcase');
     const demoUserRow = element(document, 'div', 'chat-welcome-user-row');
     const demoUserBubble = element(document, 'div', 'chat-welcome-user-bubble');
-    const demoUserMeta = element(document, 'div', 'chat-welcome-user-meta');
-    demoUserMeta.append(element(document, 'span', 'chat-welcome-user-who', 'You'), element(document, 'span', 'chat-welcome-user-time', '10:24 AM'));
-    demoUserBubble.append(
-      demoUserMeta,
-      element(document, 'p', 'chat-welcome-user-text', 'Help me design the homepage for my portfolio site. Focus on the hero, key sections, and how to make it stand out for recruiters.')
+    const demoUserTop = element(document, 'div', 'chat-welcome-user-top');
+    demoUserTop.append(
+      element(document, 'p', 'chat-welcome-user-text', 'Can you tell me more about my experience with Guidewire and the type of work I’ve done?'),
+      element(document, 'span', 'chat-welcome-user-time', '10:24 AM')
     );
+    demoUserBubble.append(demoUserTop);
     const demoUserAvatar = element(document, 'span', 'chat-welcome-jb-badge', 'JB');
     demoUserRow.append(demoUserBubble, demoUserAvatar);
 
     const demoAssistantRow = element(document, 'div', 'chat-welcome-assistant-row');
     const demoAssistantAvatar = element(document, 'span', 'chat-welcome-bot-avatar');
     const demoAssistantCard = element(document, 'div', 'chat-welcome-assistant-card');
-    demoAssistantCard.append(
-      element(document, 'p', 'chat-welcome-assistant-title', 'Assistant'),
-      element(document, 'p', 'chat-stepper-lead', 'I’ll help you design your portfolio homepage. Here’s what I’m doing and the systems I’m using:')
-    );
-    const demoStepperList = element(document, 'div', 'chat-stepper-list');
-    const demoSteps = [
-      ['1', '✓', 'Intent classified', 'Build / Design · Website · Portfolio', '0.6s', 'done'],
-      ['2', '2', 'Plan created', 'Breaking this into tasks and selecting the right tools and models.', '3.1s', 'pending'],
-      ['3', '3', 'Context gathered', 'Loading your portfolio corpus, existing site references, and design patterns.', '4.2s', 'pending'],
-      ['4', '4', 'Design generation', 'Creating multiple homepage concepts with modern, clean layouts.', '18.7s', 'active'],
-      ['5', '5', 'Evaluation & iteration', 'Comparing options and refining the best concept.', '—', 'pending'],
-      ['6', '6', 'Result', 'Presenting final design with options and next steps.', '—', 'pending']
-    ];
-    for (const [num, badgeTxt, sTitle, sDesc, sTime, sState] of demoSteps) {
-      const sRow = element(document, 'div', `chat-step-row is-${sState}`);
-      sRow.setAttribute('data-step-index', num);
-      const sBadge = element(document, 'span', 'chat-step-badge', badgeTxt);
-      const sCopy = element(document, 'div', 'chat-step-copy');
-      sCopy.append(element(document, 'span', 'chat-step-title', sTitle), element(document, 'span', 'chat-step-desc', sDesc));
-      const sTimeEl = element(document, 'span', 'chat-step-time', sTime);
-      sRow.append(sBadge, sCopy, sTimeEl);
-      demoStepperList.append(sRow);
+    const demoCardActions = element(document, 'div', 'chat-welcome-card-actions');
+    for (const actIcon of ['📋', '👍', '👎', '⋯']) {
+      demoCardActions.append(element(document, 'span', 'chat-welcome-action-icon', actIcon));
     }
-    demoAssistantCard.append(demoStepperList);
+    const demoLeadWrap = element(document, 'div', 'chat-welcome-lead-wrap');
+    demoLeadWrap.append(
+      element(
+        document,
+        'p',
+        'chat-welcome-lead-p',
+        'You have extensive experience with Guidewire, primarily working with Policy, Billing, and Claims administration (IBS) across P&C and Health and Dental insurance. You’ve been involved in system conversions, integrations, renewals, and endorsements, with a strong focus on business analysis, requirements, testing, and training.'
+      ),
+      demoCardActions
+    );
+    const demoSubLead = element(document, 'p', 'chat-welcome-sublead', 'Here are some key highlights from your experience:');
+    const demoHighlightsList = element(document, 'div', 'chat-welcome-highlights-list');
+    const demoHighlights = [
+      ['IBS (Policy, Billing, Claims):', ' Worked across all three modules, supporting underwriting workbench, renewals, and endorsements.'],
+      ['System conversions:', ' Led and supported large-scale data takeovers, including loading 1,000,000 claim lines and $100,000,000 in payments.'],
+      ['Business analysis:', ' Developed functional and non-functional requirements, created templates and RFI documents, and facilitated approvals.'],
+      ['Integrations:', ' Worked with MCCG and AL3 (flat file), supporting provider onboarding and adjudication.'],
+      ['Renewals:', ' Supported processes with 80% renewals, with a mix of 60% commercial and 40% farm.'],
+      ['Team leadership:', ' Worked across 4–5 teams (10–20 people each), coached BA peers on SQL, and delivered training sessions.'],
+      ['Presentations:', ' Delivered sessions on takeover history, CBQ changes, and AI fundamentals.']
+    ];
+    for (const [bLabel, bBody] of demoHighlights) {
+      const hRow = element(document, 'div', 'chat-welcome-highlight-item');
+      const hDot = element(document, 'span', 'chat-welcome-highlight-dot');
+      const hText = element(document, 'p', 'chat-welcome-highlight-text');
+      hText.append(element(document, 'strong', 'chat-welcome-highlight-strong', bLabel), element(document, 'span', '', bBody));
+      hRow.append(hDot, hText);
+      demoHighlightsList.append(hRow);
+    }
+    demoAssistantCard.append(demoLeadWrap, demoSubLead, demoHighlightsList);
     demoAssistantRow.append(demoAssistantAvatar, demoAssistantCard);
     showcase.append(demoUserRow, demoAssistantRow);
 
@@ -3773,98 +3847,129 @@
     livePipeline.setAttribute('data-live-pipeline', '');
     const pipeHeader = element(document, 'div', 'chat-pipeline-header');
     const pipeTitleWrap = element(document, 'div', 'chat-pipeline-title-wrap');
+    const pipeStatusPill = element(document, 'span', 'chat-pipeline-status-pill', 'Completed');
+    const pipeDuration = element(document, 'span', 'chat-pipeline-duration', '🕒 12.4s');
     pipeTitleWrap.append(
-      element(document, 'span', 'chat-pipeline-dot'),
-      element(document, 'span', 'chat-pipeline-title', 'LIVE PIPELINE')
+      element(document, 'span', 'chat-pipeline-dot', '❖'),
+      element(document, 'span', 'chat-pipeline-title', 'Context & execution'),
+      pipeStatusPill,
+      pipeDuration
     );
-    pipeHeader.append(pipeTitleWrap, status);
+    const pipeRightWrap = element(document, 'div', 'chat-pipeline-header-right');
+    const pipeToggleBtn = element(document, 'button', 'chat-pipeline-toggle-btn', 'Hide details ⌃');
+    pipeToggleBtn.type = 'button';
+    pipeRightWrap.append(pipeToggleBtn, status);
+    pipeHeader.append(pipeTitleWrap, pipeRightWrap);
+
+    const pipeBody = element(document, 'div', 'chat-pipeline-body');
+    pipeToggleBtn.addEventListener?.('click', () => {
+      const collapsed = livePipeline.classList?.toggle?.('is-collapsed');
+      pipeToggleBtn.textContent = collapsed ? 'Show details ⌄' : 'Hide details ⌃';
+    });
+
     const pipeTrack = element(document, 'div', 'chat-pipeline-track');
     const pipeStages = [
-      { id: 'chat', tone: 'cyan', icon: '💬', title: 'Chat', sub: 'Your request', pills: [] },
-      { id: 'router', tone: 'emerald', icon: '🧠', title: 'JEV', sub: 'Route & decide', pills: ['Claude Sonnet', 'Build: Web Design'] },
-      { id: 'cag', tone: 'teal', icon: '🗄️', title: 'CAG', sub: 'Load context', pills: ['Portfolio corpus', 'Current site', 'Design patterns'] },
-      { id: 'skills', tone: 'purple', icon: '🛠️', title: 'Skills', sub: 'Design & generate', pills: ['UI/UX design', 'Image generation', 'Frontend patterns'] },
-      { id: 'evaluator', tone: 'green', icon: '🛡️', title: 'Evaluator', sub: 'Review & refine', pills: ['Quality check', 'Style match', 'Recruiter focus'] },
-      { id: 'response', tone: 'violet', icon: '✨', title: 'Response', sub: 'Show results', pills: ['Design options', 'Key sections', 'Implementation plan'] }
+      { id: 'intent', tone: 'cyan', icon: '🎯', title: 'Intent', sub: 'career query', metric: '0.3s', active: false },
+      { id: 'cag', tone: 'teal', icon: '💠', title: 'CAG', sub: 'semantic search', metric: '2.1s', active: true },
+      { id: 'rag', tone: 'emerald', icon: '🔍', title: 'RAG', sub: 'hybrid retrieval', metric: '1.4s', active: false },
+      { id: 'context', tone: 'purple', icon: '⚙️', title: 'Context', sub: 'compile', metric: '0.8s', active: false },
+      { id: 'model', tone: 'amber', icon: '✦', title: 'Model', sub: 'Claude Sonnet 4', metric: '0.4s', active: false },
+      { id: 'response', tone: 'violet', icon: '📝', title: 'Response', sub: 'generate', metric: '7.4s', active: false }
     ];
     const pipeCols = Object.create(null);
     pipeStages.forEach((stg, idx) => {
       if (idx > 0) {
         pipeTrack.append(element(document, 'span', 'chat-pipeline-arrow', '→'));
       }
-      const col = element(document, 'div', `chat-pipeline-col is-${stg.tone} is-lit`);
+      const col = element(document, 'div', `chat-pipeline-col is-${stg.tone} is-lit${stg.active ? ' is-featured' : ''}`);
       col.setAttribute('data-pipe-stage', stg.id);
-      const node = element(document, 'div', `chat-pipeline-node is-${stg.tone}`);
-      node.append(
-        element(document, 'span', 'chat-pipeline-icon', stg.icon),
-        element(document, 'span', 'chat-pipeline-name', stg.title),
-        element(document, 'span', 'chat-pipeline-sub', stg.sub)
-      );
-      const subPills = element(document, 'div', 'chat-pipeline-subpills');
-      const pillNodes = [];
-      for (const pText of stg.pills) {
-        const pNode = element(document, 'span', 'chat-pipeline-pill', pText);
-        subPills.append(pNode);
-        pillNodes.push(pNode);
-      }
+      const node = element(document, 'div', `chat-pipeline-node is-${stg.tone}${stg.active ? ' is-featured' : ''}`);
+      const iconBadge = element(document, 'span', `chat-pipeline-icon is-${stg.tone}`, stg.icon);
+      const copyCol = element(document, 'div', 'chat-pipeline-copy');
+      const nameEl = element(document, 'span', 'chat-pipeline-name', stg.title);
+      const subEl = element(document, 'span', 'chat-pipeline-sub', stg.sub);
+      const metricEl = element(document, 'span', 'chat-pipeline-metric', stg.metric);
+      copyCol.append(nameEl, subEl, metricEl);
+      node.append(iconBadge, copyCol);
       const tabMap = {
-        chat: 'trace',
-        router: 'trace',
+        intent: 'trace',
         cag: 'context',
-        skills: 'tools',
-        evaluator: 'evidence',
+        rag: 'evidence',
+        context: 'context',
+        model: 'trace',
         response: 'evidence'
       };
       col.addEventListener?.('click', () => {
         details.activate?.(tabMap[stg.id] || 'trace');
       });
-      col.append(node, subPills);
-      pipeCols[stg.id] = { col, node, pillNodes, tone: stg.tone };
+      col.append(node);
+      pipeCols[stg.id] = { col, node, subEl, metricEl, tone: stg.tone };
       pipeTrack.append(col);
     });
-    livePipeline.append(pipeHeader, pipeTrack);
+
+    const pipeCtxStack = element(document, 'div', 'chat-pipeline-ctx-stack');
+    const pipeCtxHeader = element(document, 'div', 'chat-pipeline-ctx-header');
+    const pipeCtxTitleWrap = element(document, 'div', 'chat-pipeline-ctx-title-wrap');
+    pipeCtxTitleWrap.append(
+      element(document, 'span', 'chat-pipeline-ctx-title', 'Context stack'),
+      element(document, 'span', 'chat-pipeline-ctx-subtitle', '(used by the model)')
+    );
+    const pipeCtxTotal = element(document, 'span', 'chat-pipeline-ctx-total', '12.3k tokens');
+    pipeCtxHeader.append(pipeCtxTitleWrap, pipeCtxTotal);
+
+    const pipeCtxBar = element(document, 'div', 'chat-pipeline-ctx-bar');
+    const segCag = element(document, 'div', 'chat-pipeline-ctx-seg is-cag');
+    segCag.style && (segCag.style.width = '58%');
+    const segRag = element(document, 'div', 'chat-pipeline-ctx-seg is-rag');
+    segRag.style && (segRag.style.width = '26%');
+    const segConv = element(document, 'div', 'chat-pipeline-ctx-seg is-conv');
+    segConv.style && (segConv.style.width = '11%');
+    const segSys = element(document, 'div', 'chat-pipeline-ctx-seg is-sys');
+    segSys.style && (segSys.style.width = '5%');
+    pipeCtxBar.append(segCag, segRag, segConv, segSys);
+
+    const pipeCtxLegend = element(document, 'div', 'chat-pipeline-ctx-legend');
+    const legendItems = [
+      ['is-cag', 'Career corpus (CAG)', '7.1k (58%)'],
+      ['is-rag', 'Retrieved documents (RAG)', '3.2k (26%)'],
+      ['is-conv', 'Conversation', '1.4k (11%)'],
+      ['is-sys', 'System prompt', '0.6k (5%)']
+    ];
+    const legendValNodes = [];
+    for (const [cls, lName, lVal] of legendItems) {
+      const lItem = element(document, 'div', 'chat-pipeline-ctx-legend-item');
+      const lDot = element(document, 'span', `chat-pipeline-ctx-dot ${cls}`);
+      const lLabel = element(document, 'span', 'chat-pipeline-ctx-label', lName);
+      const lMetric = element(document, 'span', 'chat-pipeline-ctx-val', lVal);
+      lItem.append(lDot, lLabel, lMetric);
+      legendValNodes.push(lMetric);
+      pipeCtxLegend.append(lItem);
+    }
+    pipeCtxStack.append(pipeCtxHeader, pipeCtxBar, pipeCtxLegend);
+    pipeBody.append(pipeTrack, pipeCtxStack);
+    livePipeline.append(pipeHeader, pipeBody);
 
     function syncLivePipeline(view) {
       if (!view) return;
       const cd = view.contextData || {};
-      const routerCol = pipeCols.router;
-      if (routerCol && routerCol.pillNodes.length >= 2) {
-        routerCol.pillNodes[0].textContent = cd.completedModel || cd.model || 'gpt-6-luna';
-        routerCol.pillNodes[1].textContent = cd.routingMode ? (ROUTING_MODE_LABELS[cd.routingMode] || cd.routingMode) : 'Build: Web Design';
+      if (pipeCols.intent?.subEl) {
+        pipeCols.intent.subEl.textContent = cd.routingMode ? (ROUTING_MODE_LABELS[cd.routingMode] || cd.routingMode).toLowerCase() : 'career query';
       }
-      const cagCol = pipeCols.cag;
-      if (cagCol && cagCol.pillNodes.length >= 2) {
-        cagCol.pillNodes[0].textContent = cd.retrievalMode === 'hybrid' ? 'S3 Vectors + BM25' : 'CAG Prefix Pack';
-        cagCol.pillNodes[1].textContent = `${cd.claimCount ?? 15} pinned claims`;
-        if (cagCol.pillNodes[2]) {
-          cagCol.pillNodes[2].textContent = cd.retrievalMode === 'hybrid'
-            ? `${cd.matchedCount ?? 4} RAG chunks + KV hit`
-            : '⚡ 0 ms KV Cache Hit';
-        }
+      if (pipeCols.cag?.subEl) {
+        pipeCols.cag.subEl.textContent = `${cd.claimCount ?? 15} claims · semantic`;
       }
-      const skillsCol = pipeCols.skills;
-      if (skillsCol && Array.isArray(view.toolCalls) && view.toolCalls.length > 0) {
-        view.toolCalls.slice(0, 3).forEach((tc, i) => {
-          if (skillsCol.pillNodes[i]) {
-            const tName = tc.name || tc.toolName || 'search_public_evidence';
-            skillsCol.pillNodes[i].textContent = TOOL_LABELS[tName] || tName;
-          }
-        });
+      if (pipeCols.rag?.subEl) {
+        pipeCols.rag.subEl.textContent = cd.retrievalMode === 'hybrid' ? `${cd.matchedCount ?? 4} vector chunks` : 'cag prefix hit';
       }
-      const evalCol = pipeCols.evaluator;
-      if (evalCol && evalCol.pillNodes.length >= 2) {
-        const cLen = Array.isArray(view.claims) ? view.claims.length : 0;
-        if (cLen > 0) {
-          evalCol.pillNodes[0].textContent = `${cLen} claim${cLen === 1 ? '' : 's'} verified`;
-        }
-        evalCol.pillNodes[1].textContent = view.degraded ? 'Degraded fallback' : 'Contract Guard ✓';
+      if (pipeCols.model?.subEl) {
+        pipeCols.model.subEl.textContent = cd.completedModel || cd.model || 'Claude Sonnet 4';
       }
     }
 
     const form = element(document, 'form', 'chat-compose');
     const label = element(document, 'label', 'chat-small-label', 'Your question'); label.htmlFor = 'portfolio-chat-question';
     const input = element(document, 'textarea'); input.id = label.htmlFor; input.name = 'question'; input.rows = 2; input.maxLength = 8192;
-    input.placeholder = 'Ask a question or share an idea...'; input.required = true; input.disabled = true;
+    input.placeholder = 'Ask a follow-up question...'; input.required = true; input.disabled = true;
     input.setAttribute('aria-describedby', 'portfolio-chat-hint');
     const footer = element(document, 'div', 'chat-compose-footer');
     const toolbarLeft = element(document, 'div', 'chat-compose-toolbar');
@@ -3872,8 +3977,7 @@
     const toolPresets = [
       ['📎', 'Compare my role requirements against Josh’s verified experience: '],
       ['@', '@NEXUS What is the architecture of the NEXUS workflow engine?'],
-      ['🛠️', 'Run search_public_evidence on Josh’s Guidewire and Medavie integrations.'],
-      ['🖼️', 'Show me how this AWS us-east-2 + CAG + S3 Vectors assistant is architected.']
+      ['🎚️', 'Show me how this AWS us-east-2 + CAG + S3 Vectors assistant is architected.']
     ];
     for (const [ic, presetText] of toolPresets) {
       const tBtn = element(document, 'span', 'chat-tool-icon', ic);
@@ -3884,22 +3988,8 @@
       });
       toolIcons.append(tBtn);
     }
-    const projToggle = element(document, 'div', 'chat-compose-project-toggle');
-    const projSwitch = element(document, 'span', 'chat-switch-pill');
-    const projLabel = element(document, 'span', 'chat-project-label', 'Add to project?');
-    const projSelector = element(document, 'span', 'chat-project-selector', 'Portfolio Site (joshboyer.ca) ▾');
-    const projNames = ['Portfolio Site (joshboyer.ca) ▾', 'NEXUS Capstone ▾', 'Takeover VBA Add-In ▾', 'Medavie Integration ▾'];
-    let projIdx = 0;
-    projSwitch.addEventListener?.('click', () => {
-      projSwitch.classList?.toggle?.('is-on');
-    });
-    projSelector.addEventListener?.('click', () => {
-      projIdx = (projIdx + 1) % projNames.length;
-      projSelector.textContent = projNames[projIdx];
-    });
-    projToggle.append(projSwitch, projLabel, projSelector);
     const hint = element(document, 'p', 'chat-hint', 'Enter to send · Shift + Enter for a new line'); hint.id = 'portfolio-chat-hint';
-    toolbarLeft.append(toolIcons, projToggle, hint);
+    toolbarLeft.append(toolIcons, hint);
 
     const railPrompts = {
       'Dell Support (Sept 2006+)': 'Tell me about Josh’s enterprise infrastructure and support experience at Dell starting in September 2006.',
@@ -3909,24 +3999,36 @@
       'SQL & Reporting Continuity': 'How did Josh handle reporting continuity and financial-report SQL across core insurance system transitions?',
       'NEXUS Capstone': 'What is NEXUS and how did Josh architect it as his independent AI capstone?',
       'Experience': 'Give me an overview of Josh Boyer’s career journey from Dell (2006) through Grenville Mutual (2009–2022) and Medavie Blue Cross.',
+      'Skills': 'What are Josh’s core technical and business architecture skills across SQL, integrations, and AI?',
+      'Insurance Systems': 'Can you tell me more about Josh’s experience with Guidewire, IBS, Cognition+, and insurance integrations?',
+      'Projects': 'What major projects has Josh built, including the Bulk Group Takeover VBA add-in and NEXUS capstone?',
+      'Certifications': 'What formal training, industry background, and technical qualifications does Josh bring?',
+      'Contact': 'How can I get in touch with Josh Boyer regarding Business Architecture or Technical Solutions roles in Ottawa or remote?',
       'NEXUS': 'Tell me about Josh’s NEXUS independent capstone and how it uses structured AI workflows.',
       'Insurance systems': 'What is Josh’s experience with Guidewire, Cognition+, IBS, and enterprise insurance integrations?',
       'AI & automation': 'How has Josh applied automation (80% residential, 60% commercial, 40% farm renewal automation) and AI architecture?',
       'Projects & portfolio': 'How is this portfolio assistant architected on AWS us-east-2 with CAG, S3 Vectors, MCP tools, and ElevenLabs?',
       'Career opportunities': 'What types of Business Architecture, Systems Analysis, or Technical Solutions roles align best with Josh’s background?'
     };
-    const scopeChipNodes = document.querySelectorAll?.('.chat-scope-chip, .chat-callout-list li') || [];
+    const scopeChipNodes = document.querySelectorAll?.('.chat-scope-chip, .chat-callout-list li, [data-sidebar-nav]') || [];
     for (const chipNode of scopeChipNodes) {
       chipNode.addEventListener?.('click', () => {
+        if (chipNode.hasAttribute?.('data-sidebar-nav')) {
+          const allNav = document.querySelectorAll?.('[data-sidebar-nav]') || [];
+          for (const n of allNav) n.classList?.remove?.('is-active');
+          chipNode.classList?.add?.('is-active');
+        }
         if (!ready || busy || input.disabled) return;
-        const labelTxt = (chipNode.textContent || '').trim();
+        const navKey = chipNode.getAttribute?.('data-sidebar-nav');
+        if (navKey === 'chat') return;
+        const labelTxt = (chipNode.querySelector?.('.chat-nav-label')?.textContent || chipNode.textContent || '').trim();
         input.value = railPrompts[labelTxt] || `Tell me about ${labelTxt} in Josh’s portfolio.`;
         form.requestSubmit();
       });
     }
 
     const actions = element(document, 'div', 'chat-compose-actions');
-    const mic = element(document, 'button', 'chat-secondary chat-mic-btn', '🎙️ Voice'); mic.type = 'button'; mic.disabled = true;
+    const mic = element(document, 'button', 'chat-secondary chat-mic-btn', '🎙️'); mic.type = 'button'; mic.disabled = true;
     mic.setAttribute('data-voice-mic-btn', '');
     mic.setAttribute('aria-pressed', 'false');
     mic.setAttribute('aria-label', 'Dictate question with ElevenLabs Scribe');
@@ -3934,7 +4036,7 @@
     const retry = element(document, 'button', 'chat-secondary', 'Check request again'); retry.type = 'button'; retry.hidden = true;
     const send = element(document, 'button', 'chat-send', 'Send ↑'); send.type = 'submit'; send.disabled = true;
     actions.append(mic, stop, retry, send); footer.append(toolbarLeft, actions); form.append(label, input, footer);
-    panel.append(heading, messages, livePipeline, form); shell.append(panel, details.element); host.append(shell);
+    panel.append(heading, quickPillsBar, messages, livePipeline, form); shell.append(panel, details.element); host.append(shell);
     let ready = false, busy = false, currentReply, uiEpoch = 0, limit = 8192, currentConfig, liveTurnCounter = 0;
     function matchCanonicalEvidenceForLiveText(rawText) {
       const ev = client.evidence;
@@ -4214,7 +4316,7 @@
       limit = config.limits.maxMessageBytes;
       if (ready) {
         status.textContent = 'Private chat is ready.';
-        scope.textContent = 'General help, with Josh’s public portfolio when it is relevant. Details stay beside the conversation.';
+        scope.textContent = 'I’ll draw from my career corpus and show you how I find and use information.';
         voice.checkAvailability();
       } else status.textContent = 'Chat is currently disabled.';
       update();
