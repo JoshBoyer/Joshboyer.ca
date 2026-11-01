@@ -77,11 +77,114 @@ function voiceRoute(method: string, path: string): boolean {
     (method === 'POST' && (path === '/api/chat/voice/tts' || path === '/api/chat/voice/stt' || path === '/api/chat/voice/live-session'));
 }
 
+const MAX_VOICE_JSON_BYTES = 65_536;
+const MAX_VOICE_AUDIO_STREAM_BYTES = 8 * 1024 * 1024;
+const MAX_VOICE_POSTS_PER_MINUTE = 30;
+const voiceRateWindows = new Map<string, number[]>();
+
+function checkVoiceRateLimit(visitorKey: string, nowMs: number): boolean {
+  const cutoff = nowMs - 60_000;
+  const recent = (voiceRateWindows.get(visitorKey) ?? []).filter(ts => ts > cutoff);
+  if (recent.length >= MAX_VOICE_POSTS_PER_MINUTE) {
+    voiceRateWindows.set(visitorKey, recent);
+    return false;
+  }
+  recent.push(nowMs);
+  voiceRateWindows.set(visitorKey, recent);
+  if (voiceRateWindows.size > 256) {
+    for (const [k, list] of voiceRateWindows.entries()) {
+      if (list.every(ts => ts <= cutoff)) voiceRateWindows.delete(k);
+    }
+  }
+  return true;
+}
+
+async function readBoundedResponseJson(response: Response, signal: AbortSignal, maximum = MAX_VOICE_JSON_BYTES): Promise<unknown> {
+  const declaredLength = response.headers.get('Content-Length');
+  if (declaredLength && (!/^[0-9]+$/.test(declaredLength) || Number(declaredLength) > maximum)) {
+    throw new RangeError('Response limit');
+  }
+  if (!response.body) throw new Error('Empty upstream body');
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let length = 0;
+  const abort = () => { void reader.cancel().catch(() => undefined); };
+  signal.addEventListener('abort', abort, { once: true });
+  try {
+    while (true) {
+      if (signal.aborted) throw new Error('Aborted');
+      const next = await reader.read();
+      if (signal.aborted) throw new Error('Aborted');
+      if (next.done) break;
+      length += next.value.byteLength;
+      if (length > maximum) {
+        void reader.cancel().catch(() => undefined);
+        throw new RangeError('Response limit');
+      }
+      chunks.push(next.value);
+    }
+  } finally {
+    signal.removeEventListener('abort', abort);
+    reader.releaseLock();
+  }
+  const bytes = new Uint8Array(length);
+  let offset = 0;
+  for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.length; }
+  return JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes));
+}
+
+function streamBoundedAudio(body: ReadableStream<Uint8Array>, maxBytes = MAX_VOICE_AUDIO_STREAM_BYTES): ReadableStream<Uint8Array> {
+  const reader = body.getReader();
+  let total = 0;
+  return new ReadableStream({
+    async pull(controller) {
+      try {
+        const next = await reader.read();
+        if (next.done) {
+          controller.close();
+          return;
+        }
+        total += next.value.byteLength;
+        if (total > maxBytes) {
+          await reader.cancel().catch(() => undefined);
+          controller.error(new RangeError('Audio stream exceeded maximum size'));
+          return;
+        }
+        controller.enqueue(next.value);
+      } catch (err) {
+        controller.error(err);
+      }
+    },
+    async cancel() {
+      await reader.cancel().catch(() => undefined);
+    }
+  });
+}
+
+function isValidElevenLabsSignedUrl(candidate: string, apiKey: string): boolean {
+  // eslint-disable-next-line no-control-regex -- Reject control characters in signed WebSocket URL.
+  if (!candidate || candidate.length > 2048 || /[\u0000-\u001f\u007f\s]/.test(candidate)) return false;
+  if ((apiKey && candidate.includes(apiKey)) || /xi-api-key/i.test(candidate)) return false;
+  try {
+    const parsed = new URL(candidate);
+    return parsed.protocol === 'wss:' &&
+      parsed.hostname === 'api.elevenlabs.io' &&
+      parsed.port === '' &&
+      !parsed.username &&
+      !parsed.password &&
+      parsed.pathname === '/v1/convai/conversation';
+  } catch {
+    return false;
+  }
+}
+
 async function handleVoiceRoute(request: Request, path: string, env: Env, dependencies: Dependencies): Promise<Response> {
   const apiKey = (env.ELEVENLABS_API_KEY ?? '').trim();
-  const voiceId = (env.ELEVENLABS_VOICE_ID ?? '').trim() || DEFAULT_JOSH_VOICE_ID;
+  const configuredVoice = (env.ELEVENLABS_VOICE_ID ?? '').trim();
+  const voiceId = /^[A-Za-z0-9]{15,32}$/.test(configuredVoice) ? configuredVoice : DEFAULT_JOSH_VOICE_ID;
   const agentId = (env.ELEVENLABS_AGENT_ID ?? '').trim();
   const fetcher = dependencies.fetcher ?? fetch;
+  const nowMs = (dependencies.now ?? Date.now)();
 
   if (path === '/api/chat/voice/status') {
     const isEnabled = Boolean(apiKey);
@@ -100,20 +203,26 @@ async function handleVoiceRoute(request: Request, path: string, env: Env, depend
     }), { status: 200, headers: { 'Content-Type': 'application/json; charset=utf-8' } }));
   }
 
-  if (!apiKey) return failure(503, 'VOICE_NOT_CONFIGURED');
+  if (!apiKey) return secure(failure(503, 'VOICE_NOT_CONFIGURED'));
+  const rateKey = cookie(request, ACCESS_COOKIE) ?? 'anonymous';
+  if (!checkVoiceRateLimit(rateKey, nowMs)) return secure(failure(429, 'RATE_LIMITED'));
 
   if (path === '/api/chat/voice/tts') {
     try {
       const bytes = await readBody(request, AbortSignal.timeout(10000), 4096);
       const parsed: unknown = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes));
-      if (typeof parsed !== 'object' || !parsed || Array.isArray(parsed)) return failure(400, 'INVALID_REQUEST');
+      if (typeof parsed !== 'object' || !parsed || Array.isArray(parsed)) return secure(failure(400, 'INVALID_REQUEST'));
+      for (const k of Object.keys(parsed)) {
+        if (k !== 'text' && k !== 'voiceId') return secure(failure(400, 'INVALID_REQUEST'));
+      }
       const rawText = typeof (parsed as { text?: unknown }).text === 'string' ? (parsed as { text: string }).text : '';
-      if (!rawText || rawText.includes('\u0000') || rawText.length > 1600) return failure(400, 'INVALID_REQUEST');
+      if (!rawText || rawText.includes('\u0000') || rawText.length > 1600) return secure(failure(400, 'INVALID_REQUEST'));
       const cleanText = rawText.replace(/\s+/g, ' ').trim();
-      if (!cleanText) return failure(400, 'INVALID_REQUEST');
+      if (!cleanText) return secure(failure(400, 'INVALID_REQUEST'));
       const rawVoiceId = (parsed as { voiceId?: unknown }).voiceId;
-      if (rawVoiceId !== undefined && (typeof rawVoiceId !== 'string' || !/^[A-Za-z0-9]{15,32}$/.test(rawVoiceId))) {
-        return failure(400, 'INVALID_REQUEST');
+      if (rawVoiceId !== undefined && (typeof rawVoiceId !== 'string' || !/^[A-Za-z0-9]{15,32}$/.test(rawVoiceId) ||
+          (rawVoiceId !== voiceId && rawVoiceId !== DEFAULT_JOSH_VOICE_ID))) {
+        return secure(failure(400, 'INVALID_REQUEST'));
       }
       const targetVoiceId = typeof rawVoiceId === 'string' ? rawVoiceId : voiceId;
       const upstream = await fetcher(
@@ -136,23 +245,24 @@ async function handleVoiceRoute(request: Request, path: string, env: Env, depend
               use_speaker_boost: true
             }
           }),
+          redirect: 'manual',
           signal: AbortSignal.timeout(25000)
         }
       );
-      if (!upstream.ok || !upstream.body) return failure(502, 'VOICE_UPSTREAM_FAILED');
-      return secure(new Response(upstream.body, {
+      if (upstream.status !== 200 || !upstream.body) return secure(failure(502, 'VOICE_UPSTREAM_FAILED'));
+      return secure(new Response(streamBoundedAudio(upstream.body), {
         status: 200,
         headers: { 'Content-Type': 'audio/mpeg' }
       }), CSP, 'audio/mpeg');
     } catch (error) {
-      return failure(error instanceof RangeError ? 413 : 502, 'VOICE_UPSTREAM_FAILED');
+      return secure(failure(error instanceof RangeError ? 413 : 502, 'VOICE_UPSTREAM_FAILED'));
     }
   }
 
   if (path === '/api/chat/voice/stt') {
     try {
       const bytes = await readBody(request, AbortSignal.timeout(15000), 1_500_000);
-      if (bytes.byteLength === 0) return failure(400, 'INVALID_REQUEST');
+      if (bytes.byteLength === 0) return secure(failure(400, 'INVALID_REQUEST'));
       const contentType = (request.headers.get('Content-Type') ?? '').toLowerCase();
       let audioBytes: Uint8Array<ArrayBuffer>;
       let mimeType = 'audio/webm';
@@ -161,14 +271,18 @@ async function handleVoiceRoute(request: Request, path: string, env: Env, depend
         mimeType = contentType.split(';')[0]!.trim() || 'audio/webm';
       } else {
         const parsed: unknown = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes));
-        if (typeof parsed !== 'object' || !parsed || Array.isArray(parsed)) return failure(400, 'INVALID_REQUEST');
+        if (typeof parsed !== 'object' || !parsed || Array.isArray(parsed)) return secure(failure(400, 'INVALID_REQUEST'));
+        for (const k of Object.keys(parsed)) {
+          if (k !== 'audioBase64' && k !== 'mimeType') return secure(failure(400, 'INVALID_REQUEST'));
+        }
         const audioBase64 = typeof (parsed as { audioBase64?: unknown }).audioBase64 === 'string'
           ? (parsed as { audioBase64: string }).audioBase64.trim()
           : '';
         if (typeof (parsed as { mimeType?: unknown }).mimeType === 'string') {
-          mimeType = (parsed as { mimeType: string }).mimeType;
+          const candidateMime = (parsed as { mimeType: string }).mimeType.split(';')[0]!.trim().toLowerCase();
+          if (/^audio\/(?:webm|ogg|mp4|wav|mpeg)$/.test(candidateMime)) mimeType = candidateMime;
         }
-        if (!audioBase64 || audioBase64.length > 1_400_000) return failure(400, 'INVALID_REQUEST');
+        if (!audioBase64 || audioBase64.length > 1_400_000) return secure(failure(400, 'INVALID_REQUEST'));
         const binaryStr = atob(audioBase64);
         audioBytes = new Uint8Array(binaryStr.length);
         for (let i = 0; i < binaryStr.length; i += 1) audioBytes[i] = binaryStr.charCodeAt(i);
@@ -178,14 +292,16 @@ async function handleVoiceRoute(request: Request, path: string, env: Env, depend
       formData.append('file', new Blob([audioBytes], { type: mimeType }), `speech.${ext}`);
       formData.append('model_id', 'scribe_v1');
       formData.append('tag_audio_events', 'false');
+      const sttSignal = AbortSignal.timeout(15000);
       const upstream = await fetcher('https://api.elevenlabs.io/v1/speech-to-text', {
         method: 'POST',
         headers: { 'xi-api-key': apiKey },
         body: formData,
-        signal: AbortSignal.timeout(15000)
+        redirect: 'manual',
+        signal: sttSignal
       });
-      if (!upstream.ok) return failure(502, 'VOICE_STT_FAILED');
-      const data = await upstream.json() as { text?: unknown; language_code?: unknown };
+      if (upstream.status !== 200) return secure(failure(502, 'VOICE_STT_FAILED'));
+      const data = await readBoundedResponseJson(upstream, sttSignal) as { text?: unknown; language_code?: unknown };
       const text = typeof data?.text === 'string' ? data.text.trim().slice(0, 2000) : '';
       return secure(new Response(JSON.stringify({
         schemaVersion: '1.0.0',
@@ -193,36 +309,40 @@ async function handleVoiceRoute(request: Request, path: string, env: Env, depend
         languageCode: typeof data?.language_code === 'string' ? data.language_code : 'en'
       }), { status: 200, headers: { 'Content-Type': 'application/json; charset=utf-8' } }));
     } catch (error) {
-      return failure(error instanceof RangeError ? 413 : 502, 'VOICE_STT_FAILED');
+      return secure(failure(error instanceof RangeError ? 413 : 502, 'VOICE_STT_FAILED'));
     }
   }
 
   if (path === '/api/chat/voice/live-session') {
-    if (!agentId) return failure(503, 'LIVE_AGENT_NOT_CONFIGURED');
+    if (!agentId || !/^[A-Za-z0-9_-]{10,64}$/.test(agentId)) return secure(failure(503, 'LIVE_AGENT_NOT_CONFIGURED'));
     try {
       await readBody(request, AbortSignal.timeout(5000), 1024);
+      const liveSignal = AbortSignal.timeout(10000);
       const upstream = await fetcher(
         `https://api.elevenlabs.io/v1/convai/conversation/get_signed_url?agent_id=${encodeURIComponent(agentId)}`,
         {
           method: 'GET',
           headers: { 'xi-api-key': apiKey },
-          signal: AbortSignal.timeout(10000)
+          redirect: 'manual',
+          signal: liveSignal
         }
       );
-      if (!upstream.ok) {
+      if (upstream.status !== 200) {
         if (upstream.status === 401 || upstream.status === 403) {
+          const fallbackUrl = `wss://api.elevenlabs.io/v1/convai/conversation?agent_id=${encodeURIComponent(agentId)}`;
+          if (!isValidElevenLabsSignedUrl(fallbackUrl, apiKey)) return secure(failure(502, 'LIVE_SESSION_FAILED'));
           return secure(new Response(JSON.stringify({
             schemaVersion: '1.0.0',
-            signedUrl: `wss://api.elevenlabs.io/v1/convai/conversation?agent_id=${encodeURIComponent(agentId)}`,
+            signedUrl: fallbackUrl,
             voiceId,
             authMode: 'public_agent_fallback'
           }), { status: 200, headers: { 'Content-Type': 'application/json; charset=utf-8' } }));
         }
-        return failure(502, 'LIVE_SESSION_FAILED');
+        return secure(failure(502, 'LIVE_SESSION_FAILED'));
       }
-      const data = await upstream.json() as { signed_url?: unknown };
-      if (typeof data?.signed_url !== 'string' || !data.signed_url.startsWith('wss://api.elevenlabs.io/')) {
-        return failure(502, 'LIVE_SESSION_FAILED');
+      const data = await readBoundedResponseJson(upstream, liveSignal) as { signed_url?: unknown };
+      if (typeof data?.signed_url !== 'string' || !isValidElevenLabsSignedUrl(data.signed_url, apiKey)) {
+        return secure(failure(502, 'LIVE_SESSION_FAILED'));
       }
       return secure(new Response(JSON.stringify({
         schemaVersion: '1.0.0',
@@ -231,7 +351,7 @@ async function handleVoiceRoute(request: Request, path: string, env: Env, depend
         authMode: 'signed_url'
       }), { status: 200, headers: { 'Content-Type': 'application/json; charset=utf-8' } }));
     } catch (error) {
-      return failure(error instanceof RangeError ? 413 : 502, 'LIVE_SESSION_FAILED');
+      return secure(failure(error instanceof RangeError ? 413 : 502, 'LIVE_SESSION_FAILED'));
     }
   }
 
@@ -255,53 +375,56 @@ export async function privateChat(request: Request, env: Env, dependencies: Depe
   if (env.CHAT_PRIVATE_ENABLED !== 'true' || env.PUBLIC_CHAT_ENABLED === 'true') return unavailable();
   if (/^\/api\/chat\/_/i.test(url.pathname)) return unavailable();
   let config: ReturnType<typeof validatedConfig>;
-  try { config = validatedConfig(env); } catch { return failure(503, 'NOT_CONFIGURED'); }
-  if (url.protocol !== 'https:' && !['localhost', '127.0.0.1'].includes(url.hostname)) return failure(403, 'HTTPS_REQUIRED');
+  try { config = validatedConfig(env); } catch { return secure(failure(503, 'NOT_CONFIGURED')); }
+  if (url.protocol !== 'https:' && !['localhost', '127.0.0.1'].includes(url.hostname)) return secure(failure(403, 'HTTPS_REQUIRED'));
   const nowMs = (dependencies.now ?? Date.now)();
   const now = Math.floor(nowMs / 1000);
   const isRead = request.method === 'GET' || request.method === 'HEAD';
+  const rawContentType = request.headers.get('Content-Type') ?? '';
+  const validWriteContentType = /^application\/json(?:\s*;\s*charset=utf-8)?$/i.test(rawContentType) ||
+    (url.pathname === '/api/chat/voice/stt' && /^audio\/(?:webm|ogg|mp4|wav|mpeg)(?:\s*;.*)?$/i.test(rawContentType));
   if (!isRead && (request.headers.get('Origin') !== url.origin ||
       ['cross-site', 'none'].includes(request.headers.get('Sec-Fetch-Site') ?? '') ||
-      !/^application\/json(?:\s*;\s*charset=utf-8)?$/i.test(request.headers.get('Content-Type') ?? '') ||
-      request.headers.has('Content-Encoding'))) return failure(403, 'REQUEST_REJECTED');
+      !validWriteContentType ||
+      request.headers.has('Content-Encoding'))) return secure(failure(403, 'REQUEST_REJECTED'));
 
   if (url.pathname === '/api/chat/access') {
-    if (request.method !== 'POST') return failure(405, 'METHOD_NOT_ALLOWED');
+    if (request.method !== 'POST') return secure(failure(405, 'METHOD_NOT_ALLOWED'));
     try {
       const bytes = await readBody(request, AbortSignal.timeout(5000), 256);
       const body: unknown = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes));
       if (typeof body !== 'object' || !body || Array.isArray(body) || Object.keys(body).join() !== 'token' ||
           typeof (body as { token?: unknown }).token !== 'string' ||
-          !await authorised('Bearer ' + (body as { token: string }).token, config.token)) return failure(401, 'UNAUTHORISED');
+          !await authorised('Bearer ' + (body as { token: string }).token, config.token)) return secure(failure(401, 'UNAUTHORISED'));
       const expiry = String(now + 3600);
       const value = expiry + '.' + await mac(config.token, 'private-access-v1:' + expiry);
       return secure(new Response('{"ok":true}', { headers: { 'Content-Type': 'application/json',
         'Set-Cookie': `${ACCESS_COOKIE}=${value}; Path=/; Secure; HttpOnly; SameSite=Strict; Max-Age=3600` } }));
-    } catch (error) { return failure(error instanceof RangeError ? 413 : 400, 'INVALID_REQUEST'); }
+    } catch (error) { return secure(failure(error instanceof RangeError ? 413 : 400, 'INVALID_REQUEST')); }
   }
 
   const assets = env.CHAT_ASSETS ?? env.ASSETS;
   const authenticated = await access(request, config.token, nowMs);
   if (url.pathname === '/chat-preview' || url.pathname === '/chat-preview.html' || url.pathname === '/') {
-    if (!isRead) return failure(405, 'METHOD_NOT_ALLOWED');
+    if (!isRead) return secure(failure(405, 'METHOD_NOT_ALLOWED'));
     if (!authenticated) return login();
-    if (!assets) return failure(503, 'ASSETS_UNAVAILABLE');
+    if (!assets) return secure(failure(503, 'ASSETS_UNAVAILABLE'));
     return secure(await assets.fetch(new Request(new URL('/chat-preview.html', url), { method: request.method })));
   }
   if (Object.hasOwn(ASSET_TYPES, url.pathname)) {
-    if (!isRead) return failure(405, 'METHOD_NOT_ALLOWED');
-    if (!authenticated) return failure(401, 'UNAUTHORISED');
-    if (!assets) return failure(503, 'ASSETS_UNAVAILABLE');
+    if (!isRead) return secure(failure(405, 'METHOD_NOT_ALLOWED'));
+    if (!authenticated) return secure(failure(401, 'UNAUTHORISED'));
+    if (!assets) return secure(failure(503, 'ASSETS_UNAVAILABLE'));
     const assetResponse = await assets.fetch(new Request(url, { method: request.method }));
     if (assetResponse.status === 404) return unavailable();
     return secure(assetResponse, CSP, ASSET_TYPES[url.pathname]);
   }
   if (voiceRoute(request.method, url.pathname)) {
-    if (!authenticated) return failure(401, 'UNAUTHORISED');
+    if (!authenticated) return secure(failure(401, 'UNAUTHORISED'));
     return handleVoiceRoute(request, url.pathname, env, dependencies);
   }
   if (!route(request.method, url.pathname)) return unavailable();
-  if (!authenticated) return failure(401, 'UNAUTHORISED');
+  if (!authenticated) return secure(failure(401, 'UNAUTHORISED'));
 
   const controller = new AbortController();
   const abort = () => controller.abort();
@@ -311,9 +434,9 @@ export async function privateChat(request: Request, env: Env, dependencies: Depe
   const cleanup = () => { clearTimeout(timer); request.signal.removeEventListener('abort', abort); };
   try {
     const body = await readBody(request, controller.signal, 12288);
-    if (isRead && body.length) { cleanup(); return failure(400, 'INVALID_REQUEST'); }
+    if (isRead && body.length) { cleanup(); return secure(failure(400, 'INVALID_REQUEST')); }
     const session = cookie(request, SESSION_COOKIE);
-    if (session !== undefined && !/^[A-Za-z0-9_-]{43}$/.test(session)) { cleanup(); return failure(401, 'INVALID_SESSION'); }
+    if (session !== undefined && !/^[A-Za-z0-9_-]{43}$/.test(session)) { cleanup(); return secure(failure(401, 'INVALID_SESSION')); }
     const visitor = await mac(config.token, 'private-visitor-v1');
     const headers = await signedHeaders(body, config.keyring, String(now), dependencies.nonce?.() ?? crypto.randomUUID(),
       request.method, url.pathname, `private:${visitor}:${session ?? '-'}`);
@@ -323,19 +446,19 @@ export async function privateChat(request: Request, env: Env, dependencies: Depe
     const contentType = upstream.headers.get('Content-Type') ?? '';
     if (upstream.status < 200 || upstream.status >= 500 || upstream.status >= 300 && upstream.status < 400 ||
         !/^(?:application\/json|text\/event-stream)(?:;|$)/i.test(contentType) || !upstream.body) {
-      void upstream.body?.cancel().catch(() => undefined); cleanup(); return failure(502, 'UPSTREAM_REJECTED');
+      void upstream.body?.cancel().catch(() => undefined); cleanup(); return secure(failure(502, 'UPSTREAM_REJECTED'));
     }
     const responseHeaders = new Headers({ 'Content-Type': contentType });
     const sessionCookie = upstream.headers.get('Set-Cookie');
     if (sessionCookie) {
       if (!/^__Host-jb_chat=(?:[A-Za-z0-9_-]{43})?; Path=\/; Secure; HttpOnly; SameSite=Strict; Max-Age=(?:86400|0)$/.test(sessionCookie)) {
-        void upstream.body.cancel().catch(() => undefined); cleanup(); return failure(502, 'INVALID_SESSION');
+        void upstream.body.cancel().catch(() => undefined); cleanup(); return secure(failure(502, 'INVALID_SESSION'));
       }
       responseHeaders.set('Set-Cookie', sessionCookie);
     }
     return secure(new Response(streamBody(upstream.body, controller, cleanup), { status: upstream.status, headers: responseHeaders }));
   } catch (error) {
     cleanup();
-    return failure(controller.signal.aborted ? 504 : error instanceof RangeError ? 413 : 502, 'CHAT_UNAVAILABLE');
+    return secure(failure(controller.signal.aborted ? 504 : error instanceof RangeError ? 413 : 502, 'CHAT_UNAVAILABLE'));
   }
 }

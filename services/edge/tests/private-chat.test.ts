@@ -378,11 +378,87 @@ test('ElevenLabs Josh voice routes (2ccxXaT9cMefjPlK2Pwn) require operator cooki
   assert.ok(String(liveJson.signedUrl).startsWith('wss://api.elevenlabs.io/v1/convai/conversation'));
   assert.ok(!JSON.stringify(liveJson).includes(voiceCanary));
 
-  // 5. Hostile TTS inputs (empty text, NUL byte, oversized text) fail closed with 400
-  for (const badBody of [{ text: '' }, { text: 'Hello\u0000world' }, { text: 'a'.repeat(1601) }, { text: 'Hi', voiceId: '../bad' }]) {
+  // 5. Hostile TTS inputs (empty text, NUL byte, oversized text, non-Josh voiceId, extra keys) fail closed with 400
+  for (const badBody of [
+    { text: '' },
+    { text: 'Hello\u0000world' },
+    { text: 'a'.repeat(1601) },
+    { text: 'Hi', voiceId: '../bad' },
+    { text: 'Hi', voiceId: 'OtherVoice1234567890' },
+    { text: 'Hi', extraKey: 'forbidden' }
+  ]) {
     const badRes = await worker.fetch(request('/api/chat/voice/tts', 'POST', badBody, cookies), voiceEnv);
     assert.equal(badRes.status, 400);
+    assert.equal(badRes.headers.get('X-Frame-Options'), 'DENY');
+    assert.ok(badRes.headers.get('Content-Security-Policy')?.includes("default-src 'none'"));
     const errText = await badRes.text();
     assert.ok(!errText.includes(voiceCanary));
+  }
+
+  // 6. Authenticated POST /api/chat/voice/stt accepts both JSON { audioBase64, mimeType } and raw audio/webm, and rejects hostile signed_url
+  let sttUpstreamMode: 'ok' | 'redirect' = 'ok';
+  let liveUpstreamUrl = 'wss://api.elevenlabs.io/v1/convai/conversation?agent_id=agent_1';
+  const sttWorker = createWorker({
+    fetcher: async (input, init) => {
+      const url = typeof input === 'string' ? input : input instanceof URL ? input.toString() : input.url;
+      assert.equal(init?.redirect, 'manual');
+      if (url.includes('/v1/speech-to-text')) {
+        if (sttUpstreamMode === 'redirect') {
+          return new Response(null, { status: 302, headers: { Location: 'https://evil.example/steal' } });
+        }
+        return new Response(JSON.stringify({ text: 'Tell me about Medavie Blue Cross.', language_code: 'en' }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+      if (url.includes('/v1/convai/conversation/get_signed_url')) {
+        return new Response(JSON.stringify({ signed_url: liveUpstreamUrl }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+      return new Response(voiceCanary, { status: 502 });
+    }
+  });
+  const sttCookies = await login(sttWorker);
+
+  const sttJsonRes = await sttWorker.fetch(
+    request('/api/chat/voice/stt', 'POST', { audioBase64: btoa('fake-webm-bytes'), mimeType: 'audio/webm' }, sttCookies),
+    voiceEnv
+  );
+  assert.equal(sttJsonRes.status, 200);
+  const sttJsonBody = await sttJsonRes.json() as Record<string, unknown>;
+  assert.equal(sttJsonBody.text, 'Tell me about Medavie Blue Cross.');
+
+  const sttRawReq = new Request(`${origin}/api/chat/voice/stt`, {
+    method: 'POST',
+    headers: {
+      Origin: origin,
+      'Sec-Fetch-Site': 'same-origin',
+      'Content-Type': 'audio/webm;codecs=opus',
+      Cookie: sttCookies
+    },
+    body: new Uint8Array([0x1a, 0x45, 0xdf, 0xa3])
+  });
+  const sttRawRes = await sttWorker.fetch(sttRawReq, voiceEnv);
+  assert.equal(sttRawRes.status, 200);
+
+  sttUpstreamMode = 'redirect';
+  const sttRedirectRes = await sttWorker.fetch(
+    request('/api/chat/voice/stt', 'POST', { audioBase64: btoa('fake-webm-bytes') }, sttCookies),
+    voiceEnv
+  );
+  assert.equal(sttRedirectRes.status, 502);
+
+  for (const badSignedUrl of [
+    'wss://api.elevenlabs.io/evil/path',
+    'wss://api.elevenlabs.io:8443/v1/convai/conversation',
+    'wss://user:pass@api.elevenlabs.io/v1/convai/conversation',
+    `wss://api.elevenlabs.io/v1/convai/conversation?key=${voiceCanary}`,
+    'wss://api.elevenlabs.io/v1/convai/conversation?xi-api-key=leak'
+  ]) {
+    liveUpstreamUrl = badSignedUrl;
+    const badLiveRes = await sttWorker.fetch(request('/api/chat/voice/live-session', 'POST', {}, sttCookies), voiceEnv);
+    assert.equal(badLiveRes.status, 502, `Expected 502 for hostile signed_url: ${badSignedUrl}`);
   }
 });

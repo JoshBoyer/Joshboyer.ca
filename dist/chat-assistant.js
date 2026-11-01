@@ -2114,7 +2114,10 @@
         });
         if (!res.ok) throw new Error('live_unavailable');
         const data = await res.json();
-        if (!data?.signedUrl) throw new Error('missing_signed_url');
+        if (typeof data?.signedUrl !== 'string' ||
+            !/^wss:\/\/api\.elevenlabs\.io\/v1\/convai\/conversation\?[A-Za-z0-9._~:/?#[\]@!$&'()*+,;=%-]+$/.test(data.signedUrl)) {
+          throw new Error('missing_signed_url');
+        }
         const ws = new win.WebSocket(data.signedUrl);
         activeSocket = ws;
         isLiveCall = true;
@@ -2316,11 +2319,16 @@
             }
             setAvatarState('thinking', 'Transcribing via ElevenLabs Scribe…');
             try {
+              const arrayBuf = await blob.arrayBuffer();
+              const bytes = new Uint8Array(arrayBuf);
+              let binary = '';
+              for (let i = 0; i < bytes.byteLength; i += 1) binary += String.fromCharCode(bytes[i]);
+              const audioBase64 = win.btoa(binary);
               const sttRes = await fetcher('/api/chat/voice/stt', {
                 method: 'POST',
                 credentials: 'same-origin',
-                headers: { 'Content-Type': blob.type || 'audio/webm', Accept: 'application/json' },
-                body: blob
+                headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                body: JSON.stringify({ audioBase64, mimeType: blob.type || 'audio/webm' })
               });
               if (sttRes.ok) {
                 const sttJson = await sttRes.json();
@@ -2374,7 +2382,7 @@
     if (introBtn) {
       introBtn.addEventListener('click', () => {
         void speakText(
-          "Hey, I'm Josh's AI assistant. Ask me about my architecture work, Guidewire integrations, hybrid S3 vector RAG, or MCP tools—or start Live Voice to talk in real time.",
+          "Hey, I'm Josh's AI assistant. Ask me about my architecture work, core insurance integrations, hybrid S3 vector RAG, or MCP tools—or start Live Voice to talk in real time.",
           { isIntro: true, fallbackUrl: '/assets/personal/josh-intro-voice.mp3' }
         );
       });

@@ -5,29 +5,32 @@
  *
  * Uses the ElevenLabs Conversational AI REST API (/v1/convai/agents/:agent_id
  * and /v1/convai/knowledge-base) to configure Josh Boyer's live voice agent
- * (`agent_6801m5j3psdyec1bkkecnnak1s6x`) with:
+ * with:
  *   1. Voice ID `2ccxXaT9cMefjPlK2Pwn` ("Josh Pod Voice", Professional Voice Clone)
  *   2. 44.1 kHz studio output (`agent_output_audio_format: "pcm_44100"`) instead of
  *      the default 16 kHz telephone format (`pcm_16000`) that makes voices sound far away
  *   3. Generous turn-taking timeout (`turn_timeout: 10`) so pauses never trigger
  *      premature "..." / "I'm still here" interruptions
  *   4. Canonical JoshBoyer.ca system prompt (including AWS us-east-2 architecture,
- *      Guidewire, Medavie, SQL continuity, NEXUS, and strict anti-repetition rules)
+ *      Grenville IBS to Cognition+ modernization, Medavie, SQL continuity, NEXUS,
+ *      and strict anti-repetition rules)
  *   5. Optional Knowledge Base document upload from `chat/knowledge/cag-context.json`
  *
- * Requirement: ELEVENLABS_API_KEY in `.env` must have `convai_read` and `convai_write`
- * permissions enabled in the ElevenLabs dashboard (Developers -> API Keys -> Edit permissions).
+ * Requirement: ELEVENLABS_API_KEY and ELEVENLABS_AGENT_ID in `.env` (with `convai_read`
+ * and `convai_write` permissions enabled in the ElevenLabs dashboard).
  */
 
 const fs = require('node:fs');
 const path = require('node:path');
 
 const ROOT = path.resolve(__dirname, '..');
-const DEFAULT_ENV_PATH = 'C:\\Users\\boyer\\Downloads\\Projects\\Joshboyer.ca\\.env';
 
 function loadEnv() {
   const out = { ...process.env };
-  const candidates = [path.join(ROOT, '.env'), DEFAULT_ENV_PATH];
+  const candidates = [
+    path.join(ROOT, '.env'),
+    path.resolve(ROOT, '..', '..', '..', '.env')
+  ];
   for (const file of candidates) {
     if (!fs.existsSync(file)) continue;
     for (const line of fs.readFileSync(file, 'utf8').split(/\r?\n/)) {
@@ -50,11 +53,11 @@ function buildAgentSystemPrompt(cag) {
     "Do NOT include bracketed stage directions like [warmly] or [laughs] in your text.",
     "CRITICAL MULTI-TURN RULE: Never repeat the same paragraph, disclaimer, or explanation twice in a conversation. Always build directly and logically on what the visitor just said.",
     "VERIFIED PORTFOLIO FACTS:",
-    "- Dell (Sept 2006+): Enterprise technical support and hardware/systems troubleshooting foundation.",
-    "- Grenville Mutual Insurance (2009–2022): Bridged business architecture, systems analysis, and Guidewire core insurance platforms. Automated approximately 80% of residential renewals, 40% of farm/agri renewals, and 60% of commercial renewals (user-reported, renewal-only). Researched and documented the broker takeover solution, guided receiving-system changes, and personally designed and built the production Excel VBA add-in for validation, XML batch generation, and error reconciliation.",
-    "- Medavie Blue Cross (2022–present): Senior Business Systems Analyst. Led solution review, mapping, and synchronization requirements for provider and claims REST/scheduled-event integrations (not Kafka), and supported live integrations. Delivered approved reporting continuity analysis/design, operational interim SQL, and corrected financial-report SQL adopted by the payment team.",
+    "- Dell (Sept 2006–2009): Enterprise technical support and hardware/systems troubleshooting foundation.",
+    "- Grenville Mutual Insurance (2009–2022): Progressed from Systems Administrator to Business and Systems Analyst during core IBS to Cognition+ modernization. Automated approximately 80% of residential renewals, 40% of farm/agri renewals, and 60% of commercial renewals (user-reported, renewal-only).",
+    "- Medavie Blue Cross (2022–present): Senior Business Systems Analyst. Led solution review, mapping, and synchronization requirements for ProviderRegistry and claims REST/scheduled-event integrations (not Kafka), and supported live integrations. Researched and documented the bulk group takeover solution, guided receiving-system changes with developers, and personally designed and built the production Excel VBA add-in for validation, XML batch generation, and error reconciliation. Delivered approved reporting continuity analysis/design, operational interim SQL, and corrected financial-report SQL adopted by the payment team.",
     "- Independent AI & Cloud Architecture: Created NEXUS (independent AI capstone) and personally architected and deployed THIS portfolio assistant on AWS us-east-2 using AWS Lambda, Amazon S3 & S3 Vectors (1536-dimensional hybrid vector RAG), Amazon DynamoDB (session state & $25 atomic cost ledger), API Gateway (REST + AWS_IAM SigV4 internal routing), AWS Secrets Manager & SSM Parameter Store, Cloudflare Workers & AI Gateway, 3 read-only JSON-RPC MCP tools (get_case_study, search_public_evidence, compare_job_requirements), and ElevenLabs Live Voice.",
-    "- Career boundary: While Josh's corporate insurance employers ran primarily on-premise/virtualized environments (VMware, Guidewire, SQL) rather than commercial AWS/Azure migrations, Josh has direct hands-on AWS us-east-2 cloud architecture experience building this assistant, alongside 15+ years of enterprise integration, API mapping, and data continuity that transfer directly to AWS teams.",
+    "- Career boundary: While Josh's corporate insurance employers ran primarily on-premise/virtualized environments (VMware, hybrid core insurance platforms, SQL) rather than commercial AWS/Azure migrations, Josh has direct hands-on AWS us-east-2 cloud architecture experience building this assistant, alongside 15+ years of enterprise integration, API mapping, and data continuity that transfer directly to AWS teams.",
     "",
     `Approved CAG summary JSON: ${JSON.stringify(cag)}`
   ].join('\n');
@@ -63,11 +66,11 @@ function buildAgentSystemPrompt(cag) {
 async function main() {
   const env = loadEnv();
   const apiKey = (env.ELEVENLABS_API_KEY || '').trim();
-  const agentId = (env.ELEVENLABS_AGENT_ID || 'agent_6801m5j3psdyec1bkkecnnak1s6x').trim();
+  const agentId = (env.ELEVENLABS_AGENT_ID || '').trim();
   const voiceId = (env.ELEVENLABS_VOICE_ID || '2ccxXaT9cMefjPlK2Pwn').trim();
 
-  if (!apiKey) {
-    console.error('ERROR: ELEVENLABS_API_KEY is not set.');
+  if (!apiKey || !agentId) {
+    console.error('ERROR: ELEVENLABS_API_KEY and ELEVENLABS_AGENT_ID must be set.');
     process.exit(1);
   }
 
