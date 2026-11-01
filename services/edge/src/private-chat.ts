@@ -109,7 +109,7 @@ async function handleVoiceRoute(request: Request, path: string, env: Env, depend
       if (typeof parsed !== 'object' || !parsed || Array.isArray(parsed)) return failure(400, 'INVALID_REQUEST');
       const rawText = typeof (parsed as { text?: unknown }).text === 'string' ? (parsed as { text: string }).text : '';
       if (!rawText || rawText.includes('\u0000') || rawText.length > 1600) return failure(400, 'INVALID_REQUEST');
-      const cleanText = rawText.replace(/\s+/g, ' ').trim().slice(0, 700);
+      const cleanText = rawText.replace(/\s+/g, ' ').trim();
       if (!cleanText) return failure(400, 'INVALID_REQUEST');
       const rawVoiceId = (parsed as { voiceId?: unknown }).voiceId;
       if (rawVoiceId !== undefined && (typeof rawVoiceId !== 'string' || !/^[A-Za-z0-9]{15,32}$/.test(rawVoiceId))) {
@@ -129,13 +129,13 @@ async function handleVoiceRoute(request: Request, path: string, env: Env, depend
             text: cleanText,
             model_id: 'eleven_multilingual_v2',
             voice_settings: {
-              stability: 0.50,
+              stability: 0.55,
               similarity_boost: 0.75,
               style: 0.0,
               use_speaker_boost: true
             }
           }),
-          signal: AbortSignal.timeout(15000)
+          signal: AbortSignal.timeout(25000)
         }
       );
       if (!upstream.ok || !upstream.body) return failure(502, 'VOICE_UPSTREAM_FAILED');
@@ -153,7 +153,7 @@ async function handleVoiceRoute(request: Request, path: string, env: Env, depend
       const bytes = await readBody(request, AbortSignal.timeout(15000), 1_500_000);
       if (bytes.byteLength === 0) return failure(400, 'INVALID_REQUEST');
       const contentType = (request.headers.get('Content-Type') ?? '').toLowerCase();
-      let audioBytes: Uint8Array;
+      let audioBytes: Uint8Array<ArrayBuffer>;
       let mimeType = 'audio/webm';
       if (contentType.startsWith('audio/')) {
         audioBytes = bytes;
