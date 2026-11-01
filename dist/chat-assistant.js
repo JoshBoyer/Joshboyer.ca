@@ -1624,14 +1624,18 @@
         .replace(/\b15\+\s*years\b/gi, 'over fifteen years')
         .replace(/\s+/g, ' ')
         .trim();
-      const sentences = humanized.match(/[^.!?]+[.!?]+(?:\s+|$)|[^.!?]+$/g) || [humanized];
-      if (sentences.length <= 3) return humanized;
-      // If a response has 4+ sentences, keep the first 2 core sentences + any final question so spoken delivery stays conversational and punchy
-      const last = sentences[sentences.length - 1].trim();
-      if (/\?$/.test(last)) {
-        return `${sentences[0].trim()} ${sentences[1].trim()} ${last}`.replace(/\s+/g, ' ').trim();
+      const sentences = (humanized.match(/[^.!?]+[.!?]+(?:\s+|$)|[^.!?]+$/g) || [humanized]).map(s => s.trim()).filter(Boolean);
+      const selected = sentences.length <= 3
+        ? sentences
+        : (/\?$/.test(sentences[sentences.length - 1])
+            ? [sentences[0], sentences[1], sentences[sentences.length - 1]]
+            : sentences.slice(0, 3));
+      if (selected.length >= 2 && /\?$/.test(selected[selected.length - 1])) {
+        const bodyPart = selected.slice(0, -1).join(' ');
+        const questionPart = selected[selected.length - 1];
+        return `[warmly] ${bodyPart} [curious] ${questionPart}`.replace(/\s+/g, ' ').trim();
       }
-      return sentences.slice(0, 3).map(s => s.trim()).join(' ').replace(/\s+/g, ' ').trim();
+      return `[warmly] ${selected.join(' ')}`.replace(/\s+/g, ' ').trim();
     }
 
     function normalizeSentenceKey(sentence) {

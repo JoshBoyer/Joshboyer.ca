@@ -93,7 +93,7 @@ async function handleVoiceRoute(request: Request, path: string, env: Env, depend
       voiceId,
       tts: isEnabled,
       stt: isEnabled,
-      ttsModel: 'eleven_multilingual_v2',
+      ttsModel: 'eleven_v4_turbo',
       sttModel: 'scribe_v1',
       liveEnabled: isLive,
       liveConversationalAi: isLive
@@ -127,14 +127,7 @@ async function handleVoiceRoute(request: Request, path: string, env: Env, depend
           },
           body: JSON.stringify({
             text: cleanText,
-            model_id: 'eleven_multilingual_v2',
-            voice_settings: {
-              stability: 0.38,
-              similarity_boost: 0.82,
-              style: 0.22,
-              speed: 0.94,
-              use_speaker_boost: true
-            }
+            model_id: 'eleven_v4_turbo'
           }),
           signal: AbortSignal.timeout(25000)
         }
