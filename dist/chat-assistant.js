@@ -1577,6 +1577,7 @@
     let micMuteGainNode = null;
     let liveKeepaliveTimer = null;
     let lastMicChunkAt = 0;
+    let lastActivitySentAt = 0;
     let lastTranscriptText = '';
     let lastTranscriptAt = 0;
     let lastAudioEndedAt = 0;
@@ -1585,19 +1586,96 @@
     let isRecordingMic = false;
     let isLiveCall = false;
     let isLiveSpeaking = false;
+    let serverGreetingSkipped = false;
+    let liveSpeechChain = Promise.resolve();
+    const liveSpokenSentences = new Set();
+
+    const LIVE_VOICE_CONTEXT_UPDATE = [
+      'IMPORTANT LIVE CONTEXT UPDATE FROM JOSH BOYER PORTFOLIO APPLICATION (SUPERSEDES STATIC CLOUD DISCLAIMER):',
+      '1. Persona & Greeting: Introduce yourself as Josh’s AI assistant (never use the name "Alex", and never output bracketed stage tags like [warmly], [calmly], or [patient]). Keep spoken responses natural, direct, warm, and conversational (2 to 4 complete sentences).',
+      '2. Strict Anti-Repetition & Multi-Turn Progression Rule: NEVER repeat the same paragraph, disclaimer, or sentence twice in a conversation. Every turn must build forward on the prior turn with new specifics.',
+      '3. Hands-On AWS & Cloud Architecture (Current Live System): While Josh’s corporate insurance roles at Grenville Mutual (2009–2022) and Medavie Blue Cross (2022–Present) operated in on-premise/virtualized (VMware, IBS, Cognition+, MAAX) and hybrid integration environments rather than commercial employer cloud migrations, Josh personally architected, built, and deployed THIS live portfolio AI platform on AWS (us-east-2) using AWS Lambda (Node.js 22), Amazon S3 & S3 Vectors (1536-d hybrid vector RAG), Amazon DynamoDB (session-turns & atomic $25 cost-ledger), Amazon API Gateway (REST + AWS_IAM SigV4 signing), AWS Secrets Manager, AWS CDK, Cloudflare Workers & AI Gateway, and a 3-tool JSON-RPC MCP server (get_case_study, search_public_evidence, compare_job_requirements).',
+      '4. Follow-Up AWS Questions: When a user follows up saying their company uses AWS or asks about his AWS experience, do NOT repeat the on-premise disclaimer—instead, explain his hands-on AWS us-east-2 serverless architecture on this live portfolio platform and how his 15+ years of API contract mapping, asynchronous event tables, and SQL reconciliation transfer directly to AWS production workloads.',
+      '5. Verified Career Facts (Oct 2026 Master): Medavie Blue Cross (2022–Present): ProviderRegistry REST/scheduled-event sync (ProviderEvent table + REST consumer, not Kafka), bulk group takeover automation (personally built the production Excel VBA add-in for validation, XML batch generation, and error reconciliation), and reporting continuity (approved analysis/design + corrected financial-report SQL adopted by the payment team). Grenville Mutual (2009–2022): Systems Admin to Business/Systems Analyst (2014–2016 transition window), IBS to Cognition+ modernization, and user-reported renewal-only straight-through automation (~80% residential, ~60% commercial, ~40% farm/agri). Dell (Sept 2006–2009). NEXUS is his active independent multi-agent AI capstone.'
+    ].join('\n');
 
     function cleanStageTags(rawText) {
       return String(rawText || '')
         .replace(/\[[^\]]{1,48}\]\s*/g, '')
-        .replace(/\([^)]{1,32}\)\s*/g, '')
+        .replace(/\((?:warmly|calmly|patient|patiently|friendly|excited|softly|thoughtfully|empathetically|chuckles|laughs|sighs|clears throat|pause|smiling)\)\s*/gi, '')
+        .replace(/\bI(?:'m| am)\s+Alex,\s*Josh['’]s\s+AI\s+representative\b/gi, "I'm Josh's AI assistant")
+        .replace(/\bI(?:'m| am)\s+Alex\b/gi, "I'm Josh's AI assistant")
         .replace(/\s+/g, ' ')
         .trim();
+    }
+
+    function normalizeSentenceKey(sentence) {
+      return String(sentence || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function sentenceTokenOverlap(keyA, keyB) {
+      const tokensA = keyA.split(' ').filter(w => w.length > 2);
+      const tokensB = keyB.split(' ').filter(w => w.length > 2);
+      if (!tokensA.length || !tokensB.length) return 0;
+      const setB = new Set(tokensB);
+      let shared = 0;
+      for (const t of tokensA) {
+        if (setB.has(t)) shared += 1;
+      }
+      return shared / Math.min(tokensA.length, tokensB.length);
+    }
+
+    function deduplicateLiveResponse(rawText, priorSentences, lastUserQuestion = '') {
+      const cleaned = cleanStageTags(rawText);
+      if (!cleaned) return '';
+      const rawSentences = cleaned.match(/[^.!?]+[.!?]+(?:\s+|$)|[^.!?]+$/g) || [cleaned];
+      const kept = [];
+      for (const rawSentence of rawSentences) {
+        const trimmed = rawSentence.trim();
+        if (!trimmed) continue;
+        const key = normalizeSentenceKey(trimmed);
+        const wordCount = key.split(' ').filter(Boolean).length;
+        if (wordCount >= 6) {
+          let isRepeated = priorSentences.has(key);
+          if (!isRepeated) {
+            for (const prevKey of priorSentences) {
+              if (sentenceTokenOverlap(key, prevKey) >= 0.76) {
+                isRepeated = true;
+                break;
+              }
+            }
+          }
+          if (isRepeated) continue;
+        }
+        kept.push(trimmed);
+      }
+      let finalResponse = kept.join(' ').replace(/\s+/g, ' ').trim();
+      if (!finalResponse || (kept.length === 1 && /\?$/.test(kept[0]) && rawSentences.length > 1)) {
+        if (/\b(?:aws|amazon|cloud|lambda|s3|dynamodb|serverless)\b/i.test(lastUserQuestion || cleaned)) {
+          finalResponse = "On the hands-on AWS side, Josh personally architected and deployed this live portfolio assistant in AWS us-east-2 using Lambda, S3 Vectors for 1536-dimension hybrid RAG, DynamoDB for session state and atomic cost guardrails, API Gateway with IAM SigV4 signing, and AWS CDK—and his 15+ years of API contract mapping, event-driven integration, and SQL reconciliation transfer directly to AWS production workloads. Which AWS services does your team rely on most?";
+        } else {
+          finalResponse = cleaned;
+        }
+      }
+      const finalSentences = finalResponse.match(/[^.!?]+[.!?]+(?:\s+|$)|[^.!?]+$/g) || [finalResponse];
+      for (const s of finalSentences) {
+        const k = normalizeSentenceKey(s);
+        if (k.split(' ').filter(Boolean).length >= 6) {
+          priorSentences.add(k);
+        }
+      }
+      return finalResponse;
     }
 
     function isValidSpokenInput(rawText) {
       const cleaned = cleanStageTags(rawText);
       if (!cleaned) return false;
       // Reject pure punctuation, ellipses ("...", "…"), or single filler noises ("uh", "um", "hmm")
+      if (/^[.\u2026\s,!?-]+$/.test(cleaned)) return false;
       const words = cleaned.match(/[a-zA-Z0-9']+/g) || [];
       const alphaWords = words.filter(w => /[a-zA-Z]{2,}/.test(w));
       if (alphaWords.length === 0) return false;
@@ -1729,7 +1807,7 @@
       rafId = win.requestAnimationFrame(tick);
     }
 
-    async function playAudioBlob(blob, { turnButton = null, isIntro = false, isLiveTurn = false, label = 'Speaking · Josh (ElevenLabs)' } = {}) {
+    async function playAudioBlob(blob, { turnButton = null, isIntro = false, isLiveTurn = false, waitForEnd = false, label = 'Speaking · Josh (ElevenLabs)' } = {}) {
       stopCurrentAudio();
       if (!win?.Audio || !win?.URL?.createObjectURL) return false;
       const url = win.URL.createObjectURL(blob);
@@ -1748,7 +1826,11 @@
         introBtn.textContent = '⏹ Stop Intro';
       }
       setAvatarState(isLiveCall ? 'live' : 'speaking', label);
-      audio.addEventListener('ended', () => {
+      let resolvePlayback = null;
+      const playbackDone = new Promise(resolve => {
+        resolvePlayback = resolve;
+      });
+      const finishPlayback = () => {
         lastAudioEndedAt = Date.now();
         stopCurrentAudio();
         if (isLiveCall) {
@@ -1756,19 +1838,20 @@
         } else {
           setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
         }
-      }, { once: true });
-      audio.addEventListener('error', () => {
-        lastAudioEndedAt = Date.now();
-        stopCurrentAudio();
-        if (isLiveCall) {
-          setAvatarState('live', 'Live Voice Active · Listening…');
-        } else {
-          setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
+        if (resolvePlayback) {
+          const r = resolvePlayback;
+          resolvePlayback = null;
+          r(true);
         }
-      }, { once: true });
+      };
+      audio.addEventListener('ended', finishPlayback, { once: true });
+      audio.addEventListener('error', finishPlayback, { once: true });
       try {
         await audio.play();
         animateSimulatedEnergy();
+        if (waitForEnd) {
+          await playbackDone;
+        }
         return true;
       } catch {
         stopCurrentAudio();
@@ -1777,11 +1860,16 @@
         } else {
           setAvatarState('idle', 'ElevenLabs Voice Ready · Josh');
         }
+        if (resolvePlayback) {
+          const r = resolvePlayback;
+          resolvePlayback = null;
+          r(false);
+        }
         return false;
       }
     }
 
-    async function speakText(rawText, { turnButton = null, isIntro = false, isLiveTurn = false, fallbackUrl = null } = {}) {
+    async function speakText(rawText, { turnButton = null, isIntro = false, isLiveTurn = false, waitForEnd = false, fallbackUrl = null } = {}) {
       if (turnButton && currentSpeakBtn === turnButton && currentAudio && !currentAudio.paused) {
         stopCurrentAudio();
         setAvatarState(isLiveCall ? 'live' : 'idle', isLiveCall ? 'Live Voice Active · Listening…' : 'ElevenLabs Voice Ready · Josh');
@@ -1824,6 +1912,7 @@
                 turnButton,
                 isIntro,
                 isLiveTurn,
+                waitForEnd,
                 label: isLiveCall ? 'Josh Speaking (Live ElevenLabs)…' : 'Speaking · Josh (ElevenLabs)'
               });
               return;
@@ -1839,7 +1928,7 @@
           if (fallbackRes.ok) {
             const blob = await fallbackRes.blob();
             if (blob.size > 0) {
-              await playAudioBlob(blob, { turnButton, isIntro, isLiveTurn, label: 'Speaking · Josh Intro' });
+              await playAudioBlob(blob, { turnButton, isIntro, isLiveTurn, waitForEnd, label: 'Speaking · Josh Intro' });
               return;
             }
           }
@@ -1849,9 +1938,33 @@
       setAvatarState(isLiveCall ? 'live' : 'idle', isLiveCall ? 'Live Voice Active · Listening…' : 'ElevenLabs Voice Ready · Josh');
     }
 
+    function enqueueLiveSpeech(rawText, turnButton = null) {
+      const cleaned = cleanStageTags(rawText);
+      if (!cleaned) return liveSpeechChain;
+      liveSpeechChain = liveSpeechChain
+        .catch(() => {})
+        .then(async () => {
+          if (!isLiveCall) return;
+          await speakText(cleaned, { turnButton, isLiveTurn: true, waitForEnd: true });
+        });
+      return liveSpeechChain;
+    }
+
+    function sendUserActivityPing(ws) {
+      if (!ws || ws.readyState !== win?.WebSocket?.OPEN) return;
+      const nowTs = Date.now();
+      if (nowTs - lastActivitySentAt < 1800) return;
+      lastActivitySentAt = nowTs;
+      try {
+        ws.send(JSON.stringify({ type: 'user_activity' }));
+      } catch { /* ignore */ }
+    }
+
     function stopLiveCall() {
       isLiveCall = false;
       isLiveSpeaking = false;
+      serverGreetingSkipped = false;
+      liveSpeechChain = Promise.resolve();
       if (liveKeepaliveTimer) {
         clearInterval(liveKeepaliveTimer);
         liveKeepaliveTimer = null;
@@ -1912,6 +2025,8 @@
         const ws = new win.WebSocket(data.signedUrl);
         activeSocket = ws;
         isLiveCall = true;
+        serverGreetingSkipped = false;
+        liveSpeechChain = Promise.resolve();
         if (liveBtn) {
           liveBtn.textContent = '🔴 End Live Voice';
           liveBtn.classList.add('is-active');
@@ -1922,20 +2037,24 @@
           ws.send(JSON.stringify({
             type: 'conversation_initiation_client_data'
           }));
+          ws.send(JSON.stringify({
+            type: 'contextual_update',
+            text: LIVE_VOICE_CONTEXT_UPDATE
+          }));
           if (!options.hasExistingTurns?.()) {
-            const greeting = "Hey! Thanks for stopping by my portfolio. I'm listening—what would you like to talk through?";
-            options.onLiveTranscript?.('assistant', greeting);
-            void speakText(greeting, { isLiveTurn: true });
+            const greeting = "Hey! Welcome to Josh's portfolio. I'm Josh's AI assistant—what would you like to talk through?";
+            const speakBtn = options.onLiveTranscript?.('assistant', greeting) || null;
+            deduplicateLiveResponse(greeting, liveSpokenSentences);
+            void enqueueLiveSpeech(greeting, speakBtn);
           }
           lastMicChunkAt = Date.now();
-          const keepaliveSilence = encodePcm16Base64(new Int16Array(1600));
+          sendUserActivityPing(ws);
           liveKeepaliveTimer = setInterval(() => {
             if (!isLiveCall || activeSocket !== ws || ws.readyState !== win.WebSocket.OPEN) return;
-            if (Date.now() - lastMicChunkAt >= 220) {
-              lastMicChunkAt = Date.now();
-              try { ws.send(JSON.stringify({ user_audio_chunk: keepaliveSilence })); } catch { /* ignore */ }
-            }
-          }, 250);
+            // Send user_activity every 2.5s to reset ElevenLabs' 7.0s user_turn_timeout timer ("...")
+            // so the server never injects "..." or interrupts a spoken response mid-sentence.
+            sendUserActivityPing(ws);
+          }, 2500);
           if (win.navigator?.mediaDevices?.getUserMedia) {
             try {
               micStream = await win.navigator.mediaDevices.getUserMedia({
@@ -1962,13 +2081,13 @@
                 processor.onaudioprocess = evt => {
                   if (!isLiveCall || activeSocket !== ws || ws.readyState !== win.WebSocket.OPEN) return;
                   lastMicChunkAt = Date.now();
-                  const inputData = evt.inputBuffer.getChannelData(0);
                   if (isSpeakingOrSynthesizing()) {
-                    const silentLen = Math.max(1, Math.round(inputData.length / ((audioCtx.sampleRate || 48000) / 16000)));
-                    const silence = new Int16Array(silentLen);
-                    ws.send(JSON.stringify({ user_audio_chunk: encodePcm16Base64(silence) }));
+                    // While Josh is speaking, do NOT stream microphone audio (preventing speaker echo barge-in cutoffs)
+                    // and keep the turn timer reset via user_activity.
+                    sendUserActivityPing(ws);
                     return;
                   }
+                  const inputData = evt.inputBuffer.getChannelData(0);
                   const pcm16 = downsampleTo16k(inputData, audioCtx.sampleRate || 48000);
                   ws.send(JSON.stringify({ user_audio_chunk: encodePcm16Base64(pcm16) }));
                 };
@@ -1985,7 +2104,6 @@
             if (msg.type === 'ping' && msg.ping_event?.event_id !== undefined) {
               ws.send(JSON.stringify({ type: 'pong', event_id: msg.ping_event.event_id }));
             } else if (msg.type === 'user_transcript' && msg.user_transcription_event?.user_transcript) {
-              if (isSpeakingOrSynthesizing()) return;
               const userText = cleanStageTags(msg.user_transcription_event.user_transcript);
               if (!isValidSpokenInput(userText)) return;
               const nowTs = Date.now();
@@ -1994,9 +2112,35 @@
               }
               lastTranscriptText = userText;
               lastTranscriptAt = nowTs;
-              // Route live spoken turn directly through the main contextual multi-turn assistant (CAG + Hybrid RAG + MCP)
-              // instead of using ElevenLabs' static dashboard prompt, so responses stay contextual, logical, and never repeat.
-              options.onDictationResult?.(userText);
+              options.onLiveTranscript?.('user', userText);
+              if (!isSpeakingOrSynthesizing()) {
+                setAvatarState('thinking', 'Josh Thinking…');
+              }
+            } else if (msg.type === 'agent_response' && msg.agent_response_event?.agent_response) {
+              if (!serverGreetingSkipped) {
+                serverGreetingSkipped = true;
+                // Skip ElevenLabs' automatic turn-0 greeting ("Hi there! I'm Alex...") because our client
+                // already played the clean Josh greeting on open.
+                return;
+              }
+              const rawAgentText = String(msg.agent_response_event.agent_response || '');
+              const cleanedAgent = cleanStageTags(rawAgentText);
+              if (!cleanedAgent) return;
+              // Never render or speak ElevenLabs' user_turn_timeout check-in prompt
+              if (/i['’]?m still here and ready to help/i.test(cleanedAgent)) {
+                sendUserActivityPing(ws);
+                return;
+              }
+              const dedupedText = deduplicateLiveResponse(cleanedAgent, liveSpokenSentences, lastTranscriptText);
+              if (!dedupedText) return;
+              try {
+                ws.send(JSON.stringify({
+                  type: 'contextual_update',
+                  text: `Assistant already stated: "${dedupedText.slice(0, 180)}". On the next turn, do NOT repeat this explanation; build forward with new specifics.`
+                }));
+              } catch { /* ignore */ }
+              const speakBtn = options.onLiveTranscript?.('assistant', dedupedText) || null;
+              void enqueueLiveSpeech(dedupedText, speakBtn);
             }
           } catch { /* ignore malformed frame */ }
         });
@@ -2245,20 +2389,33 @@
         form.requestSubmit();
       },
       onLiveTranscript: (role, text) => {
-        if (!text) return;
+        if (!text) return null;
         welcome.hidden = true;
         if (role === 'user') {
           const q = element(document, 'article', 'chat-message chat-question');
           q.append(element(document, 'p', 'chat-small-label', 'You · Live Voice'), element(document, 'p', '', text));
           messages.append(q);
-        } else {
-          const a = element(document, 'article', 'chat-message chat-answer');
-          const body = element(document, 'div', 'chat-answer-text');
-          renderParagraphs(document, body, text);
-          a.append(element(document, 'p', 'chat-small-label', 'Josh · Live Voice'), body);
-          messages.append(a);
+          status.textContent = 'Live Voice · Thinking…';
+          scroll(true);
+          return null;
         }
+        const a = element(document, 'article', 'chat-message chat-answer');
+        const body = element(document, 'div', 'chat-answer-text');
+        renderParagraphs(document, body, text);
+        const turnActions = element(document, 'div', 'chat-turn-actions');
+        const speakButton = element(document, 'button', 'chat-turn-speak-button', '🔊 Listen');
+        speakButton.type = 'button';
+        speakButton.setAttribute('aria-pressed', 'false');
+        speakButton.setAttribute('aria-label', 'Read response aloud in Josh voice');
+        speakButton.addEventListener('click', () => {
+          voice.speakTurn({ replyText: text }, speakButton);
+        });
+        turnActions.append(speakButton);
+        a.append(element(document, 'p', 'chat-small-label', 'Josh · Live Voice'), body, turnActions);
+        messages.append(a);
+        status.textContent = 'Live Voice · Response ready.';
         scroll(true);
+        return speakButton;
       }
     });
     mic.addEventListener('click', () => { void voice.toggleMicDictation(mic); });
