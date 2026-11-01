@@ -4698,7 +4698,8 @@
     showMoreBtn.setAttribute('data-message-expand', '');
     showMoreBtn.setAttribute('aria-expanded', 'false');
     showMoreBtn.addEventListener?.('click', () => {
-      const expanded = demoHighlightsList.classList?.toggle?.('is-mobile-expanded');
+      const expanded = demoAssistantCard.classList?.toggle?.('is-mobile-expanded');
+      demoHighlightsList.classList?.toggle?.('is-mobile-expanded', Boolean(expanded));
       showMoreBtn.setAttribute('aria-expanded', String(Boolean(expanded)));
       showMoreBtn.textContent = expanded ? 'Show less ⌃' : 'Show more ⌄';
     });
@@ -5303,6 +5304,7 @@
           b.setAttribute('aria-selected', String(act));
           mobileTabPanels[k].hidden = !act;
         }
+        activateJourneyTab(mKey);
       });
       mobileTabBtns[mKey] = mBtn;
       mobileTabPanels[mKey] = mPanel;

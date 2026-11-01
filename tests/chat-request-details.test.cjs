@@ -1722,16 +1722,24 @@ test('Deliverables 2-9: Live Execution Strip, Expandable Journey Tabs, Filterabl
   // 8. Intentional Mobile Header, Message Expand, and Mobile Bottom Sheet
   const mobileHeader = shell.querySelector('[data-mobile-header]');
   const mobileExpandBtn = shell.querySelector('[data-message-expand]');
+  const mobileAssistantCard = shell.querySelector('.chat-welcome-assistant-card');
   const mobileSheet = shell.querySelector('[data-mobile-sheet]');
-  assert.ok(mobileHeader && mobileExpandBtn && mobileSheet, 'Mobile header, message expand button, and bottom sheet must exist');
+  assert.ok(mobileHeader && mobileExpandBtn && mobileAssistantCard && mobileSheet, 'Mobile header, message expand button, assistant card, and bottom sheet must exist');
   assert.equal(mobileExpandBtn.getAttribute('aria-expanded'), 'false');
+  assert.equal(mobileAssistantCard.classList.contains('is-mobile-expanded'), false);
   mobileExpandBtn.click();
   assert.equal(mobileExpandBtn.getAttribute('aria-expanded'), 'true');
+  assert.equal(mobileAssistantCard.classList.contains('is-mobile-expanded'), true, 'Show more button must toggle .is-mobile-expanded on .chat-welcome-assistant-card');
+
+  const closeJourneyBtn = journeyDrawer.querySelector('[data-close-journey-drawer]');
+  closeJourneyBtn.click();
+  assert.equal(journeyDrawer.classList.contains('is-collapsed'), true, 'Journey drawer must collapse when close button is clicked');
 
   const mobileContextTab = mobileSheet.querySelector('[data-mobile-tab="context"]');
   mobileContextTab.click();
   assert.equal(mobileContextTab.classList.contains('is-active'), true);
-  assert.equal(journeyDrawer.classList.contains('is-collapsed'), false, 'Selecting Context tab on Mobile Sheet must sync Journey Drawer');
+  assert.equal(journeyDrawer.classList.contains('is-collapsed'), false, 'Selecting Context tab on Mobile Sheet must uncollapse Journey Drawer');
+  assert.equal(journeyDrawer.getAttribute('data-active-journey-tab'), 'context', 'Selecting Context tab on Mobile Sheet must sync data-active-journey-tab');
 
   const mobileCloseBtn = mobileSheet.querySelector('[data-mobile-sheet-close]');
   mobileCloseBtn.click();
