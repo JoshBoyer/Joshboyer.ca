@@ -643,9 +643,26 @@
       );
     }
 
+    function resolveStageServiceBadge(stage, entry = {}) {
+      if (stage === 'routing') return 'CF Edge · API GW';
+      if (stage === 'budget') return 'DynamoDB Ledger';
+      if (stage === 'retrieval') return entry.retrievalMode === 'skipped' ? 'CAG Direct' : 'S3 Vectors · 1536-d';
+      if (stage === 'mcp') return 'Lambda MCP · SigV4';
+      if (stage === 'context') return 'CAG Corpus Pack';
+      if (stage === 'provider') return entry.provider === 'anthropic' ? 'AI Gateway · Anthropic' : 'AI Gateway · OpenAI';
+      if (stage === 'validation') return 'Contract Guard';
+      if (stage === 'settlement') return 'DynamoDB Settle';
+      return 'AWS us-east-2';
+    }
+
     function updateGroup(group) {
       const value = group.latest;
       group.row.className = `chat-trace-stage is-${value.state}`;
+      setAttr(group.row, 'data-trace-stage-kind', value.stage);
+      setAttr(group.row, 'data-stage-service', resolveStageServiceBadge(value.stage, value));
+      const dur = typeof value.durationMs === 'number' && value.durationMs >= 0 ? value.durationMs : (value.state === 'started' ? 35 : 4);
+      const pct = value.state === 'started' ? 62 : Math.max(8, Math.min(100, Math.round(Math.log10(dur + 2) * 38)));
+      setAttr(group.row, 'style', `--stage-pct: ${pct}%`);
       group.state.textContent = TRACE_STATES[value.state];
       group.time.textContent = value.elapsedMs === null
         ? (value.replayed ? 'Original request' : 'Timing not recorded')
@@ -848,6 +865,8 @@
         );
         if (!stageName) continue;
         const previous = stageMap.get(stageName);
+        const rawState = String(safeGet(item, 'state') ?? safeGet(item, 'status') ?? '').trim().toLowerCase();
+        const isStarted = rawState === 'started' || rawState === 'running' || rawState === 'active';
         const status = resolveStageItemStatus(item);
         const rawDuration = safeGet(item, 'durationMs');
         const durationMs = typeof rawDuration === 'number' && Number.isFinite(rawDuration) && rawDuration >= 0
@@ -858,12 +877,14 @@
           previous ? previous.detail : TRACE_STAGES[stageName].explanation,
           512
         );
-        stageMap.set(stageName, { stage: stageName, status, durationMs, detail });
+        stageMap.set(stageName, { stage: stageName, status, isStarted, durationMs, detail });
       }
     } else if (record(rawStages)) {
       for (const stageName of CANONICAL_STAGE_ORDER) {
         const item = safeGet(rawStages, stageName);
         if (!record(item)) continue;
+        const rawState = String(safeGet(item, 'state') ?? safeGet(item, 'status') ?? '').trim().toLowerCase();
+        const isStarted = rawState === 'started' || rawState === 'running' || rawState === 'active';
         const status = resolveStageItemStatus(item);
         const rawDuration = safeGet(item, 'durationMs');
         const durationMs = typeof rawDuration === 'number' && Number.isFinite(rawDuration) && rawDuration >= 0
@@ -874,7 +895,7 @@
           TRACE_STAGES[stageName].explanation,
           512
         );
-        stageMap.set(stageName, { stage: stageName, status, durationMs, detail });
+        stageMap.set(stageName, { stage: stageName, status, isStarted, durationMs, detail });
       }
     }
     return stageMap;
@@ -941,6 +962,24 @@
       const list = element(document, 'ol', 'chat-trace-stages chat-trace-list');
       setAttr(list, 'data-trace-stages', '');
 
+      const stageServiceLabels = {
+        routing: 'CF Edge · API GW',
+        retrieval: 'S3 Vectors · 1536-d',
+        mcp: 'Lambda MCP · SigV4',
+        context: 'CAG Corpus Pack',
+        budget: 'DynamoDB Ledger',
+        provider: 'CF AI Gateway · LLM',
+        validation: 'Contract Guard',
+        settlement: 'DynamoDB Settle'
+      };
+      let maxDuration = 1;
+      for (const stageName of CANONICAL_STAGE_ORDER) {
+        const entry = stageMap.get(stageName);
+        if (entry && typeof entry.durationMs === 'number' && entry.durationMs > maxDuration) {
+          maxDuration = entry.durationMs;
+        }
+      }
+
       CANONICAL_STAGE_ORDER.forEach((stageName, idx) => {
         const entry = stageMap.get(stageName) || {
           stage: stageName,
@@ -950,7 +989,13 @@
         };
         const item = element(document, 'li', `chat-trace-item chat-trace-stage is-${entry.status}`);
         setAttr(item, 'data-trace-stage', stageName);
+        setAttr(item, 'data-trace-stage-kind', stageName);
         setAttr(item, 'data-trace-status', entry.status);
+        setAttr(item, 'data-stage-service', stageServiceLabels[stageName] || 'AWS us-east-2');
+        const pct = entry.status === 'skipped'
+          ? 0
+          : Math.max(8, Math.min(100, Math.round((Math.max(1, entry.durationMs) / maxDuration) * 100)));
+        setAttr(item, 'style', `--stage-pct: ${pct}%`);
 
         const header = element(document, 'div', 'chat-trace-stage-summary');
         const ordinal = element(document, 'span', 'chat-trace-ordinal', String(idx + 1).padStart(2, '0'));
@@ -1435,11 +1480,12 @@
       setAttr(techStack, 'aria-label', 'Solution architecture and cloud stack');
       setAttr(techStack, 'data-chat-tech-stack', '');
       const techHeader = element(document, 'div', 'chat-tech-stack-header');
-      techHeader.append(
-        element(document, 'span', 'chat-tech-stack-title', 'Solution stack'),
-        element(document, 'span', 'chat-tech-stack-region', 'AWS us-east-2 · CF · 11Labs')
-      );
+      const techTitle = element(document, 'span', 'chat-tech-stack-title', 'Solution stack');
+      const techBadge = element(document, 'span', 'chat-tech-stack-region', 'AWS us-east-2 · CF · 11Labs');
+      setAttr(techBadge, 'data-tech-stack-badge', '');
+      techHeader.append(techTitle, techBadge);
       const techGrid = element(document, 'ul', 'chat-tech-stack-grid');
+      const techItems = Object.create(null);
       const SVG_NS = 'http://www.w3.org/2000/svg';
       const stackSpecs = [
         {
@@ -1447,9 +1493,12 @@
           glyph: 'AWS',
           name: 'AWS us-east-2',
           role: 'Cloud & IAM SigV4',
+          tab: 'trace',
           paths: [
-            { d: 'M12 2.5L20 7.1V16.4L12 21L4 16.4V7.1L12 2.5Z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.8', strokeLinejoin: 'round' },
-            { d: 'M4 7.1L12 11.7L20 7.1M12 11.7V21', fill: 'none', stroke: 'currentColor', strokeWidth: '1.6', strokeLinejoin: 'round' }
+            { d: 'M12 2.8L18.5 6.4V13.4L12 17L5.5 13.4V6.4L12 2.8Z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.7', strokeLinejoin: 'round' },
+            { d: 'M5.5 6.4L12 10L18.5 6.4M12 10V17', fill: 'none', stroke: 'currentColor', strokeWidth: '1.5', strokeLinejoin: 'round' },
+            { d: 'M4.2 18.2C7.8 20.8 14.8 21.1 19.2 18.4', fill: 'none', stroke: 'currentColor', strokeWidth: '1.8', strokeLinecap: 'round' },
+            { d: 'M17.2 17.2L19.8 18.1L18.7 20.6', fill: 'none', stroke: 'currentColor', strokeWidth: '1.7', strokeLinecap: 'round', strokeLinejoin: 'round' }
           ]
         },
         {
@@ -1457,8 +1506,10 @@
           glyph: 'λ',
           name: 'AWS Lambda',
           role: 'Handler · Auth · MCP',
+          tab: 'trace',
           paths: [
-            { d: 'M7 4.5H10.6L17.5 19.5H13.9L11.6 14.2L9.1 19.5H5.7L9.9 10.8L7 4.5Z', fill: 'currentColor' }
+            { d: 'M6.2 4H10.4L12.6 8.8L17.8 20H14.1L10.8 12.6L7.6 20H4.1L9.1 9.4L6.2 4Z', fill: 'currentColor' },
+            { d: 'M15.2 4.5H19.5V8.8', fill: 'none', stroke: 'currentColor', strokeWidth: '1.6', strokeLinecap: 'round', strokeLinejoin: 'round' }
           ]
         },
         {
@@ -1466,9 +1517,11 @@
           glyph: 'S3',
           name: 'S3 & S3 Vectors',
           role: '1536-d Vector Index',
+          tab: 'evidence',
           paths: [
-            { d: 'M5.5 6.5C5.5 4.8 8.4 3.5 12 3.5C15.6 3.5 18.5 4.8 18.5 6.5L17 17.5C17 19.2 14.8 20.5 12 20.5C9.2 20.5 7 19.2 7 17.5L5.5 6.5Z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.8', strokeLinejoin: 'round' },
-            { d: 'M5.5 6.5C5.5 8.2 8.4 9.5 12 9.5C15.6 9.5 18.5 8.2 18.5 6.5', fill: 'none', stroke: 'currentColor', strokeWidth: '1.6' }
+            { d: 'M5 6.5C5 4.8 8.1 3.5 12 3.5C15.9 3.5 19 4.8 19 6.5L17.4 17.8C17.1 19.4 14.8 20.5 12 20.5C9.2 20.5 6.9 19.4 6.6 17.8L5 6.5Z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.75', strokeLinejoin: 'round' },
+            { d: 'M5 6.5C5 8.2 8.1 9.5 12 9.5C15.9 9.5 19 8.2 19 6.5', fill: 'none', stroke: 'currentColor', strokeWidth: '1.5' },
+            { d: 'M9 13.5L12 11.8L15 13.5L12 15.2L9 13.5Z', fill: 'currentColor' }
           ]
         },
         {
@@ -1476,10 +1529,11 @@
           glyph: 'DB',
           name: 'Amazon DynamoDB',
           role: 'Sessions & $25 Ledger',
+          tab: 'context',
           paths: [
-            { d: 'M4.5 6.5C4.5 4.8 7.9 3.5 12 3.5C16.1 3.5 19.5 4.8 19.5 6.5V17.5C19.5 19.2 16.1 20.5 12 20.5C7.9 20.5 4.5 19.2 4.5 17.5V6.5Z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.8' },
-            { d: 'M4.5 12C4.5 13.7 7.9 15 12 15C16.1 15 19.5 13.7 19.5 12', fill: 'none', stroke: 'currentColor', strokeWidth: '1.6' },
-            { d: 'M13.2 7.2L10.2 12.2H13L11.2 16.8', fill: 'none', stroke: 'currentColor', strokeWidth: '1.6', strokeLinecap: 'round', strokeLinejoin: 'round' }
+            { d: 'M4.5 6.2C4.5 4.6 7.6 3.3 11.5 3.3C15.4 3.3 18.5 4.6 18.5 6.2V17.2C18.5 18.8 15.4 20.1 11.5 20.1C7.6 20.1 4.5 18.8 4.5 17.2V6.2Z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.7' },
+            { d: 'M4.5 6.2C4.5 7.8 7.6 9.1 11.5 9.1C15.4 9.1 18.5 7.8 18.5 6.2M4.5 11.6C4.5 13.2 7.6 14.5 11.5 14.5', fill: 'none', stroke: 'currentColor', strokeWidth: '1.5' },
+            { d: 'M15.8 9.2L12.2 14.2H15.4L13.6 19.5L18.8 13.5H15.5L15.8 9.2Z', fill: 'currentColor' }
           ]
         },
         {
@@ -1487,9 +1541,11 @@
           glyph: 'API',
           name: 'API Gateway',
           role: 'REST + AWS_IAM Route',
+          tab: 'trace',
           paths: [
-            { d: 'M7.5 7L3.5 12L7.5 17M16.5 7L20.5 12L16.5 17', fill: 'none', stroke: 'currentColor', strokeWidth: '1.9', strokeLinecap: 'round', strokeLinejoin: 'round' },
-            { d: 'M13.5 5.5L10.5 18.5', fill: 'none', stroke: 'currentColor', strokeWidth: '1.7', strokeLinecap: 'round' }
+            { d: 'M4 5V19M20 5V19', fill: 'none', stroke: 'currentColor', strokeWidth: '1.8', strokeLinecap: 'round' },
+            { d: 'M4 8H8L10.5 12L8 16H4M20 8H16L13.5 12L16 16H20', fill: 'none', stroke: 'currentColor', strokeWidth: '1.6', strokeLinecap: 'round', strokeLinejoin: 'round' },
+            { d: 'M10.5 12H13.5', fill: 'none', stroke: 'currentColor', strokeWidth: '1.8', strokeLinecap: 'round' }
           ]
         },
         {
@@ -1497,9 +1553,10 @@
           glyph: 'IAM',
           name: 'Secrets & SSM',
           role: 'Keyring & Pointers',
+          tab: 'context',
           paths: [
-            { d: 'M12 2.8L19 5.8V11.4C19 16 15.9 19.7 12 21.2C8.1 19.7 5 16 5 11.4V5.8L12 2.8Z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.8', strokeLinejoin: 'round' },
-            { d: 'M12 9.5C10.9 9.5 10 10.4 10 11.5C10 12.3 10.5 13 11.2 13.3V15.8H12.8V13.3C13.5 13 14 12.3 14 11.5C14 10.4 13.1 9.5 12 9.5Z', fill: 'currentColor' }
+            { d: 'M12 2.5L19.2 5.7V11.3C19.2 16.1 16.1 19.9 12 21.5C7.9 19.9 4.8 16.1 4.8 11.3V5.7L12 2.5Z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.75', strokeLinejoin: 'round' },
+            { d: 'M12 8.2C10.5 8.2 9.3 9.4 9.3 10.9C9.3 12 9.9 12.9 10.8 13.3V16.8H13.2V15.2H14.4V13.6H13.2V13.3C14.1 12.9 14.7 12 14.7 10.9C14.7 9.4 13.5 8.2 12 8.2Z', fill: 'currentColor' }
           ]
         },
         {
@@ -1507,8 +1564,10 @@
           glyph: 'CF',
           name: 'Cloudflare Edge',
           role: 'Worker & AI Gateway',
+          tab: 'trace',
           paths: [
-            { d: 'M6.8 17.5H17.8C19.8 17.5 21.2 16.1 21.2 14.2C21.2 12.4 19.9 11 18.1 10.9C17.5 7.9 14.9 5.8 11.8 5.8C8.9 5.8 6.4 7.7 5.7 10.4C3.9 10.7 2.8 12.2 2.8 14C2.8 16 4.5 17.5 6.8 17.5Z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.8', strokeLinejoin: 'round' }
+            { d: 'M6.2 17.5H16.6C18.7 17.5 20.3 16 20.3 14C20.3 12.1 18.9 10.6 17 10.5C16.3 7.6 13.7 5.5 10.6 5.5C7.6 5.5 5.1 7.4 4.4 10.2C2.8 10.6 1.8 12 1.8 13.8C1.8 15.9 3.6 17.5 6.2 17.5Z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.75', strokeLinejoin: 'round' },
+            { d: 'M17.8 7.4L19.4 6.2M20.2 9.8L22 9.3M15.6 5.4L16.3 3.7', fill: 'none', stroke: 'currentColor', strokeWidth: '1.6', strokeLinecap: 'round' }
           ]
         },
         {
@@ -1516,9 +1575,11 @@
           glyph: 'MCP',
           name: 'Portfolio MCP',
           role: 'JSON-RPC · 3 Tools',
+          tab: 'tools',
           paths: [
-            { d: 'M12 6.5V12M12 12L7.2 16.2M12 12L16.8 16.2', fill: 'none', stroke: 'currentColor', strokeWidth: '1.8', strokeLinecap: 'round' },
-            { d: 'M12 4.5C13.1 4.5 14 5.4 14 6.5C14 7.6 13.1 8.5 12 8.5C10.9 8.5 10 7.6 10 6.5C10 5.4 10.9 4.5 12 4.5ZM6 15.5C7.1 15.5 8 16.4 8 17.5C8 18.6 7.1 19.5 6 19.5C4.9 19.5 4 18.6 4 17.5C4 16.4 4.9 15.5 6 15.5ZM18 15.5C19.1 15.5 20 16.4 20 17.5C20 18.6 19.1 19.5 18 19.5C16.9 19.5 16 18.6 16 17.5C16 16.4 16.9 15.5 18 15.5Z', fill: 'currentColor' }
+            { d: 'M7 7.5C7 6.1 8.1 5 9.5 5H14.5C15.9 5 17 6.1 17 7.5V16.5C17 17.9 15.9 19 14.5 19H9.5C8.1 19 7 17.9 7 16.5V7.5Z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.7' },
+            { d: 'M4 9H7M4 15H7M17 9H20M17 15H20', fill: 'none', stroke: 'currentColor', strokeWidth: '1.7', strokeLinecap: 'round' },
+            { d: 'M10.2 9.5L14.2 12L10.2 14.5V9.5Z', fill: 'currentColor' }
           ]
         },
         {
@@ -1526,8 +1587,11 @@
           glyph: 'AI',
           name: 'AI Gateway LLMs',
           role: 'Luna · Haiku 5.5',
+          tab: 'context',
           paths: [
-            { d: 'M12 3L14.2 9.8L21 12L14.2 14.2L12 21L9.8 14.2L3 12L9.8 9.8L12 3Z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.8', strokeLinejoin: 'round' }
+            { d: 'M12 2.8C13.9 2.8 15.6 3.9 16.3 5.6C18.1 5.9 19.6 7.1 20.2 8.9C20.8 10.6 20.3 12.5 19.1 13.8C19.4 15.6 18.6 17.4 17 18.4C15.4 19.4 13.5 19.3 12 18.3C10.5 19.3 8.6 19.4 7 18.4C5.4 17.4 4.6 15.6 4.9 13.8C3.7 12.5 3.2 10.6 3.8 8.9C4.4 7.1 5.9 5.9 7.7 5.6C8.4 3.9 10.1 2.8 12 2.8Z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.65', strokeLinejoin: 'round' },
+            { d: 'M12 8.4L15.1 10.2V13.8L12 15.6L8.9 13.8V10.2L12 8.4Z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.5', strokeLinejoin: 'round' },
+            { d: 'M12 8.4V3.2M15.1 10.2L19.5 7.6M15.1 13.8L19.5 16.4M12 15.6V20.2M8.9 13.8L4.5 16.4M8.9 10.2L4.5 7.6', fill: 'none', stroke: 'currentColor', strokeWidth: '1.35', strokeLinecap: 'round' }
           ]
         },
         {
@@ -1535,21 +1599,25 @@
           glyph: '11L',
           name: 'ElevenLabs Voice',
           role: 'Josh 2ccxXaT9 · Live',
+          tab: 'trace',
           paths: [
-            { d: 'M4 10V14M8 7V17M12 4V20M16 7V17M20 10V14', fill: 'none', stroke: 'currentColor', strokeWidth: '2', strokeLinecap: 'round' }
+            { d: 'M9.2 5.2H11.2V18.8H9.2V5.2ZM12.8 5.2H14.8V18.8H12.8V5.2Z', fill: 'currentColor' },
+            { d: 'M5.5 8.5C4.2 10.5 4.2 13.5 5.5 15.5M18.5 8.5C19.8 10.5 19.8 13.5 18.5 15.5', fill: 'none', stroke: 'currentColor', strokeWidth: '1.7', strokeLinecap: 'round' }
           ]
         }
       ];
       for (const spec of stackSpecs) {
         const li = element(document, 'li', 'chat-tech-stack-item');
         setAttr(li, 'data-tech-service', spec.id);
+        setAttr(li, 'data-tech-state', 'idle');
+        setAttr(li, 'data-target-tab', spec.tab);
         const iconWrap = element(document, 'span', `chat-tech-icon is-${spec.id}`);
         setAttr(iconWrap, 'aria-hidden', 'true');
         if (typeof document.createElementNS === 'function' && Array.isArray(spec.paths)) {
           const svg = document.createElementNS(SVG_NS, 'svg');
           svg.setAttribute('viewBox', '0 0 24 24');
-          svg.setAttribute('width', '15');
-          svg.setAttribute('height', '15');
+          svg.setAttribute('width', '16');
+          svg.setAttribute('height', '16');
           svg.setAttribute('aria-hidden', 'true');
           svg.setAttribute('focusable', 'false');
           for (const pathSpec of spec.paths) {
@@ -1571,7 +1639,13 @@
           element(document, 'span', 'chat-tech-name', spec.name),
           element(document, 'span', 'chat-tech-role', spec.role)
         );
-        li.append(iconWrap, copyWrap);
+        const statusDot = element(document, 'span', 'chat-tech-status-dot');
+        setAttr(statusDot, 'aria-hidden', 'true');
+        li.append(iconWrap, copyWrap, statusDot);
+        li.addEventListener('click', () => {
+          setActiveTab(spec.tab, false);
+        });
+        techItems[spec.id] = li;
         techGrid.append(li);
       }
       techStack.append(techHeader, techGrid);
@@ -1587,11 +1661,12 @@
         techStack
       );
 
-      return { content, identity, tablist, buttons, panels, close };
+      return { content, identity, tablist, buttons, panels, close, techStack, techBadge, techItems };
     }
 
     const primarySurface = createMountSurface('');
     const mobileMirrorSurface = externalMobileContainer ? createMountSurface('chat-mobile') : null;
+    let customServiceStates = null;
 
     desktop.replaceChildren(primarySurface.content);
     if (externalMobileContainer) {
@@ -1606,6 +1681,111 @@
       }
     } else if (!isBridgeFallback && document.body && !dialog.parentNode) {
       document.body.append(dialog);
+    }
+
+    function computeTurnTechStates(turn) {
+      const states = {
+        aws: 'idle',
+        lambda: 'idle',
+        s3: 'idle',
+        dynamodb: 'idle',
+        apigw: 'idle',
+        secrets: 'idle',
+        cloudflare: 'idle',
+        mcp: 'idle',
+        openai: 'idle',
+        elevenlabs: 'idle'
+      };
+      if (turn) {
+        const stageServices = {
+          routing: ['cloudflare', 'apigw', 'aws', 'lambda', 'secrets'],
+          budget: ['dynamodb', 'lambda'],
+          retrieval: ['s3', 'lambda'],
+          mcp: ['mcp', 'apigw', 'lambda'],
+          context: ['lambda', 'aws'],
+          provider: ['cloudflare', 'openai'],
+          validation: ['lambda'],
+          settlement: ['dynamodb', 'aws']
+        };
+        const stageMap = extractStageMap(turn);
+        let anyInFlight = false;
+        for (const [stageName, services] of Object.entries(stageServices)) {
+          const entry = stageMap.get(stageName);
+          if (!entry || entry.status === 'skipped') continue;
+          const targetState = entry.isStarted || entry.status === 'running' || entry.status === 'started'
+            ? 'active'
+            : (entry.status === 'degraded' || entry.status === 'failed')
+              ? 'degraded'
+              : 'completed';
+          if (targetState === 'active') anyInFlight = true;
+          for (const svc of services) {
+            if (states[svc] === 'active') continue;
+            if (targetState === 'active') states[svc] = 'active';
+            else if (targetState === 'degraded' && states[svc] !== 'active') states[svc] = 'degraded';
+            else if (states[svc] === 'idle') states[svc] = 'completed';
+          }
+        }
+        if (anyInFlight) {
+          states.aws = 'active';
+        }
+        const rawCitations = safeGet(turn, 'citations') ?? safeGet(turn, 'claims');
+        if (Array.isArray(rawCitations) && rawCitations.length > 0 && states.s3 === 'idle') {
+          states.s3 = 'completed';
+        }
+        const rawCalls = safeGet(turn, 'toolCalls') ?? safeGet(safeGet(turn, 'trace'), 'toolCalls') ?? safeGet(turn, 'tools');
+        if (Array.isArray(rawCalls) && rawCalls.length > 0 && states.mcp === 'idle') {
+          states.mcp = 'completed';
+        }
+        if (safeGet(turn, 'voiceActive') === true) {
+          states.elevenlabs = 'active';
+        } else if (safeGet(turn, 'voiceUsed') === true || safeGet(turn, 'kind') === 'live_voice') {
+          if (states.elevenlabs === 'idle') states.elevenlabs = 'completed';
+        }
+      }
+      if (customServiceStates && record(customServiceStates)) {
+        for (const key of Object.keys(states)) {
+          if (typeof customServiceStates[key] === 'string') {
+            states[key] = customServiceStates[key];
+          }
+        }
+      }
+      return states;
+    }
+
+    function syncSurfaceTechStack(surface, turn) {
+      if (!surface || !surface.techItems) return;
+      const states = computeTurnTechStates(turn);
+      let activeCount = 0;
+      let usedCount = 0;
+      for (const [id, itemNode] of Object.entries(surface.techItems)) {
+        const st = states[id] || 'idle';
+        setAttr(itemNode, 'data-tech-state', st);
+        if (st === 'active') {
+          itemNode.className = 'chat-tech-stack-item is-active';
+          activeCount += 1;
+          usedCount += 1;
+        } else if (st === 'completed') {
+          itemNode.className = 'chat-tech-stack-item is-used';
+          usedCount += 1;
+        } else if (st === 'degraded') {
+          itemNode.className = 'chat-tech-stack-item is-degraded';
+          usedCount += 1;
+        } else {
+          itemNode.className = 'chat-tech-stack-item';
+        }
+      }
+      if (surface.techBadge) {
+        if (activeCount > 0) {
+          surface.techBadge.textContent = `⚡ Live · ${usedCount}/10 Active`;
+          setAttr(surface.techBadge, 'data-stack-live', 'true');
+        } else if (usedCount > 0) {
+          surface.techBadge.textContent = `${usedCount}/10 Engaged · us-east-2`;
+          removeAttr(surface.techBadge, 'data-stack-live');
+        } else {
+          surface.techBadge.textContent = 'AWS us-east-2 · CF · 11Labs';
+          removeAttr(surface.techBadge, 'data-stack-live');
+        }
+      }
     }
 
     function syncTabAttributes(surface) {
@@ -1682,6 +1862,26 @@
       surface.panels.context.replaceChildren(
         renderContextView(document, turnForSurface)
       );
+      if (currentTurn) {
+        const stageMap = extractStageMap(currentTurn);
+        let activeStages = 0;
+        for (const entry of stageMap.values()) {
+          if (entry && entry.status !== 'skipped') activeStages += 1;
+        }
+        const rawCitations = safeGet(currentTurn, 'citations') ?? safeGet(currentTurn, 'claims');
+        const citeCount = Array.isArray(rawCitations) ? rawCitations.filter(record).length : 0;
+        const rawCalls = safeGet(currentTurn, 'toolCalls') ?? safeGet(safeGet(currentTurn, 'trace'), 'toolCalls');
+        const toolCount = Array.isArray(rawCalls) ? rawCalls.filter(record).length : 0;
+        setAttr(surface.buttons.trace, 'data-tab-count', String(activeStages || 8));
+        setAttr(surface.buttons.evidence, 'data-tab-count', String(citeCount));
+        setAttr(surface.buttons.tools, 'data-tab-count', String(toolCount));
+        setAttr(surface.buttons.context, 'data-tab-count', 'CAG');
+      } else {
+        for (const name of TABS) {
+          removeAttr(surface.buttons[name], 'data-tab-count');
+        }
+      }
+      syncSurfaceTechStack(surface, currentTurn);
       syncTabAttributes(surface);
     }
 
@@ -1807,6 +2007,11 @@
       activate: setActiveTab,
       getActiveTab() { return activeTab; },
       get activeTab() { return activeTab; },
+      setTechStackState(overrides) {
+        customServiceStates = record(overrides) ? { ...overrides } : null;
+        syncSurfaceTechStack(primarySurface, currentTurn);
+        if (mobileMirrorSurface) syncSurfaceTechStack(mobileMirrorSurface, currentTurn);
+      },
       update(view, state) {
         if (view) selection.update(view);
         if (!view || selection.selected === view) {
@@ -1846,6 +2051,7 @@
         selection.clear();
         currentTurn = null;
         currentState = {};
+        customServiceStates = null;
         renderAllSurfaces();
         if (dialog.open) closeDrawer();
       },

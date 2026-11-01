@@ -1066,3 +1066,83 @@ test('D-01 regression: update(view) and chat-assistant bridge never steal mounte
     }
   }
 });
+
+test('UI telemetry & Solution Stack live lighting: lights up engaged services, switches tabs on click, and populates stage/tab badges', () => {
+  const doc = createSimDocument(1440);
+  const container = doc.createElement('aside');
+  doc.body.append(container);
+  const panel = PortfolioChatDetails.createDetailsPanel({ document: doc, container });
+
+  // Initially all 10 stack components are idle
+  const stackItems = container.querySelectorAll('.chat-tech-stack-item');
+  assert.equal(stackItems.length, 10);
+  for (const item of stackItems) {
+    assert.equal(item.getAttribute('data-tech-state'), 'idle');
+  }
+
+  // Render an in-flight turn where retrieval is started and routing/budget are completed
+  panel.renderTurn({
+    requestId: 'req-live-stack-01',
+    stages: [
+      { stage: 'routing', status: 'ok', durationMs: 2 },
+      { stage: 'budget', status: 'ok', durationMs: 3 },
+      { stage: 'retrieval', status: 'started', durationMs: 0 },
+      { stage: 'mcp', status: 'pending', durationMs: 0 }
+    ],
+    citations: [],
+    tools: []
+  });
+
+  const s3Item = container.querySelector('[data-tech-service="s3"]');
+  const awsItem = container.querySelector('[data-tech-service="aws"]');
+  const ddbItem = container.querySelector('[data-tech-service="dynamodb"]');
+  const mcpItem = container.querySelector('[data-tech-service="mcp"]');
+  const elevenItem = container.querySelector('[data-tech-service="elevenlabs"]');
+
+  assert.equal(s3Item.getAttribute('data-tech-state'), 'active', 'S3 must be active while retrieval stage is started');
+  assert.equal(s3Item.className.includes('is-active'), true);
+  assert.equal(awsItem.getAttribute('data-tech-state'), 'active', 'AWS must be active while a stage is in flight');
+  assert.equal(ddbItem.getAttribute('data-tech-state'), 'completed', 'DynamoDB must be completed after budget stage completes');
+  assert.equal(mcpItem.getAttribute('data-tech-state'), 'idle', 'MCP must remain idle while pending');
+  assert.equal(
+    container.querySelector('.chat-tech-stack-region').getAttribute('data-stack-live'),
+    'true',
+    'Header region badge must show data-stack-live="true" while any service is active'
+  );
+
+  // Complete the turn with citations and MCP tools
+  panel.renderTurn(buildPhase4Turn());
+  assert.equal(s3Item.getAttribute('data-tech-state'), 'completed');
+  assert.equal(s3Item.className.includes('is-used'), true);
+  assert.equal(mcpItem.getAttribute('data-tech-state'), 'completed');
+  assert.equal(
+    container.querySelector('[data-tech-service="openai"]').getAttribute('data-tech-state'),
+    'completed'
+  );
+
+  // Voice override lights up ElevenLabs in real time
+  panel.setTechStackState({ elevenlabs: 'active', cloudflare: 'active' });
+  assert.equal(elevenItem.getAttribute('data-tech-state'), 'active');
+  assert.equal(elevenItem.className.includes('is-active'), true);
+  panel.setTechStackState({ elevenlabs: 'completed', cloudflare: null });
+  assert.equal(elevenItem.getAttribute('data-tech-state'), 'completed');
+
+  // Verify tab counter attributes (preserving exact tab.textContent)
+  assert.equal(container.querySelector('[data-details-tab="trace"]').textContent, 'Trace');
+  assert.equal(container.querySelector('[data-details-tab="trace"]').getAttribute('data-tab-count'), '8');
+  assert.equal(container.querySelector('[data-details-tab="evidence"]').getAttribute('data-tab-count'), '2');
+  assert.equal(container.querySelector('[data-details-tab="tools"]').getAttribute('data-tab-count'), '2');
+
+  // Verify stage service badge and proportional bar on trace items
+  const providerStage = container.querySelector('[data-trace-stage="provider"]');
+  assert.equal(providerStage.getAttribute('data-stage-service'), 'CF AI Gateway · LLM');
+  assert.ok(providerStage.getAttribute('style').includes('--stage-pct:'));
+
+  // Clicking a Solution Stack item switches to its associated tab
+  s3Item.click();
+  assert.equal(panel.getActiveTab(), 'evidence');
+  mcpItem.click();
+  assert.equal(panel.getActiveTab(), 'tools');
+  ddbItem.click();
+  assert.equal(panel.getActiveTab(), 'context');
+});
