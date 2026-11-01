@@ -126,6 +126,7 @@ export interface RetrievedChunk {
   text: string;
   resumeText: string;
   decision: string;
+  process: string[];
   outcome: string;
   technicalGuidance: string;
   sourcePath: string;
@@ -886,6 +887,8 @@ function formatBoundedPromptContext(
       `Delivery Status: ${chunk.deliveryStatus} | Source: ${chunk.sourceUrls[0] ?? chunk.sourcePath}`,
       `Summary: ${chunk.resumeText}`,
       `Decision & Outcome: ${chunk.decision} -> ${chunk.outcome}`,
+      `Process Steps: ${chunk.process.join(' | ')}`,
+      `Technical Guidance: ${chunk.technicalGuidance}`,
       `Qualification Boundary: ${chunk.qualificationNote}`,
     ].join('\n');
 
@@ -1280,6 +1283,7 @@ export function createRetrievalEngine(
           text: chunk.embeddingText,
           resumeText: chunk.resumeText,
           decision: chunk.decision,
+          process: [...chunk.process],
           outcome: chunk.outcome,
           technicalGuidance: chunk.technicalGuidance,
           sourcePath: verified.sourcePath,

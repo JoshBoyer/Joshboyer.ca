@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import { DynamoDBClient, CreateTableCommand, DeleteTableCommand, ScanCommand } from '@aws-sdk/client-dynamodb';
-import { CAG_CLAIM_IDS, CAG_VERSION, SYSTEM_PREFIX, MAX_PROVIDER_REQUEST_BYTES, MAX_OUTPUT_TOKENS, INPUT_TOKEN_ALLOWANCE,
+import { CAG_CLAIM_IDS, CAG_VERSION, CAG_HIGH_LEVEL_CORPUS, SYSTEM_PREFIX, MAX_PROVIDER_REQUEST_BYTES, MAX_OUTPUT_TOKENS, INPUT_TOKEN_ALLOWANCE,
   buildUserContext, renderSelection, type StreamFrame } from '../src/cag.js';
 import { createAwsPhase4Clients } from '../src/aws.js';
 import { providerBody, callChatProvider } from '../src/chat-provider.js';
@@ -1181,5 +1181,72 @@ test('Phase 4 end-to-end integration with real DynamoDB AwsChatState, real Retri
     ddb.destroy();
   }
 });
+
+test('two-tier CAG high-level corpus + RAG deep-detail pull embeds complete career overview in SYSTEM_PREFIX and injects process + technicalGuidance from RAG chunks', () => {
+  assert.equal(CAG_HIGH_LEVEL_CORPUS.architecture, 'two-tier-cag-rag');
+  assert.equal(CAG_HIGH_LEVEL_CORPUS.corpusVersion, CAG_VERSION);
+  assert.equal(CAG_HIGH_LEVEL_CORPUS.profile.name, 'Josh Boyer');
+  assert.equal(CAG_HIGH_LEVEL_CORPUS.profile.location, 'Ottawa, Ontario, Canada');
+  assert.equal(CAG_HIGH_LEVEL_CORPUS.profile.externalProfiles.workshop42, 'https://ws42.ca');
+  assert.equal(CAG_HIGH_LEVEL_CORPUS.profile.externalProfiles.linkedin, 'https://www.linkedin.com/in/josh-boyer-1b770618/');
+  assert.equal(CAG_HIGH_LEVEL_CORPUS.personalMaking.url, 'https://ws42.ca');
+  assert.deepEqual(
+    CAG_HIGH_LEVEL_CORPUS.careerEras.map(era => era.id),
+    ['role-dell', 'role-harris', 'role-grenville', 'role-medavie', 'role-independent']
+  );
+  assert.equal(CAG_HIGH_LEVEL_CORPUS.domainPillars.length, 6);
+  assert.equal(CAG_HIGH_LEVEL_CORPUS.projectCatalog.length, 13);
+  assert.ok(SYSTEM_PREFIX.includes('high_level_corpus='));
+  assert.ok(SYSTEM_PREFIX.includes('"architecture":"two-tier-cag-rag"'));
+  assert.ok(SYSTEM_PREFIX.includes('https://ws42.ca'));
+  assert.ok(SYSTEM_PREFIX.includes('https://www.linkedin.com/in/josh-boyer-1b770618/'));
+
+  const takeoverChunk = chunksManifest.chunks.find(c => c.id === 'experience-takeover')!;
+  const ctxJson = buildUserContext(
+    { schemaVersion: '1.0.0', requestId: REQUEST_ID, text: 'How did Josh build the Medavie claims-history loading VBA tool?' },
+    [],
+    {
+      retrievedChunks: [{
+        id: takeoverChunk.id,
+        claimId: takeoverChunk.claimId,
+        projectId: takeoverChunk.projectId,
+        roleId: takeoverChunk.roleId,
+        title: takeoverChunk.title,
+        period: takeoverChunk.period,
+        deliveryStatus: takeoverChunk.deliveryStatus,
+        resumeText: takeoverChunk.resumeText,
+        decision: takeoverChunk.decision,
+        process: takeoverChunk.process,
+        technicalGuidance: takeoverChunk.technicalGuidance,
+        outcome: takeoverChunk.outcome,
+        qualificationNotes: takeoverChunk.qualificationNotes,
+        sourceIds: takeoverChunk.sourceIds,
+        combinedScore: 0.9142
+      }]
+    }
+  );
+  const parsed = JSON.parse(ctxJson) as {
+    approved_retrieved_chunks: Array<{
+      id: string;
+      projectId: string;
+      roleId: string;
+      decision: string;
+      process: string[];
+      technicalGuidance: string;
+      outcome: string;
+      combinedScore: number;
+    }>;
+  };
+  assert.equal(parsed.approved_retrieved_chunks.length, 1);
+  const enriched = parsed.approved_retrieved_chunks[0]!;
+  assert.equal(enriched.id, 'experience-takeover');
+  assert.equal(enriched.projectId, 'takeover');
+  assert.equal(enriched.roleId, 'role-medavie');
+  assert.ok(enriched.decision.includes('Excel VBA add-in'));
+  assert.equal(enriched.process.length, 3);
+  assert.ok(enriched.technicalGuidance.includes('researched the receiving load'));
+  assert.equal(enriched.combinedScore, 0.9142);
+});
+
 
 

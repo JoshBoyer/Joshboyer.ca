@@ -1392,11 +1392,13 @@ test('Horizontal Context Window & CAG Cache Visual Map: renders 6 proportional s
   assert.match(cagOnlyMap.textContent, /RAG skipped · CAG Direct/);
 });
 
-test('Mockup v3 repo assets, data-active-tab tracking, and Sources used (6) interactive sub-tab filtering', () => {
+test('Mockup v4 repo assets, LinkedIn & ws42.ca profile integration, data-active-tab tracking, and Step Inspector + View all sources', () => {
   const previewHtml = fs.readFileSync(path.join(__dirname, '..', 'services', 'edge', 'chat-preview.html'), 'utf8');
   assert.match(previewHtml, /\/assets\/jb-mark\.svg/, 'chat-preview.html must use repo brand mark /assets/jb-mark.svg');
   assert.match(previewHtml, /\/assets\/personal\/josh-portrait-main\.jpg/, 'chat-preview.html must use repo studio portrait /assets/personal/josh-portrait-main.jpg');
   assert.match(previewHtml, /\/assets\/skills-mountain-horizon-bg\.jpg/, 'chat-preview.html must use repo scenic photo /assets/skills-mountain-horizon-bg.jpg');
+  assert.match(previewHtml, /https:\/\/www\.linkedin\.com\/in\/josh-boyer-1b770618\//, 'chat-preview.html must link to LinkedIn profile');
+  assert.match(previewHtml, /https:\/\/ws42\.ca/, 'chat-preview.html must link to Workshop42 ws42.ca');
 
   const doc = createSimDocument(1440);
   const chat = require('../dist/chat-assistant.js');
@@ -1417,17 +1419,24 @@ test('Mockup v3 repo assets, data-active-tab tracking, and Sources used (6) inte
   traceTab.click();
   assert.equal(details.element.getAttribute('data-active-tab'), 'trace');
 
-  // Interactive Sources used (6) / Career corpus (4) / Web (2) sub-tabs filter rows
-  const srcTabs = details.element.querySelectorAll('.chat-src-tab');
-  assert.equal(srcTabs.length, 3);
-  const allRows = details.element.querySelectorAll('.chat-source-used-row');
-  assert.equal(allRows.length, 6);
-  srcTabs[1].click(); // Career corpus (4)
-  assert.equal(allRows.filter(r => !r.hidden).length, 4);
-  srcTabs[2].click(); // Web (2)
-  assert.equal(allRows.filter(r => !r.hidden).length, 2);
-  srcTabs[0].click(); // Sources used (6)
-  assert.equal(allRows.filter(r => !r.hidden).length, 6);
+  // Verify Step 3 default inspector card, What I found (3 sources -> View all sources -> 5 sources with LinkedIn & ws42.ca)
+  const stepTitle = details.element.querySelector('.chat-inspector-step-title');
+  assert.equal(stepTitle.textContent, 'Step 3: Find additional information');
+  const foundItems = details.element.querySelectorAll('.chat-found-source-item');
+  assert.equal(foundItems.length, 5);
+  assert.equal(foundItems.filter(r => !r.hidden).length, 3);
+  const viewAllBtn = details.element.querySelector('.chat-view-all-sources-btn');
+  assert.ok(viewAllBtn, 'View all sources button must exist');
+  viewAllBtn.click();
+  assert.equal(foundItems.filter(r => !r.hidden).length, 5);
+  assert.match(details.element.textContent, /Workshop42 Making Studio \(ws42\.ca\)/);
+  assert.match(details.element.textContent, /Josh Boyer — LinkedIn Profile/);
+
+  // Verify setInspectedStep updates Step card, Why this step?, and Next step
+  details.setInspectedStep(2);
+  assert.equal(stepTitle.textContent, 'Step 2: Career knowledge (cached)');
+  const nextTitle = details.element.querySelector('.chat-next-step-title');
+  assert.equal(nextTitle.textContent, 'Find additional information');
 });
 
 test('Simple / Detailed / Engineer mode switcher, Clear chat visual reset & session_expired resilience, and showcase action buttons', async () => {
