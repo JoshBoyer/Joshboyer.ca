@@ -1005,7 +1005,23 @@ test('Phase 4 Browser Flow 1 (Desktop 1440x900): operator login, portrait loadin
     assert.equal(await page.$eval('.chat-details-pin-banner', el => el.hidden), true);
     assert.equal(await page.getAttribute(`button[data-turn-select="${turn2RequestId}"]`, 'aria-pressed'), 'true');
 
-    // 8. Click "Clear chat" -> invokes DELETE /api/chat/session, clears DOM turns and localStorage
+    // 7b. Verify Simple / Engineer / Detailed mode pills transform the live DOM in Chromium
+    await page.click('button[data-mode-pill="simple"]');
+    assert.equal(await page.getAttribute('.chat-shell', 'data-view-mode'), 'simple');
+    assert.equal(await page.$eval('[data-live-pipeline]', el => el.classList.contains('is-collapsed')), true);
+    assert.equal(await page.getAttribute('.chat-details-panel', 'data-active-tab'), 'evidence');
+
+    await page.click('button[data-mode-pill="engineer"]');
+    assert.equal(await page.getAttribute('.chat-shell', 'data-view-mode'), 'engineer');
+    assert.equal(await page.$eval('[data-live-pipeline]', el => el.classList.contains('is-collapsed')), false);
+    assert.equal(await page.$eval('.chat-tech-stack', el => el.classList.contains('is-stack-expanded')), true);
+    assert.equal(await page.getAttribute('.chat-details-panel', 'data-active-tab'), 'context');
+
+    await page.click('button[data-mode-pill="detailed"]');
+    assert.equal(await page.getAttribute('.chat-shell', 'data-view-mode'), 'detailed');
+    assert.equal(await page.getAttribute('.chat-details-panel', 'data-active-tab'), 'trace');
+
+    // 8. Click "Clear chat" -> invokes DELETE /api/chat/session, clears DOM turns, hides showcase, and clears localStorage
     await page.click('.chat-heading .chat-text-button');
     await page.waitForFunction(
       () => document.querySelector('.chat-status')?.textContent === 'Conversation cleared. Your next question starts a new session.'
@@ -1013,6 +1029,8 @@ test('Phase 4 Browser Flow 1 (Desktop 1440x900): operator login, portrait loadin
     assert.equal(getClearedCount(), 1);
     assert.equal(await page.locator('.chat-answer').count(), 0);
     assert.equal(await page.$eval('.chat-welcome', el => el.hidden), false);
+    assert.equal(await page.$eval('.chat-welcome', el => el.classList.contains('is-cleared')), true);
+    assert.equal(await page.$eval('.chat-welcome-showcase', el => el.hidden), true);
     const storedAfterClear = await page.evaluate(() => localStorage.getItem('joshboyer_private_chat_history_v1'));
     assert.equal(storedAfterClear, null);
 

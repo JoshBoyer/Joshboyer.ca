@@ -28,6 +28,32 @@ class SimNode {
     this.open = false;
   }
 
+  get classList() {
+    const self = this;
+    return {
+      add(...tokens) {
+        const set = new Set(String(self.className || '').split(/\s+/).filter(Boolean));
+        for (const t of tokens) if (t) set.add(t);
+        self.className = [...set].join(' ');
+      },
+      remove(...tokens) {
+        const set = new Set(String(self.className || '').split(/\s+/).filter(Boolean));
+        for (const t of tokens) set.delete(t);
+        self.className = [...set].join(' ');
+      },
+      contains(token) {
+        return String(self.className || '').split(/\s+/).filter(Boolean).includes(token);
+      },
+      toggle(token, force) {
+        const has = this.contains(token);
+        const next = force !== undefined ? Boolean(force) : !has;
+        if (next) this.add(token);
+        else this.remove(token);
+        return next;
+      }
+    };
+  }
+
   get textContent() {
     if (this.children.length === 0) return this._textContent;
     return this._textContent + this.children.map(child => child.textContent).join('');
@@ -1403,5 +1429,143 @@ test('Mockup v3 repo assets, data-active-tab tracking, and Sources used (6) inte
   srcTabs[0].click(); // Sources used (6)
   assert.equal(allRows.filter(r => !r.hidden).length, 6);
 });
+
+test('Simple / Detailed / Engineer mode switcher, Clear chat visual reset & session_expired resilience, and showcase action buttons', async () => {
+  const doc = createSimDocument(1440);
+  const chat = require('../dist/chat-assistant.js');
+  const evidencePayload = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'dist', 'chat-evidence.json'), 'utf8'));
+
+  const chatNavItem = doc.createElement('button');
+  chatNavItem.setAttribute('data-sidebar-nav', 'Chat');
+  doc.body.append(chatNavItem);
+
+  const host = doc.createElement('div');
+  doc.body.append(host);
+
+  let deleteCalls = 0;
+  let submittedMessages = 0;
+  const mounted = chat.mount(host, {
+    fetchImpl: async (url, opts = {}) => {
+      if (url === '/api/chat/config') {
+        return new Response(JSON.stringify({
+          schemaVersion: '1.0.0',
+          available: true,
+          capabilities: { chat: true, cag: true, rag: true, mcp: true, voice: false },
+          limits: { maxMessageBytes: 8192, maxTurns: 8, maxToolsPerTurn: 4, turnDeadlineMs: 60000 }
+        }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
+      if (url === '/chat-evidence.json') {
+        return new Response(JSON.stringify(evidencePayload), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
+      if (url === '/api/chat/session' && opts.method === 'POST') {
+        return new Response(JSON.stringify({
+          schemaVersion: '1.0.0',
+          generation: '22222222-2222-4222-8222-222222222222',
+          expiresAt: Date.now() + 1800000,
+          remainingTurns: 8
+        }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
+      if (url === '/api/chat/session' && opts.method === 'DELETE') {
+        deleteCalls += 1;
+        if (deleteCalls >= 2) {
+          // Simulate second Clear chat when session cookie is already cleared (401 session_expired)
+          return new Response(JSON.stringify({ schemaVersion: '1.0.0', error: { code: 'session_expired', retryable: false } }), {
+            status: 401,
+            headers: { 'Content-Type': 'application/json' }
+          });
+        }
+        return new Response(JSON.stringify({ schemaVersion: '1.0.0', cleared: true }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+      if (url === '/api/chat/messages') {
+        submittedMessages += 1;
+      }
+      return new Response('{}', { status: 404, headers: { 'Content-Type': 'application/json' } });
+    }
+  });
+
+  await new Promise(resolve => setTimeout(resolve, 25));
+
+  const shell = mounted.element;
+  assert.equal(shell.getAttribute('data-view-mode'), 'detailed');
+
+  const simpleBtn = shell.querySelector('[data-mode-pill="simple"]');
+  const detailedBtn = shell.querySelector('[data-mode-pill="detailed"]');
+  const engineerBtn = shell.querySelector('[data-mode-pill="engineer"]');
+  const livePipeline = shell.querySelector('[data-live-pipeline]');
+  const techStack = shell.querySelector('.chat-tech-stack');
+  const scopeEl = shell.querySelector('.chat-scope');
+
+  assert.ok(simpleBtn && detailedBtn && engineerBtn, 'All 3 mode pills must exist');
+  assert.equal(detailedBtn.getAttribute('aria-pressed'), 'true');
+
+  // 1. Click Simple -> sets data-view-mode="simple", collapses pipeline, switches details to evidence
+  simpleBtn.click();
+  assert.equal(shell.getAttribute('data-view-mode'), 'simple');
+  assert.equal(simpleBtn.getAttribute('aria-pressed'), 'true');
+  assert.equal(detailedBtn.getAttribute('aria-pressed'), 'false');
+  assert.equal(livePipeline.classList.contains('is-collapsed'), true);
+  assert.equal(mounted.details.activeTab, 'evidence');
+  assert.match(scopeEl.textContent, /Simple mode/);
+
+  // 2. Click Engineer -> sets data-view-mode="engineer", expands pipeline & 10-service techStack, switches details to context
+  engineerBtn.click();
+  assert.equal(shell.getAttribute('data-view-mode'), 'engineer');
+  assert.equal(engineerBtn.getAttribute('aria-pressed'), 'true');
+  assert.equal(simpleBtn.getAttribute('aria-pressed'), 'false');
+  assert.equal(livePipeline.classList.contains('is-collapsed'), false);
+  assert.equal(techStack.classList.contains('is-stack-expanded'), true);
+  assert.equal(mounted.details.activeTab, 'context');
+  assert.match(scopeEl.textContent, /Engineer mode/);
+  const engTelemetry = shell.querySelector('[data-engineer-telemetry]');
+  assert.ok(engTelemetry, 'Engineer telemetry block must exist in welcome showcase');
+  assert.match(engTelemetry.textContent, /ENGINEER TELEMETRY/);
+
+  // 3. Click Detailed -> restores default detailed mode
+  detailedBtn.click();
+  assert.equal(shell.getAttribute('data-view-mode'), 'detailed');
+  assert.equal(detailedBtn.getAttribute('aria-pressed'), 'true');
+  assert.equal(livePipeline.classList.contains('is-collapsed'), false);
+  assert.equal(techStack.classList.contains('is-stack-expanded'), false);
+  assert.equal(mounted.details.activeTab, 'trace');
+
+  // 4. Showcase action buttons (copy, up, inspect)
+  const copyBtn = shell.querySelector('[data-showcase-action="copy"]');
+  const inspectBtn = shell.querySelector('[data-showcase-action="inspect"]');
+  const statusEl = shell.querySelector('.chat-status');
+  copyBtn.click();
+  assert.equal(copyBtn.textContent, '✓');
+  assert.equal(statusEl.textContent, 'Copied response to clipboard.');
+  inspectBtn.click();
+  assert.equal(mounted.details.activeTab, 'evidence');
+
+  // 5. Clicking [data-sidebar-nav="Chat"] focuses input without submitting a message
+  chatNavItem.click();
+  assert.equal(submittedMessages, 0, 'Clicking Chat sidebar nav must not submit a prompt');
+
+  // 6. Click Clear chat -> hides .chat-welcome-showcase, marks .chat-welcome.is-cleared, resets pipeline to Ready
+  const clearBtn = shell.querySelector('[data-clear-chat]');
+  const welcomeEl = shell.querySelector('.chat-welcome');
+  const showcaseEl = shell.querySelector('.chat-welcome-showcase');
+  assert.equal(showcaseEl.hidden, false);
+  clearBtn.click();
+  await new Promise(resolve => setTimeout(resolve, 25));
+  assert.equal(deleteCalls, 1);
+  assert.equal(showcaseEl.hidden, true, 'Clear chat must hide .chat-welcome-showcase');
+  assert.equal(welcomeEl.classList.contains('is-cleared'), true, 'Clear chat must mark .chat-welcome.is-cleared');
+  assert.equal(welcomeEl.hidden, false, '.chat-welcome must remain unhidden');
+  assert.equal(statusEl.textContent, 'Conversation cleared. Your next question starts a new session.');
+  assert.equal(clearBtn.disabled, false, 'Clear chat button must remain enabled after clearing');
+
+  // 7. Clicking Clear chat a second time (when server returns 401 session_expired) still succeeds without locking UI
+  clearBtn.click();
+  await new Promise(resolve => setTimeout(resolve, 25));
+  assert.equal(deleteCalls, 2);
+  assert.equal(statusEl.textContent, 'Conversation cleared. Your next question starts a new session.');
+  assert.equal(clearBtn.disabled, false, 'UI must remain ready and unlocked when DELETE /api/chat/session returns 401 session_expired');
+});
+
 
 

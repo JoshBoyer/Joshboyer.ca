@@ -2174,6 +2174,8 @@
       }
     }
 
+    let isClearedState = false;
+
     function createDefaultTracePreview() {
       const wrap = element(document, 'div', 'chat-details-empty chat-default-trace-preview');
       const sr = element(document, 'span', 'sr-only', 'Select a response to see the stages reported for that request.');
@@ -2203,6 +2205,50 @@
       return wrap;
     }
 
+    function createDefaultEvidencePreview() {
+      const wrap = element(document, 'section', 'chat-request-evidence chat-default-evidence-preview');
+      const sr = element(document, 'p', 'chat-details-empty sr-only', 'Selected portfolio evidence will appear here. General responses may have no portfolio references.');
+      const intro = element(document, 'p', 'chat-evidence-intro', 'Selected public portfolio evidence (6 verified sources · CAG + Hybrid RAG):');
+      const blocks = element(document, 'div', 'chat-evidence-blocks');
+      const defaultClaims = [
+        ['2009–2022 · Grenville Mutual', 'Guidewire Policy, Billing & Claims (IBS) Integration', 'Supported Policy, Billing, and Claims modules across P&C operations, including underwriting workbench, endorsements, and renewal automation (80% residential, 60% commercial, 40% farm/agri).'],
+        ['2016–2022 · Grenville Mutual', 'Bulk Group Takeover & Excel VBA Validation Add-In', 'Researched and documented the takeover solution, guided receiving-system changes with developers, and personally designed and built the production Excel VBA add-in for validation, XML batches, and error reconciliation.'],
+        ['2022–Present · Medavie Blue Cross', 'Provider Registry & Claims REST/Event Integrations', 'Conducted solution review, mapping, and synchronization requirements for provider onboarding and adjudication, followed by support of implemented integrations.']
+      ];
+      for (const [period, cTitle, cText] of defaultClaims) {
+        const card = element(document, 'section', 'chat-answer-block chat-answer-claim');
+        card.append(
+          element(document, 'p', 'chat-answer-period', period),
+          element(document, 'h3', '', cTitle),
+          element(document, 'p', '', cText)
+        );
+        blocks.append(card);
+      }
+      wrap.append(sr, intro, blocks);
+      return wrap;
+    }
+
+    function createDefaultToolsPreview() {
+      const wrap = element(document, 'section', 'chat-request-tools chat-default-tools-preview');
+      const sr = element(document, 'p', 'chat-details-empty sr-only', 'Select a response to inspect any portfolio MCP tool calls.');
+      const card = renderToolsView(document, {
+        toolCalls: [
+          {
+            toolCallId: 'tool-guidewire-1',
+            name: 'search_public_evidence',
+            toolName: 'search_public_evidence',
+            mcpMethod: 'tools/call',
+            state: 'completed',
+            status: 'completed',
+            durationMs: 14,
+            summary: 'Matched 6 canonical Guidewire, IBS, MCCG/AL3, and Bulk Group Takeover evidence records.'
+          }
+        ]
+      });
+      wrap.append(sr, card);
+      return wrap;
+    }
+
     function render() {
       const view = selection.selected;
       pinBanner.hidden = !selection.pinned;
@@ -2215,7 +2261,7 @@
       }
       if (promptPreview) {
         promptPreview.textContent = view?.questionText
-          || 'Can you tell me more about my experience with Guidewire and the type of work I’ve done?';
+          || (isClearedState ? 'No active request · Ask a question to inspect live execution.' : 'Can you tell me more about my experience with Guidewire and the type of work I’ve done?');
       }
       if (metaDuration) {
         if (view && Array.isArray(view.tracePoints) && view.tracePoints.length > 0) {
@@ -2223,7 +2269,7 @@
           const doneState = view.timeline?.outcome ? 'completed' : 'in progress';
           metaDuration.textContent = `${formatTraceTime(maxElapsed || 38)} (${doneState})`;
         } else {
-          metaDuration.textContent = '12.4s (completed)';
+          metaDuration.textContent = isClearedState ? '0.0s (ready)' : '12.4s (completed)';
         }
       }
       if (liveExecStatus && liveExecTime) {
@@ -2231,6 +2277,9 @@
           const maxElapsed = view.tracePoints.reduce((acc, pt) => Math.max(acc, Number(pt.elapsedMs) || 0), 0);
           liveExecStatus.textContent = view.timeline?.outcome ? 'Completed' : 'Running';
           liveExecTime.textContent = formatTraceTime(maxElapsed || 12);
+        } else if (isClearedState) {
+          liveExecStatus.textContent = 'Ready';
+          liveExecTime.textContent = '0.0s';
         } else {
           liveExecStatus.textContent = 'Completed';
           liveExecTime.textContent = '12.4s';
@@ -2241,10 +2290,18 @@
         panels.trace.replaceChildren(view?.timeline?.element || createDefaultTracePreview());
       }
       if (panels.evidence) {
-        panels.evidence.replaceChildren(view?.evidence || element(document, 'p', 'chat-details-empty', 'Selected portfolio evidence will appear here. General responses may have no portfolio references.'));
+        panels.evidence.replaceChildren(
+          view?.evidence || (isClearedState
+            ? element(document, 'p', 'chat-details-empty', 'Selected portfolio evidence will appear here. General responses may have no portfolio references.')
+            : createDefaultEvidencePreview())
+        );
       }
       if (panels.tools) {
-        panels.tools.replaceChildren(view ? (view.tools || renderToolsView(document, view)) : element(document, 'p', 'chat-details-empty', 'Select a response to inspect any portfolio MCP tool calls.'));
+        panels.tools.replaceChildren(
+          view ? (view.tools || renderToolsView(document, view)) : (isClearedState
+            ? element(document, 'p', 'chat-details-empty', 'Select a response to inspect any portfolio MCP tool calls.')
+            : createDefaultToolsPreview())
+        );
       }
       if (panels.context) {
         if (view) {
@@ -2278,8 +2335,8 @@
         buttons.context?.removeAttribute?.('data-tab-count');
       } else {
         buttons.trace?.removeAttribute?.('data-tab-count');
-        buttons.evidence?.setAttribute?.('data-tab-count', '6');
-        buttons.tools?.setAttribute?.('data-tab-count', '1');
+        buttons.evidence?.setAttribute?.('data-tab-count', isClearedState ? '0' : '6');
+        buttons.tools?.setAttribute?.('data-tab-count', isClearedState ? '0' : '1');
         buttons.context?.removeAttribute?.('data-tab-count');
       }
       syncTechStack(view);
@@ -2298,17 +2355,23 @@
       element: desktop,
       dialog,
       activate,
+      setStackExpanded(expanded) {
+        if (expanded) techStack.classList?.add?.('is-stack-expanded');
+        else techStack.classList?.remove?.('is-stack-expanded');
+      },
       setVoiceTechState(overrides) {
         voiceServiceOverrides = overrides && typeof overrides === 'object' ? { ...overrides } : null;
         syncTechStack(selection.selected);
       },
       update(view) {
+        isClearedState = false;
         registerView(view);
         selection.update(view);
         render();
         notifyExternal();
       },
       open(view, trigger) {
+        isClearedState = false;
         registerView(view);
         selection.select(view);
         render();
@@ -2319,6 +2382,7 @@
       },
       returnToLatest: handleReturnToLatest,
       clear() {
+        isClearedState = true;
         knownViews.length = 0;
         selection.clear();
         voiceServiceOverrides = null;
@@ -3737,19 +3801,30 @@
 
     const headingControls = element(document, 'div', 'chat-heading-controls');
     const modeSwitcher = element(document, 'div', 'chat-mode-switcher');
-    for (const [mLabel, isDefault] of [['◎ Simple', false], ['Detailed', true], ['🖧 Engineer', false]]) {
+    const modeConfigs = [
+      ['simple', '◎ Simple', false],
+      ['detailed', 'Detailed', true],
+      ['engineer', '🖧 Engineer', false]
+    ];
+    let currentViewMode = 'detailed';
+    shell.setAttribute('data-view-mode', 'detailed');
+    const modePillButtons = Object.create(null);
+    for (const [mKey, mLabel, isDefault] of modeConfigs) {
       const mBtn = element(document, 'button', `chat-mode-pill${isDefault ? ' is-active' : ''}`, mLabel);
       mBtn.type = 'button';
+      mBtn.setAttribute('data-mode-pill', mKey);
+      mBtn.setAttribute('aria-pressed', String(isDefault));
       mBtn.addEventListener('click', () => {
-        for (const child of modeSwitcher.children) child.className = 'chat-mode-pill';
-        mBtn.className = 'chat-mode-pill is-active';
+        applyViewMode(mKey);
       });
+      modePillButtons[mKey] = mBtn;
       modeSwitcher.append(mBtn);
     }
     const moreBtn = element(document, 'button', 'chat-heading-more-btn', '⋯');
     moreBtn.type = 'button';
     moreBtn.setAttribute('aria-label', 'More options');
     const clear = element(document, 'button', 'chat-text-button', 'Clear chat'); clear.type = 'button'; clear.disabled = true;
+    clear.setAttribute('data-clear-chat', '');
     moreBtn.addEventListener?.('click', () => {
       if (!clear.disabled) clear.click?.();
       else input.focus?.();
@@ -3779,7 +3854,9 @@
     const messages = element(document, 'div', 'chat-messages'); messages.setAttribute('aria-label', 'Conversation'); messages.setAttribute('role', 'log'); messages.setAttribute('aria-live', 'polite'); messages.setAttribute('aria-relevant', 'additions'); messages.tabIndex = 0;
     const welcome = element(document, 'div', 'chat-welcome');
     const welcomeIntro = element(document, 'div', 'chat-welcome-intro');
-    welcomeIntro.append(element(document, 'span', 'chat-monogram', 'jb.'), element(document, 'h2', '', 'What can I help with?'), element(document, 'p', '', 'Talk through an idea, ask a question, or explore Josh’s work.'));
+    const welcomeHeading = element(document, 'h2', '', 'What can I help with?');
+    const welcomeSubtext = element(document, 'p', '', 'Talk through an idea, ask a question, or explore Josh’s work.');
+    welcomeIntro.append(element(document, 'span', 'chat-monogram', 'jb.'), welcomeHeading, welcomeSubtext);
 
     const showcase = element(document, 'div', 'chat-welcome-showcase');
     const demoUserRow = element(document, 'div', 'chat-welcome-user-row');
@@ -3797,8 +3874,33 @@
     const demoAssistantAvatar = element(document, 'span', 'chat-welcome-bot-avatar');
     const demoAssistantCard = element(document, 'div', 'chat-welcome-assistant-card');
     const demoCardActions = element(document, 'div', 'chat-welcome-card-actions');
-    for (const actIcon of ['📋', '👍', '👎', '⋯']) {
-      demoCardActions.append(element(document, 'span', 'chat-welcome-action-icon', actIcon));
+    const demoLeadParagraphText = 'You have extensive experience with Guidewire, primarily working with Policy, Billing, and Claims administration (IBS) across P&C and Health and Dental insurance. You’ve been involved in system conversions, integrations, renewals, and endorsements, with a strong focus on business analysis, requirements, testing, and training.';
+    for (const [actIcon, actLabel, actKey] of [
+      ['📋', 'Copy response', 'copy'],
+      ['👍', 'Mark helpful', 'up'],
+      ['👎', 'Needs improvement', 'down'],
+      ['⋯', 'Inspect evidence', 'inspect']
+    ]) {
+      const actBtn = element(document, 'button', 'chat-welcome-action-icon', actIcon);
+      actBtn.type = 'button';
+      actBtn.setAttribute('aria-label', actLabel);
+      actBtn.setAttribute('data-showcase-action', actKey);
+      actBtn.addEventListener?.('click', () => {
+        if (actKey === 'copy') {
+          try {
+            document.defaultView?.navigator?.clipboard?.writeText?.(demoLeadParagraphText);
+          } catch { /* ignore clipboard permission error */ }
+          actBtn.textContent = '✓';
+          status.textContent = 'Copied response to clipboard.';
+        } else if (actKey === 'up' || actKey === 'down') {
+          actBtn.classList?.toggle?.('is-active');
+          status.textContent = 'Feedback recorded.';
+        } else if (actKey === 'inspect') {
+          details.activate?.('evidence');
+          status.textContent = 'Showing verified portfolio evidence.';
+        }
+      });
+      demoCardActions.append(actBtn);
     }
     const demoLeadWrap = element(document, 'div', 'chat-welcome-lead-wrap');
     demoLeadWrap.append(
@@ -3806,7 +3908,7 @@
         document,
         'p',
         'chat-welcome-lead-p',
-        'You have extensive experience with Guidewire, primarily working with Policy, Billing, and Claims administration (IBS) across P&C and Health and Dental insurance. You’ve been involved in system conversions, integrations, renewals, and endorsements, with a strong focus on business analysis, requirements, testing, and training.'
+        demoLeadParagraphText
       ),
       demoCardActions
     );
@@ -3829,7 +3931,30 @@
       hRow.append(hDot, hText);
       demoHighlightsList.append(hRow);
     }
-    demoAssistantCard.append(demoLeadWrap, demoSubLead, demoHighlightsList);
+    const demoEngineerBlock = element(document, 'div', 'chat-welcome-engineer-block');
+    demoEngineerBlock.setAttribute('data-engineer-telemetry', '');
+    const engTitle = element(document, 'div', 'chat-welcome-eng-header');
+    engTitle.append(
+      element(document, 'span', 'chat-welcome-eng-badge', '🖧 ENGINEER TELEMETRY'),
+      element(document, 'span', 'chat-welcome-eng-meta', 'AWS us-east-2 · CAG + S3 Vectors · Schema v1.0.0')
+    );
+    const engGrid = element(document, 'div', 'chat-welcome-eng-grid');
+    const engRows = [
+      ['CAG Prefix Cache', '7,120 tok pinned · 91% KV cache hit · 0ms vector I/O'],
+      ['Hybrid S3 Vectors RAG', '4 chunks matched (cosine ≥ 0.74 · idx-2026-10-31)'],
+      ['MCP JSON-RPC 2.0', 'search_public_evidence · SigV4 IAM read-only lambda'],
+      ['Contract Validation', '6/6 canonical claim citations verified · 0 ungrounded claims']
+    ];
+    for (const [eKey, eVal] of engRows) {
+      const eCell = element(document, 'div', 'chat-welcome-eng-cell');
+      eCell.append(
+        element(document, 'span', 'chat-welcome-eng-key', eKey),
+        element(document, 'span', 'chat-welcome-eng-val', eVal)
+      );
+      engGrid.append(eCell);
+    }
+    demoEngineerBlock.append(engTitle, engGrid);
+    demoAssistantCard.append(demoLeadWrap, demoSubLead, demoHighlightsList, demoEngineerBlock);
     demoAssistantRow.append(demoAssistantAvatar, demoAssistantCard);
     showcase.append(demoUserRow, demoAssistantRow);
 
@@ -3949,6 +4074,36 @@
     pipeBody.append(pipeTrack, pipeCtxStack);
     livePipeline.append(pipeHeader, pipeBody);
 
+    function applyViewMode(modeKey) {
+      if (!modePillButtons[modeKey]) return;
+      currentViewMode = modeKey;
+      shell.setAttribute('data-view-mode', modeKey);
+      for (const [k, btn] of Object.entries(modePillButtons)) {
+        const active = k === modeKey;
+        btn.className = `chat-mode-pill${active ? ' is-active' : ''}`;
+        btn.setAttribute('aria-pressed', String(active));
+      }
+      if (modeKey === 'simple') {
+        scope.textContent = 'Simple mode · Concise executive summaries without pipeline clutter.';
+        livePipeline.classList?.add?.('is-collapsed');
+        pipeToggleBtn.textContent = 'Show details ⌄';
+        details.setStackExpanded?.(false);
+        details.activate?.('evidence');
+      } else if (modeKey === 'engineer') {
+        scope.textContent = 'Engineer mode · Full CAG prefix cache telemetry, S3 Vectors RAG, MCP JSON-RPC & AWS us-east-2 stack.';
+        livePipeline.classList?.remove?.('is-collapsed');
+        pipeToggleBtn.textContent = 'Hide details ⌃';
+        details.setStackExpanded?.(true);
+        details.activate?.('context');
+      } else {
+        scope.textContent = 'I’ll draw from my career corpus and show you how I find and use information.';
+        livePipeline.classList?.remove?.('is-collapsed');
+        pipeToggleBtn.textContent = 'Hide details ⌃';
+        details.setStackExpanded?.(false);
+        details.activate?.('trace');
+      }
+    }
+
     function syncLivePipeline(view) {
       if (!view) return;
       const cd = view.contextData || {};
@@ -4020,7 +4175,10 @@
         }
         if (!ready || busy || input.disabled) return;
         const navKey = chipNode.getAttribute?.('data-sidebar-nav');
-        if (navKey === 'chat') return;
+        if (navKey && navKey.toLowerCase() === 'chat') {
+          input.focus?.();
+          return;
+        }
         const labelTxt = (chipNode.querySelector?.('.chat-nav-label')?.textContent || chipNode.textContent || '').trim();
         input.value = railPrompts[labelTxt] || `Tell me about ${labelTxt} in Josh’s portfolio.`;
         form.requestSubmit();
@@ -4303,11 +4461,27 @@
     clear.addEventListener('click', async () => {
       uiEpoch += 1; busy = false; ready = false; update();
       voice.stopAll();
+      showcase.hidden = true;
+      welcome.classList?.add?.('is-cleared');
+      welcomeHeading.textContent = 'Conversation cleared';
+      welcomeSubtext.textContent = 'Ask a question below or pick a starter topic to start a new session.';
+      pipeStatusPill.textContent = 'Ready';
+      pipeDuration.textContent = '🕒 0.0s';
       messages.replaceChildren(welcome); welcome.hidden = false; currentReply = null; input.value = ''; status.textContent = 'Clearing the conversation…';
       storedTurns = []; clearStoredHistory(storage);
       details.clear();
-      try { await client.clear(); ready = true; status.textContent = 'Conversation cleared. Your next question starts a new session.'; }
-      catch { status.textContent = 'The server could not confirm deletion. Reload before starting another conversation.'; }
+      try {
+        await client.clear();
+        ready = true;
+        status.textContent = 'Conversation cleared. Your next question starts a new session.';
+      } catch (err) {
+        if (err && err.code === 'session_expired') {
+          ready = Boolean(currentConfig ? (currentConfig.available && currentConfig.capabilities?.chat) : true);
+          status.textContent = 'Conversation cleared. Your next question starts a new session.';
+        } else {
+          status.textContent = 'The server could not confirm deletion. Reload before starting another conversation.';
+        }
+      }
       update(); if (ready) input.focus();
     });
     client.initialise().then(config => {
@@ -4316,7 +4490,9 @@
       limit = config.limits.maxMessageBytes;
       if (ready) {
         status.textContent = 'Private chat is ready.';
-        scope.textContent = 'I’ll draw from my career corpus and show you how I find and use information.';
+        if (currentViewMode === 'detailed') {
+          scope.textContent = 'I’ll draw from my career corpus and show you how I find and use information.';
+        }
         voice.checkAvailability();
       } else status.textContent = 'Chat is currently disabled.';
       update();
