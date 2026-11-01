@@ -1146,3 +1146,89 @@ test('UI telemetry & Solution Stack live lighting: lights up engaged services, s
   ddbItem.click();
   assert.equal(panel.getActiveTab(), 'context');
 });
+
+test('Live Voice advanced controls & Barge-In: sustained user speech interrupts playback, pre-roll flushes, and HUD controls toggle barge-in/mute/pace', async () => {
+  const chatAssistant = require('../dist/chat-assistant.js');
+  const doc = createSimDocument(1440);
+  doc.defaultView.btoa = str => Buffer.from(str, 'binary').toString('base64');
+
+  const stage = doc.createElement('div');
+  stage.setAttribute('data-avatar-stage', '');
+  const statusText = doc.createElement('span');
+  statusText.setAttribute('data-avatar-status-text', '');
+  const voiceControls = doc.createElement('div');
+  voiceControls.setAttribute('data-voice-controls', '');
+  doc.body.append(stage, statusText, voiceControls);
+
+  const bargeInEvents = [];
+  let resolveTtsFetch;
+  const voice = chatAssistant.createVoiceController(doc, {
+    fetchImpl: () => new Promise(resolve => { resolveTtsFetch = resolve; }),
+    onBargeIn: evt => bargeInEvents.push(evt)
+  });
+
+  // Auto-mounted Live Voice HUD controls must exist
+  const hud = doc.querySelector('[data-voice-live-hud]');
+  assert.ok(hud, 'Expected [data-voice-live-hud] to be auto-mounted next to [data-voice-controls]');
+  const bargeInBtn = doc.querySelector('[data-voice-bargein-btn]');
+  const interruptBtn = doc.querySelector('[data-voice-interrupt-btn]');
+  const muteBtn = doc.querySelector('[data-voice-mute-btn]');
+  const paceBtn = doc.querySelector('[data-voice-pace-btn]');
+  assert.equal(voice.isBargeInEnabled, true);
+  assert.equal(interruptBtn.disabled, true, 'Interrupt button must be disabled while idle');
+
+  // Start speaking a turn (TTS synthesis in progress -> voice.isSpeaking() === true)
+  const speakBtn = doc.createElement('button');
+  voice.speakTurn({ replyText: 'Josh architected this live portfolio platform on AWS us-east-2.' }, speakBtn);
+  assert.equal(voice.isSpeaking(), true);
+  assert.equal(interruptBtn.disabled, false, 'Interrupt button must enable while speaking/synthesizing');
+
+  // Low-level speaker bleed (RMS 0.015 < 0.052 threshold) or a single transient spike must NOT trigger barge-in
+  const bleedFrame = new Float32Array(256).fill(0.015);
+  const loudFrame = new Float32Array(256).fill(0.085);
+  assert.equal(voice.processMicFrame(bleedFrame, 16000).bargedIn, false);
+  assert.equal(voice.processMicFrame(loudFrame, 16000).bargedIn, false);
+  assert.equal(voice.processMicFrame(bleedFrame, 16000).bargedIn, false);
+  assert.equal(voice.isSpeaking(), true, 'Transient 1-frame spike must not falsely barge in');
+
+  // 3 consecutive frames of intentional user speech (RMS 0.085 >= 0.052) must trigger acoustic barge-in
+  assert.equal(voice.processMicFrame(loudFrame, 16000).bargedIn, false);
+  assert.equal(voice.processMicFrame(loudFrame, 16000).bargedIn, false);
+  const thirdFrame = voice.processMicFrame(loudFrame, 16000);
+  assert.equal(thirdFrame.bargedIn, true, '3 consecutive speech frames must trigger acoustic barge-in');
+  assert.equal(voice.isSpeaking(), false, 'Playback/synthesis must stop immediately on barge-in');
+  assert.equal(voice.bargeInCount, 1);
+  assert.equal(bargeInEvents.length, 1);
+  assert.equal(bargeInEvents[0].source, 'voice');
+
+  // Toggling Barge-in Off prevents automatic voice barge-in, while manual Interrupt button still barges in
+  bargeInBtn.click();
+  assert.equal(voice.isBargeInEnabled, false);
+  assert.equal(bargeInBtn.getAttribute('aria-pressed'), 'false');
+
+  voice.speakTurn({ replyText: 'Second spoken turn with auto barge-in disabled.' }, speakBtn);
+  assert.equal(voice.isSpeaking(), true);
+  voice.processMicFrame(loudFrame, 16000);
+  voice.processMicFrame(loudFrame, 16000);
+  assert.equal(voice.processMicFrame(loudFrame, 16000).bargedIn, false, 'Auto barge-in must not fire when disabled');
+  assert.equal(voice.isSpeaking(), true);
+
+  // Clicking manual Interrupt button barges in immediately
+  interruptBtn.click();
+  assert.equal(voice.isSpeaking(), false, 'Manual interrupt button must halt speech immediately');
+  assert.equal(voice.bargeInCount, 2);
+  assert.equal(bargeInEvents[1].source, 'button');
+
+  // Mute and Pace controls cycle deterministically
+  muteBtn.click();
+  assert.equal(voice.isMicMuted, true);
+  assert.equal(muteBtn.getAttribute('aria-pressed'), 'true');
+  assert.equal(voice.voicePace, 1.0);
+  paceBtn.click();
+  assert.equal(voice.voicePace, 1.1);
+  paceBtn.click();
+  assert.equal(voice.voicePace, 0.95);
+  paceBtn.click();
+  assert.equal(voice.voicePace, 1.0);
+  if (resolveTtsFetch) resolveTtsFetch({ ok: false });
+});

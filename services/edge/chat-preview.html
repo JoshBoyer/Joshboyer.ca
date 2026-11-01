@@ -58,6 +58,21 @@
             <button type="button" class="chat-voice-btn chat-voice-btn--autospeak" data-voice-autospeak-btn aria-pressed="true" title="Automatically speak responses with Josh's ElevenLabs voice">🔊 Auto: On</button>
             <button type="button" class="chat-voice-btn chat-voice-btn--intro" data-voice-intro-btn title="Play 30-second intro in Josh's voice">👋 30s Intro</button>
           </div>
+          <div class="chat-voice-live-hud" data-voice-live-hud aria-label="Advanced Live Voice and Barge-In controls">
+            <div class="chat-voice-vad-row">
+              <span class="chat-voice-vad-label" data-voice-vad-label>Barge-in ready · Speak or press Space</span>
+              <div class="chat-voice-vad-meter" data-voice-meter role="progressbar" aria-label="Microphone and voice activity level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                <span class="chat-voice-vad-fill" data-voice-meter-fill></span>
+                <span class="chat-voice-bargein-tick" data-voice-bargein-tick title="Barge-in voice interruption threshold"></span>
+              </div>
+            </div>
+            <div class="chat-voice-subcontrols">
+              <button type="button" class="chat-voice-pill" data-voice-bargein-btn aria-pressed="true" title="Toggle hands-free voice interruption (barge-in) while Josh is speaking">⚡ Barge-in: On</button>
+              <button type="button" class="chat-voice-pill chat-voice-pill--interrupt" data-voice-interrupt-btn disabled title="Interrupt Josh immediately and speak now (Space or Escape)">✋ Interrupt</button>
+              <button type="button" class="chat-voice-pill" data-voice-mute-btn aria-pressed="false" title="Mute or unmute microphone during Live Voice">🎙️ Mic: Live</button>
+              <button type="button" class="chat-voice-pill" data-voice-pace-btn title="Cycle voice speaking pace (1.0x, 1.1x, 0.95x)">⏩ Pace: 1.0×</button>
+            </div>
+          </div>
           <div class="chat-scope-chips" aria-label="Verified portfolio scope">
             <span class="chat-scope-chip">Dell Support (Sept 2006+)</span>
             <span class="chat-scope-chip">Grenville (2009–2022)</span>
