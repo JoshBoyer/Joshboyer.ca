@@ -11,7 +11,9 @@ const assets = ['chat-assistant.js', 'chat-request-details.js', 'chat-assistant.
   'assets/jb-mark.svg', 'assets/jb-logo-transparent.png',
   'assets/personal/josh-portrait-main.jpg', 'assets/personal/josh-portrait-smiling.jpg', 'assets/optimized-extra/personal/josh-portrait-vest-640.webp',
   'assets/skills-mountain-horizon-bg.jpg',
-  'assets/personal/josh-avatar-idle.mp4', 'assets/personal/josh-intro-voice.mp3'];
+  'assets/personal/josh-avatar-idle.mp4', 'assets/personal/josh-intro-voice.mp3',
+  'assets/chat/elevenlabs-voice-orb.webp',
+  'assets/chat/elevenlabs-alpine-footer.webp'];
 for (const relative of assets) {
   const target = path.join(__dirname, 'build/assets', relative);
   fs.mkdirSync(path.dirname(target), { recursive: true });

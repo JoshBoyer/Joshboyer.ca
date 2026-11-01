@@ -1746,6 +1746,87 @@ test('Deliverables 2-9: Live Execution Strip, Expandable Journey Tabs, Filterabl
   assert.equal(mobileSheet.hidden, true, 'Mobile sheet close button must hide the sheet');
 });
 
+test('RL-LAYOUT-01, RL-ICON-01 & RL-IMG-01: Center column is strictly for chat while Right Side Panel and tabs house supporting details, unified SVG icon pack is rendered across the demo, and ElevenLabs ambient assets are blended without cut-out stage boxes', async () => {
+  const doc = createSimDocument(1440);
+  const chat = require('../dist/chat-assistant.js');
+  const evidencePayload = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'dist', 'chat-evidence.json'), 'utf8'));
+
+  const host = doc.createElement('div');
+  doc.body.append(host);
+
+  const mounted = chat.mount(host, {
+    fetchImpl: async url => {
+      if (url === '/api/chat/config') {
+        return new Response(JSON.stringify({
+          schemaVersion: '1.0.0',
+          available: true,
+          capabilities: { chat: true, cag: true, rag: true, mcp: true, voice: true },
+          limits: { maxMessageBytes: 8192, maxTurns: 8, maxToolsPerTurn: 4, turnDeadlineMs: 60000 }
+        }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
+      if (url === '/chat-evidence.json') {
+        return new Response(JSON.stringify(evidencePayload), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
+      return new Response('{}', { status: 404, headers: { 'Content-Type': 'application/json' } });
+    }
+  });
+
+  await new Promise(resolve => setTimeout(resolve, 25));
+  const shell = mounted.element;
+  const centerChatPanel = shell.querySelector('.chat-panel');
+  const sideDetailsPanel = mounted.details.element;
+
+  // 1. Center Column (.chat-panel) contains ONLY chat experience; supporting details live in Right Side Panel
+  assert.ok(centerChatPanel, 'Center .chat-panel must exist');
+  assert.ok(centerChatPanel.querySelector('.chat-messages'), 'Center column must contain .chat-messages');
+  assert.ok(centerChatPanel.querySelector('.chat-compose'), 'Center column must contain .chat-compose');
+  assert.equal(Boolean(centerChatPanel.querySelector('[data-live-process-strip]')), false, 'Center column must NOT contain [data-live-process-strip]');
+  assert.equal(Boolean(centerChatPanel.querySelector('[data-journey-drawer]')), false, 'Center column must NOT contain [data-journey-drawer]');
+  assert.equal(Boolean(centerChatPanel.querySelector('[data-pedestal-grid]')), false, 'Center column must NOT contain [data-pedestal-grid]');
+  assert.equal(Boolean(centerChatPanel.querySelector('[data-sources-inspector]')), false, 'Center column must NOT contain [data-sources-inspector]');
+
+  // Right Side Panel (.chat-details-panel) houses all supporting details and tabs
+  const supportingSlot = sideDetailsPanel.querySelector('[data-supporting-details-slot]');
+  assert.ok(supportingSlot, 'Right Side Panel must contain [data-supporting-details-slot]');
+  assert.ok(supportingSlot.querySelector('[data-live-process-strip]'), 'Right Side Panel must house [data-live-process-strip]');
+  assert.ok(supportingSlot.querySelector('[data-journey-drawer]'), 'Right Side Panel must house [data-journey-drawer]');
+  assert.ok(supportingSlot.querySelector('[data-pedestal-grid]'), 'Right Side Panel must house [data-pedestal-grid]');
+  assert.ok(supportingSlot.querySelector('[data-sources-inspector]'), 'Right Side Panel must house [data-sources-inspector]');
+  assert.ok(supportingSlot.querySelector('[data-aws-service-guide]'), 'Right Side Panel must house [data-aws-service-guide]');
+
+  // 2. Unified Vector SVG Icon Pack ([data-demo-icon]) is rendered across the demo with zero cut-out stage images
+  const allDemoIcons = shell.querySelectorAll('[data-demo-icon]');
+  assert.ok(allDemoIcons.length >= 40, `Expected at least 40 vector [data-demo-icon] SVG nodes across the interface, observed ${allDemoIcons.length}`);
+  const iconNames = new Set(allDemoIcons.map(el => el.getAttribute('data-demo-icon')));
+  for (const requiredIcon of [
+    'message', 'database', 'search-doc', 'layers', 'brain', 'wave',
+    'copy', 'thumbs-up', 'thumbs-down', 'more', 'compass',
+    'file-text', 'book', 'sparkles', 'aws', 'refresh',
+    'user', 'cloudflare', 'apigw', 'lambda', 's3', 'dynamodb', 'model', 'elevenlabs',
+    'paperclip', 'at-sign', 'sliders', 'mic'
+  ]) {
+    assert.equal(iconNames.has(requiredIcon), true, `Unified icon pack must render [data-demo-icon="${requiredIcon}"]`);
+  }
+
+  // Zero cut-out stage <img> tags inside pedestals
+  const pedestalStageImgs = shell.querySelectorAll('.chat-pedestal-3d img');
+  assert.equal(pedestalStageImgs.length, 0, 'Pedestals must use vector SVG icons and CSS geometry, never cut-out raster <img> boxes');
+
+  // 3. Full-frame ElevenLabs ambient assets exist on disk, are allowlisted, and no sliced stage files exist
+  const chatAssetsDir = path.join(__dirname, '..', 'dist', 'assets', 'chat');
+  assert.equal(fs.existsSync(path.join(chatAssetsDir, 'elevenlabs-voice-orb.webp')), true, 'elevenlabs-voice-orb.webp must exist');
+  assert.equal(fs.existsSync(path.join(chatAssetsDir, 'elevenlabs-alpine-footer.webp')), true, 'elevenlabs-alpine-footer.webp must exist');
+  assert.equal(fs.existsSync(path.join(chatAssetsDir, 'elevenlabs-stage-1.webp')), false, 'Sliced cutout elevenlabs-stage-1.webp must not exist');
+  assert.equal(fs.existsSync(path.join(chatAssetsDir, 'elevenlabs-pedestals-sheet.webp')), false, 'Sliced sheet elevenlabs-pedestals-sheet.webp must not exist');
+
+  const voiceObsCard = sideDetailsPanel.querySelector('[data-voice-observability-card]');
+  assert.equal(voiceObsCard.getAttribute('data-elevenlabs-asset'), 'voice-orb');
+  const previewHtml = fs.readFileSync(path.join(__dirname, '..', 'services', 'edge', 'chat-preview.html'), 'utf8');
+  assert.match(previewHtml, /\/assets\/chat\/elevenlabs-alpine-footer\.webp/);
+  assert.match(previewHtml, /data-elevenlabs-asset="voice-orb"/);
+});
+
+
 
 
 

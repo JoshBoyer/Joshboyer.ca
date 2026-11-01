@@ -20,7 +20,9 @@ export const ASSET_TYPES: Readonly<Record<string, string>> = Object.freeze(Objec
   '/assets/optimized-extra/personal/josh-portrait-vest-640.webp': 'image/webp',
   '/assets/skills-mountain-horizon-bg.jpg': 'image/jpeg',
   '/assets/personal/josh-avatar-idle.mp4': 'video/mp4',
-  '/assets/personal/josh-intro-voice.mp3': 'audio/mpeg'
+  '/assets/personal/josh-intro-voice.mp3': 'audio/mpeg',
+  '/assets/chat/elevenlabs-voice-orb.webp': 'image/webp',
+  '/assets/chat/elevenlabs-alpine-footer.webp': 'image/webp'
 }));
 export const ASSETS = new Set(Object.keys(ASSET_TYPES));
 const CSP = "default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; connect-src 'self' wss://api.elevenlabs.io; img-src 'self'; media-src 'self' blob:; base-uri 'none'; frame-ancestors 'none'; form-action 'self'";

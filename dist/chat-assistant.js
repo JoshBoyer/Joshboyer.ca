@@ -1804,75 +1804,278 @@
     }
     return iconWrap;
   }
+
+  // Unified Demo Vector Icon Pack (Lucide 24x24 stroke-width 1.85 + Cloud Service Vector Glyphs)
+  const DEMO_ICON_PACK = Object.freeze({
+    message: {
+      glyph: 'Chat',
+      paths: [
+        { d: 'M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.9', strokeLinecap: 'round', strokeLinejoin: 'round' }
+      ]
+    },
+    database: {
+      glyph: 'DB',
+      paths: [
+        { d: 'M12 3c4.97 0 9 1.34 9 3s-4.03 3-9 3-9-1.34-9-3 4.03-3 9-3z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.85', strokeLinejoin: 'round' },
+        { d: 'M3 6v12c0 1.66 4.03 3 9 3s9-1.34 9-3V6', fill: 'none', stroke: 'currentColor', strokeWidth: '1.85', strokeLinecap: 'round', strokeLinejoin: 'round' },
+        { d: 'M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3', fill: 'none', stroke: 'currentColor', strokeWidth: '1.85', strokeLinecap: 'round', strokeLinejoin: 'round' }
+      ]
+    },
+    'search-doc': {
+      glyph: 'RAG',
+      paths: [
+        { d: 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h6', fill: 'none', stroke: 'currentColor', strokeWidth: '1.85', strokeLinecap: 'round', strokeLinejoin: 'round' },
+        { d: 'M14 2v5h5', fill: 'none', stroke: 'currentColor', strokeWidth: '1.85', strokeLinecap: 'round', strokeLinejoin: 'round' },
+        { d: 'M16.5 13.5a3.2 3.2 0 1 0 0 6.4 3.2 3.2 0 0 0 0-6.4z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.9' },
+        { d: 'M19 19l2.5 2.5', fill: 'none', stroke: 'currentColor', strokeWidth: '2', strokeLinecap: 'round' }
+      ]
+    },
+    layers: {
+      glyph: 'CTX',
+      paths: [
+        { d: 'M12 2L2 7l10 5 10-5-10-5z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.85', strokeLinecap: 'round', strokeLinejoin: 'round' },
+        { d: 'M2 12l10 5 10-5', fill: 'none', stroke: 'currentColor', strokeWidth: '1.85', strokeLinecap: 'round', strokeLinejoin: 'round' },
+        { d: 'M2 17l10 5 10-5', fill: 'none', stroke: 'currentColor', strokeWidth: '1.85', strokeLinecap: 'round', strokeLinejoin: 'round' }
+      ]
+    },
+    brain: {
+      glyph: 'AI',
+      paths: [
+        { d: 'M12 4.5a2.5 2.5 0 0 0-4.96-.46 2.5 2.5 0 0 0-1.98 3 2.5 2.5 0 0 0-1.32 4.24 3 3 0 0 0 .34 5.58 2.5 2.5 0 0 0 2.96 3.08A2.5 2.5 0 0 0 12 19.5V4.5z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.8', strokeLinecap: 'round', strokeLinejoin: 'round' },
+        { d: 'M12 4.5a2.5 2.5 0 0 1 4.96-.46 2.5 2.5 0 0 1 1.98 3 2.5 2.5 0 0 1 1.32 4.24 3 3 0 0 1-.34 5.58 2.5 2.5 0 0 1-2.96 3.08A2.5 2.5 0 0 1 12 19.5V4.5z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.8', strokeLinecap: 'round', strokeLinejoin: 'round' }
+      ]
+    },
+    wave: {
+      glyph: 'Out',
+      paths: [
+        { d: 'M3 10v4M7.5 6v12M12 3v18M16.5 7v10M21 10v4', fill: 'none', stroke: 'currentColor', strokeWidth: '2', strokeLinecap: 'round' }
+      ]
+    },
+    'file-text': {
+      glyph: 'Doc',
+      paths: [
+        { d: 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.85', strokeLinecap: 'round', strokeLinejoin: 'round' },
+        { d: 'M14 2v6h6M8 13h8M8 17h6', fill: 'none', stroke: 'currentColor', strokeWidth: '1.85', strokeLinecap: 'round', strokeLinejoin: 'round' }
+      ]
+    },
+    book: {
+      glyph: 'Ref',
+      paths: [
+        { d: 'M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.85', strokeLinecap: 'round', strokeLinejoin: 'round' },
+        { d: 'M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.85', strokeLinecap: 'round', strokeLinejoin: 'round' }
+      ]
+    },
+    copy: {
+      glyph: 'Copy',
+      paths: [
+        { d: 'M9 9h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V11a2 2 0 0 1 2-2z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.9', strokeLinecap: 'round', strokeLinejoin: 'round' },
+        { d: 'M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1', fill: 'none', stroke: 'currentColor', strokeWidth: '1.9', strokeLinecap: 'round', strokeLinejoin: 'round' }
+      ]
+    },
+    check: {
+      glyph: '✓',
+      paths: [
+        { d: 'M20 6L9 17l-5-5', fill: 'none', stroke: 'currentColor', strokeWidth: '2.2', strokeLinecap: 'round', strokeLinejoin: 'round' }
+      ]
+    },
+    'thumbs-up': {
+      glyph: 'Up',
+      paths: [
+        { d: 'M7 10v12', fill: 'none', stroke: 'currentColor', strokeWidth: '1.9', strokeLinecap: 'round', strokeLinejoin: 'round' },
+        { d: 'M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.9', strokeLinecap: 'round', strokeLinejoin: 'round' }
+      ]
+    },
+    'thumbs-down': {
+      glyph: 'Down',
+      paths: [
+        { d: 'M17 14V2', fill: 'none', stroke: 'currentColor', strokeWidth: '1.9', strokeLinecap: 'round', strokeLinejoin: 'round' },
+        { d: 'M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.9', strokeLinecap: 'round', strokeLinejoin: 'round' }
+      ]
+    },
+    more: {
+      glyph: '•••',
+      paths: [
+        { d: 'M5 12h.01M12 12h.01M19 12h.01', fill: 'none', stroke: 'currentColor', strokeWidth: '2.6', strokeLinecap: 'round' }
+      ]
+    },
+    compass: {
+      glyph: '◎',
+      paths: [
+        { d: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.85' },
+        { d: 'M16.24 7.76l-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.75', strokeLinejoin: 'round' }
+      ]
+    },
+    sparkles: {
+      glyph: '✦',
+      paths: [
+        { d: 'M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.85', strokeLinejoin: 'round' }
+      ]
+    },
+    user: {
+      glyph: 'User',
+      paths: [
+        { d: 'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2', fill: 'none', stroke: 'currentColor', strokeWidth: '1.9', strokeLinecap: 'round', strokeLinejoin: 'round' },
+        { d: 'M12 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.9' }
+      ]
+    },
+    mic: {
+      glyph: 'Mic',
+      paths: [
+        { d: 'M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.9', strokeLinecap: 'round', strokeLinejoin: 'round' },
+        { d: 'M19 10v2a7 7 0 0 1-14 0v-2M12 19v3', fill: 'none', stroke: 'currentColor', strokeWidth: '1.9', strokeLinecap: 'round', strokeLinejoin: 'round' }
+      ]
+    },
+    paperclip: {
+      glyph: 'Clip',
+      paths: [
+        { d: 'M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48', fill: 'none', stroke: 'currentColor', strokeWidth: '1.85', strokeLinecap: 'round', strokeLinejoin: 'round' }
+      ]
+    },
+    'at-sign': {
+      glyph: '@',
+      paths: [
+        { d: 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z', fill: 'none', stroke: 'currentColor', strokeWidth: '1.85' },
+        { d: 'M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8', fill: 'none', stroke: 'currentColor', strokeWidth: '1.85', strokeLinecap: 'round', strokeLinejoin: 'round' }
+      ]
+    },
+    sliders: {
+      glyph: 'Cfg',
+      paths: [
+        { d: 'M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6', fill: 'none', stroke: 'currentColor', strokeWidth: '1.85', strokeLinecap: 'round' }
+      ]
+    },
+    cloudflare: {
+      glyph: 'CF',
+      paths: TECH_STACK_ITEMS.find(i => i.id === 'cloudflare').paths
+    },
+    apigw: {
+      glyph: 'API',
+      paths: TECH_STACK_ITEMS.find(i => i.id === 'apigw').paths
+    },
+    lambda: {
+      glyph: 'λ',
+      paths: TECH_STACK_ITEMS.find(i => i.id === 'lambda').paths
+    },
+    s3: {
+      glyph: 'S3',
+      paths: TECH_STACK_ITEMS.find(i => i.id === 's3').paths
+    },
+    dynamodb: {
+      glyph: 'DB',
+      paths: TECH_STACK_ITEMS.find(i => i.id === 'dynamodb').paths
+    },
+    model: {
+      glyph: 'AI',
+      paths: TECH_STACK_ITEMS.find(i => i.id === 'openai').paths
+    },
+    elevenlabs: {
+      glyph: '11L',
+      paths: TECH_STACK_ITEMS.find(i => i.id === 'elevenlabs').paths
+    },
+    aws: {
+      glyph: 'AWS',
+      paths: TECH_STACK_ITEMS.find(i => i.id === 'aws').paths
+    }
+  });
+
+  function createDemoIcon(document, iconName, className = '', size = 16) {
+    const specItem = DEMO_ICON_PACK[iconName] || DEMO_ICON_PACK.sparkles;
+    const wrap = element(document, 'span', `chat-demo-icon is-icon-${iconName}${className ? ` ${className}` : ''}`);
+    wrap.setAttribute('data-demo-icon', iconName);
+    wrap.setAttribute('aria-hidden', 'true');
+    if (typeof document.createElementNS === 'function' && Array.isArray(specItem.paths)) {
+      const svg = document.createElementNS(SVG_NS, 'svg');
+      svg.setAttribute('viewBox', '0 0 24 24');
+      svg.setAttribute('width', String(size));
+      svg.setAttribute('height', String(size));
+      svg.setAttribute('aria-hidden', 'true');
+      svg.setAttribute('focusable', 'false');
+      for (const spec of specItem.paths) {
+        const path = document.createElementNS(SVG_NS, 'path');
+        path.setAttribute('d', spec.d);
+        if (spec.fill) path.setAttribute('fill', spec.fill);
+        if (spec.stroke) path.setAttribute('stroke', spec.stroke);
+        if (spec.strokeWidth) path.setAttribute('stroke-width', spec.strokeWidth);
+        if (spec.strokeLinecap) path.setAttribute('stroke-linecap', spec.strokeLinecap);
+        if (spec.strokeLinejoin) path.setAttribute('stroke-linejoin', spec.strokeLinejoin);
+        svg.append(path);
+      }
+      wrap.append(svg);
+    } else {
+      wrap.textContent = specItem.glyph;
+    }
+    return wrap;
+  }
+
   const STEP_INSPECTOR_META = Object.freeze({
     1: {
       tone: 'blue',
-      icon: '💬',
+      icon: 'message',
       title: 'Step 1: Understand your question',
       time: '0.2s',
       desc: 'I classify your intent, topic focus, and whether the turn needs high-level CAG overview or deep RAG + MCP retrieval.',
       why: 'Your question asks about specific Guidewire experience and project work, so I classified it as a portfolio career query requiring both cached career knowledge and retrieved project details.',
-      nextIcon: '🗄️',
+      nextIcon: 'database',
       nextTone: 'emerald',
       nextTitle: 'Career knowledge (cached)',
       nextDesc: 'Next, I search the pinned high-level CAG corpus (5 career eras, 6 pillars, 13-project index) at 0 ms KV cache latency.'
     },
     2: {
       tone: 'emerald',
-      icon: '🗄️',
+      icon: 'database',
       title: 'Step 2: Career knowledge (cached)',
       time: '1.1s',
       desc: 'Search my prepared career knowledge (CAG high-level corpus) for relevant experience, skills, projects, and verified profiles.',
       why: 'The CAG prefix holds ~7,100 tokens of structured career eras (Dell, Harris, Grenville, Medavie, Independent), 6 capability pillars, LinkedIn, and Workshop42 (ws42.ca) pinned in KV cache.',
-      nextIcon: '🔍',
+      nextIcon: 'search-doc',
       nextTone: 'purple',
       nextTitle: 'Find additional information',
       nextDesc: 'Next, Hybrid RAG pulls deep project chunks (decision, step-by-step process, technical guidance, and outcome) from S3 Vectors.'
     },
     3: {
       tone: 'purple',
-      icon: '🔍',
+      icon: 'search-doc',
       title: 'Step 3: Find additional information',
       time: '1.4s',
       desc: 'When needed, I search for specific project details, documentation, or external references to add to your career information.',
       why: 'Your question is about specific Guidewire experience. I first checked my prepared career knowledge, then retrieved the most relevant project details to provide a complete and accurate answer.',
-      nextIcon: '🧠',
+      nextIcon: 'brain',
       nextTone: 'amber',
       nextTitle: 'Generate the answer',
       nextDesc: 'The AI model is now creating a response using your career information and the retrieved sources.'
     },
     4: {
       tone: 'cyan',
-      icon: '🗂️',
+      icon: 'layers',
       title: 'Step 4: Prepare context for the AI model',
       time: '0.8s',
       desc: 'Combine your question, cached high-level career corpus (58%), retrieved RAG project chunks (26%), and guardrails into a 12,300-token package.',
       why: 'Assembling the pinned CAG prefix ahead of the dynamic RAG delta preserves a warm KV prefix hit while bounding total context under strict byte limits.',
-      nextIcon: '🧠',
+      nextIcon: 'brain',
       nextTone: 'amber',
       nextTitle: 'Generate the answer',
       nextDesc: 'The AI model is now creating a response using your career information and the retrieved sources.'
     },
     5: {
       tone: 'amber',
-      icon: '🧠',
+      icon: 'brain',
       title: 'Step 5: Generate the answer',
       time: '0.5s',
       desc: 'Use a specialized AI model via Cloudflare AI Gateway to synthesize a clear, accurate response grounded only in approved evidence.',
       why: 'Claude Sonnet 4 / gpt-6-luna synthesizes the natural reply and selects canonical claim IDs while preserving all qualification boundaries.',
-      nextIcon: '💬',
+      nextIcon: 'wave',
       nextTone: 'blue',
       nextTitle: 'Deliver to you',
       nextDesc: 'Stream the validated response back to chat, attach source citations, and prepare optional ElevenLabs voice narration.'
     },
     6: {
       tone: 'blue',
-      icon: '💬',
+      icon: 'wave',
       title: 'Step 6: Deliver to you',
       time: '1.3s',
       desc: 'Stream the contract-validated response back to chat, render verified citations, and prepare optional ElevenLabs voice narration.',
       why: 'Every streamed frame is verified against the canonical schema before rendering, with 1-click Listen narration in Josh’s ElevenLabs voice.',
-      nextIcon: '✓',
+      nextIcon: 'check',
       nextTone: 'emerald',
       nextTitle: 'Turn complete',
       nextDesc: 'All 6 pipeline stages completed and usage settled in the DynamoDB ledger.'
@@ -1887,7 +2090,8 @@
     // Card 1: Selected Step Header (Step 3: Find additional information 1.4s)
     const stepCard = element(document, 'div', 'chat-inspector-step-card');
     stepCard.setAttribute('data-inspector-step-card', '3');
-    const stepIcon = element(document, 'span', 'chat-inspector-step-icon is-purple', '🔍');
+    const stepIcon = element(document, 'span', 'chat-inspector-step-icon is-purple');
+    stepIcon.append(createDemoIcon(document, 'search-doc', '', 16));
     const stepCopy = element(document, 'div', 'chat-inspector-step-copy');
     const stepHeadRow = element(document, 'div', 'chat-inspector-step-head');
     const stepTitle = element(document, 'span', 'chat-inspector-step-title', 'Step 3: Find additional information');
@@ -1912,7 +2116,7 @@
     const foundList = element(document, 'div', 'chat-what-found-list');
     const defaultFoundSources = [
       {
-        icon: '📄',
+        icon: 'file-text',
         tone: 'emerald',
         title: 'Guidewire Implementation Project',
         score: '0.92',
@@ -1922,7 +2126,7 @@
         extra: false
       },
       {
-        icon: '📄',
+        icon: 'file-text',
         tone: 'emerald',
         title: 'Insurance Systems Architecture',
         score: '0.87',
@@ -1932,7 +2136,7 @@
         extra: false
       },
       {
-        icon: '📚',
+        icon: 'book',
         tone: 'cyan',
         title: 'Guidewire Documentation (public)',
         score: '0.74',
@@ -1967,7 +2171,12 @@
       const item = element(document, `div`, `chat-found-source-item${src.extra ? ' is-extra-profile' : ''}`);
       if (src.extra) item.hidden = true;
       item.setAttribute('data-found-source', src.url ? 'external-profile' : 'corpus');
-      const icBox = element(document, 'span', `chat-found-source-icon is-${src.tone}`, src.icon);
+      const icBox = element(document, 'span', `chat-found-source-icon is-${src.tone}`);
+      if (DEMO_ICON_PACK[src.icon]) {
+        icBox.append(createDemoIcon(document, src.icon, '', 14));
+      } else {
+        icBox.textContent = src.icon;
+      }
       const bodyCol = element(document, 'div', 'chat-found-source-body');
       const topRow = element(document, 'div', 'chat-found-source-top');
       if (src.url) {
@@ -2013,7 +2222,8 @@
 
     // Card 3: Why this step?
     const whyCard = element(document, 'div', 'chat-why-step-card');
-    const whyIcon = element(document, 'span', 'chat-why-step-icon', '❖');
+    const whyIcon = element(document, 'span', 'chat-why-step-icon');
+    whyIcon.append(createDemoIcon(document, 'sparkles', '', 15));
     const whyCopy = element(document, 'div', 'chat-why-step-copy');
     const whyTitle = element(document, 'span', 'chat-why-step-title', 'Why this step?');
     const whyText = element(
@@ -2033,7 +2243,8 @@
       element(document, 'span', 'chat-model-details-expand', '⤢')
     );
     const modelMainRow = element(document, 'div', 'chat-model-main-row');
-    const modelAiBadge = element(document, 'span', 'chat-model-ai-badge', 'AI');
+    const modelAiBadge = element(document, 'span', 'chat-model-ai-badge');
+    modelAiBadge.append(createDemoIcon(document, 'brain', '', 14));
     const modelNameEl = element(document, 'span', 'chat-model-name-label', 'Claude Sonnet 4');
     const modelSelPill = element(document, 'span', 'chat-model-selected-pill', 'Selected');
     const modelWhyBtn = element(document, 'button', 'chat-model-why-btn', 'Why this model?');
@@ -2054,7 +2265,8 @@
     const nextCard = element(document, 'div', 'chat-next-step-card');
     const nextHeader = element(document, 'span', 'chat-next-step-label', 'Next step');
     const nextBodyRow = element(document, 'div', 'chat-next-step-row');
-    const nextIconBadge = element(document, 'span', 'chat-next-step-icon is-amber', '🧠');
+    const nextIconBadge = element(document, 'span', 'chat-next-step-icon is-amber');
+    nextIconBadge.append(createDemoIcon(document, 'brain', '', 15));
     const nextCopyCol = element(document, 'div', 'chat-next-step-copy');
     const nextStepTitle = element(document, 'span', 'chat-next-step-title', 'Generate the answer');
     const nextStepDesc = element(
@@ -2103,10 +2315,10 @@
     answerUsedHead.append(element(document, 'span', 'chat-answer-used-title', 'This answer used...'));
     const answerUsedList = element(document, 'div', 'chat-answer-used-list');
     const answerUsedDefs = [
-      { key: 'cag', step: 2, tone: 'emerald', icon: '🗄️', title: 'CAG · Career knowledge', sub: '7 relevant sections', pct: '58%', tokens: '7,100 tokens' },
-      { key: 'rag', step: 3, tone: 'purple', icon: '📄', title: 'RAG · Retrieved sources', sub: '3 project documents', pct: '26%', tokens: '3,200 tokens' },
-      { key: 'context', step: 4, tone: 'cyan', icon: '🧩', title: 'Context assembly', sub: 'Your question + history', pct: '11%', tokens: '1,400 tokens' },
-      { key: 'model', step: 5, tone: 'amber', icon: 'AI', title: 'Claude Sonnet 4', sub: 'Generated the answer', pct: '5%', tokens: '600 tokens' }
+      { key: 'cag', step: 2, tone: 'emerald', icon: 'database', title: 'CAG · Career knowledge', sub: '7 relevant sections', pct: '58%', tokens: '7,100 tokens' },
+      { key: 'rag', step: 3, tone: 'purple', icon: 'file-text', title: 'RAG · Retrieved sources', sub: '3 project documents', pct: '26%', tokens: '3,200 tokens' },
+      { key: 'context', step: 4, tone: 'cyan', icon: 'layers', title: 'Context assembly', sub: 'Your question + history', pct: '11%', tokens: '1,400 tokens' },
+      { key: 'model', step: 5, tone: 'amber', icon: 'brain', title: 'Claude Sonnet 4', sub: 'Generated the answer', pct: '5%', tokens: '600 tokens' }
     ];
     const answerUsedRefs = Object.create(null);
     for (const uDef of answerUsedDefs) {
@@ -2114,7 +2326,8 @@
       uRow.type = 'button';
       uRow.setAttribute('data-answer-used-item', uDef.key);
       uRow.setAttribute('data-answer-used-step', String(uDef.step));
-      const uIcon = element(document, 'span', `chat-answer-used-icon is-${uDef.tone}`, uDef.icon);
+      const uIcon = element(document, 'span', `chat-answer-used-icon is-${uDef.tone}`);
+      uIcon.append(createDemoIcon(document, uDef.icon, '', 15));
       const uCopy = element(document, 'div', 'chat-answer-used-copy');
       const uTitle = element(document, 'span', 'chat-answer-used-item-title', uDef.title);
       const uSub = element(document, 'span', 'chat-answer-used-item-sub', uDef.sub);
@@ -2171,13 +2384,13 @@
     const timelineList = element(document, 'ol', 'chat-vertical-timeline-list');
     timelineList.setAttribute('data-trace-timeline-list', '');
     const timelineDefs = [
-      { id: 'received', step: 1, clock: '10:24:01', tone: 'blue', icon: '💬', title: 'Message received', sub: 'User question' },
-      { id: 'intent', step: 1, clock: '10:24:01', tone: 'emerald', icon: '🧭', title: 'Intent classification', sub: 'Career query → Guidewire' },
-      { id: 'cag', step: 2, clock: '10:24:02', tone: 'cyan', icon: '🗄️', title: 'CAG search', sub: '7 sections · 0.8s' },
-      { id: 'rag', step: 3, clock: '10:24:03', tone: 'purple', icon: '🔍', title: 'RAG retrieval', sub: '3 sources · 1.4s' },
-      { id: 'context', step: 4, clock: '10:24:04', tone: 'blue', icon: '🗂️', title: 'Context assembly', sub: '12.3k tokens · 0.8s' },
-      { id: 'model', step: 5, clock: '10:24:05', tone: 'amber', icon: '🧠', title: 'Claude Sonnet 4', sub: 'Generating response' },
-      { id: 'stream', step: 6, clock: '10:24:08', tone: 'blue', icon: '✨', title: 'Streaming response', sub: 'Tokens to chat' }
+      { id: 'received', step: 1, clock: '10:24:01', tone: 'blue', icon: 'message', title: 'Message received', sub: 'User question' },
+      { id: 'intent', step: 1, clock: '10:24:01', tone: 'emerald', icon: 'compass', title: 'Intent classification', sub: 'Career query → Guidewire' },
+      { id: 'cag', step: 2, clock: '10:24:02', tone: 'cyan', icon: 'database', title: 'CAG search', sub: '7 sections · 0.8s' },
+      { id: 'rag', step: 3, clock: '10:24:03', tone: 'purple', icon: 'search-doc', title: 'RAG retrieval', sub: '3 sources · 1.4s' },
+      { id: 'context', step: 4, clock: '10:24:04', tone: 'blue', icon: 'layers', title: 'Context assembly', sub: '12.3k tokens · 0.8s' },
+      { id: 'model', step: 5, clock: '10:24:05', tone: 'amber', icon: 'brain', title: 'Claude Sonnet 4', sub: 'Generating response' },
+      { id: 'stream', step: 6, clock: '10:24:08', tone: 'blue', icon: 'wave', title: 'Streaming response', sub: 'Tokens to chat' }
     ];
     const timelineRowRefs = [];
     for (const tDef of timelineDefs) {
@@ -2186,7 +2399,8 @@
       tRow.setAttribute('data-timeline-stage', tDef.id);
       const tClock = element(document, 'span', 'chat-vertical-timeline-clock', tDef.clock);
       const tDot = element(document, 'span', `chat-vertical-timeline-dot is-${tDef.tone}`);
-      const tIcon = element(document, 'span', `chat-vertical-timeline-icon is-${tDef.tone}`, tDef.icon);
+      const tIcon = element(document, 'span', `chat-vertical-timeline-icon is-${tDef.tone}`);
+      tIcon.append(createDemoIcon(document, tDef.icon, '', 14));
       const tCopy = element(document, 'div', 'chat-vertical-timeline-copy');
       const tTitle = element(document, 'span', 'chat-vertical-timeline-item-title', tDef.title);
       const tSub = element(document, 'span', 'chat-vertical-timeline-item-sub', tDef.sub);
@@ -2200,9 +2414,10 @@
       timelineList.append(tRow);
     }
 
-    // Voice observability row inside timeline card
+    // Voice observability row inside timeline card (with blended ElevenLabs acoustic aura)
     const voiceObsCard = element(document, 'div', 'chat-voice-observability-card');
     voiceObsCard.setAttribute('data-voice-observability-card', '');
+    voiceObsCard.setAttribute('data-elevenlabs-asset', 'voice-orb');
     const voiceObsHead = element(document, 'div', 'chat-voice-obs-head');
     const voiceObsTitle = element(document, 'span', 'chat-voice-obs-title', 'ElevenLabs Voice Telemetry · Ready');
     const voiceObsBadge = element(document, 'span', 'chat-voice-obs-badge', '● Ready');
@@ -2289,13 +2504,13 @@
       const meta = STEP_INSPECTOR_META[stepNum] || STEP_INSPECTOR_META[3];
       stepCard.setAttribute('data-inspector-step-card', String(stepNum));
       stepIcon.className = `chat-inspector-step-icon is-${meta.tone}`;
-      stepIcon.textContent = meta.icon;
+      stepIcon.replaceChildren(createDemoIcon(document, meta.icon, '', 16));
       stepTitle.textContent = meta.title;
       stepTime.textContent = meta.time;
       stepDesc.textContent = meta.desc;
       whyText.textContent = meta.why;
       nextIconBadge.className = `chat-next-step-icon is-${meta.nextTone}`;
-      nextIconBadge.textContent = meta.nextIcon;
+      nextIconBadge.replaceChildren(createDemoIcon(document, meta.nextIcon, '', 15));
       nextStepTitle.textContent = meta.nextTitle;
       nextStepDesc.textContent = meta.nextDesc;
       if (!fromReplay) {
@@ -2307,7 +2522,6 @@
         }
       }
       if (stepNum === 2 && !showingAllSources) {
-        // Highlight LinkedIn & Workshop42 (ws42.ca) when inspecting CAG Career Knowledge!
         for (const node of extraSourceNodes) node.hidden = false;
         foundCountBadge.textContent = '5 sources (CAG + Profiles)';
       }
@@ -2391,9 +2605,11 @@
     desktop.setAttribute('aria-label', 'Request details');
     desktop.setAttribute('data-chat-details', '');
     const content = element(document, 'div', 'chat-details-content');
+    const supportingDetailsSlot = element(document, 'div', 'chat-supporting-details-slot');
+    supportingDetailsSlot.setAttribute('data-supporting-details-slot', '');
     const heading = element(document, 'header', 'chat-details-heading');
     const title = element(document, 'h2', '', 'Request details'); title.id = 'chat-details-title';
-    const editBadge = element(document, 'span', 'chat-details-edit-badge', '✎ Edit');
+    const editBadge = element(document, 'span', 'chat-details-edit-badge', 'Edit');
     const close = element(document, 'button', 'chat-details-close', 'Close details'); close.type = 'button';
     close.setAttribute('data-chat-drawer-close', '');
     heading.append(title, editBadge, close);
@@ -2417,11 +2633,11 @@
     const metaProject = element(document, 'span', 'chat-meta-val is-badge', 'joshboyer.ca');
     const metaTicket = element(document, 'span', 'chat-meta-val is-muted', 'draft (not created yet)');
     metaGrid.append(
-      createMetaRow('◎ Request ID', identity),
-      createMetaRow('🕒 Created', metaCreated),
-      createMetaRow('⏱️ Duration', metaDuration),
-      createMetaRow('📁 Project', metaProject),
-      createMetaRow('🎫 Ticket', metaTicket)
+      createMetaRow('Request ID', identity),
+      createMetaRow('Created', metaCreated),
+      createMetaRow('Duration', metaDuration),
+      createMetaRow('Project', metaProject),
+      createMetaRow('Ticket', metaTicket)
     );
 
     const pinBanner = element(document, 'div', 'chat-details-pin-banner');
@@ -2526,7 +2742,7 @@
       tabs.append(button);
     });
     const techStack = createTechStackFooter(document, tabName => activate(tabName));
-    content.append(tabs, summaryCard, liveTraceHeader, ...tabList.map(name => panels[name]), contextStripSlot, techStack);
+    content.append(supportingDetailsSlot, tabs, summaryCard, liveTraceHeader, ...tabList.map(name => panels[name]), contextStripSlot, techStack);
     desktop.append(content);
     document.body.append(dialog);
 
@@ -2743,16 +2959,17 @@
       wrap.append(sr);
       const list = element(document, 'div', 'chat-mock-trace-list');
       const previewRows = [
-        ['emerald', '💬', 'Intent classification', 'Career query → Guidewire experience', '0.3s'],
-        ['cyan', '❖', 'CAG — Career corpus search', 'Semantic search across structured career data', '2.1s'],
-        ['teal', '🔍', 'Hybrid RAG retrieval', 'Personal docs + public sources (if needed)', '1.4s'],
-        ['blue', '🗂️', 'Context compilation', 'Rank, dedupe, and assemble final context', '0.8s'],
-        ['amber', '✦', 'Claude Sonnet 4', 'Generate response', '0.4s'],
-        ['emerald', '✨', 'Response streaming', 'Stream to chat (342 tokens)', '7.4s']
+        ['emerald', 'message', 'Intent classification', 'Career query → Guidewire experience', '0.3s'],
+        ['cyan', 'database', 'CAG — Career corpus search', 'Semantic search across structured career data', '2.1s'],
+        ['teal', 'search-doc', 'Hybrid RAG retrieval', 'Personal docs + public sources (if needed)', '1.4s'],
+        ['blue', 'layers', 'Context compilation', 'Rank, dedupe, and assemble final context', '0.8s'],
+        ['amber', 'brain', 'Claude Sonnet 4', 'Generate response', '0.4s'],
+        ['emerald', 'wave', 'Response streaming', 'Stream to chat (342 tokens)', '7.4s']
       ];
-      for (const [tone, iconChar, titleTxt, subTxt, durStr] of previewRows) {
+      for (const [tone, iconKey, titleTxt, subTxt, durStr] of previewRows) {
         const row = element(document, 'div', `chat-mock-trace-row is-${tone}`);
-        const iconEl = element(document, 'span', `chat-mock-trace-icon is-${tone}`, iconChar);
+        const iconEl = element(document, 'span', `chat-mock-trace-icon is-${tone}`);
+        iconEl.append(createDemoIcon(document, iconKey, '', 14));
         const copy = element(document, 'div', 'chat-mock-trace-copy');
         copy.append(
           element(document, 'span', 'chat-mock-trace-title', titleTxt),
@@ -2917,6 +3134,9 @@
       element: desktop,
       dialog,
       activate,
+      mountSupportingDetails(stripNode, pipelineNode) {
+        supportingDetailsSlot.replaceChildren(stripNode, pipelineNode);
+      },
       setInspectedStep(stepNum) {
         techStack._setInspectedStep?.(stepNum);
         activate('trace');
@@ -4492,12 +4712,13 @@
     const demoCardActions = element(document, 'div', 'chat-welcome-card-actions');
     const demoLeadParagraphText = 'You have extensive experience with Guidewire, primarily working with Policy, Billing, and Claims administration (IBS) across P&C and Health and Dental insurance. You’ve been involved in system conversions, integrations, renewals, and endorsements, with a strong focus on business analysis, requirements, testing, and training.';
     for (const [actIcon, actLabel, actKey] of [
-      ['📋', 'Copy response', 'copy'],
-      ['👍', 'Mark helpful', 'up'],
-      ['👎', 'Needs improvement', 'down'],
-      ['⋯', 'Inspect evidence', 'inspect']
+      ['copy', 'Copy response', 'copy'],
+      ['thumbs-up', 'Mark helpful', 'up'],
+      ['thumbs-down', 'Needs improvement', 'down'],
+      ['more', 'Inspect evidence', 'inspect']
     ]) {
-      const actBtn = element(document, 'button', 'chat-welcome-action-icon', actIcon);
+      const actBtn = element(document, 'button', 'chat-welcome-action-icon');
+      actBtn.append(createDemoIcon(document, actIcon, '', 14));
       actBtn.type = 'button';
       actBtn.setAttribute('aria-label', actLabel);
       actBtn.setAttribute('data-showcase-action', actKey);
@@ -4519,7 +4740,7 @@
       demoCardActions.append(actBtn);
     }
 
-    const demoStatusSpinnerEl = element(document, 'span', 'chat-pedestal-status-spinner', '✻');
+    const demoStatusSpinnerEl = element(document, 'span', 'chat-pedestal-status-spinner', '✓');
     const demoStatusTextEl = element(document, 'span', 'chat-pedestal-status-text', 'Finding the best information from my career knowledge...');
     const demoStatusHeader = element(document, 'div', 'chat-pedestal-status-bar');
     const demoStatusLeft = element(document, 'div', 'chat-pedestal-status-left');
@@ -4533,88 +4754,88 @@
         stepNum: 1,
         tone: 'blue',
         duration: '0.2s',
-        icon: '💬',
+        icon: 'message',
         titleMain: '1. Understand your question',
         titleAccent: '',
         desc: 'Identify what you’re asking and what kind of information is needed.',
         results: [
-          ['', 'Topic: Experience'],
-          ['', 'Focus: Guidewire'],
-          ['', 'Type: Career question']
+          ['blue', 'Topic: Experience'],
+          ['blue', 'Focus: Guidewire'],
+          ['blue', 'Type: Career question']
         ]
       },
       {
         stepNum: 2,
         tone: 'emerald',
         duration: '1.1s',
-        icon: '🗄️',
+        icon: 'database',
         titleMain: '2. Career knowledge ',
         titleAccent: '(cached)',
         accentClass: 'is-emerald-text',
         desc: 'Search my prepared career knowledge for relevant experience, skills, and projects.',
         results: [
-          ['', '5 relevant sections'],
-          ['', 'From career corpus'],
-          ['', '~7,100 tokens (cached)']
+          ['emerald', '5 relevant sections'],
+          ['emerald', 'From career corpus'],
+          ['emerald', '~7,100 tokens (cached)']
         ]
       },
       {
         stepNum: 3,
         tone: 'purple',
         duration: '1.4s',
-        icon: '📄',
+        icon: 'search-doc',
         titleMain: '3. Find additional information',
         titleAccent: '',
         desc: 'Look up specific project details, documentation, or external references when needed.',
         selected: true,
         results: [
-          ['🟣', '3 sources found'],
-          ['🟠', 'Project documents'],
-          ['🟣', 'Guidewire context']
+          ['purple', '3 sources found'],
+          ['amber', 'Project documents'],
+          ['purple', 'Guidewire context']
         ]
       },
       {
         stepNum: 4,
         tone: 'cyan',
         duration: '0.8s',
-        icon: '❖',
+        icon: 'layers',
         titleMain: '4. Prepare context for the AI model',
         titleAccent: '',
         desc: 'Combine your question, relevant career information, and instructions into a context package.',
         results: [
-          ['🟩', '12,300 tokens'],
-          ['🟦', '58% career knowledge'],
-          ['🟦', '26% retrieved sources'],
-          ['🟦', '16% conversation + other']
+          ['emerald', '12,300 tokens'],
+          ['blue', '58% career knowledge'],
+          ['purple', '26% retrieved sources'],
+          ['cyan', '16% conversation + other']
         ]
       },
       {
         stepNum: 5,
         tone: 'amber',
         duration: '0.5s',
-        icon: '🧠',
+        icon: 'brain',
         titleMain: '5. Generate ',
         titleAccent: 'the answer',
         mainClass: 'is-amber-text',
         desc: 'Use a specialized AI model to create a clear, accurate response based only on your information.',
         results: [
-          ['🟧', 'Claude Sonnet 4'],
-          ['🟠', '642 output tokens'],
-          ['⚙️', 'High relevance']
+          ['amber', 'Claude Sonnet 4'],
+          ['amber', '642 output tokens'],
+          ['emerald', 'High relevance']
         ]
       },
       {
         stepNum: 6,
         tone: 'blue',
         duration: '1.3s',
-        icon: '💬',
+        icon: 'wave',
         titleMain: '6. Deliver to you',
         titleAccent: '',
         desc: 'Stream the response back to chat and prepare optional voice narration.',
         results: [
-          ['', 'Response streamed'],
-          ['', 'Citations added'],
-          ['', 'Voice available']
+          ['blue', 'Response streamed'],
+          ['emerald', 'Citations added'],
+          ['cyan', 'Voice available']
         ]
       }
     ];
@@ -4626,7 +4847,9 @@
       const pTime = element(document, 'span', `chat-pedestal-time-pill is-${pDef.tone}`, pDef.duration);
       const pStage = element(document, 'div', `chat-pedestal-3d is-${pDef.tone}`);
       const pCube = element(document, 'div', `chat-pedestal-cube is-${pDef.tone}`);
-      pCube.append(element(document, 'span', 'chat-pedestal-cube-icon', pDef.icon));
+      const pIconWrap = element(document, 'span', 'chat-pedestal-cube-icon');
+      pIconWrap.append(createDemoIcon(document, pDef.icon, 'chat-pedestal-svg-icon', 20));
+      pCube.append(pIconWrap);
       const pRingTop = element(document, 'div', `chat-pedestal-ring-top is-${pDef.tone}`);
       const pRingBase = element(document, 'div', `chat-pedestal-ring-base is-${pDef.tone}`);
       pStage.append(pCube, pRingTop, pRingBase);
@@ -4642,10 +4865,10 @@
       pResCard.append(element(document, 'span', 'chat-pedestal-result-heading', 'Result'));
       const pResList = element(document, 'div', 'chat-pedestal-result-list');
       const resultTextEls = [];
-      for (const [rIcon, rText] of pDef.results) {
+      for (const [rTone, rText] of pDef.results) {
         const rPill = element(document, 'div', 'chat-pedestal-result-pill');
-        if (rIcon) {
-          rPill.append(element(document, 'span', 'chat-pedestal-result-icon', rIcon));
+        if (rTone) {
+          rPill.append(element(document, 'span', `chat-pedestal-result-dot is-${rTone}`));
         }
         const rTextEl = element(document, 'span', 'chat-pedestal-result-text', rText);
         rPill.append(rTextEl);
@@ -4707,13 +4930,14 @@
 
     const followupChipsRow = element(document, 'div', 'chat-welcome-followup-chips');
     const followupChipPrompts = [
-      ['◎ Guidewire experience', 'What specific Guidewire PolicyCenter, BillingCenter, and ClaimCenter integrations has Josh led?'],
-      ['◎ Key achievements', 'What are Josh’s biggest measurable achievements across renewal automation and bulk group takeover?'],
-      ['◎ Team and leadership', 'How has Josh led cross-functional teams, coached BAs on SQL, and facilitated stakeholder approvals?'],
-      ['◎ SQL and reporting', 'Tell me about Josh’s reporting continuity design and financial reconciliation SQL work.']
+      ['Guidewire experience', 'What specific Guidewire PolicyCenter, BillingCenter, and ClaimCenter integrations has Josh led?'],
+      ['Key achievements', 'What are Josh’s biggest measurable achievements across renewal automation and bulk group takeover?'],
+      ['Team and leadership', 'How has Josh led cross-functional teams, coached BAs on SQL, and facilitated stakeholder approvals?'],
+      ['SQL and reporting', 'Tell me about Josh’s reporting continuity design and financial reconciliation SQL work.']
     ];
     for (const [chipLabel, chipPrompt] of followupChipPrompts) {
-      const fChip = element(document, 'button', 'chat-welcome-followup-chip', chipLabel);
+      const fChip = element(document, 'button', 'chat-welcome-followup-chip');
+      fChip.append(createDemoIcon(document, 'compass', '', 13), element(document, 'span', '', chipLabel));
       fChip.type = 'button';
       fChip.setAttribute('data-followup-chip', chipLabel);
       fChip.addEventListener?.('click', () => {
@@ -4730,7 +4954,7 @@
     demoEngineerBlock.setAttribute('data-engineer-telemetry', '');
     const engTitle = element(document, 'div', 'chat-welcome-eng-header');
     engTitle.append(
-      element(document, 'span', 'chat-welcome-eng-badge', '🖧 ENGINEER TELEMETRY'),
+      element(document, 'span', 'chat-welcome-eng-badge', 'ENGINEER TELEMETRY'),
       element(document, 'span', 'chat-welcome-eng-meta', 'AWS us-east-2 · CAG + S3 Vectors · ws42.ca + LinkedIn · Schema v1.0.0')
     );
     const engGrid = element(document, 'div', 'chat-welcome-eng-grid');
@@ -4762,7 +4986,7 @@
 
     const status = element(document, 'p', 'chat-status', 'Connecting to private chat…'); status.setAttribute('role', 'status'); status.setAttribute('aria-live', 'polite'); status.setAttribute('aria-atomic', 'true');
 
-    // Compact Live Execution Strip (matches Reference Sheet 1 Panels 1-2 & Sheet 2 center bar)
+    // Compact Live Execution Strip (mounted into the Right Side Panel supporting details)
     const liveProcessStrip = element(document, 'section', 'chat-live-process-strip');
     liveProcessStrip.setAttribute('aria-label', 'Live execution process strip');
     liveProcessStrip.setAttribute('data-live-process-strip', '');
@@ -4791,12 +5015,12 @@
     const stripStepsTrack = element(document, 'div', 'chat-strip-steps-track');
     stripStepsTrack.setAttribute('data-strip-steps', '');
     const stripStepDefs = [
-      { stepNum: 1, tone: 'blue', icon: '💬', short: 'Intent', sub: 'Classify query', duration: '0.2s' },
-      { stepNum: 2, tone: 'emerald', icon: '🗄️', short: 'CAG', sub: 'Career knowledge', duration: '0.8s' },
-      { stepNum: 3, tone: 'purple', icon: '🔍', short: 'RAG', sub: 'Search & retrieve', duration: '1.4s' },
-      { stepNum: 4, tone: 'cyan', icon: '❖', short: 'Context', sub: 'Assemble', duration: '0.8s' },
-      { stepNum: 5, tone: 'amber', icon: '🧠', short: 'Claude Sonnet 4', sub: 'Generate', duration: '0.5s' },
-      { stepNum: 6, tone: 'blue', icon: '✨', short: 'Response', sub: 'Stream to chat', duration: '1.3s' }
+      { stepNum: 1, tone: 'blue', icon: 'message', short: 'Intent', sub: 'Classify query', duration: '0.2s' },
+      { stepNum: 2, tone: 'emerald', icon: 'database', short: 'CAG', sub: 'Career knowledge', duration: '0.8s' },
+      { stepNum: 3, tone: 'purple', icon: 'search-doc', short: 'RAG', sub: 'Search & retrieve', duration: '1.4s' },
+      { stepNum: 4, tone: 'cyan', icon: 'layers', short: 'Context', sub: 'Assemble', duration: '0.8s' },
+      { stepNum: 5, tone: 'amber', icon: 'brain', short: 'Claude Sonnet 4', sub: 'Generate', duration: '0.5s' },
+      { stepNum: 6, tone: 'blue', icon: 'wave', short: 'Response', sub: 'Stream to chat', duration: '1.3s' }
     ];
     const stripStepRefs = Object.create(null);
     stripStepDefs.forEach((sDef, idx) => {
@@ -4806,7 +5030,8 @@
       const sBtn = element(document, 'button', `chat-strip-step-pill is-${sDef.tone}${sDef.stepNum === 3 ? ' is-selected' : ' is-completed'}`);
       sBtn.type = 'button';
       sBtn.setAttribute('data-strip-step', String(sDef.stepNum));
-      const sIcon = element(document, 'span', `chat-strip-step-icon is-${sDef.tone}`, sDef.icon);
+      const sIcon = element(document, 'span', `chat-strip-step-icon is-${sDef.tone}`);
+      sIcon.append(createDemoIcon(document, sDef.icon, '', 14));
       const sCopy = element(document, 'span', 'chat-strip-step-copy');
       const sTitle = element(document, 'strong', 'chat-strip-step-title', sDef.short);
       const sSub = element(document, 'span', 'chat-strip-step-sub', sDef.sub);
@@ -5070,7 +5295,8 @@
       const row = element(document, 'article', `chat-source-insp-row is-${sItem.tier}`);
       row.setAttribute('data-source-item', '');
       row.setAttribute('data-source-tier', sItem.tier);
-      const iconEl = element(document, 'span', `chat-source-insp-icon is-${sItem.tier}`, sItem.tier === 'cag' ? '🗄️' : '📄');
+      const iconEl = element(document, 'span', `chat-source-insp-icon is-${sItem.tier}`);
+      iconEl.append(createDemoIcon(document, sItem.tier === 'cag' ? 'database' : 'file-text', '', 15));
       const mainCol = element(document, 'div', 'chat-source-insp-main');
       const topLine = element(document, 'div', 'chat-source-insp-topline');
       const titleLink = element(document, 'a', 'chat-source-insp-item-title', sItem.title);
@@ -5102,8 +5328,10 @@
     const awsFlowCard = element(document, 'div', 'chat-aws-flow-card');
     const awsFlowHeader = element(document, 'div', 'chat-aws-flow-header');
     const awsFlowTitleWrap = element(document, 'div', 'chat-aws-flow-title-wrap');
+    const awsCubeIconSpan = element(document, 'span', 'chat-aws-flow-cube-icon');
+    awsCubeIconSpan.append(createDemoIcon(document, 'aws', '', 15));
     awsFlowTitleWrap.append(
-      element(document, 'span', 'chat-aws-flow-cube-icon', '🟧'),
+      awsCubeIconSpan,
       element(document, 'span', 'chat-aws-flow-title', 'AWS cloud stack'),
       element(document, 'span', 'chat-aws-flow-subtitle', '(systems used for this request)')
     );
@@ -5124,22 +5352,24 @@
       element(document, 'strong', 'chat-aws-gateway-title', 'Model Gateway'),
       element(document, 'span', 'chat-aws-gateway-sub', 'Route to best model')
     );
+    const awsGwIcon = element(document, 'span', 'chat-aws-gateway-icon');
+    awsGwIcon.append(createDemoIcon(document, 'refresh', '', 14));
     awsGatewayNode.append(
-      element(document, 'span', 'chat-aws-gateway-icon', '🔄'),
+      awsGwIcon,
       awsGatewayCopy
     );
     awsGatewayRow.append(awsGatewayNode);
 
     const pipeTrack = element(document, 'div', 'chat-aws-flow-track');
     const awsFlowNodes = [
-      { id: 'user', tone: 'slate', icon: '👤', title: 'User', sub: '(You)', sub2: '', regionTop: '', regionBot: '', tab: 'trace' },
-      { id: 'cloudflare', tone: 'amber', icon: '☁️', title: 'Cloudflare Edge', sub: 'Security & routing', sub2: '', regionTop: 'Edge Network', regionBot: 'Global', tab: 'trace' },
-      { id: 'apigw', tone: 'purple', icon: '⇄', title: 'API Gateway', sub: 'Request handling', sub2: '', regionTop: 'us-east-2', regionBot: 'AWS API Gateway', tab: 'trace' },
-      { id: 'lambda', tone: 'amber', icon: 'λ', title: 'AWS Lambda', sub: 'AI orchestration', sub2: '', regionTop: 'us-east-2', regionBot: 'AWS Lambda', tab: 'tools' },
-      { id: 's3', tone: 'emerald', icon: '🪣', title: 'S3', sub: 'Career corpus', sub2: 'Documents & context', regionTop: 'us-east-2', regionBot: 'Amazon S3', tab: 'context' },
-      { id: 'dynamodb', tone: 'blue', icon: '🗄️', title: 'DynamoDB', sub: 'Metadata & index', sub2: 'Context references', regionTop: 'us-east-2', regionBot: 'Amazon DynamoDB', tab: 'evidence' },
-      { id: 'model', tone: 'slate', icon: 'AI', title: 'Claude Sonnet 4', sub: 'AI model', sub2: 'Response generation', regionTop: 'Anthropic', regionBot: 'Claude Sonnet 4', tab: 'trace' },
-      { id: 'elevenlabs', tone: 'emerald', icon: '||||', title: 'ElevenLabs', sub: 'Voice (optional)', sub2: 'Speech synthesis', regionTop: 'External', regionBot: 'ElevenLabs API', tab: 'trace' }
+      { id: 'user', tone: 'slate', icon: 'user', title: 'User', sub: '(You)', sub2: '', regionTop: '', regionBot: '', tab: 'trace' },
+      { id: 'cloudflare', tone: 'amber', icon: 'cloudflare', title: 'Cloudflare Edge', sub: 'Security & routing', sub2: '', regionTop: 'Edge Network', regionBot: 'Global', tab: 'trace' },
+      { id: 'apigw', tone: 'purple', icon: 'apigw', title: 'API Gateway', sub: 'Request handling', sub2: '', regionTop: 'us-east-2', regionBot: 'AWS API Gateway', tab: 'trace' },
+      { id: 'lambda', tone: 'amber', icon: 'lambda', title: 'AWS Lambda', sub: 'AI orchestration', sub2: '', regionTop: 'us-east-2', regionBot: 'AWS Lambda', tab: 'tools' },
+      { id: 's3', tone: 'emerald', icon: 's3', title: 'S3', sub: 'Career corpus', sub2: 'Documents & context', regionTop: 'us-east-2', regionBot: 'Amazon S3', tab: 'context' },
+      { id: 'dynamodb', tone: 'blue', icon: 'dynamodb', title: 'DynamoDB', sub: 'Metadata & index', sub2: 'Context references', regionTop: 'us-east-2', regionBot: 'Amazon DynamoDB', tab: 'evidence' },
+      { id: 'model', tone: 'slate', icon: 'model', title: 'Claude Sonnet 4', sub: 'AI model', sub2: 'Response generation', regionTop: 'Anthropic', regionBot: 'Claude Sonnet 4', tab: 'trace' },
+      { id: 'elevenlabs', tone: 'emerald', icon: 'elevenlabs', title: 'ElevenLabs', sub: 'Voice (optional)', sub2: 'Speech synthesis', regionTop: 'External', regionBot: 'ElevenLabs API', tab: 'trace' }
     ];
     const pipeCols = Object.create(null);
     awsFlowNodes.forEach((nd, idx) => {
@@ -5149,7 +5379,8 @@
       const col = element(document, 'div', `chat-aws-flow-col is-${nd.tone}`);
       col.setAttribute('data-pipe-stage', nd.id);
       const card = element(document, 'div', `chat-aws-flow-node is-${nd.tone}`);
-      const iconBox = element(document, 'span', `chat-aws-flow-icon is-${nd.tone}`, nd.icon);
+      const iconBox = element(document, 'span', `chat-aws-flow-icon is-${nd.tone}`);
+      iconBox.append(createDemoIcon(document, nd.icon, '', 16));
       const titleEl = element(document, 'strong', 'chat-aws-flow-node-title', nd.title);
       const subEl = element(document, 'span', 'chat-aws-flow-node-sub', nd.sub);
       card.append(iconBox, titleEl, subEl);
@@ -5346,10 +5577,10 @@
     const mobileCtxClone = element(document, 'div', 'chat-mobile-ctx-summary');
     mobileCtxClone.append(
       element(document, 'h4', 'chat-mobile-sec-title', 'Context stack (12,300 tokens)'),
-      element(document, 'p', 'chat-mobile-sec-item', '🟦 Career knowledge (CAG): 7,100 tokens (58%) — Guidewire, Grenville, Medavie, LinkedIn, ws42.ca'),
-      element(document, 'p', 'chat-mobile-sec-item', '🟪 Retrieved sources (RAG): 3,200 tokens (26%) — 3 project case-study documents'),
-      element(document, 'p', 'chat-mobile-sec-item', '🟩 Conversation & instructions: 1,400 tokens (11%) — Your question and session history'),
-      element(document, 'p', 'chat-mobile-sec-item', '🟧 System prompt: 600 tokens (5%) — Citation contract and safety guardrails')
+      element(document, 'p', 'chat-mobile-sec-item', 'Career knowledge (CAG): 7,100 tokens (58%) — Guidewire, Grenville, Medavie, LinkedIn, ws42.ca'),
+      element(document, 'p', 'chat-mobile-sec-item', 'Retrieved sources (RAG): 3,200 tokens (26%) — 3 project case-study documents'),
+      element(document, 'p', 'chat-mobile-sec-item', 'Conversation & instructions: 1,400 tokens (11%) — Your question and session history'),
+      element(document, 'p', 'chat-mobile-sec-item', 'System prompt: 600 tokens (5%) — Citation contract and safety guardrails')
     );
     mobileTabPanels.context.append(mobileCtxClone);
 
@@ -5601,12 +5832,13 @@
     const toolbarLeft = element(document, 'div', 'chat-compose-toolbar');
     const toolIcons = element(document, 'div', 'chat-compose-tools');
     const toolPresets = [
-      ['📎', 'Compare my role requirements against Josh’s verified experience: '],
-      ['@', '@NEXUS What is the architecture of the NEXUS workflow engine?'],
-      ['🎚️', 'Show me how this AWS us-east-2 + CAG + S3 Vectors assistant is architected.']
+      ['paperclip', 'Compare my role requirements against Josh’s verified experience: '],
+      ['at-sign', '@NEXUS What is the architecture of the NEXUS workflow engine?'],
+      ['sliders', 'Show me how this AWS us-east-2 + CAG + S3 Vectors assistant is architected.']
     ];
     for (const [ic, presetText] of toolPresets) {
-      const tBtn = element(document, 'span', 'chat-tool-icon', ic);
+      const tBtn = element(document, 'span', 'chat-tool-icon');
+      tBtn.append(createDemoIcon(document, ic, '', 14));
       tBtn.addEventListener?.('click', () => {
         if (input.disabled) return;
         input.value = presetText;
@@ -5660,7 +5892,8 @@
     }
 
     const actions = element(document, 'div', 'chat-compose-actions');
-    const mic = element(document, 'button', 'chat-secondary chat-mic-btn', '🎙️'); mic.type = 'button'; mic.disabled = true;
+    const mic = element(document, 'button', 'chat-secondary chat-mic-btn'); mic.type = 'button'; mic.disabled = true;
+    mic.append(createDemoIcon(document, 'mic', '', 16));
     mic.setAttribute('data-voice-mic-btn', '');
     mic.setAttribute('aria-pressed', 'false');
     mic.setAttribute('aria-label', 'Dictate question with ElevenLabs Scribe');
@@ -5668,7 +5901,21 @@
     const retry = element(document, 'button', 'chat-secondary', 'Check request again'); retry.type = 'button'; retry.hidden = true;
     const send = element(document, 'button', 'chat-send', 'Send ↑'); send.type = 'submit'; send.disabled = true;
     actions.append(mic, stop, retry, send); footer.append(toolbarLeft, actions); form.append(label, input, footer);
-    panel.append(mobileHeader, heading, quickPillsBar, messages, liveProcessStrip, livePipeline, form);
+
+    // Compact mobile-only trigger bar (hidden on desktop so center column is strictly chat)
+    const mobileProcessBar = element(document, 'button', 'chat-mobile-process-trigger');
+    mobileProcessBar.type = 'button';
+    mobileProcessBar.setAttribute('data-mobile-process-trigger', '');
+    mobileProcessBar.append(
+      element(document, 'span', 'chat-strip-live-dot'),
+      element(document, 'strong', 'chat-mobile-trigger-title', 'Live process · 2 of 6'),
+      element(document, 'span', 'chat-mobile-trigger-sub', 'CAG — Using your career knowledge · 0.8s'),
+      element(document, 'span', 'chat-mobile-trigger-cta', 'Details ↗')
+    );
+    mobileProcessBar.addEventListener?.('click', () => openMobileSheet('process'));
+
+    details.mountSupportingDetails?.(liveProcessStrip, livePipeline);
+    panel.append(mobileHeader, heading, quickPillsBar, messages, mobileProcessBar, form);
     shell.append(panel, details.element, mobileSheet);
     host.append(shell);
     let ready = false, busy = false, currentReply, uiEpoch = 0, limit = 8192, currentConfig, liveTurnCounter = 0;

@@ -8209,6 +8209,346 @@
 }
 
 /* ==========================================================================
+   12B. Center Column Chat-Only Layout, Side Panel Supporting Details,
+        Unified Vector Icon Pack & Blended ElevenLabs Ambient Surfaces
+   ========================================================================== */
+.chat-demo-icon {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  color: currentColor;
+}
+
+.chat-mobile-process-trigger {
+  display: none;
+}
+
+/* Keep center chat bubble natural by showing engineer telemetry block only in Engineer mode */
+.chat-shell:not([data-view-mode="engineer"]) .chat-welcome-engineer-block {
+  display: none !important;
+}
+
+/* Desktop: Center column strictly for Chat; Right Side Panel (500px) houses all supporting details & tabs */
+.chat-heading {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px 12px !important;
+  padding: 10px 14px 6px !important;
+}
+
+.chat-heading-copy {
+  flex: 1 1 260px !important;
+  min-width: 0 !important;
+}
+
+.chat-heading .chat-heading-title-row h1 {
+  font-size: 15.5px !important;
+  line-height: 1.25 !important;
+  white-space: normal !important;
+}
+
+.chat-heading .chat-scope {
+  font-size: 11.5px !important;
+  line-height: 1.35 !important;
+  white-space: normal !important;
+}
+
+.chat-heading-controls {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+  flex-shrink: 0 !important;
+  margin-left: auto !important;
+}
+
+@media (min-width: 901px) {
+  .chat-shell,
+  .chat-workspace,
+  .chat-layout {
+    grid-template-columns: minmax(0, 1fr) 500px !important;
+  }
+
+  .chat-panel {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    height: 100% !important;
+    padding: 8px 16px 12px !important;
+    gap: 8px !important;
+    overflow: hidden !important;
+  }
+
+  .chat-panel > .chat-messages {
+    flex: 1 1 auto !important;
+    max-height: none !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    padding: 8px 10px 14px !important;
+  }
+
+  .chat-welcome-showcase {
+    gap: 12px !important;
+  }
+
+  .chat-welcome-user-bubble {
+    padding: 9px 14px !important;
+    max-width: 78% !important;
+  }
+
+  .chat-welcome-user-text {
+    font-size: 12px !important;
+    line-height: 1.42 !important;
+  }
+
+  .chat-welcome-assistant-card {
+    padding: 14px 16px !important;
+    gap: 8px !important;
+  }
+
+  .chat-welcome-lead-p {
+    font-size: 12.2px !important;
+    line-height: 1.52 !important;
+  }
+
+  .chat-welcome-sublead {
+    margin: 6px 0 2px !important;
+    font-size: 11.8px !important;
+  }
+
+  .chat-welcome-highlights-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+  }
+
+  .chat-welcome-highlight-text {
+    font-size: 11.5px !important;
+    line-height: 1.45 !important;
+  }
+
+  .chat-compose {
+    margin-top: auto !important;
+    padding: 8px 12px !important;
+  }
+
+  .chat-compose textarea {
+    min-height: 36px !important;
+    height: 36px !important;
+    padding: 7px 10px !important;
+    font-size: 12px !important;
+  }
+}
+
+/* Supporting details slot inside Right Side Panel */
+.chat-supporting-details-slot {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.chat-details-panel .chat-live-process-strip {
+  margin: 0 !important;
+  padding: 8px 10px !important;
+}
+
+.chat-details-panel .chat-strip-steps-track {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 5px !important;
+  overflow: visible !important;
+}
+
+.chat-details-panel .chat-strip-step-arrow {
+  display: none !important;
+}
+
+.chat-details-panel .chat-live-pipeline {
+  margin: 0 !important;
+  padding: 8px 10px !important;
+}
+
+.chat-details-panel .chat-journey-drawer-header {
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chat-details-panel .chat-journey-tab-list {
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.chat-details-panel .chat-journey-tab-btn {
+  padding: 4px 8px !important;
+  font-size: 9.5px !important;
+}
+
+/* 3x2 Pedestal Grid inside 500px Right Side Panel */
+.chat-details-panel .chat-pedestal-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 7px !important;
+}
+
+.chat-details-panel .chat-pedestal-col {
+  padding: 7px 7px !important;
+  min-width: 0 !important;
+}
+
+.chat-details-panel .chat-pedestal-3d {
+  height: 44px !important;
+  margin: 2px 0 4px !important;
+}
+
+.chat-pedestal-result-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: #60a5fa;
+}
+.chat-pedestal-result-dot.is-emerald { background: #34d399; }
+.chat-pedestal-result-dot.is-purple { background: #c084fc; }
+.chat-pedestal-result-dot.is-amber { background: #fbbf24; }
+.chat-pedestal-result-dot.is-cyan { background: #22d3ee; }
+.chat-pedestal-result-dot.is-blue { background: #60a5fa; }
+
+/* 2x2 Context Stack Grid & 4x2 AWS Cloud Stack Grid inside Right Side Panel */
+.chat-details-panel .chat-context-built-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 6px !important;
+}
+
+.chat-details-panel .chat-aws-flow-track {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 6px !important;
+  overflow: visible !important;
+}
+
+.chat-details-panel .chat-aws-flow-arrow {
+  display: none !important;
+}
+
+/* Blended ElevenLabs Ambient Imagery (feathered masks + screen/lighten blend, zero hard cutouts) */
+.chat-sidebar-scenic {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-end !important;
+  height: 112px !important;
+  min-height: 112px !important;
+  overflow: hidden !important;
+  border-radius: 12px !important;
+  background: #060d1b !important;
+  border: 1px solid rgba(56, 189, 248, 0.18) !important;
+}
+
+.chat-sidebar-scenic .chat-scenic-backdrop {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 1 !important;
+  display: block !important;
+}
+
+.chat-sidebar-scenic .chat-scenic-photo {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center 42% !important;
+  opacity: 0.92 !important;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, #000 35%, #000 100%);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, #000 35%, #000 100%);
+}
+
+.chat-sidebar-scenic .chat-scenic-meta {
+  position: relative !important;
+  z-index: 2 !important;
+  padding: 8px 12px !important;
+  background: linear-gradient(180deg, transparent 0%, rgba(5, 10, 22, 0.88) 100%) !important;
+}
+
+.chat-voice-card-v3[data-elevenlabs-asset="voice-orb"],
+.chat-voice-observability-card[data-elevenlabs-asset="voice-orb"] {
+  position: relative;
+  overflow: hidden;
+}
+
+.chat-voice-card-v3[data-elevenlabs-asset="voice-orb"]::before,
+.chat-voice-observability-card[data-elevenlabs-asset="voice-orb"]::before {
+  content: "";
+  position: absolute;
+  right: -12px;
+  top: -14px;
+  width: 110px;
+  height: 110px;
+  background: url('/assets/chat/elevenlabs-voice-orb.webp') center / cover no-repeat;
+  mix-blend-mode: screen;
+  opacity: 0.42;
+  -webkit-mask-image: radial-gradient(circle at center, #000 28%, transparent 72%);
+  mask-image: radial-gradient(circle at center, #000 28%, transparent 72%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.chat-voice-card-v3 > *,
+.chat-voice-observability-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 900px) {
+  .chat-heading,
+  .chat-details-panel {
+    display: none !important;
+  }
+
+  .chat-mobile-process-trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 12px 8px;
+    padding: 9px 12px;
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(13, 23, 45, 0.95), rgba(9, 16, 32, 0.98));
+    border: 1px solid rgba(56, 189, 248, 0.32);
+    color: #f8fafc;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .chat-mobile-trigger-title {
+    font: 700 11px/1.2 var(--font-display, "Plus Jakarta Sans", sans-serif);
+    color: #f8fafc;
+    white-space: nowrap;
+  }
+
+  .chat-mobile-trigger-sub {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font: 500 10.5px/1.2 var(--font-body, "Manrope", sans-serif);
+    color: #94a3b8;
+  }
+
+  .chat-mobile-trigger-cta {
+    font: 600 10.5px/1 var(--font-mono, "IBM Plex Mono", monospace);
+    color: #38bdf8;
+    white-space: nowrap;
+  }
+}
+
+/* ==========================================================================
    13. Reduced Motion
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
