@@ -1326,3 +1326,43 @@ test('Voice full-response speech preservation & STT conditioning: never drops se
   assert.match(normalized, /DynamoDB/);
   assert.match(normalized, /context engineering/i);
 });
+
+test('Horizontal Context Window & CAG Cache Visual Map: renders 6 proportional segments, KV prefix cache zone, 4-stage CAG flow strip, and adapts between hybrid RAG (58% cache) and cag_only (70% cache)', () => {
+  const doc = createSimDocument(1440);
+  const container = doc.createElement('aside');
+  doc.body.append(container);
+  const panel = PortfolioChatDetails.createDetailsPanel({ document: doc, container });
+
+  panel.renderTurn(buildPhase4Turn({
+    retrieval: { mode: 'hybrid', retrievalMode: 'hybrid', matchedCount: 4 }
+  }));
+
+  const ctxPanel = container.querySelector('[data-details-panel="context"]');
+  const visualMap = ctxPanel.querySelector('[data-context-visual-map="expanded"]');
+  assert.ok(visualMap, 'Context tab must render expanded Horizontal Context & CAG Cache Visual Map');
+
+  const segments = visualMap.querySelectorAll('[data-ctx-segment]');
+  assert.equal(segments.length, 6, 'Must render 6 horizontal context segments (cag, guard, rag, mcp, prompt, output)');
+  const cagSeg = visualMap.querySelector('[data-ctx-segment="cag"]');
+  const guardSeg = visualMap.querySelector('[data-ctx-segment="guard"]');
+  const ragSeg = visualMap.querySelector('[data-ctx-segment="rag"]');
+  assert.ok(cagSeg.className.includes('is-cached'), 'CAG segment must be marked is-cached');
+  assert.ok(guardSeg.className.includes('is-cached'), 'Guardrails segment must be marked is-cached');
+  assert.equal(cagSeg.getAttribute('style'), 'width: 42%');
+  assert.equal(ragSeg.getAttribute('style'), 'width: 18%');
+  assert.match(visualMap.textContent, /CAG Prefix Cache: 58% Hit/);
+  assert.match(visualMap.textContent, /1\. CAG Pinning/);
+  assert.match(visualMap.textContent, /2\. KV Prefix Cache/);
+  assert.match(visualMap.textContent, /S3 1536-d \(4\)/);
+
+  // Switch to cag_only mode and verify CAG segment expands to 54% (70% prefix cache hit) and RAG reports skipped
+  panel.renderTurn(buildPhase4Turn({
+    retrieval: { mode: 'cag_only', retrievalMode: 'cag_only', matchedCount: 0 }
+  }));
+  const cagOnlyMap = ctxPanel.querySelector('[data-context-visual-map="expanded"]');
+  assert.equal(cagOnlyMap.querySelector('[data-ctx-segment="cag"]').getAttribute('style'), 'width: 54%');
+  assert.match(cagOnlyMap.querySelector('[data-ctx-segment="rag"]').textContent, /RAG 0%/);
+  assert.match(cagOnlyMap.textContent, /CAG Prefix Cache: 70% Hit/);
+  assert.match(cagOnlyMap.textContent, /RAG skipped · CAG Direct/);
+});
+

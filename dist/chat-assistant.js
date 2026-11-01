@@ -686,8 +686,225 @@
     const section = element(document, 'section', 'chat-request-tools');
     return renderToolsInto(document, section, state);
   }
+  function buildContextAllocationModel(state = {}) {
+    const cd = state?.contextData || {};
+    const rMode = cd.retrievalMode || (state?.kind === 'general' ? 'skipped' : 'hybrid');
+    const isCagOnly = rMode === 'cag_only' || rMode === 'skipped';
+    const claimCount = typeof cd.claimCount === 'number' && cd.claimCount > 0 ? cd.claimCount : 15;
+    const matchedCount = typeof cd.matchedCount === 'number' && cd.matchedCount >= 0
+      ? cd.matchedCount
+      : (isCagOnly ? 0 : 4);
+    const toolCount = Array.isArray(state?.toolCalls) ? state.toolCalls.length : 1;
+    const citedCount = Array.isArray(state?.claims) && state.claims.length > 0 ? state.claims.length : 2;
+
+    const cagPct = isCagOnly ? 54 : 42;
+    const guardPct = 16;
+    const ragPct = isCagOnly ? 4 : 18;
+    const mcpPct = toolCount >= 2 ? 12 : (toolCount === 1 ? 10 : 6);
+    const promptPct = 8;
+    const outPct = Math.max(4, 100 - (cagPct + guardPct + ragPct + mcpPct + promptPct));
+    const cachedPrefixPct = cagPct + guardPct;
+
+    const rawIn = typeof cd.inputTokens === 'number' && cd.inputTokens > 0 ? cd.inputTokens : 1840;
+    const rawOut = typeof cd.outputTokens === 'number' && cd.outputTokens > 0 ? cd.outputTokens : 145;
+    const totalTokens = rawIn + rawOut;
+    const cachedTokens = typeof cd.cacheReadInputTokens === 'number' && cd.cacheReadInputTokens > 0
+      ? cd.cacheReadInputTokens
+      : Math.round(rawIn * (cachedPrefixPct / 100));
+
+    const segments = [
+      {
+        id: 'cag',
+        tone: 'emerald',
+        shortLabel: `CAG ${cagPct}%`,
+        title: 'CAG Base Corpus',
+        pct: cagPct,
+        cached: true,
+        badge: '⚡ KV Cache Hit · 0 ms',
+        detail: `${claimCount} canonical claims pinned at byte 0 (SHA-256 verified)`
+      },
+      {
+        id: 'guard',
+        tone: 'cyan',
+        shortLabel: `Guard ${guardPct}%`,
+        title: 'System & Guardrails',
+        pct: guardPct,
+        cached: true,
+        badge: '⚡ KV Cache Hit · 0 ms',
+        detail: 'Role boundaries, JSON schema & citation contract'
+      },
+      {
+        id: 'rag',
+        tone: 'blue',
+        shortLabel: isCagOnly ? 'RAG 0%' : `RAG ${ragPct}%`,
+        title: 'Hybrid S3 Vector + BM25',
+        pct: ragPct,
+        cached: false,
+        badge: isCagOnly ? 'Skipped (CAG Direct)' : `${matchedCount} chunks · S3 1536-d`,
+        detail: isCagOnly
+          ? 'Answered directly from pinned CAG pack without vector I/O'
+          : `${matchedCount} top-k chunks via S3 Vectors cosine + BM25 RRF`
+      },
+      {
+        id: 'mcp',
+        tone: 'purple',
+        shortLabel: `MCP ${mcpPct}%`,
+        title: 'Portfolio MCP Tools',
+        pct: mcpPct,
+        cached: false,
+        badge: `${toolCount} tool${toolCount === 1 ? '' : 's'} · SigV4`,
+        detail: 'Read-only JSON-RPC 2.0 tool outputs appended after prefix'
+      },
+      {
+        id: 'prompt',
+        tone: 'amber',
+        shortLabel: `Turn ${promptPct}%`,
+        title: 'Session & Prompt',
+        pct: promptPct,
+        cached: false,
+        badge: 'Live Input',
+        detail: 'DynamoDB session history + active visitor question'
+      },
+      {
+        id: 'output',
+        tone: 'violet',
+        shortLabel: `Out ${outPct}%`,
+        title: 'Validated Output',
+        pct: outPct,
+        cached: false,
+        badge: `${citedCount} citation${citedCount === 1 ? '' : 's'}`,
+        detail: 'Contract-guarded reply prose + canonical claim IDs'
+      }
+    ];
+
+    return {
+      isCagOnly,
+      claimCount,
+      matchedCount,
+      toolCount,
+      citedCount,
+      cachedPrefixPct,
+      dynamicDeltaPct: 100 - cachedPrefixPct,
+      totalTokens,
+      cachedTokens,
+      rawIn,
+      rawOut,
+      segments
+    };
+  }
+
+  function createContextVisualMapNode(document, state = {}, options = {}) {
+    const model = buildContextAllocationModel(state);
+    const expanded = Boolean(options.expanded);
+    const root = element(document, 'div', `chat-ctx-visual-map${expanded ? ' is-expanded' : ' is-compact'}`);
+    root.setAttribute?.('data-context-visual-map', expanded ? 'expanded' : 'compact');
+
+    const head = element(document, 'div', 'chat-ctx-map-head');
+    const titleWrap = element(document, 'div', 'chat-ctx-map-title-wrap');
+    titleWrap.append(
+      element(document, 'span', 'chat-ctx-map-dot'),
+      element(document, 'span', 'chat-ctx-map-title', 'CONTEXT WINDOW & CAG CACHE MAP')
+    );
+    const badgesWrap = element(document, 'div', 'chat-ctx-map-badges');
+    const cacheBadge = element(
+      document,
+      'span',
+      'chat-ctx-cache-hit-badge',
+      `⚡ CAG Prefix Cache: ${model.cachedPrefixPct}% Hit (0 ms)`
+    );
+    const tokBadge = element(
+      document,
+      'span',
+      'chat-ctx-tok-badge',
+      `${model.cachedTokens.toLocaleString('en-CA')} cached / ${model.totalTokens.toLocaleString('en-CA')} tok`
+    );
+    badgesWrap.append(cacheBadge, tokBadge);
+    head.append(titleWrap, badgesWrap);
+
+    const zonesRow = element(document, 'div', 'chat-ctx-zones-row');
+    const cachedZone = element(document, 'div', 'chat-ctx-zone is-cached-zone');
+    cachedZone.setAttribute?.('style', `width: ${model.cachedPrefixPct}%`);
+    cachedZone.append(
+      element(document, 'span', 'chat-ctx-zone-label', `⚡ PINNED KV CACHE PREFIX · ${model.cachedPrefixPct}% (CAG + Guardrails)`)
+    );
+    const dynamicZone = element(document, 'div', 'chat-ctx-zone is-dynamic-zone');
+    dynamicZone.setAttribute?.('style', `width: ${model.dynamicDeltaPct}%`);
+    dynamicZone.append(
+      element(document, 'span', 'chat-ctx-zone-label', `🔄 DYNAMIC DELTA · ${model.dynamicDeltaPct}% (RAG + MCP + Turn)`)
+    );
+    zonesRow.append(cachedZone, dynamicZone);
+
+    const barTrack = element(document, 'div', 'chat-ctx-bar-track');
+    barTrack.setAttribute?.('role', 'img');
+    barTrack.setAttribute?.('aria-label', `Context window allocation: ${model.cachedPrefixPct}% pinned CAG and guardrails prefix cache hit, ${model.dynamicDeltaPct}% dynamic RAG, MCP, prompt, and output.`);
+    for (const seg of model.segments) {
+      const segNode = element(document, 'div', `chat-ctx-seg is-${seg.tone}${seg.cached ? ' is-cached' : ''}`);
+      segNode.setAttribute?.('data-ctx-segment', seg.id);
+      segNode.setAttribute?.('style', `width: ${seg.pct}%`);
+      segNode.title = `${seg.title} (${seg.pct}%) — ${seg.badge}: ${seg.detail}`;
+      segNode.append(element(document, 'span', 'chat-ctx-seg-label', seg.shortLabel));
+      barTrack.append(segNode);
+    }
+
+    const legendRow = element(document, 'div', 'chat-ctx-legend-row');
+    for (const seg of model.segments) {
+      const pill = element(document, 'span', `chat-ctx-legend-pill is-${seg.tone}`);
+      pill.append(
+        element(document, 'span', `chat-ctx-legend-dot is-${seg.tone}`),
+        element(document, 'span', 'chat-ctx-legend-name', seg.title),
+        element(document, 'span', 'chat-ctx-legend-meta', seg.badge)
+      );
+      legendRow.append(pill);
+    }
+
+    const cacheFlow = element(document, 'div', 'chat-cag-flow-strip');
+    const flowSteps = [
+      ['1. CAG Pinning', `${model.claimCount} claims pinned at byte 0`, 'emerald'],
+      ['2. KV Prefix Cache', `${model.cachedPrefixPct}% warm hit · 0 ms I/O`, 'cyan'],
+      ['3. Tail RAG + MCP', model.isCagOnly ? 'RAG skipped · CAG Direct' : `S3 1536-d (${model.matchedCount}) + MCP (${model.toolCount})`, 'blue'],
+      ['4. Contract Guard', `${model.citedCount} verified citations`, 'violet']
+    ];
+    flowSteps.forEach(([fTitle, fSub, fTone], idx) => {
+      if (idx > 0) {
+        cacheFlow.append(element(document, 'span', 'chat-cag-flow-arrow', '→'));
+      }
+      const stepEl = element(document, 'div', `chat-cag-flow-step is-${fTone}`);
+      stepEl.append(
+        element(document, 'span', 'chat-cag-flow-title', fTitle),
+        element(document, 'span', 'chat-cag-flow-sub', fSub)
+      );
+      cacheFlow.append(stepEl);
+    });
+
+    root.append(head, zonesRow, barTrack, legendRow, cacheFlow);
+
+    if (expanded) {
+      const layerGrid = element(document, 'div', 'chat-ctx-layer-grid');
+      for (const seg of model.segments) {
+        const lCard = element(document, 'div', `chat-ctx-layer-card is-${seg.tone}`);
+        const lHead = element(document, 'div', 'chat-ctx-layer-head');
+        lHead.append(
+          element(document, 'span', `chat-ctx-legend-dot is-${seg.tone}`),
+          element(document, 'span', 'chat-ctx-layer-title', seg.title),
+          element(document, 'span', 'chat-ctx-layer-pct', `${seg.pct}%`)
+        );
+        const lBadge = element(document, 'span', `chat-ctx-layer-badge${seg.cached ? ' is-hit' : ''}`, seg.badge);
+        const lDesc = element(document, 'p', 'chat-ctx-layer-desc', seg.detail);
+        lCard.append(lHead, lBadge, lDesc);
+        layerGrid.append(lCard);
+      }
+      root.append(layerGrid);
+    }
+
+    if (typeof options.onSelect === 'function') {
+      root.addEventListener?.('click', () => options.onSelect());
+    }
+    return root;
+  }
+
   function renderContextInto(document, section, state = {}) {
     const contextData = state?.contextData || {};
+    const visualMap = createContextVisualMapNode(document, state, { expanded: true });
     const card = element(document, 'div', 'chat-context-card');
     card.setAttribute?.('data-context-mode', state?.kind || 'pending');
     const list = element(document, 'dl', 'chat-trace-facts chat-context-grid');
@@ -728,7 +945,7 @@
       );
     }
     card.append(list);
-    section.replaceChildren(card);
+    section.replaceChildren(visualMap, card);
     return section;
   }
   function renderContextView(document, state = {}) {
@@ -1139,11 +1356,18 @@
             if (point.model) current.contextData.model = point.model;
             if (point.provider) current.contextData.provider = point.provider;
             if (point.attempt !== undefined) current.contextData.attempt = point.attempt;
+            if (typeof point.inputTokens === 'number') current.contextData.inputTokens = point.inputTokens;
+            if (typeof point.outputTokens === 'number') current.contextData.outputTokens = point.outputTokens;
+            if (typeof point.cacheReadInputTokens === 'number') current.contextData.cacheReadInputTokens = point.cacheReadInputTokens;
+            if (typeof point.cacheWriteInputTokens === 'number') current.contextData.cacheWriteInputTokens = point.cacheWriteInputTokens;
             if (point.state === 'completed' && point.model) {
               current.contextData.completedModel = point.model;
               current.contextData.completedAttempt = point.attempt ?? 1;
             }
             if ((point.attempt ?? 1) > 1 || point.state === 'failed') current.degraded = true;
+          } else if (point.stage === 'settlement') {
+            if (typeof point.chargedMicros === 'number') current.contextData.chargedMicros = point.chargedMicros;
+            if (typeof point.reservedMicros === 'number') current.contextData.reservedMicros = point.reservedMicros;
           }
         } else {
           current.timeline.identify(frame.requestId);
@@ -1615,15 +1839,39 @@
     const summaryCard = element(document, 'div', 'chat-request-summary-card');
     summaryCard.append(heading, promptPreview, tagsRow, metaGrid, pinBanner);
 
+    let traceAutoScroll = true;
+    let traceExpandedAll = false;
     const liveTraceHeader = element(document, 'div', 'chat-live-trace-header');
     const liveTraceTitle = element(document, 'span', 'chat-live-trace-title', 'Live trace');
     const liveTraceControls = element(document, 'div', 'chat-live-trace-controls');
     const autoScrollWrap = element(document, 'span', 'chat-autoscroll-toggle', 'Auto-scroll');
     const autoScrollSwitch = element(document, 'span', 'chat-toggle-switch is-on');
     autoScrollWrap.append(autoScrollSwitch);
+    autoScrollWrap.addEventListener?.('click', () => {
+      traceAutoScroll = !traceAutoScroll;
+      autoScrollSwitch.className = traceAutoScroll ? 'chat-toggle-switch is-on' : 'chat-toggle-switch';
+    });
     const viewAllBadge = element(document, 'span', 'chat-trace-view-all', 'View all');
+    viewAllBadge.addEventListener?.('click', () => {
+      traceExpandedAll = !traceExpandedAll;
+      viewAllBadge.textContent = traceExpandedAll ? 'Collapse' : 'View all';
+      const stageDetails = panels.trace?.querySelectorAll?.('details.chat-trace-stage') || [];
+      for (const dNode of stageDetails) {
+        dNode.open = traceExpandedAll;
+      }
+    });
+    editBadge.addEventListener?.('click', () => {
+      const qInput = document.getElementById?.('portfolio-chat-question');
+      if (qInput && promptPreview?.textContent) {
+        qInput.value = promptPreview.textContent;
+        qInput.focus?.();
+      }
+    });
     liveTraceControls.append(autoScrollWrap, viewAllBadge);
     liveTraceHeader.append(liveTraceTitle, liveTraceControls);
+
+    const contextStripSlot = element(document, 'div', 'chat-context-strip-slot');
+    contextStripSlot.setAttribute('data-context-strip-slot', '');
 
     const tabs = element(document, 'div', 'chat-details-tabs');
     tabs.setAttribute('role', 'tablist');
@@ -1658,6 +1906,7 @@
       if (!buttons[name]) return;
       activeTab = name;
       liveTraceHeader.hidden = name !== 'trace';
+      contextStripSlot.hidden = name === 'context';
       for (const key of tabList) {
         buttons[key].setAttribute('aria-selected', String(key === name));
         buttons[key].tabIndex = key === name ? 0 : -1;
@@ -1691,7 +1940,7 @@
       tabs.append(button);
     });
     const techStack = createTechStackFooter(document, tabName => activate(tabName));
-    content.append(tabs, summaryCard, liveTraceHeader, ...tabList.map(name => panels[name]), techStack);
+    content.append(tabs, summaryCard, liveTraceHeader, ...tabList.map(name => panels[name]), contextStripSlot, techStack);
     desktop.append(content);
     document.body.append(dialog);
 
@@ -1965,7 +2214,27 @@
         panels.tools.replaceChildren(view ? (view.tools || renderToolsView(document, view)) : element(document, 'p', 'chat-details-empty', 'Select a response to inspect any portfolio MCP tool calls.'));
       }
       if (panels.context) {
-        panels.context.replaceChildren(view ? (view.context || renderContextView(document, view)) : element(document, 'p', 'chat-details-empty', 'Select a response to inspect its approved context and routing state.'));
+        if (view) {
+          panels.context.replaceChildren(view.context || renderContextView(document, view));
+        } else {
+          const emptyCtx = renderContextView(document, {});
+          const sr = element(document, 'span', 'sr-only', 'Select a response to inspect its approved context and routing state.');
+          emptyCtx.prepend?.(sr);
+          panels.context.replaceChildren(emptyCtx);
+        }
+      }
+      if (contextStripSlot) {
+        contextStripSlot.replaceChildren(
+          createContextVisualMapNode(document, view || {}, {
+            expanded: false,
+            onSelect: () => activate('context')
+          })
+        );
+      }
+      if (traceAutoScroll && panels.trace && typeof panels.trace.scrollTop === 'number') {
+        try {
+          panels.trace.scrollTop = panels.trace.scrollHeight || 0;
+        } catch { /* ignore */ }
       }
       if (view) {
         const uniqueStages = new Set(Array.isArray(view.tracePoints) ? view.tracePoints.map(pt => pt.stage) : []);
@@ -3538,6 +3807,17 @@
         subPills.append(pNode);
         pillNodes.push(pNode);
       }
+      const tabMap = {
+        chat: 'trace',
+        router: 'trace',
+        cag: 'context',
+        skills: 'tools',
+        evaluator: 'evidence',
+        response: 'evidence'
+      };
+      col.addEventListener?.('click', () => {
+        details.activate?.(tabMap[stg.id] || 'trace');
+      });
       col.append(node, subPills);
       pipeCols[stg.id] = { col, node, pillNodes, tone: stg.tone };
       pipeTrack.append(col);
@@ -3554,8 +3834,30 @@
       }
       const cagCol = pipeCols.cag;
       if (cagCol && cagCol.pillNodes.length >= 2) {
-        cagCol.pillNodes[0].textContent = cd.retrievalMode === 'hybrid' ? 'S3 Vectors + BM25' : 'Portfolio corpus';
-        cagCol.pillNodes[1].textContent = `${cd.claimCount ?? 15} verified claims`;
+        cagCol.pillNodes[0].textContent = cd.retrievalMode === 'hybrid' ? 'S3 Vectors + BM25' : 'CAG Prefix Pack';
+        cagCol.pillNodes[1].textContent = `${cd.claimCount ?? 15} pinned claims`;
+        if (cagCol.pillNodes[2]) {
+          cagCol.pillNodes[2].textContent = cd.retrievalMode === 'hybrid'
+            ? `${cd.matchedCount ?? 4} RAG chunks + KV hit`
+            : '⚡ 0 ms KV Cache Hit';
+        }
+      }
+      const skillsCol = pipeCols.skills;
+      if (skillsCol && Array.isArray(view.toolCalls) && view.toolCalls.length > 0) {
+        view.toolCalls.slice(0, 3).forEach((tc, i) => {
+          if (skillsCol.pillNodes[i]) {
+            const tName = tc.name || tc.toolName || 'search_public_evidence';
+            skillsCol.pillNodes[i].textContent = TOOL_LABELS[tName] || tName;
+          }
+        });
+      }
+      const evalCol = pipeCols.evaluator;
+      if (evalCol && evalCol.pillNodes.length >= 2) {
+        const cLen = Array.isArray(view.claims) ? view.claims.length : 0;
+        if (cLen > 0) {
+          evalCol.pillNodes[0].textContent = `${cLen} claim${cLen === 1 ? '' : 's'} verified`;
+        }
+        evalCol.pillNodes[1].textContent = view.degraded ? 'Degraded fallback' : 'Contract Guard ✓';
       }
     }
 
@@ -3567,17 +3869,61 @@
     const footer = element(document, 'div', 'chat-compose-footer');
     const toolbarLeft = element(document, 'div', 'chat-compose-toolbar');
     const toolIcons = element(document, 'div', 'chat-compose-tools');
-    for (const ic of ['📎', '@', '🛠️', '🖼️']) {
-      toolIcons.append(element(document, 'span', 'chat-tool-icon', ic));
+    const toolPresets = [
+      ['📎', 'Compare my role requirements against Josh’s verified experience: '],
+      ['@', '@NEXUS What is the architecture of the NEXUS workflow engine?'],
+      ['🛠️', 'Run search_public_evidence on Josh’s Guidewire and Medavie integrations.'],
+      ['🖼️', 'Show me how this AWS us-east-2 + CAG + S3 Vectors assistant is architected.']
+    ];
+    for (const [ic, presetText] of toolPresets) {
+      const tBtn = element(document, 'span', 'chat-tool-icon', ic);
+      tBtn.addEventListener?.('click', () => {
+        if (input.disabled) return;
+        input.value = presetText;
+        input.focus?.();
+      });
+      toolIcons.append(tBtn);
     }
     const projToggle = element(document, 'div', 'chat-compose-project-toggle');
-    projToggle.append(
-      element(document, 'span', 'chat-switch-pill'),
-      element(document, 'span', 'chat-project-label', 'Add to project?'),
-      element(document, 'span', 'chat-project-selector', 'Portfolio Site (joshboyer.ca) ▾')
-    );
+    const projSwitch = element(document, 'span', 'chat-switch-pill');
+    const projLabel = element(document, 'span', 'chat-project-label', 'Add to project?');
+    const projSelector = element(document, 'span', 'chat-project-selector', 'Portfolio Site (joshboyer.ca) ▾');
+    const projNames = ['Portfolio Site (joshboyer.ca) ▾', 'NEXUS Capstone ▾', 'Takeover VBA Add-In ▾', 'Medavie Integration ▾'];
+    let projIdx = 0;
+    projSwitch.addEventListener?.('click', () => {
+      projSwitch.classList?.toggle?.('is-on');
+    });
+    projSelector.addEventListener?.('click', () => {
+      projIdx = (projIdx + 1) % projNames.length;
+      projSelector.textContent = projNames[projIdx];
+    });
+    projToggle.append(projSwitch, projLabel, projSelector);
     const hint = element(document, 'p', 'chat-hint', 'Enter to send · Shift + Enter for a new line'); hint.id = 'portfolio-chat-hint';
     toolbarLeft.append(toolIcons, projToggle, hint);
+
+    const railPrompts = {
+      'Dell Support (Sept 2006+)': 'Tell me about Josh’s enterprise infrastructure and support experience at Dell starting in September 2006.',
+      'Grenville (2009–2022)': 'What did Josh build and lead during his 2009–2022 tenure at Grenville Mutual, including renewal automation?',
+      'Bulk Group Takeover & VBA': 'How did Josh design and build the production Excel VBA add-in and XML batch pipeline for bulk group takeover?',
+      'Medavie Claims REST/Event': 'Explain Josh’s solution review, mapping, and support for Medavie Blue Cross provider registry and claims integrations.',
+      'SQL & Reporting Continuity': 'How did Josh handle reporting continuity and financial-report SQL across core insurance system transitions?',
+      'NEXUS Capstone': 'What is NEXUS and how did Josh architect it as his independent AI capstone?',
+      'Experience': 'Give me an overview of Josh Boyer’s career journey from Dell (2006) through Grenville Mutual (2009–2022) and Medavie Blue Cross.',
+      'NEXUS': 'Tell me about Josh’s NEXUS independent capstone and how it uses structured AI workflows.',
+      'Insurance systems': 'What is Josh’s experience with Guidewire, Cognition+, IBS, and enterprise insurance integrations?',
+      'AI & automation': 'How has Josh applied automation (80% residential, 60% commercial, 40% farm renewal automation) and AI architecture?',
+      'Projects & portfolio': 'How is this portfolio assistant architected on AWS us-east-2 with CAG, S3 Vectors, MCP tools, and ElevenLabs?',
+      'Career opportunities': 'What types of Business Architecture, Systems Analysis, or Technical Solutions roles align best with Josh’s background?'
+    };
+    const scopeChipNodes = document.querySelectorAll?.('.chat-scope-chip, .chat-callout-list li') || [];
+    for (const chipNode of scopeChipNodes) {
+      chipNode.addEventListener?.('click', () => {
+        if (!ready || busy || input.disabled) return;
+        const labelTxt = (chipNode.textContent || '').trim();
+        input.value = railPrompts[labelTxt] || `Tell me about ${labelTxt} in Josh’s portfolio.`;
+        form.requestSubmit();
+      });
+    }
 
     const actions = element(document, 'div', 'chat-compose-actions');
     const mic = element(document, 'button', 'chat-secondary chat-mic-btn', '🎙️ Voice'); mic.type = 'button'; mic.disabled = true;

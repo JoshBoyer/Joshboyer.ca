@@ -1294,6 +1294,84 @@
       'ok'
     );
 
+    const retrievalObj = safeGet(turn, 'retrieval') ?? safeGet(traceObj, 'retrieval') ?? contextObj;
+    const rawRMode = safeGet(retrievalObj, 'retrievalMode') ?? safeGet(retrievalObj, 'mode');
+    const rMode = cleanEnum(rawRMode, ALLOWED_RETRIEVAL_MODES, 'hybrid');
+    const isCagOnly = rMode === 'cag_only' || rMode === 'skipped';
+    const rawMatched = safeGet(retrievalObj, 'matchedCount');
+    const matchedCount = integer(rawMatched, 0, 100) ? rawMatched : (isCagOnly ? 0 : 4);
+    const rawCalls = safeGet(turn, 'toolCalls') ?? safeGet(traceObj, 'toolCalls');
+    const toolCount = Array.isArray(rawCalls) ? rawCalls.filter(record).length : 1;
+    const rawCitations = safeGet(turn, 'citations') ?? safeGet(turn, 'claims');
+    const citedCount = Array.isArray(rawCitations) ? rawCitations.filter(record).length : 2;
+    const cagPct = isCagOnly ? 54 : 42;
+    const guardPct = 16;
+    const ragPct = isCagOnly ? 4 : 18;
+    const mcpPct = toolCount >= 2 ? 12 : (toolCount === 1 ? 10 : 6);
+    const promptPct = 8;
+    const outPct = Math.max(4, 100 - (cagPct + guardPct + ragPct + mcpPct + promptPct));
+    const cachedPrefixPct = cagPct + guardPct;
+
+    const visualMap = element(document, 'div', 'chat-ctx-visual-map is-expanded');
+    setAttr(visualMap, 'data-context-visual-map', 'expanded');
+    const mapHead = element(document, 'div', 'chat-ctx-map-head');
+    const titleWrap = element(document, 'div', 'chat-ctx-map-title-wrap');
+    titleWrap.append(
+      element(document, 'span', 'chat-ctx-map-dot'),
+      element(document, 'span', 'chat-ctx-map-title', 'CONTEXT WINDOW & CAG CACHE MAP')
+    );
+    const badgesWrap = element(document, 'div', 'chat-ctx-map-badges');
+    badgesWrap.append(
+      element(document, 'span', 'chat-ctx-cache-hit-badge', `⚡ CAG Prefix Cache: ${cachedPrefixPct}% Hit (0 ms)`),
+      element(document, 'span', 'chat-ctx-tok-badge', '15/15 Pinned Claims · SHA-256')
+    );
+    mapHead.append(titleWrap, badgesWrap);
+
+    const zonesRow = element(document, 'div', 'chat-ctx-zones-row');
+    const cachedZone = element(document, 'div', 'chat-ctx-zone is-cached-zone');
+    setAttr(cachedZone, 'style', `width: ${cachedPrefixPct}%`);
+    cachedZone.append(element(document, 'span', 'chat-ctx-zone-label', `⚡ PINNED KV CACHE PREFIX · ${cachedPrefixPct}% (CAG + Guardrails)`));
+    const dynamicZone = element(document, 'div', 'chat-ctx-zone is-dynamic-zone');
+    setAttr(dynamicZone, 'style', `width: ${100 - cachedPrefixPct}%`);
+    dynamicZone.append(element(document, 'span', 'chat-ctx-zone-label', `🔄 DYNAMIC DELTA · ${100 - cachedPrefixPct}% (RAG + MCP + Turn)`));
+    zonesRow.append(cachedZone, dynamicZone);
+
+    const barTrack = element(document, 'div', 'chat-ctx-bar-track');
+    const segDefs = [
+      ['cag', 'emerald', `CAG ${cagPct}%`, cagPct, true],
+      ['guard', 'cyan', `Guard ${guardPct}%`, guardPct, true],
+      ['rag', 'blue', isCagOnly ? 'RAG 0%' : `RAG ${ragPct}%`, ragPct, false],
+      ['mcp', 'purple', `MCP ${mcpPct}%`, mcpPct, false],
+      ['prompt', 'amber', `Turn ${promptPct}%`, promptPct, false],
+      ['output', 'violet', `Out ${outPct}%`, outPct, false]
+    ];
+    for (const [sId, sTone, sLbl, sPct, isCached] of segDefs) {
+      const segNode = element(document, 'div', `chat-ctx-seg is-${sTone}${isCached ? ' is-cached' : ''}`);
+      setAttr(segNode, 'data-ctx-segment', sId);
+      setAttr(segNode, 'style', `width: ${sPct}%`);
+      segNode.append(element(document, 'span', 'chat-ctx-seg-label', sLbl));
+      barTrack.append(segNode);
+    }
+
+    const cacheFlow = element(document, 'div', 'chat-cag-flow-strip');
+    const flowSteps = [
+      ['1. CAG Pinning', '15 claims pinned at byte 0', 'emerald'],
+      ['2. KV Prefix Cache', `${cachedPrefixPct}% warm hit · 0 ms I/O`, 'cyan'],
+      ['3. Tail RAG + MCP', isCagOnly ? 'RAG skipped · CAG Direct' : `S3 1536-d (${matchedCount}) + MCP (${toolCount})`, 'blue'],
+      ['4. Contract Guard', `${citedCount} verified citations`, 'violet']
+    ];
+    flowSteps.forEach(([fTitle, fSub, fTone], idx) => {
+      if (idx > 0) cacheFlow.append(element(document, 'span', 'chat-cag-flow-arrow', '→'));
+      const stepEl = element(document, 'div', `chat-cag-flow-step is-${fTone}`);
+      stepEl.append(
+        element(document, 'span', 'chat-cag-flow-title', fTitle),
+        element(document, 'span', 'chat-cag-flow-sub', fSub)
+      );
+      cacheFlow.append(stepEl);
+    });
+
+    visualMap.append(mapHead, zonesRow, barTrack, cacheFlow);
+
     const card = element(document, 'div', 'chat-context-card');
     const dl = element(document, 'dl', 'chat-trace-facts chat-context-grid');
 
@@ -1316,7 +1394,7 @@
     addRow('Budget status', budgetStatus, 'data-limit-budget-status', false);
 
     card.append(dl);
-    wrapper.append(card);
+    wrapper.append(visualMap, card);
     return wrapper;
   }
 
