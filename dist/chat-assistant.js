@@ -1625,7 +1625,9 @@
         .replace(/\b(\d{4})\s*[\u2013\u2014-]\s*(\d{4})\b/g, '$1 to $2')
         .replace(/\b15\+\s*years\b/gi, 'over fifteen years')
         .replace(/^Josh['’]s enterprise experience is rooted in on-premise,\s*virtualized systems,\s*network infrastructure,\s*and application integrations rather than commercial (?:AWS or Azure )?cloud migrations\./i,
-          "In his corporate insurance roles at Medavie and Grenville, the core platforms ran on-prem VMware and hybrid infrastructure—and alongside that, he personally built and deployed this live portfolio assistant on AWS.")
+          "In his corporate insurance roles at Medavie and Grenville, the core platforms ran on-prem VMware and hybrid infrastructure, and alongside that, he personally built and deployed this live portfolio assistant on AWS.")
+        .replace(/\s*[\u2014\u2013]\s*/g, ', ')
+        .replace(/,\s*,+/g, ', ')
         .replace(/\s+/g, ' ')
         .trim();
       const sentences = (humanized.match(/[^.!?]+[.!?]+(?:\s+|$)|[^.!?]+$/g) || [humanized]).map(s => s.trim()).filter(Boolean);
@@ -1634,7 +1636,12 @@
         : (/\?$/.test(sentences[sentences.length - 1])
             ? [sentences[0], sentences[1], sentences[sentences.length - 1]]
             : sentences.slice(0, 3));
-      return selected.join(' ').replace(/\s+/g, ' ').trim();
+      if (selected.length >= 2 && /\?$/.test(selected[selected.length - 1])) {
+        const bodyPart = selected.slice(0, -1).join(' ');
+        const questionPart = selected[selected.length - 1];
+        return `[warmly] ${bodyPart} [curious] ${questionPart}`.replace(/\s+/g, ' ').trim();
+      }
+      return `[warmly] ${selected.join(' ')}`.replace(/\s+/g, ' ').trim();
     }
 
     function matchInstantLiveReply(userText) {
@@ -1913,7 +1920,17 @@
       });
       const finishPlayback = () => {
         lastAudioEndedAt = Date.now();
-        stopCurrentAudio();
+        isLiveSpeaking = false;
+        cleanupAudioElementOnly();
+        if (currentSpeakBtn) {
+          currentSpeakBtn.setAttribute('aria-pressed', 'false');
+          currentSpeakBtn.textContent = '🔊 Listen';
+          currentSpeakBtn = null;
+        }
+        if (introBtn) {
+          introBtn.setAttribute('aria-pressed', 'false');
+          introBtn.textContent = '👋 30s Intro';
+        }
         if (isLiveCall) {
           setAvatarState('live', 'Live Voice Active · Listening…');
         } else {
@@ -1998,8 +2015,8 @@
         turnButton.textContent = '⏳ Voice…';
       }
       if (fetcher && spoken) {
-        // Synthesize the complete 2-3 sentence turn as a single unbroken MP3 on eleven_turbo_v2_5 (~580ms)
-        // so playback never splits, aborts a second chunk, or cuts out mid-reply.
+        // Synthesize the complete 2-3 sentence turn as a single unbroken 192kbps MP3 on eleven_v4_turbo
+        // so prosody flows naturally and playback never splits or cuts out mid-reply.
         const fullBlob = await fetchTtsAudioBlob(spoken, abortCtrl);
         if (abortCtrl?.signal?.aborted) return;
         ttsAbortController = null;
@@ -2155,7 +2172,7 @@
           if (win.navigator?.mediaDevices?.getUserMedia) {
             try {
               micStream = await win.navigator.mediaDevices.getUserMedia({
-                audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+                audio: { channelCount: 1, echoCancellation: false, noiseSuppression: false, autoGainControl: false }
               });
               if (!isLiveCall || activeSocket !== ws) {
                 micStream.getTracks().forEach(t => t.stop());
@@ -2296,7 +2313,9 @@
       stopCurrentAudio();
       if (win?.navigator?.mediaDevices?.getUserMedia && typeof win.MediaRecorder === 'function' && fetcher) {
         try {
-          const stream = await win.navigator.mediaDevices.getUserMedia({ audio: true });
+          const stream = await win.navigator.mediaDevices.getUserMedia({
+            audio: { channelCount: 1, echoCancellation: false, noiseSuppression: false, autoGainControl: false }
+          });
           const chunks = [];
           const recorder = new win.MediaRecorder(stream);
           mediaRecorder = recorder;

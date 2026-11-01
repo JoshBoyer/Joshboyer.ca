@@ -196,7 +196,7 @@ async function handleVoiceRoute(request: Request, path: string, env: Env, depend
       voiceId,
       tts: isEnabled,
       stt: isEnabled,
-      ttsModel: 'eleven_turbo_v2_5',
+      ttsModel: 'eleven_v4_turbo',
       sttModel: 'scribe_v1',
       liveEnabled: isLive,
       liveConversationalAi: isLive
@@ -221,12 +221,12 @@ async function handleVoiceRoute(request: Request, path: string, env: Env, depend
       if (!cleanText) return secure(failure(400, 'INVALID_REQUEST'));
       const rawVoiceId = (parsed as { voiceId?: unknown }).voiceId;
       if (rawVoiceId !== undefined && (typeof rawVoiceId !== 'string' || !/^[A-Za-z0-9]{15,32}$/.test(rawVoiceId) ||
-          (rawVoiceId !== voiceId && rawVoiceId !== DEFAULT_JOSH_VOICE_ID))) {
+          (rawVoiceId !== voiceId && rawVoiceId !== DEFAULT_JOSH_VOICE_ID && rawVoiceId !== '0iNRfr49ogpb5IWbQqiC'))) {
         return secure(failure(400, 'INVALID_REQUEST'));
       }
       const targetVoiceId = typeof rawVoiceId === 'string' ? rawVoiceId : voiceId;
       const upstream = await fetcher(
-        `https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(targetVoiceId)}/stream?optimize_streaming_latency=4&output_format=mp3_44100_128`,
+        `https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(targetVoiceId)}/stream?output_format=mp3_44100_192`,
         {
           method: 'POST',
           headers: {
@@ -236,14 +236,7 @@ async function handleVoiceRoute(request: Request, path: string, env: Env, depend
           },
           body: JSON.stringify({
             text: cleanText,
-            model_id: 'eleven_turbo_v2_5',
-            voice_settings: {
-              stability: 0.32,
-              similarity_boost: 0.82,
-              style: 0.30,
-              speed: 0.96,
-              use_speaker_boost: true
-            }
+            model_id: 'eleven_v4_turbo'
           }),
           redirect: 'manual',
           signal: AbortSignal.timeout(25000)
