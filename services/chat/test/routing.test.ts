@@ -83,7 +83,8 @@ test('specific project slugs and case study deep dives route to rag_and_mcp with
     ['Explain the commercial quoting workflows and CSIO mapping.', 'workflows'],
     ['What rules were built for newbusiness integration?', 'newbusiness'],
     ['How was the C#/.NET document upload portal built?', 'upload'],
-    ['What is the status of lowkey and workshop42 in the portfolio?', 'nexus']
+    ['What is the status of lowkey and workshop42 in the portfolio?', 'nexus'],
+    ['Tell me about ws42.ca, The Voyager, and Apex.', 'nexus']
   ];
 
   for (const [message, expectedProjectId] of cases) {
@@ -104,7 +105,8 @@ test('general portfolio, career, employer and boundary questions route to rag_an
     'What is Josh’s career history across Grenville, Medavie and Dell?',
     'Does Josh hold any formal Architect title, security clearances or cloud certifications?',
     'What insurance systems, SQL and VBA work has Josh delivered?',
-    'Did Josh work with Economical or Definity and Guidewire?'
+    'Did Josh work with Economical or Definity and Guidewire?',
+    'Where can I find the LinkedIn profile?'
   ];
   for (const message of portfolioPrompts) {
     const plan = planTurnRoute({ message });

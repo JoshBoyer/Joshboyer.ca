@@ -63,7 +63,7 @@ const PROJECT_MATCHERS: ReadonlyArray<{
   requiresSecondarySearch?: boolean;
 }> = Object.freeze([
   { projectId: 'nexus', slug: 'project-nexus', pattern: /\b(?:project-nexus|nexus)\b/i },
-  { projectId: 'nexus', slug: 'lowkey', pattern: /\b(?:lowkey|workshop\s*42|ws42(?:\.ca)?)\b/i, requiresSecondarySearch: true },
+  { projectId: 'nexus', slug: 'lowkey', pattern: /\b(?:lowkey|workshop\s*42|ws42(?:\.ca)?|makerworld|apex|voyager)\b/i, requiresSecondarySearch: true },
   { projectId: 'takeover', slug: 'guidewire-policy-takeover', pattern: /\b(?:guidewire-policy-takeover|policy-takeover|takeover|claims-history\s+loading|excel\s+vba\s+add-in)\b/i },
   { projectId: 'renewals', slug: 'guidewire-renewal-automation', pattern: /\b(?:guidewire-renewal-automation|renewal-automation|renewals|renewal\s+eligibility)\b/i },
   { projectId: 'claims', slug: 'medavie-claims-integration', pattern: /\b(?:medavie-claims-integration|claims-integration|providerregistry|claims\s+adjudication|provider\s+sync(?:hronization)?)\b/i },
@@ -103,7 +103,7 @@ const FACET_MATCHERS: ReadonlyArray<{ facet: Facet; pattern: RegExp }> = Object.
 const JOB_FIT_PATTERN = /\b(?:job\s+description|jd\b|requirements?\s+fit|role\s+comparison|role\s+requirements?|hiring\s+for|candidate\s+fit|compare\s+job|good\s+fit\s+for\s+this\s+role|responsibilities\s*:|qualifications\s*:|compare\s+.*\brequirements?\b)\b/i;
 const DIRECT_MCP_ONLY_PATTERN = /\b(?:direct\s+case\s+study\s+lookup|only\s+run\s+get_case_study)\b/i;
 const FOLLOW_UP_ONLY_PATTERN = /^\s*(?:can\s+you\s+)?(?:expand|elaborate|tell\s+me\s+more)\s+on\s+that(?:\s+earlier\s+point|\s+previous\s+point)?[?.!\s]*$/i;
-const PORTFOLIO_SIGNAL_PATTERN = /\b(?:josh(?:\s+boyer)?|boyer|portfolio|career|experience|background|resume|r[eé]sum[eé]|employers?|grenville|economical|definity|medavie|harris|dell|certifications?|certified|clearances?|architect\s+title|formal\s+architect|metrics?|automation\s+rates?|guidewire|vba|underwriting|broker|insurance|capstone|ws42(?:\.ca)?|workshop\s*42|linkedin|makerworld|apex\s+monitor|voyager\s+canoe)\b/i;
+const PORTFOLIO_SIGNAL_PATTERN = /\b(?:josh(?:\s+boyer)?|boyer|portfolio|career|experience|background|resume|r[eé]sum[eé]|employers?|grenville|economical|definity|medavie|harris|dell|certifications?|certified|clearances?|architect\s+title|formal\s+architect|metrics?|automation\s+rates?|guidewire|vba|underwriting|broker|insurance|capstone|ws42(?:\.ca)?|workshop\s*42|linkedin|makerworld|apex|voyager)\b/i;
 
 function isSafePlainObject(value: unknown): value is Record<string, unknown> {
   if (value === null || typeof value !== 'object' || Array.isArray(value) || types.isProxy(value)) return false;
