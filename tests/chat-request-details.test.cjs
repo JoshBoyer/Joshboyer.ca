@@ -1581,5 +1581,163 @@ test('Simple / Detailed / Engineer mode switcher, Clear chat visual reset & sess
   assert.equal(clearBtn.disabled, false, 'UI must remain ready and unlocked when DELETE /api/chat/session returns 401 session_expired');
 });
 
+test('Deliverables 2-9: Live Execution Strip, Expandable Journey Tabs, Filterable Sources Inspector (All/CAG/RAG), Contextual AWS Highlights, Live Voice Observability, Deterministic Trace Replay, and Intentional Mobile Bottom Sheet', async () => {
+  const doc = createSimDocument(1440);
+  const chat = require('../dist/chat-assistant.js');
+  const evidencePayload = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'dist', 'chat-evidence.json'), 'utf8'));
+
+  const host = doc.createElement('div');
+  doc.body.append(host);
+
+  const mounted = chat.mount(host, {
+    fetchImpl: async url => {
+      if (url === '/api/chat/config') {
+        return new Response(JSON.stringify({
+          schemaVersion: '1.0.0',
+          available: true,
+          capabilities: { chat: true, cag: true, rag: true, mcp: true, voice: true },
+          limits: { maxMessageBytes: 8192, maxTurns: 8, maxToolsPerTurn: 4, turnDeadlineMs: 60000 }
+        }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
+      if (url === '/chat-evidence.json') {
+        return new Response(JSON.stringify(evidencePayload), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
+      return new Response('{}', { status: 404, headers: { 'Content-Type': 'application/json' } });
+    }
+  });
+
+  await new Promise(resolve => setTimeout(resolve, 25));
+  const shell = mounted.element;
+
+  // 1. Detailed view switch (role="switch")
+  const detailedSwitch = shell.querySelector('[data-detailed-toggle]');
+  assert.ok(detailedSwitch, 'Detailed view toggle switch must exist');
+  assert.equal(detailedSwitch.getAttribute('role'), 'switch');
+  assert.equal(detailedSwitch.getAttribute('aria-checked'), 'true');
+  detailedSwitch.click();
+  assert.equal(detailedSwitch.getAttribute('aria-checked'), 'false');
+  assert.equal(shell.getAttribute('data-view-mode'), 'simple');
+  detailedSwitch.click();
+  assert.equal(detailedSwitch.getAttribute('aria-checked'), 'true');
+  assert.equal(shell.getAttribute('data-view-mode'), 'detailed');
+
+  // 2. Live Execution Strip & 6 interactive step pills
+  const strip = shell.querySelector('[data-live-process-strip]');
+  assert.ok(strip, 'Compact Live Execution Strip must exist above the expandable journey drawer');
+  const stripSteps = strip.querySelectorAll('[data-strip-step]');
+  assert.equal(stripSteps.length, 6, 'Live Execution Strip must render all 6 journey steps');
+  const toggleDrawerBtn = strip.querySelector('[data-toggle-journey-drawer]');
+  assert.ok(toggleDrawerBtn, 'View details toggle button must exist on the Live Execution Strip');
+
+  // 3. Expandable Journey Drawer Tabs (Live process, Context stack, Sources (7), AWS architecture, Trace, Evidence)
+  const journeyDrawer = shell.querySelector('[data-journey-drawer]');
+  assert.ok(journeyDrawer, 'Expandable Journey Drawer must exist');
+  const sourcesTabBtn = journeyDrawer.querySelector('[data-journey-tab="sources"]');
+  const awsTabBtn = journeyDrawer.querySelector('[data-journey-tab="aws"]');
+  const processTabBtn = journeyDrawer.querySelector('[data-journey-tab="process"]');
+  assert.ok(sourcesTabBtn && awsTabBtn && processTabBtn, 'Journey drawer tabs must exist');
+
+  // Click Sources (7) tab -> reveals Filterable Sources & Evidence Inspector
+  sourcesTabBtn.click();
+  const sourcesInspector = journeyDrawer.querySelector('[data-sources-inspector]');
+  assert.ok(sourcesInspector, 'Sources & Evidence Inspector must exist');
+  assert.equal(sourcesInspector.hidden, false, 'Clicking Sources (7) tab must unhide Sources Inspector');
+
+  // 4. Filterable Sources & Evidence Inspector (All (7), Career knowledge (4), Retrieved sources (3))
+  const allFilter = sourcesInspector.querySelector('[data-source-filter="all"]');
+  const cagFilter = sourcesInspector.querySelector('[data-source-filter="cag"]');
+  const ragFilter = sourcesInspector.querySelector('[data-source-filter="rag"]');
+  const sourceItems = sourcesInspector.querySelectorAll('[data-source-item]');
+  const relevanceBars = sourcesInspector.querySelectorAll('[data-relevance-bar]');
+  assert.equal(sourceItems.length, 7, 'Must render 7 total grounded sources (4 CAG + 3 RAG)');
+  assert.equal(relevanceBars.length, 7, 'Every source card must have a visual relevance score bar');
+
+  cagFilter.click();
+  assert.equal(cagFilter.getAttribute('aria-pressed'), 'true');
+  assert.equal(sourceItems.filter(el => !el.hidden).length, 4, 'CAG filter must show exactly 4 Career knowledge sources');
+
+  ragFilter.click();
+  assert.equal(ragFilter.getAttribute('aria-pressed'), 'true');
+  assert.equal(sourceItems.filter(el => !el.hidden).length, 3, 'RAG filter must show exactly 3 Retrieved sources');
+
+  allFilter.click();
+  assert.equal(allFilter.getAttribute('aria-pressed'), 'true');
+  assert.equal(sourceItems.filter(el => !el.hidden).length, 7, 'All filter must restore all 7 sources');
+
+  // Restore Live process tab
+  processTabBtn.click();
+  assert.equal(sourcesInspector.hidden, true);
+
+  // 5. Contextual AWS Architecture Visualization & Progressive Service Guide
+  const awsGuide = journeyDrawer.querySelector('[data-aws-service-guide]');
+  assert.ok(awsGuide, 'Progressive plain-English AWS Service Guide must exist');
+  assert.match(awsGuide.textContent, /Amazon S3 & S3 Vectors/);
+  assert.match(awsGuide.textContent, /Amazon DynamoDB/);
+
+  // Select Step 2 (CAG) via Strip -> verify contextual AWS highlight on s3 & dynamodb and not elevenlabs
+  const step2Pill = strip.querySelector('[data-strip-step="2"]');
+  step2Pill.click();
+  const s3Stage = journeyDrawer.querySelector('[data-pipe-stage="s3"]');
+  const elevenStage = journeyDrawer.querySelector('[data-pipe-stage="elevenlabs"]');
+  assert.equal(s3Stage.getAttribute('data-step-highlighted'), 'true', 'Step 2 (CAG) must highlight Amazon S3');
+  assert.equal(elevenStage.getAttribute('data-step-highlighted'), 'false', 'Step 2 (CAG) must not highlight ElevenLabs');
+
+  // Select Step 6 (Deliver to you) -> verify ElevenLabs is highlighted
+  const step6Pill = strip.querySelector('[data-strip-step="6"]');
+  step6Pill.click();
+  assert.equal(elevenStage.getAttribute('data-step-highlighted'), 'true', 'Step 6 (Deliver to you) must highlight ElevenLabs');
+
+  // 6. Deterministic Trace Replay (Prev, Next, Reset) & Shared Event Model
+  const replayCard = mounted.details.element.querySelector('[data-trace-replay]');
+  assert.ok(replayCard, 'Deterministic Trace Replay card must exist in Right Inspector');
+  const prevBtn = replayCard.querySelector('[data-replay-prev]');
+  const nextBtn = replayCard.querySelector('[data-replay-next]');
+  const resetBtn = replayCard.querySelector('[data-replay-reset]');
+  const replayStatus = replayCard.querySelector('[data-replay-status]');
+  const stepInspectorTitle = mounted.details.element.querySelector('.chat-inspector-step-title');
+
+  resetBtn.click();
+  assert.equal(stepInspectorTitle.textContent, 'Step 1: Understand your question');
+  assert.match(replayStatus.textContent, /Step 1\/6/);
+
+  nextBtn.click();
+  assert.equal(stepInspectorTitle.textContent, 'Step 2: Career knowledge (cached)');
+  assert.match(replayStatus.textContent, /Step 2\/6/);
+  assert.equal(s3Stage.getAttribute('data-step-highlighted'), 'true', 'Replay Next to Step 2 must update AWS highlight in lockstep');
+
+  prevBtn.click();
+  assert.equal(stepInspectorTitle.textContent, 'Step 1: Understand your question');
+
+  // 7. "This answer used..." summary card & Live Voice Observability
+  const answerUsedCard = mounted.details.element.querySelector('[data-answer-used-card]');
+  assert.ok(answerUsedCard, '"This answer used..." summary card must exist');
+  assert.equal(answerUsedCard.querySelectorAll('[data-answer-used-item]').length, 4);
+
+  const voiceObsCard = mounted.details.element.querySelector('[data-voice-observability-card]');
+  assert.ok(voiceObsCard, 'Live Voice Observability card must exist');
+  mounted.details.syncVoiceObservability('speaking', 'Streaming ElevenLabs TTS narration', 2);
+  assert.equal(voiceObsCard.querySelector('[data-voice-obs-badge]').textContent, '● Speaking');
+  assert.match(voiceObsCard.querySelector('[data-voice-obs-bargein]').textContent, /2 interruptions/);
+
+  // 8. Intentional Mobile Header, Message Expand, and Mobile Bottom Sheet
+  const mobileHeader = shell.querySelector('[data-mobile-header]');
+  const mobileExpandBtn = shell.querySelector('[data-message-expand]');
+  const mobileSheet = shell.querySelector('[data-mobile-sheet]');
+  assert.ok(mobileHeader && mobileExpandBtn && mobileSheet, 'Mobile header, message expand button, and bottom sheet must exist');
+  assert.equal(mobileExpandBtn.getAttribute('aria-expanded'), 'false');
+  mobileExpandBtn.click();
+  assert.equal(mobileExpandBtn.getAttribute('aria-expanded'), 'true');
+
+  const mobileContextTab = mobileSheet.querySelector('[data-mobile-tab="context"]');
+  mobileContextTab.click();
+  assert.equal(mobileContextTab.classList.contains('is-active'), true);
+  assert.equal(journeyDrawer.classList.contains('is-collapsed'), false, 'Selecting Context tab on Mobile Sheet must sync Journey Drawer');
+
+  const mobileCloseBtn = mobileSheet.querySelector('[data-mobile-sheet-close]');
+  mobileCloseBtn.click();
+  assert.equal(mobileSheet.hidden, true, 'Mobile sheet close button must hide the sheet');
+});
+
+
 
 

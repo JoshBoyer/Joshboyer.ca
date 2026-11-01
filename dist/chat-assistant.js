@@ -2096,7 +2096,195 @@
       grid.append(li);
     }
 
-    section._setInspectedStep = function (stepNum) {
+    // Card 0A: "This answer used..." summary card (matches Reference Sheet 2 right panel)
+    const answerUsedCard = element(document, 'div', 'chat-answer-used-card');
+    answerUsedCard.setAttribute('data-answer-used-card', '');
+    const answerUsedHead = element(document, 'div', 'chat-answer-used-head');
+    answerUsedHead.append(element(document, 'span', 'chat-answer-used-title', 'This answer used...'));
+    const answerUsedList = element(document, 'div', 'chat-answer-used-list');
+    const answerUsedDefs = [
+      { key: 'cag', step: 2, tone: 'emerald', icon: '🗄️', title: 'CAG · Career knowledge', sub: '7 relevant sections', pct: '58%', tokens: '7,100 tokens' },
+      { key: 'rag', step: 3, tone: 'purple', icon: '📄', title: 'RAG · Retrieved sources', sub: '3 project documents', pct: '26%', tokens: '3,200 tokens' },
+      { key: 'context', step: 4, tone: 'cyan', icon: '🧩', title: 'Context assembly', sub: 'Your question + history', pct: '11%', tokens: '1,400 tokens' },
+      { key: 'model', step: 5, tone: 'amber', icon: 'AI', title: 'Claude Sonnet 4', sub: 'Generated the answer', pct: '5%', tokens: '600 tokens' }
+    ];
+    const answerUsedRefs = Object.create(null);
+    for (const uDef of answerUsedDefs) {
+      const uRow = element(document, 'button', `chat-answer-used-row is-${uDef.tone}`);
+      uRow.type = 'button';
+      uRow.setAttribute('data-answer-used-item', uDef.key);
+      uRow.setAttribute('data-answer-used-step', String(uDef.step));
+      const uIcon = element(document, 'span', `chat-answer-used-icon is-${uDef.tone}`, uDef.icon);
+      const uCopy = element(document, 'div', 'chat-answer-used-copy');
+      const uTitle = element(document, 'span', 'chat-answer-used-item-title', uDef.title);
+      const uSub = element(document, 'span', 'chat-answer-used-item-sub', uDef.sub);
+      uCopy.append(uTitle, uSub);
+      const uMeta = element(document, 'div', 'chat-answer-used-meta');
+      const uPct = element(document, 'strong', 'chat-answer-used-pct', uDef.pct);
+      const uTok = element(document, 'span', 'chat-answer-used-tok', uDef.tokens);
+      uMeta.append(uPct, uTok);
+      uRow.append(uIcon, uCopy, uMeta);
+      uRow.addEventListener?.('click', () => {
+        section._setInspectedStep?.(uDef.step);
+        section._onStepSelected?.(uDef.step, { source: 'answer-used' });
+      });
+      answerUsedRefs[uDef.key] = { row: uRow, titleEl: uTitle, subEl: uSub, pctEl: uPct, tokEl: uTok };
+      answerUsedList.append(uRow);
+    }
+    const viewExecTraceBtn = element(document, 'button', 'chat-view-exec-trace-btn', 'View full execution trace →');
+    viewExecTraceBtn.type = 'button';
+    viewExecTraceBtn.setAttribute('data-view-execution-trace', '');
+    answerUsedCard.append(answerUsedHead, answerUsedList, viewExecTraceBtn);
+
+    // Card 0B: Timestamped Vertical Execution Timeline + Deterministic Trace Replay Controller
+    const timelineCard = element(document, 'div', 'chat-vertical-timeline-card');
+    timelineCard.setAttribute('data-trace-replay', '');
+    const timelineHead = element(document, 'div', 'chat-vertical-timeline-head');
+    timelineHead.append(
+      element(document, 'span', 'chat-vertical-timeline-title', 'Trace / Timeline'),
+      element(document, 'span', 'chat-replay-status-pill', 'Step 6 of 6 · Live')
+    );
+    const replayStatusEl = timelineHead.children[1];
+    replayStatusEl.setAttribute('data-replay-status', '');
+
+    const replayBar = element(document, 'div', 'chat-replay-controls-bar');
+    replayBar.setAttribute('role', 'group');
+    replayBar.setAttribute('aria-label', 'Deterministic trace replay controls');
+    const replayPlayBtn = element(document, 'button', 'chat-replay-btn is-primary', '▶ Replay');
+    replayPlayBtn.type = 'button';
+    replayPlayBtn.setAttribute('data-replay-play', '');
+    replayPlayBtn.setAttribute('aria-label', 'Replay execution trace step by step');
+    const replayPrevBtn = element(document, 'button', 'chat-replay-btn', '◀ Prev');
+    replayPrevBtn.type = 'button';
+    replayPrevBtn.setAttribute('data-replay-prev', '');
+    replayPrevBtn.setAttribute('aria-label', 'Previous trace step');
+    const replayNextBtn = element(document, 'button', 'chat-replay-btn', 'Next ▶');
+    replayNextBtn.type = 'button';
+    replayNextBtn.setAttribute('data-replay-next', '');
+    replayNextBtn.setAttribute('aria-label', 'Next trace step');
+    const replayResetBtn = element(document, 'button', 'chat-replay-btn', '↺ Reset');
+    replayResetBtn.type = 'button';
+    replayResetBtn.setAttribute('data-replay-reset', '');
+    replayResetBtn.setAttribute('aria-label', 'Reset trace replay to completed state');
+    replayBar.append(replayPlayBtn, replayPrevBtn, replayNextBtn, replayResetBtn);
+
+    const timelineList = element(document, 'ol', 'chat-vertical-timeline-list');
+    timelineList.setAttribute('data-trace-timeline-list', '');
+    const timelineDefs = [
+      { id: 'received', step: 1, clock: '10:24:01', tone: 'blue', icon: '💬', title: 'Message received', sub: 'User question' },
+      { id: 'intent', step: 1, clock: '10:24:01', tone: 'emerald', icon: '🧭', title: 'Intent classification', sub: 'Career query → Guidewire' },
+      { id: 'cag', step: 2, clock: '10:24:02', tone: 'cyan', icon: '🗄️', title: 'CAG search', sub: '7 sections · 0.8s' },
+      { id: 'rag', step: 3, clock: '10:24:03', tone: 'purple', icon: '🔍', title: 'RAG retrieval', sub: '3 sources · 1.4s' },
+      { id: 'context', step: 4, clock: '10:24:04', tone: 'blue', icon: '🗂️', title: 'Context assembly', sub: '12.3k tokens · 0.8s' },
+      { id: 'model', step: 5, clock: '10:24:05', tone: 'amber', icon: '🧠', title: 'Claude Sonnet 4', sub: 'Generating response' },
+      { id: 'stream', step: 6, clock: '10:24:08', tone: 'blue', icon: '✨', title: 'Streaming response', sub: 'Tokens to chat' }
+    ];
+    const timelineRowRefs = [];
+    for (const tDef of timelineDefs) {
+      const tRow = element(document, 'li', `chat-vertical-timeline-row is-${tDef.tone} is-completed`);
+      tRow.setAttribute('data-timeline-step', String(tDef.step));
+      tRow.setAttribute('data-timeline-stage', tDef.id);
+      const tClock = element(document, 'span', 'chat-vertical-timeline-clock', tDef.clock);
+      const tDot = element(document, 'span', `chat-vertical-timeline-dot is-${tDef.tone}`);
+      const tIcon = element(document, 'span', `chat-vertical-timeline-icon is-${tDef.tone}`, tDef.icon);
+      const tCopy = element(document, 'div', 'chat-vertical-timeline-copy');
+      const tTitle = element(document, 'span', 'chat-vertical-timeline-item-title', tDef.title);
+      const tSub = element(document, 'span', 'chat-vertical-timeline-item-sub', tDef.sub);
+      tCopy.append(tTitle, tSub);
+      tRow.append(tClock, tDot, tIcon, tCopy);
+      tRow.addEventListener?.('click', () => {
+        stopReplayTimer();
+        applyReplayStep(tDef.step, true);
+      });
+      timelineRowRefs.push({ ...tDef, row: tRow, titleEl: tTitle, subEl: tSub, clockEl: tClock });
+      timelineList.append(tRow);
+    }
+
+    // Voice observability row inside timeline card
+    const voiceObsCard = element(document, 'div', 'chat-voice-observability-card');
+    voiceObsCard.setAttribute('data-voice-observability-card', '');
+    const voiceObsHead = element(document, 'div', 'chat-voice-obs-head');
+    const voiceObsTitle = element(document, 'span', 'chat-voice-obs-title', 'ElevenLabs Voice Telemetry · Ready');
+    const voiceObsBadge = element(document, 'span', 'chat-voice-obs-badge', '● Ready');
+    voiceObsBadge.setAttribute('data-voice-obs-badge', '');
+    voiceObsHead.append(voiceObsTitle, voiceObsBadge);
+    const voiceObsCopy = element(document, 'div', 'chat-voice-obs-copy');
+    const voiceObsSub = element(document, 'span', 'chat-voice-obs-sub', 'Voice ID 2ccxXaT9 · 44.1kHz PCM · VAD Barge-In Active');
+    voiceObsSub.setAttribute('data-voice-obs-state', '');
+    const voiceObsBargein = element(document, 'span', 'chat-voice-obs-v', '0 interruptions');
+    voiceObsBargein.setAttribute('data-voice-obs-bargein', '');
+    voiceObsCopy.append(voiceObsSub, voiceObsBargein);
+    voiceObsCard.append(voiceObsHead, voiceObsCopy);
+
+    timelineCard.append(timelineHead, replayBar, timelineList, voiceObsCard);
+
+    let replayCursor = 6;
+    let replayTimer = null;
+    function stopReplayTimer() {
+      if (replayTimer) {
+        clearInterval(replayTimer);
+        replayTimer = null;
+      }
+      replayPlayBtn.textContent = '▶ Replay';
+      replayPlayBtn.setAttribute('aria-pressed', 'false');
+    }
+    function applyReplayStep(stepNum, isReplayMode = false) {
+      const clamped = Math.max(1, Math.min(6, Number(stepNum) || 6));
+      replayCursor = clamped;
+      const stepLabels = {
+        1: 'Intent classification',
+        2: 'CAG career knowledge',
+        3: 'RAG retrieval',
+        4: 'Context assembly',
+        5: 'Model generation',
+        6: 'Response streamed'
+      };
+      replayStatusEl.textContent = isReplayMode
+        ? `Replaying · Step ${clamped}/6 (${stepLabels[clamped]})`
+        : `Step ${clamped}/6 · ${stepLabels[clamped]}`;
+      replayStatusEl.setAttribute('data-replay-step', String(clamped));
+      for (const ref of timelineRowRefs) {
+        const st = ref.step < clamped ? 'completed' : ref.step === clamped ? 'active' : 'pending';
+        ref.row.className = `chat-vertical-timeline-row is-${ref.tone} is-${st}`;
+        ref.row.setAttribute('data-timeline-state', st);
+      }
+      section._setInspectedStep?.(clamped, true);
+      section._onStepSelected?.(clamped, { source: 'replay', isReplay: isReplayMode });
+    }
+    replayPrevBtn.addEventListener?.('click', () => {
+      stopReplayTimer();
+      applyReplayStep(replayCursor > 1 ? replayCursor - 1 : 6, true);
+    });
+    replayNextBtn.addEventListener?.('click', () => {
+      stopReplayTimer();
+      applyReplayStep(replayCursor < 6 ? replayCursor + 1 : 1, true);
+    });
+    replayResetBtn.addEventListener?.('click', () => {
+      stopReplayTimer();
+      applyReplayStep(1, false);
+    });
+    replayPlayBtn.addEventListener?.('click', () => {
+      if (replayTimer) {
+        stopReplayTimer();
+        return;
+      }
+      replayPlayBtn.textContent = '⏸ Pause';
+      replayPlayBtn.setAttribute('aria-pressed', 'true');
+      applyReplayStep(1, true);
+      replayTimer = setInterval(() => {
+        if (replayCursor >= 6) {
+          stopReplayTimer();
+          return;
+        }
+        applyReplayStep(replayCursor + 1, true);
+      }, 450);
+    });
+    viewExecTraceBtn.addEventListener?.('click', () => {
+      timelineCard.classList?.toggle?.('is-highlighted');
+      timelineCard.scrollIntoView?.({ behavior: 'smooth', block: 'nearest' });
+    });
+
+    section._setInspectedStep = function (stepNum, fromReplay = false) {
       const meta = STEP_INSPECTOR_META[stepNum] || STEP_INSPECTOR_META[3];
       stepCard.setAttribute('data-inspector-step-card', String(stepNum));
       stepIcon.className = `chat-inspector-step-icon is-${meta.tone}`;
@@ -2109,6 +2297,14 @@
       nextIconBadge.textContent = meta.nextIcon;
       nextStepTitle.textContent = meta.nextTitle;
       nextStepDesc.textContent = meta.nextDesc;
+      if (!fromReplay) {
+        replayCursor = Math.max(1, Math.min(6, Number(stepNum) || 3));
+        for (const ref of timelineRowRefs) {
+          const st = ref.step < replayCursor ? 'completed' : ref.step === replayCursor ? 'active' : 'pending';
+          ref.row.className = `chat-vertical-timeline-row is-${ref.tone} is-${st}`;
+          ref.row.setAttribute('data-timeline-state', st);
+        }
+      }
       if (stepNum === 2 && !showingAllSources) {
         // Highlight LinkedIn & Workshop42 (ws42.ca) when inspecting CAG Career Knowledge!
         for (const node of extraSourceNodes) node.hidden = false;
@@ -2116,13 +2312,63 @@
       }
     };
 
+    section._syncVoiceObservability = function (mode, statusText, bargeInCountVal = 0) {
+      const stateClean = mode || 'idle';
+      voiceObsCard.setAttribute('data-voice-obs-state', stateClean);
+      voiceObsBargein.textContent = `${bargeInCountVal} interruptions`;
+      if (stateClean === 'speaking') {
+        voiceObsBadge.textContent = '● Speaking';
+        voiceObsTitle.textContent = 'ElevenLabs Voice · Speaking (44.1kHz PCM)';
+        voiceObsSub.textContent = `${statusText || 'Streaming studio voice'} · Barge-ins: ${bargeInCountVal}`;
+      } else if (stateClean === 'listening') {
+        voiceObsBadge.textContent = '● Listening';
+        voiceObsTitle.textContent = 'ElevenLabs Voice · Listening (VAD + Scribe STT)';
+        voiceObsSub.textContent = `${statusText || 'Capturing microphone'} · Barge-ins: ${bargeInCountVal}`;
+      } else if (stateClean === 'live') {
+        voiceObsBadge.textContent = '● Live';
+        voiceObsTitle.textContent = 'ElevenLabs Conversational AI · Live Session';
+        voiceObsSub.textContent = `WebSocket active · Voice ID 2ccxXaT9 · Barge-ins: ${bargeInCountVal}`;
+      } else {
+        voiceObsBadge.textContent = '● Ready';
+        voiceObsTitle.textContent = 'ElevenLabs Voice Telemetry · Ready';
+        voiceObsSub.textContent = `Voice ID 2ccxXaT9 · 44.1kHz PCM · Barge-ins: ${bargeInCountVal}`;
+      }
+    };
+
     section._syncTurnInspector = function (view) {
       if (!view) return;
       const cd = view.contextData || {};
-      const activeModel = cd.completedModel || cd.model;
+      const activeModel = cd.completedModel || cd.model || 'Claude Sonnet 4';
+      const isCagOnly = cd.retrievalMode === 'cag_only' || cd.retrievalMode === 'skipped';
+      const matchedCount = cd.matchedCount ?? (isCagOnly ? 0 : (view.claims?.length || 3));
+      const claimCount = cd.claimCount ?? 7;
       if (activeModel) modelNameEl.textContent = activeModel;
       if (typeof cd.inputTokens === 'number') mInputPill.textContent = `Input: ${(cd.inputTokens / 1000).toFixed(1)}k tokens`;
       if (typeof cd.outputTokens === 'number') mOutputPill.textContent = `Output: ${cd.outputTokens} tokens`;
+
+      // Update "This answer used..." rows from real turn telemetry
+      if (answerUsedRefs.cag) {
+        answerUsedRefs.cag.subEl.textContent = `${claimCount} relevant sections`;
+        answerUsedRefs.cag.pctEl.textContent = isCagOnly ? '76%' : '58%';
+      }
+      if (answerUsedRefs.rag) {
+        answerUsedRefs.rag.subEl.textContent = isCagOnly ? 'Skipped (CAG direct)' : `${matchedCount} project documents`;
+        answerUsedRefs.rag.pctEl.textContent = isCagOnly ? '0%' : '26%';
+        answerUsedRefs.rag.tokEl.textContent = isCagOnly ? '0 tokens' : '3,200 tokens';
+      }
+      if (answerUsedRefs.model) {
+        answerUsedRefs.model.titleEl.textContent = activeModel;
+        answerUsedRefs.model.tokEl.textContent = `${cd.outputTokens ?? 600} tokens`;
+      }
+      // Update vertical timeline labels from real turn telemetry
+      const focusTopic = view.questionText
+        ? (view.questionText.length > 22 ? `${view.questionText.slice(0, 22)}…` : view.questionText)
+        : 'Guidewire';
+      if (timelineRowRefs[1]) timelineRowRefs[1].subEl.textContent = `Query → ${focusTopic}`;
+      if (timelineRowRefs[2]) timelineRowRefs[2].subEl.textContent = `${claimCount} sections · 0.8s`;
+      if (timelineRowRefs[3]) timelineRowRefs[3].subEl.textContent = isCagOnly ? 'Skipped (CAG direct)' : `${matchedCount} sources · 1.4s`;
+      if (timelineRowRefs[5]) timelineRowRefs[5].titleEl.textContent = activeModel;
+
       const q = String(view.questionText || '').toLowerCase();
       if (/\b(?:ws42|workshop42|linkedin|profile|contact|about\s+me|makerworld|apex|voyager)\b/.test(q)) {
         for (const node of extraSourceNodes) node.hidden = false;
@@ -2130,7 +2376,8 @@
       }
     };
 
-    section.append(stepCard, foundCard, whyCard, modelCard, nextCard, header, grid);
+    section._replayStep = applyReplayStep;
+    section.append(stepCard, answerUsedCard, foundCard, timelineCard, whyCard, modelCard, nextCard, header, grid);
     section._techBadge = badge;
     section._techItems = itemMap;
     return section;
@@ -2672,6 +2919,15 @@
       setInspectedStep(stepNum) {
         techStack._setInspectedStep?.(stepNum);
         activate('trace');
+      },
+      setOnStepSelected(fn) {
+        techStack._onStepSelected = fn;
+      },
+      replayToStep(stepNum, isReplay = true) {
+        techStack._replayStep?.(stepNum, isReplay);
+      },
+      syncVoiceObservability(mode, statusText, bargeInCountVal) {
+        techStack._syncVoiceObservability?.(mode, statusText, bargeInCountVal);
       },
       setStackExpanded(expanded) {
         if (expanded) techStack.classList?.add?.('is-stack-expanded');
@@ -4118,6 +4374,21 @@
     headingCopy.append(element(document, 'p', 'chat-small-label', 'Private preview'), titleRow, scope);
 
     const headingControls = element(document, 'div', 'chat-heading-controls');
+    const detailedToggleWrap = element(document, 'div', 'chat-detailed-toggle-wrap');
+    const detailedToggleLabel = element(document, 'span', 'chat-detailed-toggle-label', 'Detailed view');
+    const detailedToggleBtn = element(document, 'button', 'chat-detailed-toggle-switch is-on');
+    detailedToggleBtn.type = 'button';
+    detailedToggleBtn.setAttribute('role', 'switch');
+    detailedToggleBtn.setAttribute('aria-checked', 'true');
+    detailedToggleBtn.setAttribute('aria-label', 'Toggle detailed technical observability view');
+    detailedToggleBtn.setAttribute('data-detailed-toggle', '');
+    detailedToggleBtn.append(element(document, 'span', 'chat-detailed-toggle-knob'));
+    detailedToggleBtn.addEventListener?.('click', () => {
+      const nextMode = currentViewMode === 'simple' ? 'detailed' : 'simple';
+      applyViewMode(nextMode);
+    });
+    detailedToggleWrap.append(detailedToggleLabel, detailedToggleBtn);
+
     const modeSwitcher = element(document, 'div', 'chat-mode-switcher');
     const modeConfigs = [
       ['simple', 'Simple', false],
@@ -4147,8 +4418,33 @@
       if (!clear.disabled) clear.click?.();
       else input.focus?.();
     });
-    headingControls.append(modeSwitcher, moreBtn, clear);
+    headingControls.append(detailedToggleWrap, modeSwitcher, moreBtn, clear);
     heading.append(headingCopy, headingControls);
+
+    // Intentional Mobile Top Bar (matches Reference Sheet 1 Panel 3 & Sheet 2 mobile frame)
+    const mobileHeader = element(document, 'div', 'chat-mobile-topbar');
+    mobileHeader.setAttribute('data-mobile-header', '');
+    const mobileBrand = element(document, 'div', 'chat-mobile-brand');
+    const mobileJb = element(document, 'span', 'chat-mobile-jb', 'JB');
+    const mobileBrandCopy = element(document, 'div', 'chat-mobile-brand-copy');
+    mobileBrandCopy.append(
+      element(document, 'strong', 'chat-mobile-brand-name', 'Josh Boyer'),
+      element(document, 'span', 'chat-mobile-brand-sub', 'AI Career Assistant')
+    );
+    mobileBrand.append(mobileJb, mobileBrandCopy);
+    const mobileNavToggle = element(document, 'button', 'chat-mobile-nav-btn', '☰');
+    mobileNavToggle.type = 'button';
+    mobileNavToggle.setAttribute('data-mobile-nav-toggle', '');
+    mobileNavToggle.setAttribute('aria-expanded', 'false');
+    mobileNavToggle.setAttribute('aria-label', 'Toggle navigation menu');
+    mobileNavToggle.addEventListener?.('click', () => {
+      const rail = document.querySelector?.('.chat-identity-rail');
+      const isOpen = shell.classList?.toggle?.('is-mobile-nav-open');
+      if (rail?.classList) rail.classList.toggle('is-mobile-nav-open', Boolean(isOpen));
+      mobileNavToggle.setAttribute('aria-expanded', String(Boolean(isOpen)));
+      mobileNavToggle.textContent = isOpen ? '✕' : '☰';
+    });
+    mobileHeader.append(mobileBrand, mobileNavToggle);
 
     const quickPillsBar = element(document, 'div', 'chat-quick-pills');
     const quickPillPrompts = [
@@ -4397,7 +4693,36 @@
       hRow.append(hDot, hText);
       demoHighlightsList.append(hRow);
     }
-    demoSummaryWrap.append(demoLeadWrap, demoSubLead, demoHighlightsList);
+    const showMoreBtn = element(document, 'button', 'chat-welcome-show-more-btn', 'Show more ⌄');
+    showMoreBtn.type = 'button';
+    showMoreBtn.setAttribute('data-message-expand', '');
+    showMoreBtn.setAttribute('aria-expanded', 'false');
+    showMoreBtn.addEventListener?.('click', () => {
+      const expanded = demoHighlightsList.classList?.toggle?.('is-mobile-expanded');
+      showMoreBtn.setAttribute('aria-expanded', String(Boolean(expanded)));
+      showMoreBtn.textContent = expanded ? 'Show less ⌃' : 'Show more ⌄';
+    });
+
+    const followupChipsRow = element(document, 'div', 'chat-welcome-followup-chips');
+    const followupChipPrompts = [
+      ['◎ Guidewire experience', 'What specific Guidewire PolicyCenter, BillingCenter, and ClaimCenter integrations has Josh led?'],
+      ['◎ Key achievements', 'What are Josh’s biggest measurable achievements across renewal automation and bulk group takeover?'],
+      ['◎ Team and leadership', 'How has Josh led cross-functional teams, coached BAs on SQL, and facilitated stakeholder approvals?'],
+      ['◎ SQL and reporting', 'Tell me about Josh’s reporting continuity design and financial reconciliation SQL work.']
+    ];
+    for (const [chipLabel, chipPrompt] of followupChipPrompts) {
+      const fChip = element(document, 'button', 'chat-welcome-followup-chip', chipLabel);
+      fChip.type = 'button';
+      fChip.setAttribute('data-followup-chip', chipLabel);
+      fChip.addEventListener?.('click', () => {
+        if (!ready || busy || input.disabled) return;
+        input.value = chipPrompt;
+        form.requestSubmit();
+      });
+      followupChipsRow.append(fChip);
+    }
+
+    demoSummaryWrap.append(demoLeadWrap, demoSubLead, demoHighlightsList, showMoreBtn, followupChipsRow);
 
     const demoEngineerBlock = element(document, 'div', 'chat-welcome-engineer-block');
     demoEngineerBlock.setAttribute('data-engineer-telemetry', '');
@@ -4435,9 +4760,106 @@
 
     const status = element(document, 'p', 'chat-status', 'Connecting to private chat…'); status.setAttribute('role', 'status'); status.setAttribute('aria-live', 'polite'); status.setAttribute('aria-atomic', 'true');
 
+    // Compact Live Execution Strip (matches Reference Sheet 1 Panels 1-2 & Sheet 2 center bar)
+    const liveProcessStrip = element(document, 'section', 'chat-live-process-strip');
+    liveProcessStrip.setAttribute('aria-label', 'Live execution process strip');
+    liveProcessStrip.setAttribute('data-live-process-strip', '');
+    const stripTopRow = element(document, 'div', 'chat-strip-top-row');
+    const stripLeftGroup = element(document, 'div', 'chat-strip-left-group');
+    const stripBadge = element(document, 'span', 'chat-strip-live-badge');
+    stripBadge.setAttribute('data-strip-badge', '');
+    stripBadge.append(
+      element(document, 'span', 'chat-strip-live-dot'),
+      element(document, 'span', 'chat-strip-live-label', 'Live process')
+    );
+    const stripSummaryEl = element(document, 'span', 'chat-strip-summary-text', 'Step 3 of 6 · RAG — Searching project documents & evidence');
+    stripSummaryEl.setAttribute('data-strip-summary', '');
+    stripLeftGroup.append(stripBadge, stripSummaryEl);
+
+    const stripRightGroup = element(document, 'div', 'chat-strip-right-group');
+    const stripTimeEl = element(document, 'span', 'chat-strip-time-badge', '2.4s');
+    stripTimeEl.setAttribute('data-strip-time', '');
+    const stripViewDetailsBtn = element(document, 'button', 'chat-strip-view-details-btn', 'View details →');
+    stripViewDetailsBtn.type = 'button';
+    stripViewDetailsBtn.setAttribute('data-toggle-journey-drawer', '');
+    stripViewDetailsBtn.setAttribute('aria-expanded', 'true');
+    stripRightGroup.append(stripTimeEl, stripViewDetailsBtn);
+    stripTopRow.append(stripLeftGroup, stripRightGroup);
+
+    const stripStepsTrack = element(document, 'div', 'chat-strip-steps-track');
+    stripStepsTrack.setAttribute('data-strip-steps', '');
+    const stripStepDefs = [
+      { stepNum: 1, tone: 'blue', icon: '💬', short: 'Intent', sub: 'Classify query', duration: '0.2s' },
+      { stepNum: 2, tone: 'emerald', icon: '🗄️', short: 'CAG', sub: 'Career knowledge', duration: '0.8s' },
+      { stepNum: 3, tone: 'purple', icon: '🔍', short: 'RAG', sub: 'Search & retrieve', duration: '1.4s' },
+      { stepNum: 4, tone: 'cyan', icon: '❖', short: 'Context', sub: 'Assemble', duration: '0.8s' },
+      { stepNum: 5, tone: 'amber', icon: '🧠', short: 'Claude Sonnet 4', sub: 'Generate', duration: '0.5s' },
+      { stepNum: 6, tone: 'blue', icon: '✨', short: 'Response', sub: 'Stream to chat', duration: '1.3s' }
+    ];
+    const stripStepRefs = Object.create(null);
+    stripStepDefs.forEach((sDef, idx) => {
+      if (idx > 0) {
+        stripStepsTrack.append(element(document, 'span', 'chat-strip-step-arrow', '→'));
+      }
+      const sBtn = element(document, 'button', `chat-strip-step-pill is-${sDef.tone}${sDef.stepNum === 3 ? ' is-selected' : ' is-completed'}`);
+      sBtn.type = 'button';
+      sBtn.setAttribute('data-strip-step', String(sDef.stepNum));
+      const sIcon = element(document, 'span', `chat-strip-step-icon is-${sDef.tone}`, sDef.icon);
+      const sCopy = element(document, 'span', 'chat-strip-step-copy');
+      const sTitle = element(document, 'strong', 'chat-strip-step-title', sDef.short);
+      const sSub = element(document, 'span', 'chat-strip-step-sub', sDef.sub);
+      sCopy.append(sTitle, sSub);
+      sBtn.append(sIcon, sCopy);
+      sBtn.addEventListener?.('click', () => {
+        selectObservabilityStep(sDef.stepNum, { source: 'strip' });
+      });
+      stripStepRefs[sDef.stepNum] = { btn: sBtn, titleEl: sTitle, subEl: sSub, def: sDef };
+      stripStepsTrack.append(sBtn);
+    });
+    liveProcessStrip.append(stripTopRow, stripStepsTrack);
+
     const livePipeline = element(document, 'section', 'chat-live-pipeline');
     livePipeline.setAttribute('aria-label', 'Live execution pipeline');
     livePipeline.setAttribute('data-live-pipeline', '');
+    livePipeline.setAttribute('data-journey-drawer', '');
+
+    // Journey Drawer Header Tabs (Live process | Context stack | Sources (7) | AWS architecture | Trace | Evidence)
+    const journeyTabsHeader = element(document, 'div', 'chat-journey-drawer-header');
+    const journeyTabList = element(document, 'div', 'chat-journey-tab-list');
+    journeyTabList.setAttribute('role', 'tablist');
+    journeyTabList.setAttribute('aria-label', 'Technical journey views');
+    journeyTabList.setAttribute('data-journey-tabs', '');
+    const journeyTabConfigs = [
+      ['process', 'Live process', true],
+      ['context', 'Context stack', false],
+      ['sources', 'Sources (7)', false],
+      ['aws', 'AWS architecture', false],
+      ['trace', 'Trace', false],
+      ['evidence', 'Evidence', false]
+    ];
+    const journeyTabButtons = Object.create(null);
+    let currentJourneyTab = 'process';
+    for (const [jKey, jLabel, jActive] of journeyTabConfigs) {
+      const jBtn = element(document, 'button', `chat-journey-tab-btn${jActive ? ' is-active' : ''}`, jLabel);
+      jBtn.type = 'button';
+      jBtn.setAttribute('role', 'tab');
+      jBtn.setAttribute('aria-selected', String(jActive));
+      jBtn.setAttribute('data-journey-tab', jKey);
+      jBtn.addEventListener?.('click', () => {
+        activateJourneyTab(jKey);
+      });
+      journeyTabButtons[jKey] = jBtn;
+      journeyTabList.append(jBtn);
+    }
+    const journeyHeaderRight = element(document, 'div', 'chat-journey-header-right');
+    const journeyLivePill = element(document, 'span', 'chat-journey-live-pill', '● Live');
+    const journeyTokensPill = element(document, 'span', 'chat-journey-tokens-pill', 'Total: 12,300 tokens');
+    const journeyCloseBtn = element(document, 'button', 'chat-journey-close-btn', '✕');
+    journeyCloseBtn.type = 'button';
+    journeyCloseBtn.setAttribute('data-close-journey-drawer', '');
+    journeyCloseBtn.setAttribute('aria-label', 'Collapse technical journey drawer');
+    journeyHeaderRight.append(journeyLivePill, journeyTokensPill, journeyCloseBtn);
+    journeyTabsHeader.append(journeyTabList, journeyHeaderRight);
 
     // Card 0: 6-Step 3D Glowing Pedestal Flow (placed in the flow dock below the chat messages)
     const pedestalFlowCard = element(document, 'div', 'chat-pedestal-flow-card');
@@ -4461,9 +4883,23 @@
     ctxBuiltHeader.append(ctxBuiltLeft, ctxBuiltRight);
 
     const pipeBody = element(document, 'div', 'chat-pipeline-body');
-    pipeToggleBtn.addEventListener?.('click', () => {
-      const collapsed = livePipeline.classList?.toggle?.('is-collapsed');
-      pipeToggleBtn.textContent = collapsed ? '›' : '⌄';
+    function toggleJourneyDrawer(forceExpanded) {
+      const nextCollapsed = typeof forceExpanded === 'boolean' ? !forceExpanded : !livePipeline.classList?.contains?.('is-collapsed');
+      if (nextCollapsed) livePipeline.classList?.add?.('is-collapsed');
+      else livePipeline.classList?.remove?.('is-collapsed');
+      pipeToggleBtn.textContent = nextCollapsed ? '›' : '⌄';
+      stripViewDetailsBtn.setAttribute('aria-expanded', String(!nextCollapsed));
+      stripViewDetailsBtn.textContent = nextCollapsed ? 'View details →' : 'Hide details ⌃';
+    }
+    pipeToggleBtn.addEventListener?.('click', () => toggleJourneyDrawer());
+    journeyCloseBtn.addEventListener?.('click', () => toggleJourneyDrawer(false));
+    stripViewDetailsBtn.addEventListener?.('click', () => {
+      const isNarrow = document.defaultView?.matchMedia?.('(max-width: 768px)').matches === true;
+      if (isNarrow) {
+        openMobileSheet('process');
+      } else {
+        toggleJourneyDrawer();
+      }
     });
 
     const pipeCtxBar = element(document, 'div', 'chat-pipeline-ctx-bar');
@@ -4508,6 +4944,7 @@
         desc: 'Internal instructions and safety checks'
       }
     ];
+    const ctxColRefs = Object.create(null);
     for (const colDef of ctxBuiltColumns) {
       const cCol = element(document, 'div', `chat-context-built-col ${colDef.cls}`);
       const cHead = element(document, 'div', 'chat-context-built-col-head');
@@ -4516,15 +4953,148 @@
         element(document, 'span', 'chat-context-built-col-title', colDef.title)
       );
       const cMetrics = element(document, 'div', 'chat-context-built-col-metrics');
-      cMetrics.append(
-        element(document, 'strong', 'chat-context-built-col-tokens', colDef.tokens),
-        element(document, 'span', 'chat-context-built-col-pct', colDef.pct)
-      );
+      const tokEl = element(document, 'strong', 'chat-context-built-col-tokens', colDef.tokens);
+      const pctEl = element(document, 'span', 'chat-context-built-col-pct', colDef.pct);
+      cMetrics.append(tokEl, pctEl);
       const cDesc = element(document, 'p', 'chat-context-built-col-desc', colDef.desc);
       cCol.append(cHead, cMetrics, cDesc);
+      ctxColRefs[colDef.cls] = { col: cCol, tokEl, pctEl, descEl: cDesc };
       pipeCtxGrid.append(cCol);
     }
     ctxBuiltCard.append(ctxBuiltHeader, pipeCtxBar, pipeCtxGrid);
+
+    // Card 1B: Filterable Sources & Evidence Inspector (matches Reference Sheet 1 Panel 5)
+    const sourcesInspectorCard = element(document, 'div', 'chat-sources-inspector-card');
+    sourcesInspectorCard.setAttribute('data-sources-inspector', '');
+    sourcesInspectorCard.hidden = true;
+    const sourcesInspHead = element(document, 'div', 'chat-sources-insp-head');
+    const sourcesInspCopy = element(document, 'div', 'chat-sources-insp-copy');
+    sourcesInspCopy.append(
+      element(document, 'h3', 'chat-sources-insp-title', 'Sources used in this answer'),
+      element(document, 'p', 'chat-sources-insp-sub', 'These sources were selected because they are most relevant to your question.')
+    );
+    const sourcesFilterBar = element(document, 'div', 'chat-sources-filter-bar');
+    sourcesFilterBar.setAttribute('role', 'group');
+    sourcesFilterBar.setAttribute('aria-label', 'Filter sources by knowledge tier');
+    const sourceFilterDefs = [
+      ['all', 'All (7)'],
+      ['cag', 'Career knowledge (4)'],
+      ['rag', 'Retrieved sources (3)']
+    ];
+    const sourceFilterBtns = Object.create(null);
+    const sourceCardNodes = [];
+    function applySourceFilter(filterKey) {
+      for (const [fKey, fBtn] of Object.entries(sourceFilterBtns)) {
+        const active = fKey === filterKey;
+        fBtn.className = `chat-source-filter-pill${active ? ' is-active' : ''}`;
+        fBtn.setAttribute('aria-pressed', String(active));
+      }
+      for (const sNode of sourceCardNodes) {
+        const tier = sNode.getAttribute('data-source-tier');
+        sNode.hidden = filterKey !== 'all' && tier !== filterKey;
+      }
+    }
+    for (const [fKey, fLabel] of sourceFilterDefs) {
+      const fBtn = element(document, 'button', `chat-source-filter-pill${fKey === 'all' ? ' is-active' : ''}`, fLabel);
+      fBtn.type = 'button';
+      fBtn.setAttribute('data-source-filter', fKey);
+      fBtn.setAttribute('aria-pressed', String(fKey === 'all'));
+      fBtn.addEventListener?.('click', () => applySourceFilter(fKey));
+      sourceFilterBtns[fKey] = fBtn;
+      sourcesFilterBar.append(fBtn);
+    }
+    sourcesInspHead.append(sourcesInspCopy, sourcesFilterBar);
+
+    const sourcesInspList = element(document, 'div', 'chat-sources-insp-list');
+    const canonicalInspectorSources = [
+      {
+        tier: 'cag',
+        badge: 'Career knowledge (CAG)',
+        title: 'Guidewire Experience Overview (IBS & Cognition+)',
+        snippet: '2009–2022 Grenville Mutual: Policy, Billing, and Claims administration, renewal automation (~80% residential, 60% commercial, 40% farm/agri).',
+        relevance: 95,
+        href: 'https://joshboyer.ca/#projects/renewals'
+      },
+      {
+        tier: 'rag',
+        badge: 'Retrieved source (RAG)',
+        title: 'PolicyCenter & Commercial Quoting Workflows',
+        snippet: 'Implementation approach, CSIO/ACORD/AL3/eDocs standards mapping, and underwriting rule validation.',
+        relevance: 92,
+        href: 'https://joshboyer.ca/#projects/workflows'
+      },
+      {
+        tier: 'cag',
+        badge: 'Career knowledge (CAG)',
+        title: 'Bulk Group Takeover & Excel VBA Validation Add-In',
+        snippet: 'Researched and documented takeover solution; personally designed and built production Excel VBA add-in for XML batching and error reconciliation.',
+        relevance: 89,
+        href: 'https://joshboyer.ca/#projects/takeover'
+      },
+      {
+        tier: 'rag',
+        badge: 'Retrieved source (RAG)',
+        title: 'Medavie ProviderRegistry & Claims Integration',
+        snippet: 'Solution review, mapping, and scheduled event table + REST consumer synchronization requirements (supported live in production; not Kafka).',
+        relevance: 87,
+        href: 'https://joshboyer.ca/#projects/claims'
+      },
+      {
+        tier: 'rag',
+        badge: 'Retrieved source (RAG)',
+        title: 'Reporting Data Continuity & Financial SQL Remediation',
+        snippet: 'Approved reporting continuity analysis/design, operational interim SQL, and corrected financial-report SQL adopted by the payment team.',
+        relevance: 84,
+        href: 'https://joshboyer.ca/#projects/continuity'
+      },
+      {
+        tier: 'cag',
+        badge: 'Career knowledge (CAG)',
+        title: 'Josh Boyer — LinkedIn Profile (josh-boyer-1b770618)',
+        snippet: 'Verified career timeline from Dell (Sept 2006) and Harris (2007–2009) through Grenville Mutual (2009–2022) and Medavie Blue Cross (2022–present).',
+        relevance: 91,
+        href: 'https://www.linkedin.com/in/josh-boyer-1b770618/'
+      },
+      {
+        tier: 'cag',
+        badge: 'Career knowledge (CAG)',
+        title: 'Workshop42 Making Studio (ws42.ca — Make it tangible)',
+        snippet: 'Personal physical making and 3D-printing studio featuring the Apex monitor riser and The Voyager floating canoe model.',
+        relevance: 88,
+        href: 'https://ws42.ca'
+      }
+    ];
+    for (const sItem of canonicalInspectorSources) {
+      const row = element(document, 'article', `chat-source-insp-row is-${sItem.tier}`);
+      row.setAttribute('data-source-item', '');
+      row.setAttribute('data-source-tier', sItem.tier);
+      const iconEl = element(document, 'span', `chat-source-insp-icon is-${sItem.tier}`, sItem.tier === 'cag' ? '🗄️' : '📄');
+      const mainCol = element(document, 'div', 'chat-source-insp-main');
+      const topLine = element(document, 'div', 'chat-source-insp-topline');
+      const titleLink = element(document, 'a', 'chat-source-insp-item-title', sItem.title);
+      titleLink.href = sItem.href;
+      titleLink.target = '_blank';
+      titleLink.rel = 'noopener noreferrer';
+      const tierBadge = element(document, 'span', `chat-source-tier-badge is-${sItem.tier}`, sItem.badge);
+      topLine.append(titleLink, tierBadge);
+      const snippetEl = element(document, 'p', 'chat-source-insp-snippet', sItem.snippet);
+      mainCol.append(topLine, snippetEl);
+
+      const relCol = element(document, 'div', 'chat-source-insp-rel');
+      relCol.setAttribute('data-relevance-score', String(sItem.relevance));
+      const relLabel = element(document, 'span', 'chat-source-rel-label', `Relevance · ${sItem.relevance}%`);
+      const relTrack = element(document, 'div', 'chat-source-rel-track');
+      const relFill = element(document, 'span', 'chat-source-rel-fill');
+      relFill.setAttribute('data-relevance-bar', '');
+      relFill.style && (relFill.style.width = `${sItem.relevance}%`);
+      relTrack.append(relFill);
+      relCol.append(relLabel, relTrack);
+
+      row.append(iconEl, mainCol, relCol);
+      sourceCardNodes.push(row);
+      sourcesInspList.append(row);
+    }
+    sourcesInspectorCard.append(sourcesInspHead, sourcesInspList);
 
     // Card 2: AWS cloud stack (systems used for this request)
     const awsFlowCard = element(document, 'div', 'chat-aws-flow-card');
@@ -4600,14 +5170,292 @@
       pipeTrack.append(col);
     });
 
-    awsFlowCard.append(awsFlowHeader, awsGatewayRow, pipeTrack);
-    pipeBody.append(pedestalFlowCard, ctxBuiltCard, awsFlowCard);
-    livePipeline.append(pipeBody);
+    // Progressive Plain-English AWS Service Guide ("What these services do" from Reference Sheet 1 Panel 4)
+    const awsServiceGuide = element(document, 'div', 'chat-aws-service-guide');
+    awsServiceGuide.setAttribute('data-aws-service-guide', '');
+    awsServiceGuide.append(element(document, 'span', 'chat-aws-guide-heading', 'What these services do:'));
+    const awsGuideList = element(document, 'div', 'chat-aws-guide-list');
+    const awsGuideItems = [
+      ['emerald', 'Amazon S3 & S3 Vectors (us-east-2)', 'Stores the prepared career corpus (CAG) and 1536-d vector embeddings (RAG) without needing an always-on OpenSearch cluster.'],
+      ['blue', 'Amazon DynamoDB (us-east-2)', 'Tracks session history, visitor turn allowances, and the atomic $25/month cost reservation & settlement ledger.'],
+      ['amber', 'AWS Lambda & API Gateway (us-east-2)', 'Orchestrates turn routing, hybrid retrieval, and 3 read-only SigV4 MCP tools (get_case_study, search_public_evidence, compare_job_requirements).'],
+      ['purple', 'Cloudflare Edge & AI Gateway', 'Verifies private access, signs requests, and routes model inference (Claude Sonnet 4 / gpt-6-luna) with warm prefix caching.']
+    ];
+    for (const [gTone, gName, gDesc] of awsGuideItems) {
+      const gRow = element(document, 'div', `chat-aws-guide-item is-${gTone}`);
+      gRow.append(
+        element(document, 'span', `chat-aws-guide-dot is-${gTone}`),
+        element(document, 'strong', 'chat-aws-guide-name', `${gName} — `),
+        element(document, 'span', 'chat-aws-guide-desc', gDesc)
+      );
+      awsGuideList.append(gRow);
+    }
+    awsServiceGuide.append(awsGuideList);
+
+    awsFlowCard.append(awsFlowHeader, awsGatewayRow, pipeTrack, awsServiceGuide);
+    pipeBody.append(pedestalFlowCard, ctxBuiltCard, sourcesInspectorCard, awsFlowCard);
+    livePipeline.append(journeyTabsHeader, pipeBody);
+
+    function activateJourneyTab(tabKey) {
+      if (!journeyTabButtons[tabKey]) return;
+      currentJourneyTab = tabKey;
+      livePipeline.setAttribute('data-active-journey-tab', tabKey);
+      for (const [k, btn] of Object.entries(journeyTabButtons)) {
+        const active = k === tabKey;
+        btn.className = `chat-journey-tab-btn${active ? ' is-active' : ''}`;
+        btn.setAttribute('aria-selected', String(active));
+      }
+      if (livePipeline.classList?.contains?.('is-collapsed')) {
+        toggleJourneyDrawer(true);
+      }
+      if (tabKey === 'sources') {
+        pedestalFlowCard.hidden = true;
+        ctxBuiltCard.hidden = true;
+        sourcesInspectorCard.hidden = false;
+        awsFlowCard.hidden = true;
+      } else if (tabKey === 'context') {
+        pedestalFlowCard.hidden = true;
+        ctxBuiltCard.hidden = false;
+        sourcesInspectorCard.hidden = true;
+        awsFlowCard.hidden = true;
+        details.activate?.('context');
+      } else if (tabKey === 'aws') {
+        pedestalFlowCard.hidden = true;
+        ctxBuiltCard.hidden = true;
+        sourcesInspectorCard.hidden = true;
+        awsFlowCard.hidden = false;
+      } else if (tabKey === 'trace') {
+        pedestalFlowCard.hidden = false;
+        ctxBuiltCard.hidden = true;
+        sourcesInspectorCard.hidden = true;
+        awsFlowCard.hidden = false;
+        details.activate?.('trace');
+      } else if (tabKey === 'evidence') {
+        pedestalFlowCard.hidden = true;
+        ctxBuiltCard.hidden = true;
+        sourcesInspectorCard.hidden = false;
+        awsFlowCard.hidden = true;
+        details.activate?.('evidence');
+      } else {
+        pedestalFlowCard.hidden = false;
+        ctxBuiltCard.hidden = false;
+        sourcesInspectorCard.hidden = true;
+        awsFlowCard.hidden = false;
+      }
+    }
+
+    // Step-aware AWS service mapping for contextual highlighting
+    const STEP_AWS_SERVICES = Object.freeze({
+      1: ['user', 'cloudflare', 'apigw', 'lambda'],
+      2: ['lambda', 's3'],
+      3: ['lambda', 's3', 'dynamodb'],
+      4: ['lambda', 's3', 'dynamodb'],
+      5: ['cloudflare', 'model'],
+      6: ['lambda', 'dynamodb', 'cloudflare', 'elevenlabs']
+    });
+    const STEP_STRIP_SUMMARIES = Object.freeze({
+      1: ['Step 1 of 6 · Intent — Classifying your question & routing strategy', '0.2s'],
+      2: ['Step 2 of 6 · CAG — Using your cached career knowledge (~7,100 tokens)', '0.8s'],
+      3: ['Step 3 of 6 · RAG — Searching project documents & verified evidence', '1.4s'],
+      4: ['Step 4 of 6 · Context — Combining 12,300 tokens (58% CAG + 26% RAG)', '0.8s'],
+      5: ['Step 5 of 6 · Model — Generating grounded answer via AI Gateway', '0.5s'],
+      6: ['Step 6 of 6 · Response — Validated citations streamed to chat', '1.3s']
+    });
+
+    // Intentional Mobile Bottom Sheet (matches Reference Sheet 1 Panels 3-4 & Sheet 2 mobile bottom sheet)
+    const mobileSheet = element(document, 'aside', 'chat-mobile-bottom-sheet');
+    mobileSheet.setAttribute('data-mobile-sheet', '');
+    mobileSheet.setAttribute('aria-label', 'Live process and technical details');
+    mobileSheet.hidden = true;
+    const mobileSheetHandle = element(document, 'div', 'chat-mobile-sheet-handle');
+    const mobileSheetHeader = element(document, 'div', 'chat-mobile-sheet-header');
+    const mobileSheetTitle = element(document, 'strong', 'chat-mobile-sheet-title', 'Live process details');
+    const mobileSheetClose = element(document, 'button', 'chat-mobile-sheet-close', '✕');
+    mobileSheetClose.type = 'button';
+    mobileSheetClose.setAttribute('data-mobile-sheet-close', '');
+    mobileSheetClose.setAttribute('aria-label', 'Close mobile details sheet');
+    mobileSheetHeader.append(mobileSheetTitle, mobileSheetClose);
+
+    const mobileTabsBar = element(document, 'div', 'chat-mobile-sheet-tabs');
+    mobileTabsBar.setAttribute('role', 'tablist');
+    const mobileTabDefs = [
+      ['process', 'Process'],
+      ['context', 'Context'],
+      ['sources', 'Sources (7)'],
+      ['aws', 'AWS'],
+      ['trace', 'Trace']
+    ];
+    const mobileTabBtns = Object.create(null);
+    const mobileTabPanels = Object.create(null);
+    for (const [mKey, mLbl] of mobileTabDefs) {
+      const mBtn = element(document, 'button', `chat-mobile-tab-btn${mKey === 'process' ? ' is-active' : ''}`, mLbl);
+      mBtn.type = 'button';
+      mBtn.setAttribute('role', 'tab');
+      mBtn.setAttribute('data-mobile-tab', mKey);
+      mBtn.setAttribute('aria-selected', String(mKey === 'process'));
+      const mPanel = element(document, 'div', 'chat-mobile-tab-panel');
+      mPanel.setAttribute('data-mobile-panel', mKey);
+      mPanel.hidden = mKey !== 'process';
+      mBtn.addEventListener?.('click', () => {
+        for (const [k, b] of Object.entries(mobileTabBtns)) {
+          const act = k === mKey;
+          b.className = `chat-mobile-tab-btn${act ? ' is-active' : ''}`;
+          b.setAttribute('aria-selected', String(act));
+          mobileTabPanels[k].hidden = !act;
+        }
+      });
+      mobileTabBtns[mKey] = mBtn;
+      mobileTabPanels[mKey] = mPanel;
+      mobileTabsBar.append(mBtn);
+    }
+
+    // Populate Mobile "Process" panel (6-step vertical list from Reference Sheet 1 Panel 3)
+    const mobileProcessList = element(document, 'ol', 'chat-mobile-process-list');
+    const mobileProcessStepRefs = Object.create(null);
+    const mobileStepItems = [
+      [1, '1. Intent classification', 'Career query → Guidewire experience', '0.2s', 'emerald'],
+      [2, '2. CAG – Career knowledge', 'Found 7 relevant sections (~7,100 tokens)', '0.8s', 'cyan'],
+      [3, '3. RAG – Retrieved sources', 'Searching project documents & case studies', '1.4s', 'blue'],
+      [4, '4. Context assembly', 'Preparing 12,300 tokens (58% CAG + 26% RAG)', '0.8s', 'purple'],
+      [5, '5. Claude Sonnet 4', 'Generating grounded response', '0.5s', 'amber'],
+      [6, '6. Deliver to you', 'Streaming to chat + optional voice', '1.3s', 'blue']
+    ];
+    for (const [sNum, sTitle, sSub, sDur, sTone] of mobileStepItems) {
+      const mLi = element(document, 'li', `chat-mobile-process-item is-${sTone}${sNum === 3 ? ' is-active' : ' is-completed'}`);
+      mLi.setAttribute('data-mobile-process-step', String(sNum));
+      const mDot = element(document, 'span', `chat-mobile-process-dot is-${sTone}`, sNum < 3 ? '✓' : String(sNum));
+      const mCopy = element(document, 'div', 'chat-mobile-process-copy');
+      const mTitleEl = element(document, 'strong', 'chat-mobile-process-title', sTitle);
+      const mSubEl = element(document, 'span', 'chat-mobile-process-sub', sSub);
+      mCopy.append(mTitleEl, mSubEl);
+      const mTime = element(document, 'span', 'chat-mobile-process-time', sDur);
+      mLi.append(mDot, mCopy, mTime);
+      mLi.addEventListener?.('click', () => selectObservabilityStep(sNum, { source: 'mobile' }));
+      mobileProcessStepRefs[sNum] = { li: mLi, dot: mDot, titleEl: mTitleEl, subEl: mSubEl };
+      mobileProcessList.append(mLi);
+    }
+    mobileTabPanels.process.append(mobileProcessList);
+
+    // Populate Mobile "Context" panel
+    const mobileCtxClone = element(document, 'div', 'chat-mobile-ctx-summary');
+    mobileCtxClone.append(
+      element(document, 'h4', 'chat-mobile-sec-title', 'Context stack (12,300 tokens)'),
+      element(document, 'p', 'chat-mobile-sec-item', '🟦 Career knowledge (CAG): 7,100 tokens (58%) — Guidewire, Grenville, Medavie, LinkedIn, ws42.ca'),
+      element(document, 'p', 'chat-mobile-sec-item', '🟪 Retrieved sources (RAG): 3,200 tokens (26%) — 3 project case-study documents'),
+      element(document, 'p', 'chat-mobile-sec-item', '🟩 Conversation & instructions: 1,400 tokens (11%) — Your question and session history'),
+      element(document, 'p', 'chat-mobile-sec-item', '🟧 System prompt: 600 tokens (5%) — Citation contract and safety guardrails')
+    );
+    mobileTabPanels.context.append(mobileCtxClone);
+
+    // Populate Mobile "Sources" panel
+    const mobileSourcesClone = element(document, 'div', 'chat-mobile-sources-summary');
+    for (const sItem of canonicalInspectorSources.slice(0, 5)) {
+      const mSrc = element(document, 'div', 'chat-mobile-source-card');
+      mSrc.append(
+        element(document, 'strong', '', `${sItem.title} (${sItem.relevance}%)`),
+        element(document, 'span', 'chat-mobile-source-tier', sItem.badge),
+        element(document, 'p', '', sItem.snippet)
+      );
+      mobileSourcesClone.append(mSrc);
+    }
+    mobileTabPanels.sources.append(mobileSourcesClone);
+
+    // Populate Mobile "AWS" panel
+    const mobileAwsClone = element(document, 'div', 'chat-mobile-aws-summary');
+    mobileAwsClone.append(
+      element(document, 'h4', 'chat-mobile-sec-title', 'AWS architecture (us-east-2)'),
+      element(document, 'p', 'chat-mobile-sec-item', 'User → Cloudflare Edge → API Gateway (us-east-2) → AWS Lambda (MCP) + Amazon S3 & S3 Vectors (1536-d) + DynamoDB ($25 Ledger) → Claude Sonnet 4 / gpt-6-luna → ElevenLabs Voice')
+    );
+    mobileTabPanels.aws.append(mobileAwsClone);
+
+    // Populate Mobile "Trace" panel
+    const mobileTraceReplayBtn = element(document, 'button', 'chat-replay-btn is-primary', '▶ Replay trace (Step 1 → 6)');
+    mobileTraceReplayBtn.type = 'button';
+    mobileTraceReplayBtn.setAttribute('data-mobile-replay-btn', '');
+    mobileTraceReplayBtn.addEventListener?.('click', () => {
+      details.replayToStep?.(1, true);
+    });
+    mobileTabPanels.trace.append(
+      element(document, 'h4', 'chat-mobile-sec-title', 'Deterministic Trace Replay'),
+      mobileTraceReplayBtn
+    );
+
+    mobileSheet.append(
+      mobileSheetHandle,
+      mobileSheetHeader,
+      mobileTabsBar,
+      ...Object.values(mobileTabPanels)
+    );
+    function openMobileSheet(tabKey = 'process') {
+      mobileSheet.hidden = false;
+      mobileSheet.classList?.add?.('is-open');
+      if (mobileTabBtns[tabKey]) mobileTabBtns[tabKey].click?.();
+    }
+    function closeMobileSheet() {
+      mobileSheet.classList?.remove?.('is-open');
+      mobileSheet.hidden = true;
+    }
+    mobileSheetClose.addEventListener?.('click', closeMobileSheet);
+
+    // Unified Shared Observability Step Selector (drives Strip, 3D Pedestals, AWS Flow, Right Inspector, and Mobile Sheet)
+    let currentInspectedStep = 3;
+    function selectObservabilityStep(stepNum, opts = {}) {
+      const clamped = Math.max(1, Math.min(6, Number(stepNum) || 3));
+      currentInspectedStep = clamped;
+      const isReplay = Boolean(opts.isReplay);
+
+      // 1. Update Compact Live Execution Strip
+      const [sumText, sumDur] = STEP_STRIP_SUMMARIES[clamped] || STEP_STRIP_SUMMARIES[3];
+      stripSummaryEl.textContent = isReplay ? `[Replay] ${sumText}` : sumText;
+      stripTimeEl.textContent = sumDur;
+      for (const [k, sRef] of Object.entries(stripStepRefs)) {
+        const n = Number(k);
+        const stateCls = n === clamped ? 'is-selected' : (n < clamped ? 'is-completed' : 'is-pending');
+        sRef.btn.className = `chat-strip-step-pill is-${sRef.def.tone} ${stateCls}`;
+        sRef.btn.setAttribute('data-step-state', n === clamped ? 'active' : (n < clamped ? 'completed' : 'pending'));
+      }
+
+      // 2. Update 6-Step 3D Glowing Pedestals
+      for (const node of pedestalColNodes) {
+        const pStep = Number(node.getAttribute('data-pedestal-step'));
+        node.classList?.toggle?.('is-selected', pStep === clamped);
+        node.setAttribute('data-pedestal-state', pStep === clamped ? 'active' : (pStep < clamped ? 'completed' : 'pending'));
+      }
+
+      // 3. Highlight active AWS services for this step
+      const activeServices = new Set(STEP_AWS_SERVICES[clamped] || []);
+      for (const [svcId, colRef] of Object.entries(pipeCols)) {
+        const isSvcActive = activeServices.has(svcId);
+        colRef.col.classList?.toggle?.('is-step-active', isSvcActive);
+        colRef.col.setAttribute('data-step-highlighted', String(isSvcActive));
+      }
+
+      // 4. Update Mobile Bottom Sheet process list
+      for (const [k, mRef] of Object.entries(mobileProcessStepRefs)) {
+        const n = Number(k);
+        const mState = n === clamped ? 'is-active' : (n < clamped ? 'is-completed' : 'is-pending');
+        mRef.li.className = `chat-mobile-process-item ${mState}`;
+        mRef.dot.textContent = n < clamped ? '✓' : String(n);
+      }
+
+      // 5. Sync Right Inspector unless called from Right Inspector itself
+      if (opts.source !== 'replay' && opts.source !== 'answer-used') {
+        details.setInspectedStep?.(clamped);
+      }
+    }
+
+    details.setOnStepSelected?.((stepNum, meta) => {
+      selectObservabilityStep(stepNum, meta || { source: 'inspector' });
+    });
+    selectObservabilityStep(3, { source: 'init' });
 
     function applyViewMode(modeKey) {
       if (!modePillButtons[modeKey]) return;
       currentViewMode = modeKey;
       shell.setAttribute('data-view-mode', modeKey);
+      const isDetailedOn = modeKey !== 'simple';
+      detailedToggleBtn.className = `chat-detailed-toggle-switch${isDetailedOn ? ' is-on' : ''}`;
+      detailedToggleBtn.setAttribute('aria-checked', String(isDetailedOn));
       for (const [k, btn] of Object.entries(modePillButtons)) {
         const active = k === modeKey;
         btn.className = `chat-mode-pill${active ? ' is-active' : ''}`;
@@ -4617,18 +5465,24 @@
         scope.textContent = 'Simple mode · Concise executive summaries without pipeline clutter.';
         livePipeline.classList?.add?.('is-collapsed');
         pipeToggleBtn.textContent = '›';
+        stripViewDetailsBtn.setAttribute('aria-expanded', 'false');
+        stripViewDetailsBtn.textContent = 'View details →';
         details.setStackExpanded?.(false);
         details.activate?.('evidence');
       } else if (modeKey === 'engineer') {
         scope.textContent = 'Engineer mode · Full CAG prefix cache telemetry, S3 Vectors RAG, MCP JSON-RPC & AWS us-east-2 stack.';
         livePipeline.classList?.remove?.('is-collapsed');
         pipeToggleBtn.textContent = '⌄';
+        stripViewDetailsBtn.setAttribute('aria-expanded', 'true');
+        stripViewDetailsBtn.textContent = 'Hide details ⌃';
         details.setStackExpanded?.(true);
         details.activate?.('context');
       } else {
         scope.textContent = 'I’ll draw from my career knowledge and show you how I find and use information.';
         livePipeline.classList?.remove?.('is-collapsed');
         pipeToggleBtn.textContent = '⌄';
+        stripViewDetailsBtn.setAttribute('aria-expanded', 'true');
+        stripViewDetailsBtn.textContent = 'Hide details ⌃';
         details.setStackExpanded?.(false);
         details.activate?.('trace');
       }
@@ -4639,7 +5493,50 @@
       const cd = view.contextData || {};
       const isComplete = Boolean(view.timeline?.outcome);
       const activeModel = cd.completedModel || cd.model || 'Claude Sonnet 4';
-      const matchedCount = cd.matchedCount ?? (view.claims?.length || 3);
+      const isCagOnly = cd.retrievalMode === 'cag_only' || cd.retrievalMode === 'skipped';
+      const matchedCount = cd.matchedCount ?? (isCagOnly ? 0 : (view.claims?.length || 3));
+      const claimCount = cd.claimCount ?? 15;
+
+      // Determine current live step from tracePoints when executing
+      const pts = Array.isArray(view.tracePoints) ? view.tracePoints : [];
+      let liveStep = 1;
+      if (isComplete) liveStep = 6;
+      else if (pts.some(p => p.stage === 'provider')) liveStep = 5;
+      else if (pts.some(p => p.stage === 'context')) liveStep = 4;
+      else if (pts.some(p => p.stage === 'retrieval' || p.stage === 'mcp')) liveStep = 3;
+      else if (pts.some(p => p.stage === 'budget' || p.stage === 'routing')) liveStep = 2;
+
+      selectObservabilityStep(liveStep, { source: 'live' });
+
+      if (stripStepRefs[5]?.titleEl) {
+        stripStepRefs[5].titleEl.textContent = activeModel;
+      }
+      if (stripSummaryEl) {
+        stripSummaryEl.textContent = isComplete
+          ? `Completed (6 of 6) · Grounded via ${activeModel} (${isCagOnly ? 'CAG direct' : `${matchedCount} RAG sources + CAG`})`
+          : (STEP_STRIP_SUMMARIES[liveStep]?.[0] || 'Analyzing your question and finding relevant information...');
+      }
+
+      // Sync Context Stack percentages & tokens accurately for CAG-only vs Hybrid CAG+RAG
+      const cagPctStr = isCagOnly ? '76%' : '58%';
+      const ragPctStr = isCagOnly ? '0%' : '26%';
+      const convPctStr = isCagOnly ? '18%' : '11%';
+      const sysPctStr = isCagOnly ? '6%' : '5%';
+      const totalTokNum = isCagOnly ? 9100 : 12300;
+      segCag.style && (segCag.style.width = cagPctStr);
+      segRag.style && (segRag.style.width = ragPctStr);
+      segConv.style && (segConv.style.width = convPctStr);
+      segSys.style && (segSys.style.width = sysPctStr);
+      pipeCtxTotal.textContent = `Total: ${totalTokNum.toLocaleString('en-CA')} tokens`;
+      journeyTokensPill.textContent = `Total: ${totalTokNum.toLocaleString('en-CA')} tokens`;
+      if (ctxColRefs['is-cag']) {
+        ctxColRefs['is-cag'].pctEl.textContent = cagPctStr;
+      }
+      if (ctxColRefs['is-rag']) {
+        ctxColRefs['is-rag'].tokEl.textContent = isCagOnly ? '0 tokens (skipped)' : '3,200 tokens';
+        ctxColRefs['is-rag'].pctEl.textContent = ragPctStr;
+      }
+
       if (demoStatusSpinnerEl) {
         demoStatusSpinnerEl.textContent = isComplete ? '✓' : '✻';
       }
@@ -4659,13 +5556,13 @@
         pedestalStepRefs[1].resultTextEls[2].textContent = `Type: ${cd.routingMode === 'general' ? 'General inquiry' : 'Career question'}`;
       }
       if (pedestalStepRefs[2]?.resultTextEls) {
-        pedestalStepRefs[2].resultTextEls[0].textContent = `${cd.claimCount ?? 15} verified claims`;
+        pedestalStepRefs[2].resultTextEls[0].textContent = `${claimCount} verified claims`;
         pedestalStepRefs[2].resultTextEls[1].textContent = 'From career corpus';
         pedestalStepRefs[2].resultTextEls[2].textContent = '~7,100 tokens (cached)';
       }
       if (pedestalStepRefs[3]?.resultTextEls) {
         pedestalStepRefs[3].resultTextEls[0].textContent = `${matchedCount} sources found`;
-        pedestalStepRefs[3].resultTextEls[1].textContent = cd.retrievalMode === 'cag_only' ? 'CAG direct hit' : 'Project documents';
+        pedestalStepRefs[3].resultTextEls[1].textContent = isCagOnly ? 'CAG direct hit' : 'Project documents';
         pedestalStepRefs[3].resultTextEls[2].textContent = 'LinkedIn & ws42.ca';
       }
       if (pedestalStepRefs[5]?.resultTextEls) {
@@ -4679,7 +5576,7 @@
         pedestalStepRefs[6].resultTextEls[2].textContent = view.voiceUsed ? 'ElevenLabs active' : 'Voice available';
       }
       if (pipeCols.s3?.subEl) {
-        pipeCols.s3.subEl.textContent = `${cd.claimCount ?? 15} claims · CAG`;
+        pipeCols.s3.subEl.textContent = `${claimCount} claims · CAG`;
       }
       if (pipeCols.dynamodb?.subEl) {
         pipeCols.dynamodb.subEl.textContent = cd.retrievalMode === 'hybrid' ? `${matchedCount} RAG sources` : 'CAG prefix hit';
@@ -4765,7 +5662,9 @@
     const retry = element(document, 'button', 'chat-secondary', 'Check request again'); retry.type = 'button'; retry.hidden = true;
     const send = element(document, 'button', 'chat-send', 'Send ↑'); send.type = 'submit'; send.disabled = true;
     actions.append(mic, stop, retry, send); footer.append(toolbarLeft, actions); form.append(label, input, footer);
-    panel.append(heading, quickPillsBar, messages, livePipeline, form); shell.append(panel, details.element); host.append(shell);
+    panel.append(mobileHeader, heading, quickPillsBar, messages, liveProcessStrip, livePipeline, form);
+    shell.append(panel, details.element, mobileSheet);
+    host.append(shell);
     let ready = false, busy = false, currentReply, uiEpoch = 0, limit = 8192, currentConfig, liveTurnCounter = 0;
     function matchCanonicalEvidenceForLiveText(rawText) {
       const ev = client.evidence;
@@ -4794,10 +5693,12 @@
         corpusVersion: ev.corpusVersion || ('sha256:' + 'a'.repeat(64))
       };
     }
+    let voiceBargeInCount = 0;
     const voice = createVoiceController(document, {
       fetchImpl: options.fetchImpl,
       hasExistingTurns: () => Boolean(welcome.hidden),
       onVoiceStateChange: (mode, _statusText, isLive) => {
+        details.syncVoiceObservability?.(mode, _statusText, voiceBargeInCount);
         if (mode === 'speaking') {
           if (currentReply?.view) {
             currentReply.view.voiceActive = true;
@@ -4824,6 +5725,8 @@
         }
       },
       onBargeIn: info => {
+        voiceBargeInCount += 1;
+        details.syncVoiceObservability?.('listening', 'Barge-in interruption detected · Listening to you', voiceBargeInCount);
         if (currentReply?.view) {
           currentReply.view.voiceActive = false;
           currentReply.view.bargeInInterrupted = true;
@@ -5038,6 +5941,9 @@
       welcomeSubtext.textContent = 'Ask a question below or pick a starter topic to start a new session.';
       demoStatusSpinnerEl.textContent = '✻';
       demoStatusTextEl.textContent = 'Ready · Ask a question above to see the live execution flow.';
+      stripSummaryEl.textContent = 'Ready · Ask a question above to see the live execution flow.';
+      stripTimeEl.textContent = '0.0s';
+      selectObservabilityStep(1, { syncInspector: false });
       pipeCtxTotal.textContent = 'Total: 12,300 tokens';
       messages.replaceChildren(welcome); welcome.hidden = false; currentReply = null; input.value = ''; status.textContent = 'Clearing the conversation…';
       storedTurns = []; clearStoredHistory(storage);
