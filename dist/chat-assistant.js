@@ -1832,12 +1832,7 @@
       if (mode !== 'speaking' && mode !== 'live') setEnergy(0);
     }
 
-    function stopCurrentAudio() {
-      if (ttsAbortController) {
-        try { ttsAbortController.abort(); } catch { /* ignore */ }
-        ttsAbortController = null;
-      }
-      isLiveSpeaking = false;
+    function cleanupAudioElementOnly() {
       if (rafId) {
         clearInterval(rafId);
         rafId = null;
@@ -1850,6 +1845,16 @@
         try { win.URL.revokeObjectURL(currentObjectUrl); } catch { /* ignore */ }
         currentObjectUrl = null;
       }
+      setEnergy(0);
+    }
+
+    function stopCurrentAudio() {
+      if (ttsAbortController) {
+        try { ttsAbortController.abort(); } catch { /* ignore */ }
+        ttsAbortController = null;
+      }
+      isLiveSpeaking = false;
+      cleanupAudioElementOnly();
       if (currentSpeakBtn) {
         currentSpeakBtn.setAttribute('aria-pressed', 'false');
         currentSpeakBtn.textContent = '🔊 Listen';
@@ -1859,7 +1864,6 @@
         introBtn.setAttribute('aria-pressed', 'false');
         introBtn.textContent = '👋 30s Intro';
       }
-      setEnergy(0);
     }
 
     function animateSimulatedEnergy() {
@@ -1884,11 +1888,12 @@
     }
 
     async function playAudioBlob(blob, { turnButton = null, isIntro = false, isLiveTurn = false, waitForEnd = false, label = 'Speaking · Josh (ElevenLabs)' } = {}) {
-      stopCurrentAudio();
+      cleanupAudioElementOnly();
       if (!win?.Audio || !win?.URL?.createObjectURL) return false;
       const url = win.URL.createObjectURL(blob);
       currentObjectUrl = url;
       const audio = new win.Audio(url);
+      audio.preload = 'auto';
       audio.volume = 1.0;
       currentAudio = audio;
       isLiveSpeaking = Boolean(isLiveTurn || isLiveCall);
@@ -1993,40 +1998,11 @@
         turnButton.textContent = '⏳ Voice…';
       }
       if (fetcher && spoken) {
-        const spokenSentences = (spoken.match(/[^.!?]+[.!?]+(?:\s+|$)|[^.!?]+$/g) || [spoken]).map(s => s.trim()).filter(Boolean);
-        // Sentence-1 Parallel Pipelining for ultra-low time-to-first-audio (~380-440ms):
-        // Synthesize Sentence 1 and Remaining Sentences concurrently; start playing Sentence 1 immediately
-        // while Remaining Sentences finish downloading in the background.
-        if ((isLiveTurn || isLiveCall) && spokenSentences.length >= 2 && spokenSentences[0].length >= 16) {
-          const firstSentence = spokenSentences[0];
-          const restSentences = spokenSentences.slice(1).join(' ');
-          const firstPromise = fetchTtsAudioBlob(firstSentence, abortCtrl);
-          const restPromise = fetchTtsAudioBlob(restSentences, abortCtrl);
-          const firstBlob = await firstPromise;
-          if (abortCtrl?.signal?.aborted) return;
-          if (firstBlob) {
-            await playAudioBlob(firstBlob, {
-              turnButton,
-              isIntro,
-              isLiveTurn: true,
-              waitForEnd: true,
-              label: isLiveCall ? 'Josh Speaking (Live ElevenLabs)…' : 'Speaking · Josh (ElevenLabs)'
-            });
-            const restBlob = await restPromise;
-            if (restBlob && (!isLiveTurn || isLiveCall)) {
-              await playAudioBlob(restBlob, {
-                turnButton,
-                isIntro,
-                isLiveTurn: true,
-                waitForEnd,
-                label: isLiveCall ? 'Josh Speaking (Live ElevenLabs)…' : 'Speaking · Josh (ElevenLabs)'
-              });
-            }
-            return;
-          }
-        }
+        // Synthesize the complete 2-3 sentence turn as a single unbroken MP3 on eleven_turbo_v2_5 (~580ms)
+        // so playback never splits, aborts a second chunk, or cuts out mid-reply.
         const fullBlob = await fetchTtsAudioBlob(spoken, abortCtrl);
         if (abortCtrl?.signal?.aborted) return;
+        ttsAbortController = null;
         if (fullBlob) {
           await playAudioBlob(fullBlob, {
             turnButton,
