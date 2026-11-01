@@ -1592,11 +1592,11 @@
 
     const LIVE_VOICE_CONTEXT_UPDATE = [
       'IMPORTANT LIVE CONTEXT UPDATE FROM JOSH BOYER PORTFOLIO APPLICATION (SUPERSEDES STATIC CLOUD DISCLAIMER):',
-      '1. Persona & Greeting: Introduce yourself as Josh’s AI assistant (never use the name "Alex", and never output bracketed stage tags like [warmly], [calmly], or [patient]). Keep spoken responses natural, direct, warm, and conversational (2 to 4 complete sentences).',
+      '1. Natural Human Voice Cadence (NO Robotic Lists!): Speak like a relaxed, warm human on a podcast. Keep every response to 2 or 3 short, natural sentences (around 30 to 45 words total). NEVER rattle off comma-separated lists of 4 or 5 technical acronyms in a row (do NOT say "using Lambda, S3, DynamoDB, API Gateway, and CDK" — pick 1 or 2 highlights per turn and speak conversationally). Never use the name "Alex" and never output bracketed tags like [warmly].',
       '2. Strict Anti-Repetition & Multi-Turn Progression Rule: NEVER repeat the same paragraph, disclaimer, or sentence twice in a conversation. Every turn must build forward on the prior turn with new specifics.',
-      '3. Hands-On AWS & Cloud Architecture (Current Live System): While Josh’s corporate insurance roles at Grenville Mutual (2009–2022) and Medavie Blue Cross (2022–Present) operated in on-premise/virtualized (VMware, IBS, Cognition+, MAAX) and hybrid integration environments rather than commercial employer cloud migrations, Josh personally architected, built, and deployed THIS live portfolio AI platform on AWS (us-east-2) using AWS Lambda (Node.js 22), Amazon S3 & S3 Vectors (1536-d hybrid vector RAG), Amazon DynamoDB (session-turns & atomic $25 cost-ledger), Amazon API Gateway (REST + AWS_IAM SigV4 signing), AWS Secrets Manager, AWS CDK, Cloudflare Workers & AI Gateway, and a 3-tool JSON-RPC MCP server (get_case_study, search_public_evidence, compare_job_requirements).',
-      '4. Follow-Up AWS Questions: When a user follows up saying their company uses AWS or asks about his AWS experience, do NOT repeat the on-premise disclaimer—instead, explain his hands-on AWS us-east-2 serverless architecture on this live portfolio platform and how his 15+ years of API contract mapping, asynchronous event tables, and SQL reconciliation transfer directly to AWS production workloads.',
-      '5. Verified Career Facts (Oct 2026 Master): Medavie Blue Cross (2022–Present): ProviderRegistry REST/scheduled-event sync (ProviderEvent table + REST consumer, not Kafka), bulk group takeover automation (personally built the production Excel VBA add-in for validation, XML batch generation, and error reconciliation), and reporting continuity (approved analysis/design + corrected financial-report SQL adopted by the payment team). Grenville Mutual (2009–2022): Systems Admin to Business/Systems Analyst (2014–2016 transition window), IBS to Cognition+ modernization, and user-reported renewal-only straight-through automation (~80% residential, ~60% commercial, ~40% farm/agri). Dell (Sept 2006–2009). NEXUS is his active independent multi-agent AI capstone.'
+      '3. Hands-On AWS & Cloud Architecture (Current Live System): While Josh’s corporate insurance roles at Grenville Mutual (2009–2022) and Medavie Blue Cross (2022–Present) ran on-premise VMware and hybrid enterprise systems rather than commercial employer cloud migrations, Josh personally architected and deployed THIS live portfolio platform on AWS (us-east-2) using Lambda, S3 vector search, DynamoDB, API Gateway, and AWS CDK, paired with Cloudflare AI Gateway and an MCP tool server.',
+      '4. Follow-Up AWS Questions: When a user follows up saying their company uses AWS or asks about his AWS experience, do NOT repeat the on-premise disclaimer—instead, talk naturally about how he built this live portfolio system on AWS and how his fifteen years of API integration and SQL data work transfer directly to AWS.',
+      '5. Verified Career Facts (Oct 2026 Master): Medavie Blue Cross (2022–Present): ProviderRegistry REST/scheduled-event sync, bulk group takeover automation (personally built the production Excel VBA add-in for validation, XML batching, and error reconciliation), and reporting continuity (approved design + financial SQL adopted by the payment team). Grenville Mutual (2009–2022): Systems Admin to Business/Systems Analyst, IBS to Cognition+ modernization, and renewal automation (~80% residential, ~60% commercial, ~40% farm/agri). Dell (Sept 2006–2009). NEXUS is his active independent multi-agent AI capstone.'
     ].join('\n');
 
     function cleanStageTags(rawText) {
@@ -1607,6 +1607,31 @@
         .replace(/\bI(?:'m| am)\s+Alex\b/gi, "I'm Josh's AI assistant")
         .replace(/\s+/g, ' ')
         .trim();
+    }
+
+    function humanizeForSpeech(rawText) {
+      const cleaned = cleanStageTags(rawText);
+      if (!cleaned) return '';
+      const humanized = cleaned
+        .replace(/\bus-east-2\b/gi, 'AWS Ohio')
+        .replace(/\bus-east-1\b/gi, 'AWS US East')
+        .replace(/\b1536-d(?:imension(?:al)?)?\b/gi, 'vector')
+        .replace(/\bAWS_IAM\b/g, 'IAM')
+        .replace(/\bSigV4\b/gi, 'request signing')
+        .replace(/\bJSON-RPC\s*/gi, '')
+        .replace(/\bCognition\+/g, 'Cognition Plus')
+        .replace(/\b(\d{4})\s*[\u2013\u2014-]\s*(\d{4})\b/g, '$1 to $2')
+        .replace(/\b15\+\s*years\b/gi, 'over fifteen years')
+        .replace(/\s+/g, ' ')
+        .trim();
+      const sentences = humanized.match(/[^.!?]+[.!?]+(?:\s+|$)|[^.!?]+$/g) || [humanized];
+      if (sentences.length <= 3) return humanized;
+      // If a response has 4+ sentences, keep the first 2 core sentences + any final question so spoken delivery stays conversational and punchy
+      const last = sentences[sentences.length - 1].trim();
+      if (/\?$/.test(last)) {
+        return `${sentences[0].trim()} ${sentences[1].trim()} ${last}`.replace(/\s+/g, ' ').trim();
+      }
+      return sentences.slice(0, 3).map(s => s.trim()).join(' ').replace(/\s+/g, ' ').trim();
     }
 
     function normalizeSentenceKey(sentence) {
@@ -1767,8 +1792,8 @@
         ttsAbortController = null;
       }
       isLiveSpeaking = false;
-      if (rafId && win?.cancelAnimationFrame) {
-        win.cancelAnimationFrame(rafId);
+      if (rafId) {
+        clearInterval(rafId);
         rafId = null;
       }
       if (currentAudio) {
@@ -1792,19 +1817,24 @@
     }
 
     function animateSimulatedEnergy() {
-      if (!win?.requestAnimationFrame) return;
+      if (rafId) {
+        clearInterval(rafId);
+        rafId = null;
+      }
       const start = Date.now();
-      const tick = () => {
+      rafId = setInterval(() => {
         if (!currentAudio || currentAudio.paused || currentAudio.ended) {
+          if (rafId) {
+            clearInterval(rafId);
+            rafId = null;
+          }
           setEnergy(0);
           return;
         }
         const t = (Date.now() - start) / 1000;
-        const wave = 0.25 + 0.35 * Math.abs(Math.sin(t * 7.5)) + 0.25 * Math.abs(Math.cos(t * 13.2));
+        const wave = 0.25 + 0.35 * Math.abs(Math.sin(t * 6.0)) + 0.20 * Math.abs(Math.cos(t * 10.5));
         setEnergy(wave);
-        rafId = win.requestAnimationFrame(tick);
-      };
-      rafId = win.requestAnimationFrame(tick);
+      }, 140);
     }
 
     async function playAudioBlob(blob, { turnButton = null, isIntro = false, isLiveTurn = false, waitForEnd = false, label = 'Speaking · Josh (ElevenLabs)' } = {}) {
@@ -1880,7 +1910,7 @@
         setAvatarState(isLiveCall ? 'live' : 'idle', isLiveCall ? 'Live Voice Active · Listening…' : 'ElevenLabs Voice Ready · Josh');
         return;
       }
-      const cleaned = cleanStageTags(rawText);
+      const cleaned = humanizeForSpeech(rawText);
       const spoken = extractSpokenSummary(cleaned, 1500);
       if (!spoken && !fallbackUrl) return;
       stopCurrentAudio();

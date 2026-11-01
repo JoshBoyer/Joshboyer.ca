@@ -129,9 +129,10 @@ async function handleVoiceRoute(request: Request, path: string, env: Env, depend
             text: cleanText,
             model_id: 'eleven_multilingual_v2',
             voice_settings: {
-              stability: 0.55,
-              similarity_boost: 0.75,
-              style: 0.0,
+              stability: 0.38,
+              similarity_boost: 0.82,
+              style: 0.22,
+              speed: 0.94,
               use_speaker_boost: true
             }
           }),
