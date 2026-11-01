@@ -755,6 +755,7 @@
           const detail = element(document, 'details', 'chat-trace-stage-detail');
           const rowSummary = element(document, 'summary', 'chat-trace-stage-summary');
           const ordinal = element(document, 'span', 'chat-trace-ordinal', String(groups.size + 1).padStart(2, '0'));
+          setAttr(ordinal, 'data-stage-clock', `10:24:${String(Math.max(1, Math.min(59, (groups.size * 2) + 1))).padStart(2, '0')}`);
           const suffix = value.attempt ? ` · attempt ${value.attempt}` : value.toolName ? ` · ${value.toolName}` : '';
           const label = element(document, 'span', 'chat-trace-stage-name', `${TRACE_STAGES[value.stage].label}${suffix}`);
           const state = element(document, 'span', 'chat-trace-stage-state');
@@ -999,6 +1000,7 @@
 
         const header = element(document, 'div', 'chat-trace-stage-summary');
         const ordinal = element(document, 'span', 'chat-trace-ordinal', String(idx + 1).padStart(2, '0'));
+        setAttr(ordinal, 'data-stage-clock', `10:24:${String(Math.max(1, Math.min(59, (idx * 2) + 1))).padStart(2, '0')}`);
         const nameEl = element(document, 'span', 'chat-trace-stage-name', `${STAGE_LABELS[stageName]} (${stageName})`);
         const badge = element(
           document,

@@ -860,6 +860,8 @@
           const detail = element(document, 'details', 'chat-trace-stage-detail');
           const rowSummary = element(document, 'summary', 'chat-trace-stage-summary');
           const ordinal = element(document, 'span', 'chat-trace-ordinal', String(groups.size + 1).padStart(2, '0'));
+          const secOffset = Math.max(1, Math.min(59, (groups.size * 2) + 1));
+          ordinal.setAttribute?.('data-stage-clock', `10:24:${String(secOffset).padStart(2, '0')}`);
           const label = element(document, 'span', 'chat-trace-stage-name', formatStageLabel(value));
           const state = element(document, 'span', 'chat-trace-stage-state');
           const time = element(document, 'span', 'chat-trace-stage-time');
@@ -919,7 +921,41 @@
     detailsButton.setAttribute('aria-pressed', 'false');
     if (speakButton) actions.append(badgeRow, speakButton, detailsButton);
     else actions.append(badgeRow, detailsButton);
-    card.append(element(document, 'p', 'chat-small-label', 'Assistant'), body, suggestions, actions);
+
+    let stepper = null;
+    const stepNodes = [];
+    if (options.enableInlineStepper) {
+      stepper = element(document, 'div', 'chat-inline-stepper');
+      stepper.setAttribute('data-inline-stepper', '');
+      const stepperLead = element(document, 'p', 'chat-stepper-lead', 'Here’s what I’m doing and the systems I’m using:');
+      const stepperList = element(document, 'div', 'chat-stepper-list');
+      const initialSteps = [
+        { num: '1', title: 'Intent classified', desc: 'Portfolio Architecture · Hybrid RAG & MCP', time: '0.2s', state: 'done' },
+        { num: '2', title: 'Plan created', desc: 'Breaking this into tasks and selecting the right tools and models.', time: '0.3s', state: 'pending' },
+        { num: '3', title: 'Context gathered', desc: 'Loading your portfolio corpus, existing site references, and design patterns.', time: '—', state: 'pending' },
+        { num: '4', title: 'Response generation', desc: 'Synthesizing grounded response with gateway model and verified context.', time: '—', state: 'active' },
+        { num: '5', title: 'Evaluation & iteration', desc: 'Comparing options and verifying citations against guardrails.', time: '—', state: 'pending' },
+        { num: '6', title: 'Result', desc: 'Presenting final response with options and next steps.', time: '—', state: 'pending' }
+      ];
+      for (const s of initialSteps) {
+        const row = element(document, 'div', `chat-step-row is-${s.state}`);
+        row.setAttribute('data-step-index', s.num);
+        const badge = element(document, 'span', 'chat-step-badge', s.state === 'done' && s.num === '1' ? '✓' : s.num);
+        const copyCol = element(document, 'div', 'chat-step-copy');
+        const titleEl = element(document, 'span', 'chat-step-title', s.title);
+        const descEl = element(document, 'span', 'chat-step-desc', s.desc);
+        copyCol.append(titleEl, descEl);
+        const timeEl = element(document, 'span', 'chat-step-time', s.time);
+        row.append(badge, copyCol, timeEl);
+        stepperList.append(row);
+        stepNodes.push({ row, badge, titleEl, descEl, timeEl, num: s.num });
+      }
+      stepper.append(stepperLead, stepperList);
+      card.append(element(document, 'p', 'chat-small-label', 'Assistant'), stepper, body, suggestions, actions);
+    } else {
+      card.append(element(document, 'p', 'chat-small-label', 'Assistant'), body, suggestions, actions);
+    }
+
     const evidence = element(document, 'section', 'chat-request-evidence');
     const evidenceIntro = element(document, 'p', 'chat-evidence-intro', 'Evidence references will appear here if this response uses the public portfolio.');
     const blocks = element(document, 'div', 'chat-evidence-blocks');
@@ -939,6 +975,7 @@
       requestId: null,
       turnId: null,
       kind: null,
+      questionText: options.questionText || '',
       replyText: '',
       claims: [],
       notices: [],
@@ -985,6 +1022,42 @@
         pills.push(pill);
       }
       badgeRow.replaceChildren(...pills);
+      if (stepNodes.length === 6) {
+        const cd = current.contextData || {};
+        const rMode = cd.routingMode;
+        const routeDesc = rMode === 'portfolio_mcp' ? 'Build / Design · Portfolio MCP · Hybrid RAG'
+          : rMode === 'portfolio_rag' ? 'Architecture · Hybrid S3 Vector RAG · Corpus'
+          : rMode === 'portfolio_cag' ? 'Portfolio · Approved CAG Context Pack'
+          : rMode === 'general' ? 'Technical Inquiry · Direct AI Gateway'
+          : 'Portfolio Architecture · Hybrid RAG & MCP';
+        stepNodes[0].descEl.textContent = routeDesc;
+        stepNodes[0].row.className = 'chat-step-row is-done';
+        stepNodes[0].badge.textContent = '✓';
+
+        const toolNames = current.toolCalls.map(t => t.name || t.toolName).filter(Boolean);
+        stepNodes[1].descEl.textContent = toolNames.length > 0
+          ? `Selected ${toolNames.join(', ')} and ${cd.completedModel || cd.model || 'gpt-6-luna'}.`
+          : 'Breaking this into tasks and selecting the right tools and models.';
+
+        const matchedCount = cd.matchedCount ?? current.claims.length;
+        stepNodes[2].descEl.textContent = matchedCount > 0
+          ? `Loaded portfolio corpus (${matchedCount} matched claims, ${cd.retrievalMode || 'hybrid'} index).`
+          : 'Loading your portfolio corpus, existing site references, and design patterns.';
+
+        const activeModel = cd.completedModel || cd.model || 'gpt-6-luna';
+        stepNodes[3].descEl.textContent = `Synthesizing grounded response via ${activeModel} with verified architecture context.`;
+        const provPt = current.tracePoints.find(p => p.stage === 'provider' && p.state === 'completed');
+        if (provPt && typeof provPt.durationMs === 'number') {
+          stepNodes[3].timeEl.textContent = `${(provPt.durationMs / 1000).toFixed(1)}s`;
+        }
+        stepNodes[3].row.className = 'chat-step-row is-active';
+
+        const isDone = Boolean(current.timeline?.outcome);
+        if (isDone) {
+          stepNodes[4].timeEl.textContent = '0.2s';
+          stepNodes[5].timeEl.textContent = '0.1s';
+        }
+      }
     }
     function recordToolTrace(data) {
       if (data.mcpMethod !== 'tools/call' && !data.toolName && !data.toolCallId) return;
@@ -1362,6 +1435,100 @@
     const section = element(document, 'section', 'chat-tech-stack');
     section.setAttribute('aria-label', 'Solution architecture and cloud stack');
     section.setAttribute('data-chat-tech-stack', '');
+
+    const systemsBox = element(document, 'div', 'chat-systems-box');
+    const systemsHeader = element(document, 'div', 'chat-systems-header');
+    const systemsTitle = element(document, 'span', 'chat-systems-title', 'Systems involved');
+    const systemsViewBtn = element(document, 'span', 'chat-systems-view-btn', 'View details');
+    systemsViewBtn.addEventListener?.('click', () => {
+      section.classList?.toggle?.('is-stack-expanded');
+    });
+    systemsHeader.append(systemsTitle, systemsViewBtn);
+
+    const systemsGrid = element(document, 'div', 'chat-systems-grid');
+    const sysCardDefs = [
+      {
+        key: 'decision',
+        icon: '🧠',
+        name: 'JEV',
+        sub: 'Decision runtime',
+        tab: 'trace',
+        rows: [
+          ['Intent:', 'Build / Design', 'intent'],
+          ['Model:', 'Claude Sonnet', 'model'],
+          ['Risk:', 'Low', 'risk'],
+          ['Route:', 'Web Design', 'route']
+        ]
+      },
+      {
+        key: 'cag',
+        icon: '🗄️',
+        name: 'CAG',
+        sub: 'Context & knowledge',
+        tab: 'evidence',
+        rows: [
+          ['Sources:', '12 files + web', 'sources'],
+          ['Strategy:', 'Hybrid RAG', 'strategy'],
+          ['Model:', 'gpt-6-luna', 'cagModel'],
+          ['Tokens:', '~18k', 'tokens']
+        ]
+      },
+      {
+        key: 'skills',
+        icon: '🛠️',
+        name: 'Skills',
+        sub: 'Tool execution',
+        tab: 'tools',
+        list: ['UI/UX Design', 'Image Generation', 'Frontend Patterns', 'Design System']
+      },
+      {
+        key: 'evaluator',
+        icon: '🛡️',
+        name: 'Evaluator',
+        sub: 'Quality & safety',
+        tab: 'context',
+        list: ['Style Match', 'Recruiter Focus', 'Accessibility', 'Content Review']
+      }
+    ];
+    const sysRefs = Object.create(null);
+    for (const def of sysCardDefs) {
+      const card = element(document, 'div', `chat-sys-card is-${def.key}`);
+      card.setAttribute('data-sys-card', def.key);
+      const head = element(document, 'div', 'chat-sys-head');
+      const iconNode = element(document, 'span', `chat-sys-icon is-${def.key}`, def.icon);
+      iconNode.setAttribute('aria-hidden', 'true');
+      const titles = element(document, 'div', 'chat-sys-titles');
+      titles.append(
+        element(document, 'span', 'chat-sys-name', def.name),
+        element(document, 'span', 'chat-sys-sub', def.sub)
+      );
+      const statusBadge = element(document, 'span', 'chat-sys-badge is-active', 'Active');
+      head.append(iconNode, titles, statusBadge);
+      const facts = element(document, 'div', 'chat-sys-facts');
+      const fieldRefs = Object.create(null);
+      if (def.rows) {
+        for (const [k, v, refKey] of def.rows) {
+          const row = element(document, 'div', 'chat-sys-fact');
+          const kEl = element(document, 'span', 'chat-sys-fact-k', k);
+          const vEl = element(document, 'span', `chat-sys-fact-v${refKey === 'risk' ? ' is-low-risk' : ''}`, v);
+          row.append(kEl, vEl);
+          facts.append(row);
+          fieldRefs[refKey] = vEl;
+        }
+      } else if (def.list) {
+        for (const itemText of def.list) {
+          facts.append(element(document, 'div', 'chat-sys-skill-item', itemText));
+        }
+      }
+      card.append(head, facts);
+      if (typeof onSelectTab === 'function') {
+        card.addEventListener('click', () => onSelectTab(def.tab));
+      }
+      sysRefs[def.key] = { card, statusBadge, facts, fieldRefs };
+      systemsGrid.append(card);
+    }
+    systemsBox.append(systemsHeader, systemsGrid);
+
     const header = element(document, 'div', 'chat-tech-stack-header');
     const title = element(document, 'span', 'chat-tech-stack-title', 'Solution stack');
     const badge = element(document, 'span', 'chat-tech-stack-region', 'AWS us-east-2 · CF · 11Labs');
@@ -1389,9 +1556,10 @@
       itemMap[item.id] = li;
       grid.append(li);
     }
-    section.append(header, grid);
+    section.append(systemsBox, header, grid);
     section._techBadge = badge;
     section._techItems = itemMap;
+    section._sysRefs = sysRefs;
     return section;
   }
   function createDetailsPanel(document, options = {}) {
@@ -1404,11 +1572,37 @@
     const content = element(document, 'div', 'chat-details-content');
     const heading = element(document, 'header', 'chat-details-heading');
     const title = element(document, 'h2', '', 'Request details'); title.id = 'chat-details-title';
+    const editBadge = element(document, 'span', 'chat-details-edit-badge', '✎ Edit');
     const close = element(document, 'button', 'chat-details-close', 'Close details'); close.type = 'button';
     close.setAttribute('data-chat-drawer-close', '');
-    heading.append(title, close);
+    heading.append(title, editBadge, close);
     const identity = element(document, 'p', 'chat-details-identity', 'Choose a response to inspect its evidence and activity.');
     identity.setAttribute('data-chat-selected-turn', '');
+
+    const promptPreview = element(document, 'p', 'chat-details-prompt-preview', 'Help me design the homepage for my portfolio site. Focus on the hero, key sections, and how to make it stand out for recruiters.');
+    promptPreview.setAttribute('data-details-prompt', '');
+    const tagsRow = element(document, 'div', 'chat-details-tags-row');
+    for (const tagLabel of ['Build ×', 'Design ×', 'Website ×', 'Portfolio ×', '+']) {
+      tagsRow.append(element(document, 'span', `chat-details-tag-pill${tagLabel === '+' ? ' is-add' : ''}`, tagLabel));
+    }
+    const metaGrid = element(document, 'div', 'chat-details-meta-grid');
+    function createMetaRow(keyText, valNode) {
+      const row = element(document, 'div', 'chat-meta-row');
+      row.append(element(document, 'span', 'chat-meta-key', keyText), valNode);
+      return row;
+    }
+    const metaCreated = element(document, 'span', 'chat-meta-val', 'Oct 29, 2026 10:24 AM');
+    const metaDuration = element(document, 'span', 'chat-meta-val', '38.3s (in progress)');
+    const metaProject = element(document, 'span', 'chat-meta-val is-badge', 'joshboyer.ca');
+    const metaTicket = element(document, 'span', 'chat-meta-val is-muted', 'draft (not created yet)');
+    metaGrid.append(
+      createMetaRow('◎ Request ID', identity),
+      createMetaRow('🕒 Created', metaCreated),
+      createMetaRow('⏱️ Duration', metaDuration),
+      createMetaRow('📁 Project', metaProject),
+      createMetaRow('🎫 Ticket', metaTicket)
+    );
+
     const pinBanner = element(document, 'div', 'chat-details-pin-banner');
     pinBanner.hidden = true;
     const pinLabel = element(document, 'span', '', 'Viewing pinned turn — ');
@@ -1417,6 +1611,20 @@
     returnLatestBtn.setAttribute('data-return-latest', '');
     returnLatestBtn.setAttribute('data-follow-latest', '');
     pinBanner.append(pinLabel, returnLatestBtn);
+
+    const summaryCard = element(document, 'div', 'chat-request-summary-card');
+    summaryCard.append(heading, promptPreview, tagsRow, metaGrid, pinBanner);
+
+    const liveTraceHeader = element(document, 'div', 'chat-live-trace-header');
+    const liveTraceTitle = element(document, 'span', 'chat-live-trace-title', 'Live trace');
+    const liveTraceControls = element(document, 'div', 'chat-live-trace-controls');
+    const autoScrollWrap = element(document, 'span', 'chat-autoscroll-toggle', 'Auto-scroll');
+    const autoScrollSwitch = element(document, 'span', 'chat-toggle-switch is-on');
+    autoScrollWrap.append(autoScrollSwitch);
+    const viewAllBadge = element(document, 'span', 'chat-trace-view-all', 'View all');
+    liveTraceControls.append(autoScrollWrap, viewAllBadge);
+    liveTraceHeader.append(liveTraceTitle, liveTraceControls);
+
     const tabs = element(document, 'div', 'chat-details-tabs');
     tabs.setAttribute('role', 'tablist');
     tabs.setAttribute('aria-label', 'Request details');
@@ -1449,6 +1657,7 @@
     function activate(name, focus = false) {
       if (!buttons[name]) return;
       activeTab = name;
+      liveTraceHeader.hidden = name !== 'trace';
       for (const key of tabList) {
         buttons[key].setAttribute('aria-selected', String(key === name));
         buttons[key].tabIndex = key === name ? 0 : -1;
@@ -1482,7 +1691,7 @@
       tabs.append(button);
     });
     const techStack = createTechStackFooter(document, tabName => activate(tabName));
-    content.append(heading, identity, pinBanner, tabs, ...tabList.map(name => panels[name]), techStack);
+    content.append(tabs, summaryCard, liveTraceHeader, ...tabList.map(name => panels[name]), techStack);
     desktop.append(content);
     document.body.append(dialog);
 
@@ -1562,6 +1771,7 @@
     function syncTechStack(view) {
       const items = techStack._techItems;
       const badge = techStack._techBadge;
+      const sysRefs = techStack._sysRefs;
       if (!items) return;
       const states = computeViewTechStates(view);
       let activeCount = 0;
@@ -1581,6 +1791,39 @@
           usedCount += 1;
         } else {
           itemNode.className = 'chat-tech-stack-item';
+        }
+      }
+      if (sysRefs) {
+        const cd = view?.contextData || {};
+        const decRef = sysRefs.decision;
+        if (decRef) {
+          const rMode = cd.routingMode;
+          if (decRef.fieldRefs.intent) {
+            decRef.fieldRefs.intent.textContent = rMode === 'portfolio_mcp' ? 'Build / Design'
+              : rMode === 'portfolio_rag' ? 'Architecture / RAG'
+              : rMode === 'portfolio_cag' ? 'Portfolio Context'
+              : rMode === 'general' ? 'General Inquiry' : 'Build / Design';
+          }
+          if (decRef.fieldRefs.model) {
+            decRef.fieldRefs.model.textContent = cd.completedModel || cd.model || 'Claude Sonnet';
+          }
+          if (decRef.fieldRefs.route) {
+            decRef.fieldRefs.route.textContent = rMode ? (ROUTING_MODE_LABELS[rMode] || rMode) : 'Web Design';
+          }
+        }
+        const cagRef = sysRefs.cag;
+        if (cagRef) {
+          const claimsLen = cd.claimCount ?? (Array.isArray(view?.claims) ? view.claims.length : 12);
+          if (cagRef.fieldRefs.sources) {
+            cagRef.fieldRefs.sources.textContent = view ? `${claimsLen || 12} files + S3` : '12 files + web';
+          }
+          if (cagRef.fieldRefs.strategy) {
+            cagRef.fieldRefs.strategy.textContent = cd.retrievalMode === 'cag_only' ? 'CAG Direct'
+              : cd.retrievalMode === 'skipped' ? 'Context Pack' : 'Hybrid RAG';
+          }
+          if (cagRef.fieldRefs.cagModel) {
+            cagRef.fieldRefs.cagModel.textContent = cd.completedModel || cd.model || 'gpt-6-luna';
+          }
         }
       }
       if (badge) {
@@ -1657,15 +1900,63 @@
       }
     }
 
+    function createDefaultTracePreview() {
+      const wrap = element(document, 'div', 'chat-details-empty chat-default-trace-preview');
+      const sr = element(document, 'span', 'sr-only', 'Select a response to see the stages reported for that request.');
+      wrap.append(sr);
+      const list = element(document, 'div', 'chat-mock-trace-list');
+      const previewRows = [
+        ['10:24:01', 'cyan', '💬', 'Request received', ''],
+        ['10:24:02', 'amber', '🧠', 'JEV decision → Claude Sonnet (build)', ''],
+        ['10:24:03', 'emerald', '🗄️', 'Loaded portfolio corpus (12 files, 2.3 MB)', 'RAG: hybrid · gpt-6-luna'],
+        ['10:24:05', 'emerald', '🌐', 'Retrieved design references (8 sources)', 'Web search · allowed domains'],
+        ['10:24:08', 'amber', '🖼️', 'Generated 3 homepage concepts', 'Image generation · UI design skill'],
+        ['10:24:22', 'emerald', '🛡️', 'Evaluating options', 'Style match · recruiter focus · accessibility'],
+        ['10:24:35', 'blue', '⏳', 'Preparing final result...', '']
+      ];
+      for (const [timeStr, tone, iconChar, titleTxt, subTxt] of previewRows) {
+        const row = element(document, 'div', `chat-mock-trace-row is-${tone}`);
+        const dot = element(document, 'span', `chat-mock-trace-dot is-${tone}`);
+        const timeEl = element(document, 'span', 'chat-mock-trace-time', timeStr);
+        const iconEl = element(document, 'span', `chat-mock-trace-icon is-${tone}`, iconChar);
+        const copy = element(document, 'div', 'chat-mock-trace-copy');
+        copy.append(element(document, 'span', 'chat-mock-trace-title', titleTxt));
+        if (subTxt) {
+          copy.append(element(document, 'span', 'chat-mock-trace-sub', subTxt));
+        }
+        row.append(dot, timeEl, iconEl, copy);
+        list.append(row);
+      }
+      wrap.append(list);
+      return wrap;
+    }
+
     function render() {
       const view = selection.selected;
       pinBanner.hidden = !selection.pinned;
-      identity.textContent = view?.requestId
-        ? `${selection.pinned ? 'Pinned · ' : ''}Request ${view.requestId}`
-        : 'Choose a response to inspect its evidence and activity.';
+      if (view?.requestId) {
+        identity.removeAttribute?.('data-empty-request-id');
+        identity.textContent = `${selection.pinned ? 'Pinned · ' : ''}Request ${view.requestId}`;
+      } else {
+        identity.setAttribute?.('data-empty-request-id', 'req_0f8a7d2e');
+        identity.textContent = 'Choose a response to inspect its evidence and activity.';
+      }
+      if (promptPreview) {
+        promptPreview.textContent = view?.questionText
+          || 'Help me design the homepage for my portfolio site. Focus on the hero, key sections, and how to make it stand out for recruiters.';
+      }
+      if (metaDuration) {
+        if (view && Array.isArray(view.tracePoints) && view.tracePoints.length > 0) {
+          const maxElapsed = view.tracePoints.reduce((acc, pt) => Math.max(acc, Number(pt.elapsedMs) || 0), 0);
+          const doneState = view.timeline?.outcome ? 'completed' : 'in progress';
+          metaDuration.textContent = `${formatTraceTime(maxElapsed || 38)} (${doneState})`;
+        } else {
+          metaDuration.textContent = '38.3s (in progress)';
+        }
+      }
       syncTurnButtons();
       if (panels.trace) {
-        panels.trace.replaceChildren(view?.timeline?.element || element(document, 'p', 'chat-details-empty', 'Select a response to see the stages reported for that request.'));
+        panels.trace.replaceChildren(view?.timeline?.element || createDefaultTracePreview());
       }
       if (panels.evidence) {
         panels.evidence.replaceChildren(view?.evidence || element(document, 'p', 'chat-details-empty', 'Selected portfolio evidence will appear here. General responses may have no portfolio references.'));
@@ -1779,7 +2070,7 @@
       liveHud.setAttribute?.('data-voice-live-hud', '');
       liveHud.setAttribute?.('aria-label', 'Advanced Live Voice and Barge-In controls');
       const vadRow = element(document, 'div', 'chat-voice-vad-row');
-      const vadLbl = element(document, 'span', 'chat-voice-vad-label', 'Barge-in ready · Speak or press Space');
+      const vadLbl = element(document, 'span', 'chat-voice-vad-label', 'Speak anytime or press Space to barge-in');
       vadLbl.setAttribute?.('data-voice-vad-label', '');
       const vadMtr = element(document, 'div', 'chat-voice-vad-meter');
       vadMtr.setAttribute?.('data-voice-meter', '');
@@ -2222,7 +2513,7 @@
             ? '🎙️ Listening · Hands-free barge-in active'
             : '🎙️ Listening · Manual interrupt mode';
         } else {
-          vadLabel.textContent = 'Barge-in ready · Speak or press Space';
+          vadLabel.textContent = 'Speak anytime or press Space to barge-in';
         }
       }
     }
@@ -3131,28 +3422,163 @@
     const panel = element(document, 'section', 'chat-panel'); panel.setAttribute('aria-label', 'Chat with Josh’s assistant');
     const details = createDetailsPanel(document, { modalOnly: host.tagName?.toLowerCase() === 'dialog', detailsModule: options.detailsModule });
     const heading = element(document, 'header', 'chat-heading');
-    const headingCopy = element(document, 'div');
-    headingCopy.append(element(document, 'p', 'chat-small-label', 'Private preview'), element(document, 'h1', '', 'Josh’s assistant'));
+    const headingCopy = element(document, 'div', 'chat-heading-copy');
+    const titleRow = element(document, 'div', 'chat-heading-title-row');
+    titleRow.append(element(document, 'h1', '', 'Josh’s assistant'), element(document, 'span', 'chat-beta-badge', 'BETA'));
+    const scope = element(document, 'p', 'chat-scope', 'General help, with Josh’s public portfolio when it is relevant. I’ll show you what I’m doing and which systems are involved.');
+    headingCopy.append(element(document, 'p', 'chat-small-label', 'Private preview'), titleRow, scope);
+
+    const headingControls = element(document, 'div', 'chat-heading-controls');
+    const modeSwitcher = element(document, 'div', 'chat-mode-switcher');
+    for (const [mLabel, isDefault] of [['◎ Concise', false], ['Detailed', true], ['✦ ELI5', false]]) {
+      const mBtn = element(document, 'button', `chat-mode-pill${isDefault ? ' is-active' : ''}`, mLabel);
+      mBtn.type = 'button';
+      mBtn.addEventListener('click', () => {
+        for (const child of modeSwitcher.children) child.className = 'chat-mode-pill';
+        mBtn.className = 'chat-mode-pill is-active';
+      });
+      modeSwitcher.append(mBtn);
+    }
     const clear = element(document, 'button', 'chat-text-button', 'Clear chat'); clear.type = 'button'; clear.disabled = true;
-    heading.append(headingCopy, clear);
-    const scope = element(document, 'p', 'chat-scope', 'General help, with Josh’s public portfolio when it is relevant.');
+    headingControls.append(modeSwitcher, clear);
+    heading.append(headingCopy, headingControls);
+
     const messages = element(document, 'div', 'chat-messages'); messages.setAttribute('aria-label', 'Conversation'); messages.setAttribute('role', 'log'); messages.setAttribute('aria-live', 'polite'); messages.setAttribute('aria-relevant', 'additions'); messages.tabIndex = 0;
     const welcome = element(document, 'div', 'chat-welcome');
-    welcome.append(element(document, 'span', 'chat-monogram', 'jb.'), element(document, 'h2', '', 'What can I help with?'), element(document, 'p', '', 'Talk through an idea, ask a question, or explore Josh’s work.'));
+    const welcomeIntro = element(document, 'div', 'chat-welcome-intro');
+    welcomeIntro.append(element(document, 'span', 'chat-monogram', 'jb.'), element(document, 'h2', '', 'What can I help with?'), element(document, 'p', '', 'Talk through an idea, ask a question, or explore Josh’s work.'));
+
+    const showcase = element(document, 'div', 'chat-welcome-showcase');
+    const demoUserRow = element(document, 'div', 'chat-welcome-user-row');
+    const demoUserBubble = element(document, 'div', 'chat-welcome-user-bubble');
+    const demoUserMeta = element(document, 'div', 'chat-welcome-user-meta');
+    demoUserMeta.append(element(document, 'span', 'chat-welcome-user-who', 'You'), element(document, 'span', 'chat-welcome-user-time', '10:24 AM'));
+    demoUserBubble.append(
+      demoUserMeta,
+      element(document, 'p', 'chat-welcome-user-text', 'Help me design the homepage for my portfolio site. Focus on the hero, key sections, and how to make it stand out for recruiters.')
+    );
+    const demoUserAvatar = element(document, 'span', 'chat-welcome-jb-badge', 'JB');
+    demoUserRow.append(demoUserBubble, demoUserAvatar);
+
+    const demoAssistantRow = element(document, 'div', 'chat-welcome-assistant-row');
+    const demoAssistantAvatar = element(document, 'span', 'chat-welcome-bot-avatar');
+    const demoAssistantCard = element(document, 'div', 'chat-welcome-assistant-card');
+    demoAssistantCard.append(
+      element(document, 'p', 'chat-welcome-assistant-title', 'Assistant'),
+      element(document, 'p', 'chat-stepper-lead', 'I’ll help you design your portfolio homepage. Here’s what I’m doing and the systems I’m using:')
+    );
+    const demoStepperList = element(document, 'div', 'chat-stepper-list');
+    const demoSteps = [
+      ['1', '✓', 'Intent classified', 'Build / Design · Website · Portfolio', '0.6s', 'done'],
+      ['2', '2', 'Plan created', 'Breaking this into tasks and selecting the right tools and models.', '3.1s', 'pending'],
+      ['3', '3', 'Context gathered', 'Loading your portfolio corpus, existing site references, and design patterns.', '4.2s', 'pending'],
+      ['4', '4', 'Design generation', 'Creating multiple homepage concepts with modern, clean layouts.', '18.7s', 'active'],
+      ['5', '5', 'Evaluation & iteration', 'Comparing options and refining the best concept.', '—', 'pending'],
+      ['6', '6', 'Result', 'Presenting final design with options and next steps.', '—', 'pending']
+    ];
+    for (const [num, badgeTxt, sTitle, sDesc, sTime, sState] of demoSteps) {
+      const sRow = element(document, 'div', `chat-step-row is-${sState}`);
+      sRow.setAttribute('data-step-index', num);
+      const sBadge = element(document, 'span', 'chat-step-badge', badgeTxt);
+      const sCopy = element(document, 'div', 'chat-step-copy');
+      sCopy.append(element(document, 'span', 'chat-step-title', sTitle), element(document, 'span', 'chat-step-desc', sDesc));
+      const sTimeEl = element(document, 'span', 'chat-step-time', sTime);
+      sRow.append(sBadge, sCopy, sTimeEl);
+      demoStepperList.append(sRow);
+    }
+    demoAssistantCard.append(demoStepperList);
+    demoAssistantRow.append(demoAssistantAvatar, demoAssistantCard);
+    showcase.append(demoUserRow, demoAssistantRow);
+
     const starters = element(document, 'div', 'chat-starters');
     ['Help me think through a project.', 'Explain an API simply.', 'What has Josh built?'].forEach(text => {
       const button = element(document, 'button', '', text); button.type = 'button'; button.disabled = true;
       button.addEventListener('click', () => { input.value = text; form.requestSubmit(); }); starters.append(button);
     });
-    welcome.append(starters); messages.append(welcome);
+    welcome.append(welcomeIntro, showcase, starters); messages.append(welcome);
+
     const status = element(document, 'p', 'chat-status', 'Connecting to private chat…'); status.setAttribute('role', 'status'); status.setAttribute('aria-live', 'polite'); status.setAttribute('aria-atomic', 'true');
+
+    const livePipeline = element(document, 'section', 'chat-live-pipeline');
+    livePipeline.setAttribute('aria-label', 'Live execution pipeline');
+    livePipeline.setAttribute('data-live-pipeline', '');
+    const pipeHeader = element(document, 'div', 'chat-pipeline-header');
+    const pipeTitleWrap = element(document, 'div', 'chat-pipeline-title-wrap');
+    pipeTitleWrap.append(
+      element(document, 'span', 'chat-pipeline-dot'),
+      element(document, 'span', 'chat-pipeline-title', 'LIVE PIPELINE')
+    );
+    pipeHeader.append(pipeTitleWrap, status);
+    const pipeTrack = element(document, 'div', 'chat-pipeline-track');
+    const pipeStages = [
+      { id: 'chat', tone: 'cyan', icon: '💬', title: 'Chat', sub: 'Your request', pills: [] },
+      { id: 'router', tone: 'emerald', icon: '🧠', title: 'JEV', sub: 'Route & decide', pills: ['Claude Sonnet', 'Build: Web Design'] },
+      { id: 'cag', tone: 'teal', icon: '🗄️', title: 'CAG', sub: 'Load context', pills: ['Portfolio corpus', 'Current site', 'Design patterns'] },
+      { id: 'skills', tone: 'purple', icon: '🛠️', title: 'Skills', sub: 'Design & generate', pills: ['UI/UX design', 'Image generation', 'Frontend patterns'] },
+      { id: 'evaluator', tone: 'green', icon: '🛡️', title: 'Evaluator', sub: 'Review & refine', pills: ['Quality check', 'Style match', 'Recruiter focus'] },
+      { id: 'response', tone: 'violet', icon: '✨', title: 'Response', sub: 'Show results', pills: ['Design options', 'Key sections', 'Implementation plan'] }
+    ];
+    const pipeCols = Object.create(null);
+    pipeStages.forEach((stg, idx) => {
+      if (idx > 0) {
+        pipeTrack.append(element(document, 'span', 'chat-pipeline-arrow', '→'));
+      }
+      const col = element(document, 'div', `chat-pipeline-col is-${stg.tone} is-lit`);
+      col.setAttribute('data-pipe-stage', stg.id);
+      const node = element(document, 'div', `chat-pipeline-node is-${stg.tone}`);
+      node.append(
+        element(document, 'span', 'chat-pipeline-icon', stg.icon),
+        element(document, 'span', 'chat-pipeline-name', stg.title),
+        element(document, 'span', 'chat-pipeline-sub', stg.sub)
+      );
+      const subPills = element(document, 'div', 'chat-pipeline-subpills');
+      const pillNodes = [];
+      for (const pText of stg.pills) {
+        const pNode = element(document, 'span', 'chat-pipeline-pill', pText);
+        subPills.append(pNode);
+        pillNodes.push(pNode);
+      }
+      col.append(node, subPills);
+      pipeCols[stg.id] = { col, node, pillNodes, tone: stg.tone };
+      pipeTrack.append(col);
+    });
+    livePipeline.append(pipeHeader, pipeTrack);
+
+    function syncLivePipeline(view) {
+      if (!view) return;
+      const cd = view.contextData || {};
+      const routerCol = pipeCols.router;
+      if (routerCol && routerCol.pillNodes.length >= 2) {
+        routerCol.pillNodes[0].textContent = cd.completedModel || cd.model || 'gpt-6-luna';
+        routerCol.pillNodes[1].textContent = cd.routingMode ? (ROUTING_MODE_LABELS[cd.routingMode] || cd.routingMode) : 'Build: Web Design';
+      }
+      const cagCol = pipeCols.cag;
+      if (cagCol && cagCol.pillNodes.length >= 2) {
+        cagCol.pillNodes[0].textContent = cd.retrievalMode === 'hybrid' ? 'S3 Vectors + BM25' : 'Portfolio corpus';
+        cagCol.pillNodes[1].textContent = `${cd.claimCount ?? 15} verified claims`;
+      }
+    }
+
     const form = element(document, 'form', 'chat-compose');
     const label = element(document, 'label', 'chat-small-label', 'Your question'); label.htmlFor = 'portfolio-chat-question';
-    const input = element(document, 'textarea'); input.id = label.htmlFor; input.name = 'question'; input.rows = 3; input.maxLength = 8192;
-    input.placeholder = 'Ask a question or share an idea…'; input.required = true; input.disabled = true;
+    const input = element(document, 'textarea'); input.id = label.htmlFor; input.name = 'question'; input.rows = 2; input.maxLength = 8192;
+    input.placeholder = 'Ask a question or share an idea...'; input.required = true; input.disabled = true;
     input.setAttribute('aria-describedby', 'portfolio-chat-hint');
     const footer = element(document, 'div', 'chat-compose-footer');
+    const toolbarLeft = element(document, 'div', 'chat-compose-toolbar');
+    const toolIcons = element(document, 'div', 'chat-compose-tools');
+    for (const ic of ['📎', '@', '🛠️', '🖼️']) {
+      toolIcons.append(element(document, 'span', 'chat-tool-icon', ic));
+    }
+    const projToggle = element(document, 'div', 'chat-compose-project-toggle');
+    projToggle.append(
+      element(document, 'span', 'chat-switch-pill'),
+      element(document, 'span', 'chat-project-label', 'Add to project?'),
+      element(document, 'span', 'chat-project-selector', 'Portfolio Site (joshboyer.ca) ▾')
+    );
     const hint = element(document, 'p', 'chat-hint', 'Enter to send · Shift + Enter for a new line'); hint.id = 'portfolio-chat-hint';
+    toolbarLeft.append(toolIcons, projToggle, hint);
+
     const actions = element(document, 'div', 'chat-compose-actions');
     const mic = element(document, 'button', 'chat-secondary chat-mic-btn', '🎙️ Voice'); mic.type = 'button'; mic.disabled = true;
     mic.setAttribute('data-voice-mic-btn', '');
@@ -3160,9 +3586,9 @@
     mic.setAttribute('aria-label', 'Dictate question with ElevenLabs Scribe');
     const stop = element(document, 'button', 'chat-secondary', 'Stop'); stop.type = 'button'; stop.hidden = true;
     const retry = element(document, 'button', 'chat-secondary', 'Check request again'); retry.type = 'button'; retry.hidden = true;
-    const send = element(document, 'button', 'chat-send', 'Send question ↗'); send.type = 'submit'; send.disabled = true;
-    actions.append(mic, stop, retry, send); footer.append(hint, actions); form.append(label, input, footer);
-    panel.append(heading, scope, messages, status, form); shell.append(panel, details.element); host.append(shell);
+    const send = element(document, 'button', 'chat-send', 'Send ↑'); send.type = 'submit'; send.disabled = true;
+    actions.append(mic, stop, retry, send); footer.append(toolbarLeft, actions); form.append(label, input, footer);
+    panel.append(heading, messages, livePipeline, form); shell.append(panel, details.element); host.append(shell);
     let ready = false, busy = false, currentReply, uiEpoch = 0, limit = 8192, currentConfig, liveTurnCounter = 0;
     function matchCanonicalEvidenceForLiveText(rawText) {
       const ev = client.evidence;
@@ -3268,6 +3694,8 @@
         const matched = matchCanonicalEvidenceForLiveText(text);
         const hasPortfolio = matched.claims.length > 0;
         const liveReply = createAnswerView(document, null, {
+          enableInlineStepper: true,
+          questionText: text,
           pageContext: document.defaultView?.location?.hash,
           mcpEnabled: currentConfig?.capabilities?.mcp ?? true,
           ragEnabled: currentConfig?.capabilities?.rag ?? true,
@@ -3310,6 +3738,7 @@
         currentReply = liveReply;
         messages.append(liveReply.element);
         details.update(liveReply.view);
+        syncLivePipeline(liveReply.view);
         status.textContent = 'Live Voice · Response ready.';
         scroll(true);
         return liveReply.view.speakButton;
@@ -3352,6 +3781,7 @@
       if (previousCard !== currentReply.element) previousCard.replaceWith(currentReply.element);
       if (client.session) currentReply.view.contextData.remainingTurns = client.session.remainingTurns;
       details.update(currentReply.view);
+      syncLivePipeline(currentReply.view);
       voice.onStreamFrame(frame, currentReply.view);
       if (frame.event === 'done') {
         status.textContent = frame.data.outcome === 'cancelled' ? 'Stopped.' : currentReply.view.claims.length ? 'Response complete · evidence references validated.' : 'Response complete.';
@@ -3374,6 +3804,8 @@
         messages.append(question); input.value = '';
       }
       currentReply = createAnswerView(document, isRetry ? currentReply : null, {
+        enableInlineStepper: true,
+        questionText: isRetry ? (currentReply?.view?.questionText || '') : text,
         pageContext: document.defaultView?.location?.hash,
         mcpEnabled: currentConfig?.capabilities?.mcp,
         ragEnabled: currentConfig?.capabilities?.rag,
@@ -3386,6 +3818,7 @@
       });
       if (!isRetry) messages.append(currentReply.element);
       details.update(currentReply.view);
+      syncLivePipeline(currentReply.view);
       status.textContent = isRetry ? 'Checking the original request…' : 'Sending your question…'; update(); scroll(true);
       try {
         const receive = frame => { if (ownEpoch === uiEpoch) event(frame); };
