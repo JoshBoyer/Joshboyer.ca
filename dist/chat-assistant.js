@@ -2280,8 +2280,9 @@
       }, 450);
     });
     viewExecTraceBtn.addEventListener?.('click', () => {
-      timelineCard.classList?.toggle?.('is-highlighted');
-      timelineCard.scrollIntoView?.({ behavior: 'smooth', block: 'nearest' });
+      const expanded = section.classList?.toggle?.('is-full-trace-view');
+      timelineCard.classList?.toggle?.('is-highlighted', Boolean(expanded));
+      viewExecTraceBtn.textContent = expanded ? '← Back to answer summary' : 'View full execution trace →';
     });
 
     section._setInspectedStep = function (stepNum, fromReplay = false) {
@@ -5193,9 +5194,12 @@
     }
     awsServiceGuide.append(awsGuideList);
 
+    ctxBuiltCard.hidden = true;
+    awsFlowCard.hidden = true;
     awsFlowCard.append(awsFlowHeader, awsGatewayRow, pipeTrack, awsServiceGuide);
     pipeBody.append(pedestalFlowCard, ctxBuiltCard, sourcesInspectorCard, awsFlowCard);
     livePipeline.append(journeyTabsHeader, pipeBody);
+    livePipeline.setAttribute('data-active-journey-tab', 'process');
 
     function activateJourneyTab(tabKey) {
       if (!journeyTabButtons[tabKey]) return;
@@ -5226,7 +5230,7 @@
         sourcesInspectorCard.hidden = true;
         awsFlowCard.hidden = false;
       } else if (tabKey === 'trace') {
-        pedestalFlowCard.hidden = false;
+        pedestalFlowCard.hidden = true;
         ctxBuiltCard.hidden = true;
         sourcesInspectorCard.hidden = true;
         awsFlowCard.hidden = false;
@@ -5239,9 +5243,9 @@
         details.activate?.('evidence');
       } else {
         pedestalFlowCard.hidden = false;
-        ctxBuiltCard.hidden = false;
+        ctxBuiltCard.hidden = true;
         sourcesInspectorCard.hidden = true;
-        awsFlowCard.hidden = false;
+        awsFlowCard.hidden = true;
       }
     }
 

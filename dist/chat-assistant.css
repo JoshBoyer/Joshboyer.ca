@@ -7428,7 +7428,49 @@
   border: 1px solid rgba(96, 165, 250, 0.25);
 }
 
-.chat-sources-inspector-card[hidden] {
+.chat-sources-inspector-card[hidden],
+.chat-pedestal-flow-card[hidden],
+.chat-context-built-card[hidden],
+.chat-aws-flow-card[hidden] {
+  display: none !important;
+}
+
+/* Prevent duplicate 6-step bars when Journey Drawer is open on Live process tab */
+.chat-panel:has(.chat-live-pipeline:not(.is-collapsed)[data-active-journey-tab="process"]) .chat-strip-steps-track {
+  display: none !important;
+}
+
+/* Keep Top Header title untruncated on a single line */
+.chat-heading .chat-heading-title-row h1 {
+  font-size: 13.8px !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+
+.chat-heading .chat-scope {
+  font-size: 10.2px !important;
+  white-space: nowrap !important;
+}
+
+.chat-heading .chat-heading-more-btn {
+  display: none !important;
+}
+
+.chat-heading .chat-heading-controls {
+  gap: 5px !important;
+  flex-shrink: 0;
+}
+
+/* Keep Right Inspector uncluttered and unclipped in 900px viewport */
+.chat-trace-inspector-wrap:not(.is-full-trace-view) .chat-why-step-card,
+.chat-trace-inspector-wrap:not(.is-full-trace-view) .chat-model-details-card,
+.chat-trace-inspector-wrap:not(.is-full-trace-view) .chat-next-step-card {
+  display: none !important;
+}
+
+.chat-trace-inspector-wrap.is-full-trace-view .chat-answer-used-card,
+.chat-trace-inspector-wrap.is-full-trace-view .chat-what-i-found-card {
   display: none !important;
 }
 
