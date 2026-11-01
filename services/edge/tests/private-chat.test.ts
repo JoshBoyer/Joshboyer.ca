@@ -351,12 +351,12 @@ test('ElevenLabs Josh voice routes (2ccxXaT9cMefjPlK2Pwn) require operator cooki
   assert.equal(statusRes.status, 200);
   const statusJson = await statusRes.json() as Record<string, unknown>;
   assert.equal(statusJson.voiceId, '2ccxXaT9cMefjPlK2Pwn');
-  assert.equal(statusJson.ttsModel, 'eleven_v4_turbo');
+  assert.equal(statusJson.ttsModel, 'eleven_turbo_v2_5');
   assert.equal(statusJson.tts, true);
   assert.equal(statusJson.liveConversationalAi, true);
   assert.ok(!JSON.stringify(statusJson).includes(voiceCanary));
 
-  // 3. Authenticated POST /api/chat/voice/tts uses Josh voice ID 2ccxXaT9cMefjPlK2Pwn & eleven_v4_turbo
+  // 3. Authenticated POST /api/chat/voice/tts uses Josh voice ID 2ccxXaT9cMefjPlK2Pwn & eleven_turbo_v2_5
   const ttsRes = await worker.fetch(
     request('/api/chat/voice/tts', 'POST', { text: 'Josh built the Guidewire Excel VBA add-in.' }, cookies),
     voiceEnv
@@ -368,7 +368,7 @@ test('ElevenLabs Josh voice routes (2ccxXaT9cMefjPlK2Pwn) require operator cooki
   assert.equal(calls.length, 1);
   assert.ok(calls[0]!.url.includes('/v1/text-to-speech/2ccxXaT9cMefjPlK2Pwn/stream'));
   assert.equal(calls[0]!.headers.get('xi-api-key'), voiceCanary);
-  assert.equal(JSON.parse(calls[0]!.body).model_id, 'eleven_v4_turbo');
+  assert.equal(JSON.parse(calls[0]!.body).model_id, 'eleven_turbo_v2_5');
 
   // 4. Authenticated POST /api/chat/voice/live-session returns signed WebSocket URL
   const liveRes = await worker.fetch(request('/api/chat/voice/live-session', 'POST', {}, cookies), voiceEnv);

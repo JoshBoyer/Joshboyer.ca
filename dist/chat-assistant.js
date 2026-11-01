@@ -1587,8 +1587,10 @@
     let isLiveCall = false;
     let isLiveSpeaking = false;
     let serverGreetingSkipped = false;
+    let pendingSkippedAgentResponses = 0;
     let liveSpeechChain = Promise.resolve();
     const liveSpokenSentences = new Set();
+    const liveMatchedTopics = new Set();
 
     const LIVE_VOICE_CONTEXT_UPDATE = [
       'IMPORTANT LIVE CONTEXT UPDATE FROM JOSH BOYER PORTFOLIO APPLICATION (SUPERSEDES STATIC CLOUD DISCLAIMER):',
@@ -1622,6 +1624,8 @@
         .replace(/\bCognition\+/g, 'Cognition Plus')
         .replace(/\b(\d{4})\s*[\u2013\u2014-]\s*(\d{4})\b/g, '$1 to $2')
         .replace(/\b15\+\s*years\b/gi, 'over fifteen years')
+        .replace(/^Josh['’]s enterprise experience is rooted in on-premise,\s*virtualized systems,\s*network infrastructure,\s*and application integrations rather than commercial (?:AWS or Azure )?cloud migrations\./i,
+          "In his corporate insurance roles at Medavie and Grenville, the core platforms ran on-prem VMware and hybrid infrastructure—and alongside that, he personally built and deployed this live portfolio assistant on AWS.")
         .replace(/\s+/g, ' ')
         .trim();
       const sentences = (humanized.match(/[^.!?]+[.!?]+(?:\s+|$)|[^.!?]+$/g) || [humanized]).map(s => s.trim()).filter(Boolean);
@@ -1630,12 +1634,50 @@
         : (/\?$/.test(sentences[sentences.length - 1])
             ? [sentences[0], sentences[1], sentences[sentences.length - 1]]
             : sentences.slice(0, 3));
-      if (selected.length >= 2 && /\?$/.test(selected[selected.length - 1])) {
-        const bodyPart = selected.slice(0, -1).join(' ');
-        const questionPart = selected[selected.length - 1];
-        return `[warmly] ${bodyPart} [curious] ${questionPart}`.replace(/\s+/g, ' ').trim();
+      return selected.join(' ').replace(/\s+/g, ' ').trim();
+    }
+
+    function matchInstantLiveReply(userText) {
+      const q = String(userText || '').toLowerCase().trim();
+      if (!q) return null;
+      if (/^(?:hello|hi|hey|hey there|hi there|can you hear me|testing|are you there)[?.!]*$/i.test(q)) {
+        return "Hey there! Loud and clear—I'm right here with you. What part of Josh's work or architecture are you curious about?";
       }
-      return `[warmly] ${selected.join(' ')}`.replace(/\s+/g, ' ').trim();
+      if (/\b(?:aws|amazon web services|azure|cloud|lambda|dynamodb|s3|cloudfront|serverless|platform)\b/i.test(q)) {
+        if (!liveMatchedTopics.has('cloud_turn_1') && !/\b(?:our company|we use|that platform|more about aws|hands-on|what did he build)\b/i.test(q)) {
+          liveMatchedTopics.add('cloud_turn_1');
+          return "In his corporate insurance roles at Medavie and Grenville, the core platforms ran on-prem VMware and hybrid systems—so he's always upfront about that. At the same time, he personally built and deployed this entire live portfolio assistant on AWS! Does your team run mostly on AWS?";
+        }
+        if (!liveMatchedTopics.has('cloud_turn_2')) {
+          liveMatchedTopics.add('cloud_turn_2');
+          return "That's a great fit—he built this live system right on AWS using Lambda, S3 vector search, and DynamoDB with CDK. Plus, fifteen years of mapping complex APIs and enterprise data workflows translates straight into AWS architectures. Which AWS services does your team lean on most?";
+        }
+        return "He really enjoys the hands-on serverless side—wiring up API Gateway with IAM request signing, keeping session state and cost guardrails in DynamoDB, and pairing it with Cloudflare AI Gateway. Are you looking more at backend integrations or cloud migration work?";
+      }
+      if (/\b(?:takeover|vba|excel|xml|batch|member onboarding)\b/i.test(q)) {
+        liveMatchedTopics.add('medavie_takeover');
+        return "For bulk group takeovers at Medavie, Josh researched the end-to-end workflow and personally built the production Excel VBA add-in that validates member data, generates XML batches, and reconciles errors. The operations team adopted it directly in production! Want to hear about his reporting continuity work there too?";
+      }
+      if (/\b(?:medavie|blue cross|provider\s*registry|claims|current role)\b/i.test(q)) {
+        if (!liveMatchedTopics.has('medavie_turn_1')) {
+          liveMatchedTopics.add('medavie_turn_1');
+          return "At Medavie Blue Cross—where he's been since 2022—Josh leads integration and systems analysis across claims, provider data, and finance. A big highlight was defining the mapping and sync rules to connect ProviderRegistry with the core claims platform. Would you like to hear about the group takeover tool he built there too?";
+        }
+        return "Alongside ProviderRegistry, he personally built Medavie's production Excel VBA add-in for bulk group takeovers and designed their reporting continuity architecture when core schemas changed. Which of those areas sounds closest to your team's needs?";
+      }
+      if (/\b(?:sql|reporting|financial|payment|schema|continuity)\b/i.test(q)) {
+        return "On the reporting side at Medavie, Josh designed the continuity architecture when core schemas changed and wrote the corrected financial SQL logic that the payment team adopted right into their pipeline. Have you been dealing with similar data transitions?";
+      }
+      if (/\b(?:grenville|guidewire|cognition|ibs|renewal|mutual|underwriting|broker)\b/i.test(q)) {
+        return "Josh spent thirteen years at Grenville Mutual—growing from infrastructure admin into business and systems analysis during their core modernization. He helped drive renewal automation to around eighty percent in residential, sixty percent in commercial, and forty percent in farm! What kind of core systems does your team run?";
+      }
+      if (/\b(?:nexus|rag|mcp|vector|ai|capstone|agent|how does this work)\b/i.test(q)) {
+        return "He's really passionate about practical AI engineering—both with NEXUS, his multi-agent capstone, and this live assistant you're talking to right now. It combines hybrid S3 vector search and live MCP tools with strict citation guardrails. Curious how the voice or retrieval pipeline works under the hood?";
+      }
+      if (/\b(?:dell|started|early career|2006)\b/i.test(q)) {
+        return "Josh got his start at Dell back in September 2006 before moving into enterprise infrastructure and systems analysis at Grenville in 2009. That hands-on troubleshooting foundation still shapes how he debugs distributed systems today!";
+      }
+      return null;
     }
 
     function normalizeSentenceKey(sentence) {
@@ -1903,6 +1945,29 @@
       }
     }
 
+    async function fetchTtsAudioBlob(textSegment, abortCtrl) {
+      if (!fetcher || !textSegment) return null;
+      try {
+        const response = await fetcher('/api/chat/voice/tts', {
+          method: 'POST',
+          credentials: 'same-origin',
+          cache: 'no-store',
+          headers: { 'Content-Type': 'application/json', Accept: 'audio/mpeg' },
+          body: JSON.stringify({ text: textSegment, voiceId: JOSH_VOICE_ID }),
+          ...(abortCtrl ? { signal: abortCtrl.signal } : {})
+        });
+        if (abortCtrl?.signal?.aborted) return null;
+        if (response.ok && /^audio\//i.test(response.headers.get('Content-Type') || '')) {
+          const blob = await response.blob();
+          if (abortCtrl?.signal?.aborted) return null;
+          if (blob.size > 0) return blob;
+        }
+      } catch {
+        return null;
+      }
+      return null;
+    }
+
     async function speakText(rawText, { turnButton = null, isIntro = false, isLiveTurn = false, waitForEnd = false, fallbackUrl = null } = {}) {
       if (turnButton && currentSpeakBtn === turnButton && currentAudio && !currentAudio.paused) {
         stopCurrentAudio();
@@ -1928,32 +1993,49 @@
         turnButton.textContent = '⏳ Voice…';
       }
       if (fetcher && spoken) {
-        try {
-          const response = await fetcher('/api/chat/voice/tts', {
-            method: 'POST',
-            credentials: 'same-origin',
-            cache: 'no-store',
-            headers: { 'Content-Type': 'application/json', Accept: 'audio/mpeg' },
-            body: JSON.stringify({ text: spoken, voiceId: JOSH_VOICE_ID }),
-            ...(abortCtrl ? { signal: abortCtrl.signal } : {})
-          });
+        const spokenSentences = (spoken.match(/[^.!?]+[.!?]+(?:\s+|$)|[^.!?]+$/g) || [spoken]).map(s => s.trim()).filter(Boolean);
+        // Sentence-1 Parallel Pipelining for ultra-low time-to-first-audio (~380-440ms):
+        // Synthesize Sentence 1 and Remaining Sentences concurrently; start playing Sentence 1 immediately
+        // while Remaining Sentences finish downloading in the background.
+        if ((isLiveTurn || isLiveCall) && spokenSentences.length >= 2 && spokenSentences[0].length >= 16) {
+          const firstSentence = spokenSentences[0];
+          const restSentences = spokenSentences.slice(1).join(' ');
+          const firstPromise = fetchTtsAudioBlob(firstSentence, abortCtrl);
+          const restPromise = fetchTtsAudioBlob(restSentences, abortCtrl);
+          const firstBlob = await firstPromise;
           if (abortCtrl?.signal?.aborted) return;
-          if (response.ok && /^audio\//i.test(response.headers.get('Content-Type') || '')) {
-            const blob = await response.blob();
-            if (abortCtrl?.signal?.aborted) return;
-            if (blob.size > 0) {
-              await playAudioBlob(blob, {
+          if (firstBlob) {
+            await playAudioBlob(firstBlob, {
+              turnButton,
+              isIntro,
+              isLiveTurn: true,
+              waitForEnd: true,
+              label: isLiveCall ? 'Josh Speaking (Live ElevenLabs)…' : 'Speaking · Josh (ElevenLabs)'
+            });
+            const restBlob = await restPromise;
+            if (restBlob && (!isLiveTurn || isLiveCall)) {
+              await playAudioBlob(restBlob, {
                 turnButton,
                 isIntro,
-                isLiveTurn,
+                isLiveTurn: true,
                 waitForEnd,
                 label: isLiveCall ? 'Josh Speaking (Live ElevenLabs)…' : 'Speaking · Josh (ElevenLabs)'
               });
-              return;
             }
+            return;
           }
-        } catch {
-          if (abortCtrl?.signal?.aborted) return;
+        }
+        const fullBlob = await fetchTtsAudioBlob(spoken, abortCtrl);
+        if (abortCtrl?.signal?.aborted) return;
+        if (fullBlob) {
+          await playAudioBlob(fullBlob, {
+            turnButton,
+            isIntro,
+            isLiveTurn,
+            waitForEnd,
+            label: isLiveCall ? 'Josh Speaking (Live ElevenLabs)…' : 'Speaking · Josh (ElevenLabs)'
+          });
+          return;
         }
       }
       if (fallbackUrl && fetcher && !abortCtrl?.signal?.aborted) {
@@ -1998,6 +2080,7 @@
       isLiveCall = false;
       isLiveSpeaking = false;
       serverGreetingSkipped = false;
+      pendingSkippedAgentResponses = 0;
       liveSpeechChain = Promise.resolve();
       if (liveKeepaliveTimer) {
         clearInterval(liveKeepaliveTimer);
@@ -2060,6 +2143,7 @@
         activeSocket = ws;
         isLiveCall = true;
         serverGreetingSkipped = false;
+        pendingSkippedAgentResponses = 0;
         liveSpeechChain = Promise.resolve();
         if (liveBtn) {
           liveBtn.textContent = '🔴 End Live Voice';
@@ -2103,7 +2187,7 @@
                 if (!audioCtx) audioCtx = new AudioContextCtor();
                 if (audioCtx.state === 'suspended') void audioCtx.resume();
                 const source = audioCtx.createMediaStreamSource(micStream);
-                const processor = audioCtx.createScriptProcessor(4096, 1, 1);
+                const processor = audioCtx.createScriptProcessor(2048, 1, 1);
                 const muteGain = audioCtx.createGain();
                 muteGain.gain.value = 0;
                 micSourceNode = source;
@@ -2122,7 +2206,15 @@
                     return;
                   }
                   const inputData = evt.inputBuffer.getChannelData(0);
-                  const pcm16 = downsampleTo16k(inputData, audioCtx.sampleRate || 48000);
+                  let sumSq = 0;
+                  for (let i = 0; i < inputData.length; i += 1) {
+                    sumSq += inputData[i] * inputData[i];
+                  }
+                  const rms = Math.sqrt(sumSq / Math.max(1, inputData.length));
+                  // Gate low ambient room hum (< 0.008 RMS) to pure digital zero so ElevenLabs VAD
+                  // detects end-of-speech immediately (~200ms) instead of waiting on background noise.
+                  const gatedData = rms < 0.008 ? new Float32Array(inputData.length) : inputData;
+                  const pcm16 = downsampleTo16k(gatedData, audioCtx.sampleRate || 48000);
                   ws.send(JSON.stringify({ user_audio_chunk: encodePcm16Base64(pcm16) }));
                 };
               }
@@ -2147,6 +2239,20 @@
               lastTranscriptText = userText;
               lastTranscriptAt = nowTs;
               options.onLiveTranscript?.('user', userText);
+              const instantReply = matchInstantLiveReply(userText);
+              if (instantReply) {
+                pendingSkippedAgentResponses += 1;
+                const dedupedInstant = deduplicateLiveResponse(instantReply, liveSpokenSentences, userText) || instantReply;
+                try {
+                  ws.send(JSON.stringify({
+                    type: 'contextual_update',
+                    text: `User asked: "${userText.slice(0, 120)}". Assistant already responded: "${dedupedInstant.slice(0, 180)}". On the next turn, do NOT repeat this explanation; build forward with new specifics.`
+                  }));
+                } catch { /* ignore */ }
+                const speakBtn = options.onLiveTranscript?.('assistant', dedupedInstant) || null;
+                void enqueueLiveSpeech(dedupedInstant, speakBtn);
+                return;
+              }
               if (!isSpeakingOrSynthesizing()) {
                 setAvatarState('thinking', 'Josh Thinking…');
               }
@@ -2163,6 +2269,10 @@
               // Never render or speak ElevenLabs' user_turn_timeout check-in prompt
               if (/i['’]?m still here and ready to help/i.test(cleanedAgent)) {
                 sendUserActivityPing(ws);
+                return;
+              }
+              if (pendingSkippedAgentResponses > 0) {
+                pendingSkippedAgentResponses -= 1;
                 return;
               }
               const dedupedText = deduplicateLiveResponse(cleanedAgent, liveSpokenSentences, lastTranscriptText);

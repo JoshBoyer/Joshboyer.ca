@@ -93,7 +93,7 @@ async function handleVoiceRoute(request: Request, path: string, env: Env, depend
       voiceId,
       tts: isEnabled,
       stt: isEnabled,
-      ttsModel: 'eleven_v4_turbo',
+      ttsModel: 'eleven_turbo_v2_5',
       sttModel: 'scribe_v1',
       liveEnabled: isLive,
       liveConversationalAi: isLive
@@ -117,7 +117,7 @@ async function handleVoiceRoute(request: Request, path: string, env: Env, depend
       }
       const targetVoiceId = typeof rawVoiceId === 'string' ? rawVoiceId : voiceId;
       const upstream = await fetcher(
-        `https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(targetVoiceId)}/stream?output_format=mp3_44100_192`,
+        `https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(targetVoiceId)}/stream?optimize_streaming_latency=4&output_format=mp3_44100_128`,
         {
           method: 'POST',
           headers: {
@@ -127,7 +127,14 @@ async function handleVoiceRoute(request: Request, path: string, env: Env, depend
           },
           body: JSON.stringify({
             text: cleanText,
-            model_id: 'eleven_v4_turbo'
+            model_id: 'eleven_turbo_v2_5',
+            voice_settings: {
+              stability: 0.32,
+              similarity_boost: 0.82,
+              style: 0.30,
+              speed: 0.96,
+              use_speaker_boost: true
+            }
           }),
           signal: AbortSignal.timeout(25000)
         }
