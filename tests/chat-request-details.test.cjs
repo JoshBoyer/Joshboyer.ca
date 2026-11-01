@@ -1540,6 +1540,11 @@ test('Simple / Detailed / Engineer mode switcher, Clear chat visual reset & sess
   assert.equal(techStack.classList.contains('is-stack-expanded'), false);
   assert.equal(mounted.details.activeTab, 'trace');
 
+  // Verify 6-step 3D pedestal flow is placed inside [data-live-pipeline] below .chat-messages, while .chat-messages contains only chat messages
+  const messagesEl = shell.querySelector('.chat-messages');
+  assert.equal(messagesEl.querySelector('[data-pedestal-grid]'), null, '.chat-messages must not contain [data-pedestal-grid]');
+  assert.ok(livePipeline.querySelector('[data-pedestal-grid]'), '[data-live-pipeline] below .chat-messages must contain [data-pedestal-grid]');
+
   // 4. Showcase action buttons (copy, up, inspect)
   const copyBtn = shell.querySelector('[data-showcase-action="copy"]');
   const inspectBtn = shell.querySelector('[data-showcase-action="inspect"]');

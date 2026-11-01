@@ -4222,13 +4222,12 @@
       demoCardActions.append(actBtn);
     }
 
+    const demoStatusSpinnerEl = element(document, 'span', 'chat-pedestal-status-spinner', '✻');
+    const demoStatusTextEl = element(document, 'span', 'chat-pedestal-status-text', 'Finding the best information from my career knowledge...');
     const demoStatusHeader = element(document, 'div', 'chat-pedestal-status-bar');
     const demoStatusLeft = element(document, 'div', 'chat-pedestal-status-left');
-    demoStatusLeft.append(
-      element(document, 'span', 'chat-pedestal-status-spinner', '✻'),
-      element(document, 'span', 'chat-pedestal-status-text', 'Finding the best information from my career knowledge...')
-    );
-    demoStatusHeader.append(demoStatusLeft, demoCardActions);
+    demoStatusLeft.append(demoStatusSpinnerEl, demoStatusTextEl);
+    demoStatusHeader.append(demoStatusLeft);
 
     const pedestalGrid = element(document, 'div', 'chat-pedestal-grid');
     pedestalGrid.setAttribute('data-pedestal-grid', '');
@@ -4323,6 +4322,7 @@
       }
     ];
     const pedestalColNodes = [];
+    const pedestalStepRefs = Object.create(null);
     for (const pDef of pedestalDefinitions) {
       const pCol = element(document, 'div', `chat-pedestal-col is-${pDef.tone}${pDef.selected ? ' is-selected' : ''}`);
       pCol.setAttribute('data-pedestal-step', String(pDef.stepNum));
@@ -4344,12 +4344,15 @@
       const pResCard = element(document, 'div', 'chat-pedestal-result-card');
       pResCard.append(element(document, 'span', 'chat-pedestal-result-heading', 'Result'));
       const pResList = element(document, 'div', 'chat-pedestal-result-list');
+      const resultTextEls = [];
       for (const [rIcon, rText] of pDef.results) {
         const rPill = element(document, 'div', 'chat-pedestal-result-pill');
         if (rIcon) {
           rPill.append(element(document, 'span', 'chat-pedestal-result-icon', rIcon));
         }
-        rPill.append(element(document, 'span', 'chat-pedestal-result-text', rText));
+        const rTextEl = element(document, 'span', 'chat-pedestal-result-text', rText);
+        rPill.append(rTextEl);
+        resultTextEls.push(rTextEl);
         pResList.append(rPill);
       }
       pResCard.append(pResList);
@@ -4359,6 +4362,7 @@
         pCol.classList?.add?.('is-selected');
         details.setInspectedStep?.(pDef.stepNum);
       });
+      pedestalStepRefs[pDef.stepNum] = { col: pCol, timeEl: pTime, resultTextEls };
       pedestalColNodes.push(pCol);
       pedestalGrid.append(pCol);
     }
@@ -4371,7 +4375,8 @@
         'p',
         'chat-welcome-lead-p',
         demoLeadParagraphText
-      )
+      ),
+      demoCardActions
     );
     const demoSubLead = element(document, 'p', 'chat-welcome-sublead', 'Here are some key highlights from your experience:');
     const demoHighlightsList = element(document, 'div', 'chat-welcome-highlights-list');
@@ -4417,7 +4422,7 @@
       engGrid.append(eCell);
     }
     demoEngineerBlock.append(engTitle, engGrid);
-    demoAssistantCard.append(demoStatusHeader, pedestalGrid, demoSummaryWrap, demoEngineerBlock);
+    demoAssistantCard.append(demoSummaryWrap, demoEngineerBlock);
     demoAssistantRow.append(demoAssistantAvatar, demoAssistantCard);
     showcase.append(demoUserRow, demoAssistantRow);
 
@@ -4433,6 +4438,10 @@
     const livePipeline = element(document, 'section', 'chat-live-pipeline');
     livePipeline.setAttribute('aria-label', 'Live execution pipeline');
     livePipeline.setAttribute('data-live-pipeline', '');
+
+    // Card 0: 6-Step 3D Glowing Pedestal Flow (placed in the flow dock below the chat messages)
+    const pedestalFlowCard = element(document, 'div', 'chat-pedestal-flow-card');
+    pedestalFlowCard.append(demoStatusHeader, pedestalGrid);
 
     // Card 1: How your context is built (in real time)
     const ctxBuiltCard = element(document, 'div', 'chat-context-built-card');
@@ -4592,7 +4601,7 @@
     });
 
     awsFlowCard.append(awsFlowHeader, awsGatewayRow, pipeTrack);
-    pipeBody.append(ctxBuiltCard, awsFlowCard);
+    pipeBody.append(pedestalFlowCard, ctxBuiltCard, awsFlowCard);
     livePipeline.append(pipeBody);
 
     function applyViewMode(modeKey) {
@@ -4628,14 +4637,55 @@
     function syncLivePipeline(view) {
       if (!view) return;
       const cd = view.contextData || {};
+      const isComplete = Boolean(view.timeline?.outcome);
+      const activeModel = cd.completedModel || cd.model || 'Claude Sonnet 4';
+      const matchedCount = cd.matchedCount ?? (view.claims?.length || 3);
+      if (demoStatusSpinnerEl) {
+        demoStatusSpinnerEl.textContent = isComplete ? '✓' : '✻';
+      }
+      if (demoStatusTextEl) {
+        demoStatusTextEl.textContent = isComplete
+          ? (view.isLiveVoice
+            ? `Live Voice response ready · Grounded via ${activeModel} & CAG career corpus`
+            : `Completed · Grounded via ${activeModel} (${matchedCount} sources, ~7,100 cached CAG tokens)`)
+          : 'Finding the best information from my career knowledge...';
+      }
+      if (pedestalStepRefs[1]?.resultTextEls) {
+        const focusShort = view.questionText
+          ? (view.questionText.length > 16 ? `${view.questionText.slice(0, 16)}…` : view.questionText)
+          : 'Guidewire';
+        pedestalStepRefs[1].resultTextEls[0].textContent = `Topic: ${view.isLiveVoice ? 'Live Voice' : 'Experience'}`;
+        pedestalStepRefs[1].resultTextEls[1].textContent = `Focus: ${focusShort}`;
+        pedestalStepRefs[1].resultTextEls[2].textContent = `Type: ${cd.routingMode === 'general' ? 'General inquiry' : 'Career question'}`;
+      }
+      if (pedestalStepRefs[2]?.resultTextEls) {
+        pedestalStepRefs[2].resultTextEls[0].textContent = `${cd.claimCount ?? 15} verified claims`;
+        pedestalStepRefs[2].resultTextEls[1].textContent = 'From career corpus';
+        pedestalStepRefs[2].resultTextEls[2].textContent = '~7,100 tokens (cached)';
+      }
+      if (pedestalStepRefs[3]?.resultTextEls) {
+        pedestalStepRefs[3].resultTextEls[0].textContent = `${matchedCount} sources found`;
+        pedestalStepRefs[3].resultTextEls[1].textContent = cd.retrievalMode === 'cag_only' ? 'CAG direct hit' : 'Project documents';
+        pedestalStepRefs[3].resultTextEls[2].textContent = 'LinkedIn & ws42.ca';
+      }
+      if (pedestalStepRefs[5]?.resultTextEls) {
+        pedestalStepRefs[5].resultTextEls[0].textContent = activeModel;
+        pedestalStepRefs[5].resultTextEls[1].textContent = `${cd.outputTokens ?? 642} output tokens`;
+        pedestalStepRefs[5].resultTextEls[2].textContent = 'High relevance';
+      }
+      if (pedestalStepRefs[6]?.resultTextEls) {
+        pedestalStepRefs[6].resultTextEls[0].textContent = view.isLiveVoice ? 'Live Voice streamed' : 'Response streamed';
+        pedestalStepRefs[6].resultTextEls[1].textContent = `${view.claims?.length || 0} citations added`;
+        pedestalStepRefs[6].resultTextEls[2].textContent = view.voiceUsed ? 'ElevenLabs active' : 'Voice available';
+      }
       if (pipeCols.s3?.subEl) {
         pipeCols.s3.subEl.textContent = `${cd.claimCount ?? 15} claims · CAG`;
       }
       if (pipeCols.dynamodb?.subEl) {
-        pipeCols.dynamodb.subEl.textContent = cd.retrievalMode === 'hybrid' ? `${cd.matchedCount ?? 3} RAG sources` : 'CAG prefix hit';
+        pipeCols.dynamodb.subEl.textContent = cd.retrievalMode === 'hybrid' ? `${matchedCount} RAG sources` : 'CAG prefix hit';
       }
       if (pipeCols.model?.titleEl) {
-        pipeCols.model.titleEl.textContent = cd.completedModel || cd.model || 'Claude Sonnet 4';
+        pipeCols.model.titleEl.textContent = activeModel;
       }
     }
 
@@ -4821,7 +4871,7 @@
         const matched = matchCanonicalEvidenceForLiveText(text);
         const hasPortfolio = matched.claims.length > 0;
         const liveReply = createAnswerView(document, null, {
-          enableInlineStepper: true,
+          enableInlineStepper: false,
           questionText: text,
           pageContext: document.defaultView?.location?.hash,
           mcpEnabled: currentConfig?.capabilities?.mcp ?? true,
@@ -4931,7 +4981,7 @@
         messages.append(question); input.value = '';
       }
       currentReply = createAnswerView(document, isRetry ? currentReply : null, {
-        enableInlineStepper: true,
+        enableInlineStepper: false,
         questionText: isRetry ? (currentReply?.view?.questionText || '') : text,
         pageContext: document.defaultView?.location?.hash,
         mcpEnabled: currentConfig?.capabilities?.mcp,
@@ -4986,6 +5036,8 @@
       welcome.classList?.add?.('is-cleared');
       welcomeHeading.textContent = 'Conversation cleared';
       welcomeSubtext.textContent = 'Ask a question below or pick a starter topic to start a new session.';
+      demoStatusSpinnerEl.textContent = '✻';
+      demoStatusTextEl.textContent = 'Ready · Ask a question above to see the live execution flow.';
       pipeCtxTotal.textContent = 'Total: 12,300 tokens';
       messages.replaceChildren(welcome); welcome.hidden = false; currentReply = null; input.value = ''; status.textContent = 'Clearing the conversation…';
       storedTurns = []; clearStoredHistory(storage);
