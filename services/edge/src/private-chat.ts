@@ -284,6 +284,7 @@ async function handleVoiceRoute(request: Request, path: string, env: Env, depend
       const formData = new FormData();
       formData.append('file', new Blob([audioBytes], { type: mimeType }), `speech.${ext}`);
       formData.append('model_id', 'scribe_v1');
+      formData.append('language_code', 'en');
       formData.append('tag_audio_events', 'false');
       const sttSignal = AbortSignal.timeout(15000);
       const upstream = await fetcher('https://api.elevenlabs.io/v1/speech-to-text', {

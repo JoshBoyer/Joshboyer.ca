@@ -1232,3 +1232,97 @@ test('Live Voice advanced controls & Barge-In: sustained user speech interrupts 
   assert.equal(voice.voicePace, 1.0);
   if (resolveTtsFetch) resolveTtsFetch({ ok: false });
 });
+
+test('Voice full-response speech preservation & STT conditioning: never drops sentence 3 after the red line, resets non-consecutive speaker bleed, preserves soft consonants via AGC hangover, and normalizes domain transcripts', async () => {
+  const chatAssistant = require('../dist/chat-assistant.js');
+  const doc = createSimDocument(1440);
+  doc.defaultView.btoa = str => Buffer.from(str, 'binary').toString('base64');
+
+  const stage = doc.createElement('div');
+  stage.setAttribute('data-avatar-stage', '');
+  const statusText = doc.createElement('span');
+  statusText.setAttribute('data-avatar-status-text', '');
+  const voiceControls = doc.createElement('div');
+  voiceControls.setAttribute('data-voice-controls', '');
+  doc.body.append(stage, statusText, voiceControls);
+
+  const ttsBodies = [];
+  let resolveTtsFetch;
+  const voice = chatAssistant.createVoiceController(doc, {
+    fetchImpl: (_url, opts) => {
+      ttsBodies.push(JSON.parse(opts.body));
+      return new Promise(resolve => { resolveTtsFetch = resolve; });
+    }
+  });
+
+  // 1. Exact 4-sentence reply from live screenshot must preserve 100% of all 4 sentences (including sentence 3 after the red line)
+  const exactFourSentenceReply =
+    'Josh has spent about twenty years moving from hands-on infrastructure and systems administration into complex insurance integrations and functional analysis. ' +
+    'He currently works at Medavie Blue Cross on claims processing and provider registry synchronization, and he’s actively building NEXUS, an independent AI workflow engine. ' +
+    'He focuses on bridging business needs with deep technical design, especially in solutions architecture and integration roles. ' +
+    'What kind of work or projects are you looking into today?';
+
+  const spokenText = voice.humanizeForSpeech(exactFourSentenceReply);
+  assert.ok(
+    spokenText.includes('He focuses on bridging business needs with deep technical design, especially in solutions architecture and integration roles.'),
+    'humanizeForSpeech must never drop Sentence 3 after the red line'
+  );
+  assert.ok(
+    spokenText.includes('What kind of work or projects are you looking into today?'),
+    'humanizeForSpeech must preserve the closing question'
+  );
+  assert.equal(spokenText.includes('[warmly]'), false, 'humanizeForSpeech must not inject [warmly] stage tags');
+  assert.equal(spokenText.includes('[curious]'), false, 'humanizeForSpeech must not inject [curious] stage tags');
+
+  const speakBtn = doc.createElement('button');
+  voice.speakTurn({ replyText: exactFourSentenceReply }, speakBtn);
+  assert.equal(ttsBodies.length, 1);
+  assert.ok(
+    ttsBodies[0].text.includes('He focuses on bridging business needs with deep technical design, especially in solutions architecture and integration roles.'),
+    'TTS payload must include Sentence 3 in full'
+  );
+
+  // 2. Non-consecutive speaker bleed peaks ([loud, loud, quiet, loud, loud]) must reset bargeInConsecutiveFrames to 0 and NEVER cut off speech
+  const bleedFrame = new Float32Array(256).fill(0.015);
+  const loudFrame = new Float32Array(256).fill(0.085);
+  assert.equal(voice.processMicFrame(loudFrame, 16000).bargedIn, false);
+  assert.equal(voice.processMicFrame(loudFrame, 16000).bargedIn, false);
+  assert.equal(voice.processMicFrame(bleedFrame, 16000).bargedIn, false, 'Quiet frame must reset bargeInConsecutiveFrames to 0');
+  assert.equal(voice.processMicFrame(loudFrame, 16000).bargedIn, false);
+  assert.equal(voice.processMicFrame(loudFrame, 16000).bargedIn, false, '2 loud frames after a quiet frame must not accumulate to 4 and barge in');
+  assert.equal(voice.isSpeaking(), true, 'Non-consecutive speaker bleed spikes must never interrupt active playback');
+
+  if (resolveTtsFetch) resolveTtsFetch({ ok: false });
+  voice.triggerBargeIn('manual');
+
+  // 3. Software AGC + 12-frame speech hangover must preserve soft trailing consonants (rms = 0.004) after speech onset instead of zeroing them out
+  const vowelFrame = new Float32Array(256);
+  const softConsonantFrame = new Float32Array(256);
+  for (let i = 0; i < 256; i++) {
+    vowelFrame[i] = (i % 2 === 0 ? 1 : -1) * 0.025;
+    softConsonantFrame[i] = (i % 2 === 0 ? 1 : -1) * 0.004;
+  }
+  voice.processMicFrame(vowelFrame, 16000);
+  const trailingResult = voice.processMicFrame(softConsonantFrame, 16000);
+  const decodedTrailing = Buffer.from(trailingResult.pcmBase64, 'base64');
+  let nonZeroSamples = 0;
+  for (let i = 0; i < decodedTrailing.length; i += 2) {
+    if (decodedTrailing.readInt16LE(i) !== 0) nonZeroSamples++;
+  }
+  assert.ok(nonZeroSamples > 200, `Trailing consonant frame during speech hangover must not be gated to zero (got ${nonZeroSamples} non-zero samples)`);
+
+  // 4. Transcript normalization and multi-word filler rejection
+  assert.equal(voice.isValidSpokenInput('Hmm. Hmm.'), false, 'Must reject multi-word filler sequences');
+  assert.equal(voice.isValidSpokenInput('Uh, um...'), false, 'Must reject multi-word hesitation fillers');
+  assert.equal(voice.isValidSpokenInput('Just tell me a little bit.'), true, 'Must accept genuine conversational turns');
+
+  const normalized = voice.normalizeSpokenTranscript(
+    'Tell me about Medivy Blue Cross, Granville Mutual, Cognition plus, S 3 Vectors, Dynamo D B, and content engineering.'
+  );
+  assert.match(normalized, /Medavie Blue Cross/);
+  assert.match(normalized, /Grenville Mutual/);
+  assert.match(normalized, /Cognition\+/);
+  assert.match(normalized, /S3 Vectors/);
+  assert.match(normalized, /DynamoDB/);
+  assert.match(normalized, /context engineering/i);
+});

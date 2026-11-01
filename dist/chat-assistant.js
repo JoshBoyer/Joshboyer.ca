@@ -1740,7 +1740,7 @@
     });
   }
   const JOSH_VOICE_ID = '2ccxXaT9cMefjPlK2Pwn';
-  function extractSpokenSummary(rawText, maxChars = 1500) {
+  function extractSpokenSummary(rawText, maxChars = 1550) {
     if (typeof rawText !== 'string') return '';
     const cleaned = rawText.replace(/\s+/g, ' ').trim();
     if (!cleaned) return '';
@@ -1826,10 +1826,12 @@
     const vadFill = document.querySelector?.('[data-voice-meter-fill]') || null;
     const vadLabel = document.querySelector?.('[data-voice-vad-label]') || null;
 
-    const BARGE_IN_RMS_THRESHOLD = 0.052;
+    const BARGE_IN_RMS_THRESHOLD = 0.065;
     const BARGE_IN_REQUIRED_FRAMES = 3;
     const MAX_PREROLL_CHUNKS = 8;
     const PACE_STEPS = [1.0, 1.1, 0.95];
+    const SPEECH_HOLD_MAX_FRAMES = 12;
+    const TARGET_SPEECH_RMS = 0.11;
 
     let autoSpeak = true;
     let bargeInEnabled = true;
@@ -1855,6 +1857,7 @@
     let lastTranscriptText = '';
     let lastTranscriptAt = 0;
     let lastAudioEndedAt = 0;
+    let lastSpeechStartedAt = 0;
     let mediaRecorder = null;
     let speechRec = null;
     let isRecordingMic = false;
@@ -1866,6 +1869,8 @@
     let bargeInConsecutiveFrames = 0;
     let bargeInCount = 0;
     let lastBargeInAt = 0;
+    let speechHoldFrames = 0;
+    let currentAgcGain = 1.6;
     const preRollBuffer = [];
     let liveSpeechChain = Promise.resolve();
     const liveSpokenSentences = new Set();
@@ -1886,6 +1891,25 @@
         .replace(/\((?:warmly|calmly|patient|patiently|friendly|excited|softly|thoughtfully|empathetically|chuckles|laughs|sighs|clears throat|pause|smiling)\)\s*/gi, '')
         .replace(/\bI(?:'m| am)\s+Alex,\s*Josh['’]s\s+AI\s+representative\b/gi, "I'm Josh's AI assistant")
         .replace(/\bI(?:'m| am)\s+Alex\b/gi, "I'm Josh's AI assistant")
+        .replace(/^Josh['’]s enterprise experience is rooted in on-premise,\s*virtualized systems,\s*network infrastructure,\s*and application integrations rather than commercial (?:AWS or Azure )?cloud migrations\./i,
+          "In his corporate insurance roles at Medavie and Grenville, the core platforms ran on-prem VMware and hybrid infrastructure, and alongside that, he personally built and deployed this live portfolio assistant on AWS.")
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function normalizeSpokenTranscript(rawText) {
+      const cleaned = cleanStageTags(rawText);
+      if (!cleaned) return '';
+      return cleaned
+        .replace(/\b(?:medivy|medovie|med-a-vie|med a vie|meta v|meda v|medevie)\b/gi, 'Medavie')
+        .replace(/\b(?:granville|greenville)(\s+mutual)?\b/gi, (_m, suffix) => `Grenville${suffix || ''}`)
+        .replace(/\bguide\s+wire\b/gi, 'Guidewire')
+        .replace(/\bcognition\s+plus\b/gi, 'Cognition+')
+        .replace(/\bprovider\s+registry\b/gi, 'ProviderRegistry')
+        .replace(/\bdynamo\s*d\s*b\b/gi, 'DynamoDB')
+        .replace(/\bs\s+3\s+vectors?\b/gi, 'S3 Vectors')
+        .replace(/\ba\s+w\s+s\b/gi, 'AWS')
+        .replace(/\bcontent\s+engineer(ing|s)?\b/gi, 'context engineer$1')
         .replace(/\s+/g, ' ')
         .trim();
     }
@@ -1893,7 +1917,9 @@
     function humanizeForSpeech(rawText) {
       const cleaned = cleanStageTags(rawText);
       if (!cleaned) return '';
-      const humanized = cleaned
+      // Preserve 100% of every sentence rendered in the chat bubble so the spoken voice never
+      // skips or stops reading mid-paragraph, and avoid injecting bracketed stage tags on eleven_v4_turbo.
+      return cleaned
         .replace(/\bus-east-2\b/gi, 'AWS Ohio')
         .replace(/\bus-east-1\b/gi, 'AWS US East')
         .replace(/\b1536-d(?:imension(?:al)?)?\b/gi, 'vector')
@@ -1903,25 +1929,10 @@
         .replace(/\bCognition\+/g, 'Cognition Plus')
         .replace(/\b(\d{4})\s*[\u2013\u2014-]\s*(\d{4})\b/g, '$1 to $2')
         .replace(/\b15\+\s*years\b/gi, 'over fifteen years')
-        .replace(/^Josh['’]s enterprise experience is rooted in on-premise,\s*virtualized systems,\s*network infrastructure,\s*and application integrations rather than commercial (?:AWS or Azure )?cloud migrations\./i,
-          "In his corporate insurance roles at Medavie and Grenville, the core platforms ran on-prem VMware and hybrid infrastructure, and alongside that, he personally built and deployed this live portfolio assistant on AWS.")
         .replace(/\s*[\u2014\u2013]\s*/g, ', ')
         .replace(/,\s*,+/g, ', ')
         .replace(/\s+/g, ' ')
         .trim();
-      const sentences = (humanized.match(/[^.!?]+[.!?]+(?:\s+|$)|[^.!?]+$/g) || [humanized]).map(s => s.trim()).filter(Boolean);
-      const maxSentences = conciseVoiceMode ? 2 : 3;
-      const selected = sentences.length <= maxSentences
-        ? sentences
-        : (/\?$/.test(sentences[sentences.length - 1])
-            ? [...sentences.slice(0, maxSentences - 1), sentences[sentences.length - 1]]
-            : sentences.slice(0, maxSentences));
-      if (selected.length >= 2 && /\?$/.test(selected[selected.length - 1])) {
-        const bodyPart = selected.slice(0, -1).join(' ');
-        const questionPart = selected[selected.length - 1];
-        return `[warmly] ${bodyPart} [curious] ${questionPart}`.replace(/\s+/g, ' ').trim();
-      }
-      return `[warmly] ${selected.join(' ')}`.replace(/\s+/g, ' ').trim();
     }
 
     function matchVoiceControlCommand(userText) {
@@ -2063,8 +2074,14 @@
           finalResponse = cleaned;
         }
       }
-      const finalSentences = finalResponse.match(/[^.!?]+[.!?]+(?:\s+|$)|[^.!?]+$/g) || [finalResponse];
-      for (const s of finalSentences) {
+      const finalSentences = (finalResponse.match(/[^.!?]+[.!?]+(?:\s+|$)|[^.!?]+$/g) || [finalResponse]).map(s => s.trim()).filter(Boolean);
+      const shapedSentences = conciseVoiceMode && finalSentences.length > 2
+        ? (/\?$/.test(finalSentences[finalSentences.length - 1])
+            ? [finalSentences[0], finalSentences[finalSentences.length - 1]]
+            : finalSentences.slice(0, 2))
+        : finalSentences;
+      finalResponse = shapedSentences.join(' ').replace(/\s+/g, ' ').trim();
+      for (const s of shapedSentences) {
         const k = normalizeSentenceKey(s);
         if (k.split(' ').filter(Boolean).length >= 6) {
           priorSentences.add(k);
@@ -2074,18 +2091,18 @@
     }
 
     function isValidSpokenInput(rawText) {
-      const cleaned = cleanStageTags(rawText);
+      const cleaned = normalizeSpokenTranscript(rawText);
       if (!cleaned) return false;
-      // Reject pure punctuation, ellipses ("...", "…"), or single filler noises ("uh", "um", "hmm")
+      // Reject pure punctuation, ellipses ("...", "…"), or filler noise sequences ("uh", "um", "hmm. hmm.")
       if (/^[.\u2026\s,!?-]+$/.test(cleaned)) return false;
       const words = cleaned.match(/[a-zA-Z0-9']+/g) || [];
       const alphaWords = words.filter(w => /[a-zA-Z]{2,}/.test(w));
       if (alphaWords.length === 0) return false;
+      const fillers = new Set(['uh', 'um', 'hmm', 'hm', 'ah', 'oh', 'eh', 'mm', 'huh', 'er', 'mhm', 'uhh', 'umm', 'hmmm']);
+      if (alphaWords.every(w => fillers.has(w.toLowerCase()))) return false;
       if (alphaWords.length === 1) {
         const single = alphaWords[0].toLowerCase();
-        const fillers = new Set(['uh', 'um', 'hmm', 'hm', 'ah', 'oh', 'eh', 'mm', 'huh', 'er']);
-        if (fillers.has(single)) return false;
-        const allowedShort = new Set(['hi', 'hey', 'yes', 'no', 'why', 'how', 'who', 'aws', 'sql', 'mcp', 'rag', 'cag']);
+        const allowedShort = new Set(['hi', 'hey', 'yes', 'no', 'why', 'how', 'who', 'aws', 'sql', 'mcp', 'rag', 'cag', 'vba']);
         if (single.length < 4 && !allowedShort.has(single)) return false;
       }
       return true;
@@ -2111,21 +2128,23 @@
       const ratio = rate / 16000;
       const newLength = Math.max(1, Math.round(float32Input.length / ratio));
       const out = new Int16Array(newLength);
-      let offsetResult = 0;
-      let offsetBuffer = 0;
-      while (offsetResult < newLength) {
-        const nextOffsetBuffer = Math.min(float32Input.length, Math.round((offsetResult + 1) * ratio));
-        let accum = 0;
-        let count = 0;
-        for (let i = offsetBuffer; i < nextOffsetBuffer; i += 1) {
-          accum += float32Input[i];
-          count += 1;
+      for (let offsetResult = 0; offsetResult < newLength; offsetResult += 1) {
+        const center = (offsetResult + 0.5) * ratio;
+        const start = Math.max(0, Math.floor(center - ratio));
+        const end = Math.min(float32Input.length - 1, Math.ceil(center + ratio));
+        let weightedSum = 0;
+        let weightTotal = 0;
+        for (let i = start; i <= end; i += 1) {
+          const dist = Math.abs(i - center) / ratio;
+          const weight = Math.max(0, 1 - dist);
+          if (weight > 0) {
+            weightedSum += float32Input[i] * weight;
+            weightTotal += weight;
+          }
         }
-        const sample = count > 0 ? accum / count : 0;
+        const sample = weightTotal > 0 ? weightedSum / weightTotal : float32Input[Math.min(float32Input.length - 1, Math.floor(center))];
         const clamped = Math.max(-1, Math.min(1, sample));
         out[offsetResult] = clamped < 0 ? clamped * 0x8000 : clamped * 0x7FFF;
-        offsetResult += 1;
-        offsetBuffer = nextOffsetBuffer;
       }
       return out;
     }
@@ -2309,15 +2328,43 @@
         if (ws) sendUserActivityPing(ws);
         return { rms: 0, bargedIn: false, sent: false };
       }
+      let sum = 0;
+      let minVal = Infinity;
+      let maxVal = -Infinity;
+      for (let i = 0; i < inputData.length; i += 1) {
+        const v = inputData[i];
+        sum += v;
+        if (v < minVal) minVal = v;
+        if (v > maxVal) maxVal = v;
+      }
+      const mean = (minVal < 0 && maxVal > 0) ? (sum / inputData.length) : 0;
       let sumSq = 0;
       for (let i = 0; i < inputData.length; i += 1) {
-        sumSq += inputData[i] * inputData[i];
+        const centered = inputData[i] - mean;
+        sumSq += centered * centered;
       }
       const rms = Math.sqrt(sumSq / Math.max(1, inputData.length));
       updateVadMeter(rms, false);
 
-      const gatedData = rms < 0.008 ? new Float32Array(inputData.length) : inputData;
-      const pcm16 = downsampleTo16k(gatedData, sampleRate || 48000);
+      // Speech hangover envelope + software AGC so soft consonants ("s", "t", "k", "f", "th")
+      // and quiet word endings are never chopped to digital zero before Scribe v2 Realtime STT.
+      if (rms >= 0.003) {
+        speechHoldFrames = SPEECH_HOLD_MAX_FRAMES;
+        const desiredGain = Math.min(4.5, Math.max(1.0, TARGET_SPEECH_RMS / Math.max(0.008, rms)));
+        currentAgcGain = currentAgcGain * 0.7 + desiredGain * 0.3;
+      } else if (speechHoldFrames > 0) {
+        speechHoldFrames -= 1;
+      }
+
+      const conditioned = new Float32Array(inputData.length);
+      if (rms >= 0.0018 || speechHoldFrames > 0) {
+        const gain = speechHoldFrames > 0 ? currentAgcGain : 1.0;
+        for (let i = 0; i < inputData.length; i += 1) {
+          const boosted = (inputData[i] - mean) * gain;
+          conditioned[i] = boosted > 0.85 || boosted < -0.85 ? Math.tanh(boosted) : boosted;
+        }
+      }
+      const pcm16 = downsampleTo16k(conditioned, sampleRate || 48000);
       const b64Chunk = encodePcm16Base64(pcm16);
 
       if (isSpeakingOrSynthesizing()) {
@@ -2331,14 +2378,16 @@
             bargeInConsecutiveFrames += 1;
             if (bargeInConsecutiveFrames >= BARGE_IN_REQUIRED_FRAMES) {
               triggerBargeIn('voice', ws);
-              return { rms, bargedIn: true, sent: true };
+              return { rms, bargedIn: true, sent: true, pcmBase64: b64Chunk };
             }
           } else {
-            bargeInConsecutiveFrames = Math.max(0, bargeInConsecutiveFrames - 1);
+            // Reset immediately on any frame below threshold so isolated speaker-echo peaks
+            // across sentences never accumulate and falsely interrupt Josh mid-response.
+            bargeInConsecutiveFrames = 0;
           }
         }
         if (ws) sendUserActivityPing(ws);
-        return { rms, bargedIn: false, sent: false };
+        return { rms, bargedIn: false, sent: false, pcmBase64: b64Chunk };
       }
 
       bargeInConsecutiveFrames = 0;
@@ -2346,10 +2395,10 @@
       if (ws && ws.readyState === win?.WebSocket?.OPEN) {
         try {
           ws.send(JSON.stringify({ user_audio_chunk: b64Chunk }));
-          return { rms, bargedIn: false, sent: true };
+          return { rms, bargedIn: false, sent: true, pcmBase64: b64Chunk };
         } catch { /* ignore */ }
       }
-      return { rms, bargedIn: false, sent: false };
+      return { rms, bargedIn: false, sent: false, pcmBase64: b64Chunk };
     }
 
     function animateSimulatedEnergy() {
@@ -2383,6 +2432,7 @@
       audio.volume = 1.0;
       try { audio.playbackRate = voicePace; } catch { /* ignore */ }
       currentAudio = audio;
+      lastSpeechStartedAt = Date.now();
       isLiveSpeaking = Boolean(isLiveTurn || isLiveCall);
       if (turnButton) {
         currentSpeakBtn = turnButton;
@@ -2482,12 +2532,13 @@
         return;
       }
       const cleaned = humanizeForSpeech(rawText);
-      const spoken = extractSpokenSummary(cleaned, 1500);
+      const spoken = extractSpokenSummary(cleaned, 1550);
       if (!spoken && !fallbackUrl) return;
       stopCurrentAudio();
       const myGen = speechGeneration;
       const abortCtrl = typeof AbortController === 'function' ? new AbortController() : null;
       ttsAbortController = abortCtrl;
+      lastSpeechStartedAt = Date.now();
       isLiveSpeaking = Boolean(isLiveTurn || isLiveCall);
       setAvatarState(isLiveCall ? 'live' : 'thinking', isLiveCall ? 'Josh Speaking (Live ElevenLabs)…' : 'Synthesizing Josh voice (ElevenLabs)…');
       if (turnButton) {
@@ -2496,7 +2547,7 @@
         turnButton.textContent = '⏳ Voice…';
       }
       if (fetcher && spoken) {
-        // Synthesize the complete 2-3 sentence turn as a single unbroken 192kbps MP3 on eleven_v4_turbo
+        // Synthesize the complete turn as a single unbroken 192kbps MP3 on eleven_v4_turbo
         // so prosody flows naturally and playback never splits or cuts out mid-reply.
         const fullBlob = await fetchTtsAudioBlob(spoken, abortCtrl);
         if (abortCtrl?.signal?.aborted || myGen !== speechGeneration) return;
@@ -2558,6 +2609,7 @@
       isLiveSpeaking = false;
       micMuted = false;
       bargeInConsecutiveFrames = 0;
+      speechHoldFrames = 0;
       preRollBuffer.length = 0;
       serverGreetingSkipped = false;
       pendingSkippedAgentResponses = 0;
@@ -2629,6 +2681,7 @@
         serverGreetingSkipped = false;
         pendingSkippedAgentResponses = 0;
         bargeInConsecutiveFrames = 0;
+        speechHoldFrames = 0;
         preRollBuffer.length = 0;
         liveSpeechChain = Promise.resolve();
         if (liveBtn) {
@@ -2700,19 +2753,26 @@
             if (msg.type === 'ping' && msg.ping_event?.event_id !== undefined) {
               ws.send(JSON.stringify({ type: 'pong', event_id: msg.ping_event.event_id }));
             } else if (msg.type === 'user_transcript' && msg.user_transcription_event?.user_transcript) {
-              const userText = cleanStageTags(msg.user_transcription_event.user_transcript);
+              const userText = normalizeSpokenTranscript(msg.user_transcription_event.user_transcript);
               if (!isValidSpokenInput(userText)) return;
               const nowTs = Date.now();
               if (userText.toLowerCase() === lastTranscriptText.toLowerCase() && nowTs - lastTranscriptAt < 4000) {
                 return;
               }
+              const voiceCmd = matchVoiceControlCommand(userText);
               if (isSpeakingOrSynthesizing()) {
-                triggerBargeIn('transcript', ws);
+                const wordCount = (userText.match(/[a-zA-Z0-9']+/g) || []).length;
+                if (voiceCmd || (bargeInEnabled && wordCount >= 2 && nowTs - lastSpeechStartedAt >= 450)) {
+                  triggerBargeIn('transcript', ws);
+                } else if (!bargeInEnabled && !voiceCmd) {
+                  // When auto barge-in is off or a single-word residual echo arrives during playback,
+                  // let current speech finish completely instead of cutting off mid-response.
+                  return;
+                }
               }
               lastTranscriptText = userText;
               lastTranscriptAt = nowTs;
               options.onLiveTranscript?.('user', userText);
-              const voiceCmd = matchVoiceControlCommand(userText);
               if (voiceCmd) {
                 pendingSkippedAgentResponses += 1;
                 if (voiceCmd.kind === 'pause') {
@@ -2807,7 +2867,7 @@
       if (win?.navigator?.mediaDevices?.getUserMedia && typeof win.MediaRecorder === 'function' && fetcher) {
         try {
           const stream = await win.navigator.mediaDevices.getUserMedia({
-            audio: { channelCount: 1, echoCancellation: false, noiseSuppression: false, autoGainControl: false }
+            audio: { channelCount: 1, echoCancellation: false, noiseSuppression: true, autoGainControl: true }
           });
           const chunks = [];
           const recorder = new win.MediaRecorder(stream);
@@ -2845,7 +2905,7 @@
               if (sttRes.ok) {
                 const sttJson = await sttRes.json();
                 if (sttJson?.text && typeof sttJson.text === 'string' && isValidSpokenInput(sttJson.text)) {
-                  options.onDictationResult?.(cleanStageTags(sttJson.text));
+                  options.onDictationResult?.(normalizeSpokenTranscript(sttJson.text));
                   return;
                 }
               }
@@ -2869,7 +2929,7 @@
           setAvatarState('listening', 'Listening… speak your question');
           rec.onresult = evt => {
             const transcript = evt.results?.[0]?.[0]?.transcript;
-            if (transcript && isValidSpokenInput(transcript)) options.onDictationResult?.(cleanStageTags(transcript));
+            if (transcript && isValidSpokenInput(transcript)) options.onDictationResult?.(normalizeSpokenTranscript(transcript));
           };
           rec.onend = () => {
             isRecordingMic = false;
@@ -2894,6 +2954,7 @@
       micMuted = Boolean(muted);
       if (micMuted) {
         bargeInConsecutiveFrames = 0;
+        speechHoldFrames = 0;
         preRollBuffer.length = 0;
         updateVadMeter(0, false);
       }
@@ -2994,6 +3055,9 @@
       processMicFrame(inputData, sampleRate = 48000) {
         return processMicFrame(inputData, sampleRate, activeSocket);
       },
+      humanizeForSpeech,
+      normalizeSpokenTranscript,
+      isValidSpokenInput,
       setBargeInEnabled,
       setMicMuted,
       cyclePace,
